@@ -655,9 +655,9 @@
 
       <div class="text-center max-w-3xl mx-auto mb-16" data-aos="fade-up">
         <span class="text-brand-sky font-bold text-xs tracking-widest uppercase mb-3 block">Prueba Virtual en Vivo</span>
-        <h2 class="font-display font-bold text-3xl sm:text-4xl lg:text-5xl tracking-tight text-white mb-5">Pruébatelos antes de comprarlos</h2>
+        <h2 class="font-display font-bold text-3xl sm:text-4xl lg:text-5xl tracking-tight text-white mb-5">¿Cómo te ves con tus nuevos lentes? 👀</h2>
         <p class="text-slate-400 text-sm sm:text-base leading-relaxed">
-          Active su cámara, elija un armazón de nuestro catálogo y véalo sobre su rostro en tiempo real — directamente desde su navegador, sin instalar nada.
+          Activa tu cámara, elige un armazón de nuestro catálogo y juega a probártelos en tiempo real — directo desde tu navegador, sin instalar nada y sin compromiso. Perfecto para empresas que cotizan en volumen... y para quien solo quiere ver qué le queda mejor.
         </p>
       </div>
 
@@ -711,21 +711,27 @@
 
           <!-- Catalog / controls panel -->
           <div class="bg-brand-dark/60 p-6 flex flex-col">
-            <span class="text-[10px] uppercase font-extrabold tracking-widest text-brand-sky mb-4 block">Catálogo de Armazones</span>
-
-            <div id="lensCatalog" class="grid grid-cols-3 gap-3 mb-5">
-              <!-- Lens options injected by JS from lensCatalogData -->
+            <div class="flex items-center justify-between mb-4">
+              <span class="text-[10px] uppercase font-extrabold tracking-widest text-brand-sky block">Catálogo de Armazones</span>
+              <span class="text-[9px] text-slate-500">✨ ¡Diviértete probando!</span>
             </div>
 
-            <!-- Upload own frame (for staff/admin use, or curious customers) -->
-            <label for="customLensUpload" class="flex items-center justify-center gap-2 text-[11px] font-bold uppercase tracking-wider text-slate-300 border border-dashed border-white/15 hover:border-brand-sky/40 hover:text-brand-sky rounded-xl py-3 cursor-pointer transition-all mb-5">
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/></svg>
-              Subir armazón (PNG)
-            </label>
-            <input type="file" id="customLensUpload" accept="image/png" class="hidden">
+            <div id="lensCatalog" class="grid grid-cols-3 gap-3 mb-5">
+              <!-- Lens options injected by JS from catalogo.json (with fallback) -->
+            </div>
+
+            <!-- Empty state shown if catalog has zero items -->
+            <div id="lensCatalogEmpty" class="hidden flex-col items-center text-center p-5 border border-dashed border-white/10 rounded-2xl mb-5">
+              <span class="text-2xl mb-2 block">🕶️</span>
+              <p class="text-[11px] text-slate-400 leading-relaxed">Muy pronto tendremos armazones para que te pruebes. ¡Vuelve a visitarnos!</p>
+            </div>
+
+            <button onclick="captureTryOnPhoto()" id="tryonCaptureBtn" class="hidden flex items-center justify-center gap-2 bg-white/5 border border-white/10 hover:border-brand-sky/40 hover:text-brand-sky text-slate-200 font-bold text-[11px] uppercase tracking-wider py-3 rounded-xl transition-all duration-300 mb-5">
+              📸 Capturar mi foto
+            </button>
 
             <div class="mt-auto pt-4 border-t border-white/5">
-              <p class="text-[10px] text-slate-500 leading-relaxed">Usa imágenes con fondo transparente (.png) para mejores resultados. El armazón se ajusta automáticamente al ancho de los ojos.</p>
+              <p class="text-[10px] text-slate-500 leading-relaxed">Elige un armazón y muévete frente a la cámara — el ajuste sigue tu rostro en tiempo real.</p>
             </div>
           </div>
 
@@ -1326,10 +1332,10 @@
         
         <!-- Form Left Block -->
         <div class="lg:col-span-5" data-aos="fade-right">
-          <span class="text-brand-sky font-bold text-xs tracking-widest uppercase mb-3 block">Cotizaciones</span>
-          <h2 class="font-display font-bold text-3xl sm:text-4xl tracking-tight text-white mb-6">Agende su Campaña Empresarial</h2>
+          <span class="text-brand-sky font-bold text-xs tracking-widest uppercase mb-3 block">Agende su Visita</span>
+          <h2 class="font-display font-bold text-3xl sm:text-4xl tracking-tight text-white mb-6">Para empresas y para usted también</h2>
           <p class="text-slate-300 text-sm leading-relaxed mb-8">
-            Complete el formulario clínico/corporativo o simule en tiempo real una aproximación para que Erika Quijada prepare un dossier comercial específico para su organización.
+            Ya sea que busque una campaña de salud visual para su equipo o simplemente quiera agendar su propio examen, cuéntenos qué necesita y la Lic. Erika Quijada le contactará personalmente.
           </p>
 
           <div class="flex flex-col gap-6 mb-8">
@@ -1367,57 +1373,73 @@
 
         </div>
 
-        <!-- Form Right Block - Interactive Quote Calculator Widget -->
+        <!-- Form Right Block -->
         <div class="lg:col-span-7" data-aos="fade-left" data-aos-delay="200">
           
           <div class="bg-brand-dark border border-white/5 rounded-4xl p-8 lg:p-10 shadow-2xl relative">
-            <h3 class="font-display font-bold text-2xl text-white mb-2 font-display">Simulador de Presupuesto</h3>
-            <p class="text-slate-400 text-xs mb-8">Seleccione las variables para estimar una aproximación al instante con base en su volumen de personal.</p>
 
-            <!-- Real interactive calculator widget with minimum 10 headcount rule enforced -->
-            <div class="space-y-6 mb-8 p-6 bg-brand-navy rounded-2xl border border-white/5">
-              
-              <!-- Slider for employees (strictly starts at 10) -->
+            <!-- Audience toggle: Company vs Individual -->
+            <div class="flex gap-2 p-1.5 bg-brand-navy rounded-full border border-white/5 mb-8">
+              <button id="audienceBtnCompany" onclick="setFormAudience('company')" class="flex-1 flex items-center justify-center gap-2 py-3 rounded-full text-xs font-bold uppercase tracking-wider transition-all duration-300 bg-gradient-to-r from-brand-sky to-brand-teal text-brand-navy">
+                🏢 Soy Empresa
+              </button>
+              <button id="audienceBtnPerson" onclick="setFormAudience('person')" class="flex-1 flex items-center justify-center gap-2 py-3 rounded-full text-xs font-bold uppercase tracking-wider transition-all duration-300 text-slate-300 hover:text-white">
+                🙋 Soy Persona
+              </button>
+            </div>
+
+            <div class="mb-8">
+              <h3 id="formTitle" class="font-display font-bold text-2xl text-white mb-2">Cotización Empresarial</h3>
+              <p id="formSubtitle" class="text-slate-400 text-xs">Cuéntenos sobre su equipo para preparar una propuesta de campaña en sitio.</p>
+            </div>
+
+            <!-- Company-only fields: headcount + service -->
+            <div id="companyFields" class="space-y-6 mb-8 p-6 bg-brand-navy rounded-2xl border border-white/5">
               <div>
-                <div class="flex items-center justify-between text-xs mb-3">
-                  <span class="text-slate-300 font-semibold">Número de Colaboradores (Mínimo 10):</span>
-                  <span class="text-brand-sky font-extrabold text-sm" id="calcColabVal">10</span>
-                </div>
-                <input type="range" id="calcColabSlider" min="10" max="300" value="10" class="w-full accent-brand-sky bg-brand-dark h-2 rounded-lg appearance-none cursor-pointer">
+                <label class="block text-xs font-semibold text-slate-300 mb-2">Número de Colaboradores (Mínimo 10):</label>
+                <input type="number" id="calcColabInput" min="10" value="10" class="w-full p-4 bg-brand-dark rounded-xl border border-white/5 text-sm text-white focus:border-brand-sky focus:outline-none">
                 <p class="text-[10px] text-slate-400 mt-2 italic">*Campañas in-situ válidas únicamente a partir de un mínimo de 10 personas.</p>
               </div>
 
-              <!-- Service Type Selector -->
               <div>
                 <label class="block text-xs font-semibold text-slate-300 mb-2">Servicio Requerido:</label>
                 <select id="calcService" class="w-full p-4 bg-brand-dark rounded-xl border border-white/5 text-xs text-white focus:border-brand-sky focus:outline-none">
-                  <option value="diagnostico" selected>Sólo Diagnóstico Clínico (En Sitio) - $300/Persona</option>
+                  <option value="diagnostico" selected>Sólo Diagnóstico Clínico (En Sitio)</option>
                   <option value="seguridad">Examen + Lentes de Seguridad Graduados NOM-017 (¡Examen GRATIS!)</option>
                   <option value="ejecutivo">Examen + Lentes de Oficina Filtro Blue Free (¡Examen GRATIS!)</option>
                 </select>
               </div>
 
-              <!-- Dynamic Benefit Ticker with live promo status -->
-              <div id="benefitCard" class="p-3 bg-brand-sky/5 border border-brand-sky/10 rounded-xl flex items-center gap-3 transition-all duration-300">
-                <span class="text-base" id="benefitIcon">🎁</span>
-                <span class="text-[11px] text-slate-300 font-semibold" id="benefitText">Beneficio incluido: Reporte de RR.HH. sin costo</span>
+              <div class="p-3 bg-brand-sky/5 border border-brand-sky/10 rounded-xl flex items-center gap-3">
+                <span class="text-base">🎁</span>
+                <span class="text-[11px] text-slate-300 font-semibold">Si adquiere lentes de seguridad o de oficina, los exámenes clínicos son GRATIS para todo su equipo.</span>
               </div>
+            </div>
 
-              <!-- Live Estimate Display -->
-              <div class="flex items-center justify-between pt-5 border-t border-white/5">
-                <span class="text-xs text-slate-400">Estimación Preliminar (MXN):</span>
-                <span class="font-display font-black text-white text-2xl tracking-tight" id="calcResultDisplay">$3,000.00</span>
+            <!-- Individual-only field: service for a single person -->
+            <div id="personFields" class="hidden space-y-6 mb-8 p-6 bg-brand-navy rounded-2xl border border-white/5">
+              <div>
+                <label class="block text-xs font-semibold text-slate-300 mb-2">¿Qué le gustaría agendar?</label>
+                <select id="personService" class="w-full p-4 bg-brand-dark rounded-xl border border-white/5 text-xs text-white focus:border-brand-sky focus:outline-none">
+                  <option value="examen" selected>Examen de la vista completo</option>
+                  <option value="lentes-graduados">Lentes graduados (con armazón)</option>
+                  <option value="lentes-sol">Lentes de sol / protección</option>
+                  <option value="revision">Sólo una revisión / segunda opinión</option>
+                </select>
               </div>
-
+              <div class="p-3 bg-brand-teal/5 border border-brand-teal/10 rounded-xl flex items-center gap-3">
+                <span class="text-base">✨</span>
+                <span class="text-[11px] text-slate-300 font-semibold">También atendemos consultas individuales en nuestro consultorio en Corregidora, no solo campañas empresariales.</span>
+              </div>
             </div>
 
             <!-- Traditional Contact Fields -->
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
               <div>
-                <label class="block text-[9px] uppercase tracking-widest text-slate-400 font-extrabold mb-2">Nombre de Contacto</label>
+                <label class="block text-[9px] uppercase tracking-widest text-slate-400 font-extrabold mb-2" id="formNameLabel">Nombre de Contacto</label>
                 <input type="text" id="formName" class="w-full p-4 bg-brand-navy border border-white/5 rounded-xl text-sm text-white focus:border-brand-sky focus:outline-none" placeholder="Ing. Carlos Silva">
               </div>
-              <div>
+              <div id="formCompanyWrap">
                 <label class="block text-[9px] uppercase tracking-widest text-slate-400 font-extrabold mb-2">Empresa</label>
                 <input type="text" id="formCompany" class="w-full p-4 bg-brand-navy border border-white/5 rounded-xl text-sm text-white focus:border-brand-sky focus:outline-none" placeholder="Automotriz Querétaro S.A.">
               </div>
@@ -1426,7 +1448,7 @@
                 <input type="tel" id="formPhone" class="w-full p-4 bg-brand-navy border border-white/5 rounded-xl text-sm text-white focus:border-brand-sky focus:outline-none" placeholder="442 000 0000">
               </div>
               <div>
-                <label class="block text-[9px] uppercase tracking-widest text-slate-400 font-extrabold mb-2">Correo Corporativo</label>
+                <label class="block text-[9px] uppercase tracking-widest text-slate-400 font-extrabold mb-2" id="formEmailLabel">Correo Corporativo</label>
                 <input type="email" id="formEmail" class="w-full p-4 bg-brand-navy border border-white/5 rounded-xl text-sm text-white focus:border-brand-sky focus:outline-none" placeholder="compras@empresa.com">
               </div>
             </div>
@@ -1438,7 +1460,7 @@
 
             <div class="flex flex-col sm:flex-row gap-4">
               <button onclick="submitCorporateForm()" class="shine-cta flex-1 flex items-center justify-center gap-2 bg-gradient-to-r from-brand-sky to-brand-teal text-brand-navy py-4 px-6 rounded-full font-bold transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-brand-sky/25">
-                📨 Enviar Propuesta Oficial
+                📨 <span id="submitBtnText">Enviar Propuesta Oficial</span>
               </button>
               <button onclick="sendQuickWhatsApp()" class="flex items-center justify-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white py-4 px-8 rounded-full font-bold transition-all duration-300 hover:-translate-y-0.5">
                 💬 Cotizar por WhatsApp
@@ -1517,6 +1539,92 @@
 
     </div>
   </footer>
+
+  <!-- ========== HIDDEN ADMIN PANEL (access via yoursite.com/#admin) ========== -->
+  <!-- Note: this is a convenience tool, not real security — anyone who reads the
+       page source can see the access code. It's meant to keep casual visitors out,
+       not to protect sensitive data. Never store real secrets here. -->
+  <div id="adminOverlay" class="hidden fixed inset-0 z-[100] bg-brand-dark overflow-y-auto">
+
+    <!-- Login screen -->
+    <div id="adminLogin" class="min-h-screen flex items-center justify-center p-6">
+      <div class="w-full max-w-sm bg-brand-navy border border-white/10 rounded-3xl p-8 shadow-2xl text-center">
+        <div class="w-14 h-14 rounded-2xl bg-brand-sky/10 border border-brand-sky/20 flex items-center justify-center mx-auto mb-5 text-2xl">🔒</div>
+        <h2 class="font-display font-bold text-xl text-white mb-2">Panel de Administrador</h2>
+        <p class="text-slate-400 text-xs mb-6">Ingrese la clave de acceso para gestionar el catálogo de armazones.</p>
+        <input type="password" id="adminPassInput" placeholder="Clave de acceso" class="w-full p-4 bg-brand-dark border border-white/10 rounded-xl text-sm text-white text-center focus:border-brand-sky focus:outline-none mb-4">
+        <button onclick="adminLogin()" class="w-full bg-gradient-to-r from-brand-sky to-brand-teal text-brand-navy font-bold py-3.5 rounded-full transition-all hover:-translate-y-0.5">
+          Entrar
+        </button>
+        <p id="adminLoginError" class="hidden text-red-400 text-[11px] font-semibold mt-3">Clave incorrecta. Intente de nuevo.</p>
+        <a href="#" onclick="closeAdminPanel()" class="block text-slate-500 text-[11px] mt-6 hover:text-slate-300">Volver al sitio</a>
+      </div>
+    </div>
+
+    <!-- Admin dashboard (shown after correct password) -->
+    <div id="adminDashboard" class="hidden max-w-5xl mx-auto px-6 py-12">
+      <div class="flex items-center justify-between mb-10">
+        <div>
+          <span class="text-brand-sky font-bold text-xs tracking-widest uppercase mb-1 block">Visión EKA</span>
+          <h2 class="font-display font-bold text-2xl text-white">Gestión de Catálogo de Armazones</h2>
+        </div>
+        <a href="#" onclick="closeAdminPanel()" class="flex items-center gap-2 text-slate-400 hover:text-white text-xs font-bold uppercase tracking-wider">
+          ✕ Cerrar Panel
+        </a>
+      </div>
+
+      <!-- Step-by-step instructions -->
+      <div class="bg-brand-navy border border-white/10 rounded-3xl p-6 mb-8">
+        <h3 class="font-display font-bold text-sm text-white mb-3">📋 Cómo publicar un armazón nuevo</h3>
+        <ol class="text-xs text-slate-300 space-y-2 list-decimal list-inside leading-relaxed">
+          <li>Suba la foto del armazón (PNG, fondo transparente) a la carpeta <code class="text-brand-sky bg-brand-dark px-1.5 py-0.5 rounded">lentes/</code> de su repositorio en GitHub.</li>
+          <li>Aquí abajo, agregue el nombre del armazón y el nombre exacto del archivo que subió (ej. <code class="text-brand-sky bg-brand-dark px-1.5 py-0.5 rounded">aviador-dorado.png</code>).</li>
+          <li>Cuando termine de agregar todos sus modelos, presione <strong class="text-white">"Copiar código del catálogo"</strong>.</li>
+          <li>Pegue ese código en el archivo <code class="text-brand-sky bg-brand-dark px-1.5 py-0.5 rounded">lentes/catalogo.json</code> en GitHub y guarde los cambios (commit).</li>
+          <li>Sus clientes verán el catálogo actualizado de inmediato — no es necesario tocar nada más.</li>
+        </ol>
+      </div>
+
+      <!-- Add new frame form -->
+      <div class="bg-brand-navy border border-white/10 rounded-3xl p-6 mb-8">
+        <h3 class="font-display font-bold text-sm text-white mb-4">➕ Agregar Armazón</h3>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+          <div>
+            <label class="block text-[9px] uppercase tracking-widest text-slate-400 font-extrabold mb-2">Nombre del armazón</label>
+            <input type="text" id="adminLensName" placeholder="Aviador Dorado" class="w-full p-3.5 bg-brand-dark border border-white/10 rounded-xl text-sm text-white focus:border-brand-sky focus:outline-none">
+          </div>
+          <div>
+            <label class="block text-[9px] uppercase tracking-widest text-slate-400 font-extrabold mb-2">Nombre del archivo en /lentes</label>
+            <input type="text" id="adminLensFile" placeholder="aviador-dorado.png" class="w-full p-3.5 bg-brand-dark border border-white/10 rounded-xl text-sm text-white focus:border-brand-sky focus:outline-none">
+          </div>
+        </div>
+        <button onclick="adminAddLens()" class="bg-brand-sky/10 border border-brand-sky/30 text-brand-sky font-bold text-xs uppercase tracking-wider py-3 px-6 rounded-full hover:bg-brand-sky/20 transition-all">
+          Agregar a la lista
+        </button>
+      </div>
+
+      <!-- Current list of lenses in this editing session -->
+      <div class="bg-brand-navy border border-white/10 rounded-3xl p-6 mb-8">
+        <h3 class="font-display font-bold text-sm text-white mb-4">🕶️ Armazones en esta lista</h3>
+        <div id="adminLensList" class="space-y-3 mb-2">
+          <p id="adminLensListEmpty" class="text-xs text-slate-500 italic">Aún no ha agregado ningún armazón nuevo a esta lista.</p>
+        </div>
+      </div>
+
+      <!-- Generated JSON output -->
+      <div class="bg-brand-navy border border-white/10 rounded-3xl p-6">
+        <div class="flex items-center justify-between mb-4">
+          <h3 class="font-display font-bold text-sm text-white">📄 Código para lentes/catalogo.json</h3>
+          <button onclick="adminCopyJson()" class="flex items-center gap-2 bg-gradient-to-r from-brand-sky to-brand-teal text-brand-navy font-bold text-xs uppercase tracking-wider py-2.5 px-5 rounded-full transition-all hover:-translate-y-0.5">
+            📋 Copiar código del catálogo
+          </button>
+        </div>
+        <textarea id="adminJsonOutput" readonly rows="8" class="w-full p-4 bg-brand-dark border border-white/10 rounded-xl text-[11px] text-slate-300 font-mono focus:outline-none resize-none"></textarea>
+        <p id="adminCopyConfirm" class="hidden text-brand-teal text-[11px] font-semibold mt-3">✓ Código copiado. Péguelo en lentes/catalogo.json en GitHub.</p>
+      </div>
+
+    </div>
+  </div>
 
   <!-- ========== LIVE ACTIVITY BOOKINGS TOAST LOGIC (Engaging Hook) ========== -->
   <div id="bookingToast" class="fixed bottom-6 left-6 z-50 bg-brand-dark/95 border border-brand-sky/35 p-4 rounded-2xl shadow-2xl flex items-center gap-4 backdrop-blur-md transition-all duration-500 translate-y-24 opacity-0 max-w-sm">
@@ -1599,64 +1707,64 @@
       compHandle.style.left = `${sliderPos}%`;
     });
 
-    // ---- Dynamic Budget Calculator & Benefit Logic ($300 exact cost per diagnostic person) ----
-    const colabSlider = document.getElementById('calcColabSlider');
-    const colabValDisplay = document.getElementById('calcColabVal');
+    // ---- Simple references to headcount input + service selector (used when building the quote message) ----
+    const colabInput = document.getElementById('calcColabInput');
     const serviceSelector = document.getElementById('calcService');
-    const resultDisplay = document.getElementById('calcResultDisplay');
-    const benefitCard = document.getElementById('benefitCard');
-    const benefitText = document.getElementById('benefitText');
-    const benefitIcon = document.getElementById('benefitIcon');
 
-    function calculateInteractiveEstimate() {
-      const colabCount = parseInt(colabSlider.value);
-      const selectedService = serviceSelector.value;
-      colabValDisplay.textContent = colabCount;
+    // ---- Company vs Individual form audience toggle ----
+    let currentFormAudience = 'company';
 
-      let unitPrice = 0;
-      let examIsFree = false;
+    function setFormAudience(audience) {
+      currentFormAudience = audience;
+      const btnCompany = document.getElementById('audienceBtnCompany');
+      const btnPerson = document.getElementById('audienceBtnPerson');
+      const companyFields = document.getElementById('companyFields');
+      const personFields = document.getElementById('personFields');
+      const formTitle = document.getElementById('formTitle');
+      const formSubtitle = document.getElementById('formSubtitle');
+      const formCompanyWrap = document.getElementById('formCompanyWrap');
+      const formNameLabel = document.getElementById('formNameLabel');
+      const formEmailLabel = document.getElementById('formEmailLabel');
+      const formEmail = document.getElementById('formEmail');
+      const submitBtnText = document.getElementById('submitBtnText');
 
-      switch(selectedService) {
-        case 'diagnostico':
-          unitPrice = 300; // Perfect exact $300 person match. 10 people = $3,000 pesos
-          examIsFree = false;
-          break;
-        case 'seguridad':
-          unitPrice = 850; // Cost of the safety glasses only, exam is free ($0)
-          examIsFree = true;
-          break;
-        case 'ejecutivo':
-          unitPrice = 750; // Cost of office glasses only, exam is free ($0)
-          examIsFree = true;
-          break;
-      }
+      const activeClasses = ['bg-gradient-to-r', 'from-brand-sky', 'to-brand-teal', 'text-brand-navy'];
+      const inactiveClasses = ['text-slate-300'];
 
-      // Dynamic Benefit algorithm and visual color styling based on service selected
-      if (examIsFree) {
-        benefitCard.className = "p-3 bg-brand-teal/10 border border-brand-teal/30 rounded-xl flex items-center gap-3 transition-all duration-300";
-        benefitIcon.textContent = "🔥";
-        benefitText.textContent = `¡Promoción Activada! Exámenes clínicos de $300 totalmente GRATIS para sus ${colabCount} colaboradores al adquirir los lentes.`;
+      if (audience === 'company') {
+        btnCompany.classList.add(...activeClasses);
+        btnCompany.classList.remove('text-slate-300', 'hover:text-white');
+        btnPerson.classList.remove(...activeClasses);
+        btnPerson.classList.add('text-slate-300', 'hover:text-white');
+
+        companyFields.classList.remove('hidden');
+        personFields.classList.add('hidden');
+        formCompanyWrap.classList.remove('hidden');
+
+        formTitle.textContent = 'Cotización Empresarial';
+        formSubtitle.textContent = 'Cuéntenos sobre su equipo para preparar una propuesta de campaña en sitio.';
+        formNameLabel.textContent = 'Nombre de Contacto';
+        formEmailLabel.textContent = 'Correo Corporativo';
+        formEmail.placeholder = 'compras@empresa.com';
+        submitBtnText.textContent = 'Enviar Propuesta Oficial';
       } else {
-        benefitCard.className = "p-3 bg-brand-navy border border-white/5 rounded-xl flex items-center gap-3 transition-all duration-300";
-        benefitIcon.textContent = "💡";
-        benefitText.textContent = "Recuerde: si adquiere lentes de seguridad o de oficina, los exámenes son GRATIS.";
-      }
+        btnPerson.classList.add(...activeClasses);
+        btnPerson.classList.remove('text-slate-300', 'hover:text-white');
+        btnCompany.classList.remove(...activeClasses);
+        btnCompany.classList.add('text-slate-300', 'hover:text-white');
 
-      // Volume discount applies only to larger groups to motivate sales
-      let discountFactor = 1.0;
-      if (colabCount >= 50 && colabCount < 100) {
-        discountFactor = 0.95;
-      } else if (colabCount >= 100) {
-        discountFactor = 0.90;
-      }
+        companyFields.classList.add('hidden');
+        personFields.classList.remove('hidden');
+        formCompanyWrap.classList.add('hidden');
 
-      const totalEstimate = Math.round(colabCount * unitPrice * discountFactor);
-      resultDisplay.textContent = `$${totalEstimate.toLocaleString('es-MX')} MXN`;
+        formTitle.textContent = 'Agende su Cita Personal';
+        formSubtitle.textContent = 'Cuéntenos qué necesita y le confirmaremos un horario en nuestro consultorio.';
+        formNameLabel.textContent = 'Su Nombre';
+        formEmailLabel.textContent = 'Correo Electrónico';
+        formEmail.placeholder = 'nombre@correo.com';
+        submitBtnText.textContent = 'Solicitar Mi Cita';
+      }
     }
-
-    colabSlider.addEventListener('input', calculateInteractiveEstimate);
-    serviceSelector.addEventListener('change', calculateInteractiveEstimate);
-    calculateInteractiveEstimate(); // Run initial calc
 
     // =========================================================
     // ---- LIVE CAMERA LENS TRY-ON ENGINE (face-api.js) ----
@@ -1708,28 +1816,28 @@
     // Catalog of frames available to try on. Each entry has:
     //  - thumb: small preview shown in the catalog grid (can be a regular photo)
     //  - img: the actual overlay drawn on the live camera feed — THIS ONE MUST
-    //    have a transparent background, or it will look like a box on the face.
-    // Replace "img" with your own transparent PNG product photos when ready.
-    const lensCatalogData = [
+    // Demo placeholders shown only as a fallback, so the widget never looks broken
+    // before the real catalog.json has been published. Once you publish your own
+    // catalogo.json with real product photos, these are ignored automatically.
+    const demoLensCatalogData = [
       {
-        id: 'seguridad-ansi',
-        name: 'Seguridad ANSI',
-        thumb: 'https://images.unsplash.com/photo-1504439904031-93ded9f93e4e?w=200&q=80',
+        id: 'demo-seguridad-ansi',
+        name: 'Seguridad ANSI (demo)',
         img: svgToDataUri(placeholderSvgSeguridad)
       },
       {
-        id: 'ejecutivo',
-        name: 'Ejecutivo',
-        thumb: 'https://images.unsplash.com/photo-1574258495973-f010dfbb5371?w=200&q=80',
+        id: 'demo-ejecutivo',
+        name: 'Ejecutivo (demo)',
         img: svgToDataUri(placeholderSvgEjecutivo)
       },
       {
-        id: 'dama-acetato',
-        name: 'Dama Acetato',
-        thumb: 'https://images.unsplash.com/photo-1583394293292-cb7f2e4b2ef3?w=200&q=80',
+        id: 'demo-dama-acetato',
+        name: 'Dama Acetato (demo)',
         img: svgToDataUri(placeholderSvgDama)
       }
     ];
+
+    let lensCatalogData = []; // populated from catalogo.json on load (or demo fallback)
 
     let tryonActiveLensImg = null; // currently selected Image() object to draw
     let tryonModelsLoaded = false;
@@ -1741,12 +1849,48 @@
     const tryonCanvas = document.getElementById('tryonCanvas');
     const tryonCtx = tryonCanvas.getContext('2d');
 
+    // Loads lentes/catalogo.json (published by you via the admin panel + GitHub).
+    // If it's missing, empty, or invalid, falls back to the demo placeholders so
+    // visitors always see something working.
+    async function loadPublishedCatalog() {
+      try {
+        const res = await fetch('lentes/catalogo.json', { cache: 'no-store' });
+        if (!res.ok) throw new Error('catalogo.json not found');
+        const data = await res.json();
+        if (!Array.isArray(data) || data.length === 0) {
+          lensCatalogData = [];
+          renderLensCatalog();
+          return;
+        }
+        lensCatalogData = data.map(item => ({
+          id: item.id,
+          name: item.name,
+          img: item.img.startsWith('http') || item.img.startsWith('data:') ? item.img : `lentes/${item.img}`
+        }));
+        renderLensCatalog();
+      } catch (err) {
+        // No published catalog yet — show demo placeholders instead of an empty widget
+        lensCatalogData = demoLensCatalogData;
+        renderLensCatalog();
+      }
+    }
+
     function renderLensCatalog() {
       const wrap = document.getElementById('lensCatalog');
+      const emptyState = document.getElementById('lensCatalogEmpty');
       wrap.innerHTML = '';
+
+      if (lensCatalogData.length === 0) {
+        emptyState.classList.remove('hidden');
+        emptyState.classList.add('flex');
+        return;
+      }
+      emptyState.classList.add('hidden');
+      emptyState.classList.remove('flex');
+
       lensCatalogData.forEach((lens, idx) => {
         const btn = document.createElement('button');
-        btn.className = 'lens-thumb-btn group relative aspect-square rounded-xl overflow-hidden border-2 border-white/10 hover:border-brand-sky/50 transition-all duration-300 bg-brand-navy flex items-center justify-center p-2';
+        btn.className = 'lens-thumb-btn group relative aspect-square rounded-xl overflow-hidden border-2 border-white/10 hover:border-brand-sky/50 transition-all duration-300 bg-brand-navy flex items-center justify-center p-2 hover:scale-105';
         btn.setAttribute('data-lens-id', lens.id);
         btn.innerHTML = `
           <img src="${lens.img}" alt="${lens.name}" class="w-full h-auto object-contain">
@@ -1755,6 +1899,10 @@
         btn.addEventListener('click', () => selectLens(lens.img, btn));
         wrap.appendChild(btn);
       });
+
+      // Auto-select the first frame so the widget feels alive immediately
+      const firstBtn = wrap.querySelector('.lens-thumb-btn');
+      if (firstBtn) selectLens(lensCatalogData[0].img, firstBtn);
     }
 
     function selectLens(imgUrl, btnEl) {
@@ -1782,20 +1930,6 @@
         }
       }, 650);
     }
-
-    // Allow uploading a custom frame PNG to try on instantly
-    document.getElementById('customLensUpload').addEventListener('change', (e) => {
-      const file = e.target.files[0];
-      if (!file) return;
-      const reader = new FileReader();
-      reader.onload = (ev) => {
-        document.querySelectorAll('.lens-thumb-btn').forEach(b => b.classList.remove('border-brand-sky', 'ring-2', 'ring-brand-sky/40'));
-        const img = new Image();
-        img.onload = () => { tryonActiveLensImg = img; };
-        img.src = ev.target.result;
-      };
-      reader.readAsDataURL(file);
-    });
 
     async function loadTryonModels() {
       if (tryonModelsLoaded) return;
@@ -1849,6 +1983,8 @@
         tryonCanvas.classList.remove('hidden');
         liveBadge.classList.remove('hidden');
         liveBadge.classList.add('flex');
+        document.getElementById('tryonCaptureBtn').classList.remove('hidden');
+        document.getElementById('tryonCaptureBtn').classList.add('flex');
 
         // Default to first catalog lens selected automatically
         const firstThumb = document.querySelector('.lens-thumb-btn');
@@ -1938,8 +2074,127 @@
       tryonCtx.restore();
     }
 
-    // Initialize catalog thumbnails on page load
-    renderLensCatalog();
+    // Initialize catalog: load the published catalogo.json (falls back to demo)
+    loadPublishedCatalog();
+
+    // =========================================================
+    // ---- HIDDEN ADMIN PANEL ----
+    // Convenience gate only — NOT real security. Anyone reading the page
+    // source can see this code. Good enough to keep casual visitors out,
+    // not meant for protecting sensitive information.
+    // =========================================================
+    const ADMIN_ACCESS_CODE = 'eka2026'; // <-- change this to your own code
+
+    let adminLensSessionList = []; // lenses added in this editing session
+
+    function checkAdminUrlHash() {
+      if (window.location.hash === '#admin') {
+        document.getElementById('adminOverlay').classList.remove('hidden');
+        document.getElementById('adminLogin').classList.remove('hidden');
+        document.getElementById('adminDashboard').classList.add('hidden');
+      }
+    }
+    window.addEventListener('hashchange', checkAdminUrlHash);
+    checkAdminUrlHash(); // run once on initial load too
+
+    function adminLogin() {
+      const input = document.getElementById('adminPassInput');
+      const errorMsg = document.getElementById('adminLoginError');
+
+      if (input.value === ADMIN_ACCESS_CODE) {
+        document.getElementById('adminLogin').classList.add('hidden');
+        document.getElementById('adminDashboard').classList.remove('hidden');
+        errorMsg.classList.add('hidden');
+        input.value = '';
+        // Pre-load the currently published catalog into the editing list, if any
+        if (adminLensSessionList.length === 0 && lensCatalogData.length > 0 && !lensCatalogData[0].id.startsWith('demo-')) {
+          adminLensSessionList = lensCatalogData.map(l => ({ name: l.name, file: l.img.split('/').pop() }));
+          adminRenderLensList();
+        }
+      } else {
+        errorMsg.classList.remove('hidden');
+      }
+    }
+
+    function closeAdminPanel() {
+      window.location.hash = '';
+      document.getElementById('adminOverlay').classList.add('hidden');
+    }
+
+    function adminAddLens() {
+      const nameInput = document.getElementById('adminLensName');
+      const fileInput = document.getElementById('adminLensFile');
+      const name = nameInput.value.trim();
+      const file = fileInput.value.trim();
+
+      if (!name || !file) {
+        alert('Por favor escriba el nombre del armazón y el nombre del archivo de imagen.');
+        return;
+      }
+      if (!file.toLowerCase().endsWith('.png')) {
+        alert('El archivo debe ser un PNG con fondo transparente (terminar en .png).');
+        return;
+      }
+
+      adminLensSessionList.push({ name, file });
+      nameInput.value = '';
+      fileInput.value = '';
+      nameInput.focus();
+      adminRenderLensList();
+    }
+
+    function adminRemoveLens(index) {
+      adminLensSessionList.splice(index, 1);
+      adminRenderLensList();
+    }
+
+    function adminRenderLensList() {
+      const list = document.getElementById('adminLensList');
+      const emptyMsg = document.getElementById('adminLensListEmpty');
+
+      if (adminLensSessionList.length === 0) {
+        list.innerHTML = '<p id="adminLensListEmpty" class="text-xs text-slate-500 italic">Aún no ha agregado ningún armazón nuevo a esta lista.</p>';
+      } else {
+        list.innerHTML = adminLensSessionList.map((lens, idx) => `
+          <div class="flex items-center justify-between bg-brand-dark border border-white/5 rounded-xl p-3.5">
+            <div class="flex items-center gap-3">
+              <span class="text-base">🕶️</span>
+              <div>
+                <span class="block text-white text-xs font-semibold">${lens.name}</span>
+                <span class="block text-slate-500 text-[10px] font-mono">lentes/${lens.file}</span>
+              </div>
+            </div>
+            <button onclick="adminRemoveLens(${idx})" class="text-red-400 hover:text-red-300 text-xs font-bold uppercase tracking-wide">Quitar</button>
+          </div>
+        `).join('');
+      }
+
+      adminUpdateJsonOutput();
+    }
+
+    function adminUpdateJsonOutput() {
+      const jsonData = adminLensSessionList.map((lens, idx) => ({
+        id: 'lente-' + (idx + 1) + '-' + lens.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, ''),
+        name: lens.name,
+        img: lens.file
+      }));
+      document.getElementById('adminJsonOutput').value = JSON.stringify(jsonData, null, 2);
+    }
+
+    function adminCopyJson() {
+      const textarea = document.getElementById('adminJsonOutput');
+      if (adminLensSessionList.length === 0) {
+        alert('Agregue al menos un armazón antes de copiar el código.');
+        return;
+      }
+      textarea.select();
+      document.execCommand('copy');
+      navigator.clipboard?.writeText(textarea.value).catch(() => {});
+
+      const confirmMsg = document.getElementById('adminCopyConfirm');
+      confirmMsg.classList.remove('hidden');
+      setTimeout(() => confirmMsg.classList.add('hidden'), 4000);
+    }
 
     // Stop camera if user navigates away from the section to save battery/privacy
     document.addEventListener('visibilitychange', () => {
@@ -1947,12 +2202,62 @@
         tryonStream.getTracks().forEach(t => t.stop());
         tryonStream = null;
         tryonVideo.srcObject = null;
+        document.getElementById('tryonCaptureBtn').classList.add('hidden');
+        document.getElementById('tryonCaptureBtn').classList.remove('flex');
         if (tryonRafId) {
           cancelAnimationFrame(tryonRafId);
           tryonRafId = null;
         }
       }
     });
+
+    // Take a snapshot combining the live video frame + the drawn lens overlay,
+    // then offer it as a downloadable image. A fun, shareable touch on top of
+    // the try-on experience — mirrored back to normal (un-flipped) for a
+    // natural-looking photo, with a small Visión EKA watermark.
+    function captureTryOnPhoto() {
+      if (!tryonVideo.srcObject) return;
+
+      const snapCanvas = document.createElement('canvas');
+      snapCanvas.width = tryonCanvas.width;
+      snapCanvas.height = tryonCanvas.height;
+      const snapCtx = snapCanvas.getContext('2d');
+
+      // Flip horizontally so the saved photo looks natural (matches what the
+      // user sees mirrored on screen), then draw video + lens overlay together.
+      snapCtx.save();
+      snapCtx.translate(snapCanvas.width, 0);
+      snapCtx.scale(-1, 1);
+      snapCtx.drawImage(tryonVideo, 0, 0, snapCanvas.width, snapCanvas.height);
+      snapCtx.drawImage(tryonCanvas, 0, 0, snapCanvas.width, snapCanvas.height);
+      snapCtx.restore();
+
+      // Small watermark, bottom-right, drawn after the flip restore so it reads correctly
+      const padding = 18;
+      snapCtx.font = `${Math.round(snapCanvas.width * 0.028)}px sans-serif`;
+      snapCtx.textAlign = 'right';
+      snapCtx.fillStyle = 'rgba(255,255,255,0.85)';
+      snapCtx.shadowColor = 'rgba(0,0,0,0.6)';
+      snapCtx.shadowBlur = 6;
+      snapCtx.fillText('👁️ Visión EKA', snapCanvas.width - padding, snapCanvas.height - padding);
+
+      snapCanvas.toBlob((blob) => {
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = 'vision-eka-pruebatelo.png';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        setTimeout(() => URL.revokeObjectURL(url), 2000);
+      }, 'image/png');
+
+      // Quick playful confirmation flash on the capture button itself
+      const btn = document.getElementById('tryonCaptureBtn');
+      const originalHTML = btn.innerHTML;
+      btn.innerHTML = '✅ ¡Foto guardada!';
+      setTimeout(() => { btn.innerHTML = originalHTML; }, 1800);
+    }
 
     // ---- 4-Question Autodiagnostic Quiz Engine ----
     let quizScore = 0;
@@ -2178,30 +2483,51 @@
     // ---- Form Submission Logic ----
     function submitCorporateForm() {
       const name = document.getElementById('formName').value.trim();
-      const company = document.getElementById('formCompany').value.trim();
       const phone = document.getElementById('formPhone').value.trim();
       const email = document.getElementById('formEmail').value.trim();
-      const colabCount = colabSlider.value;
-      const selectedServiceText = serviceSelector.options[serviceSelector.selectedIndex].text;
 
-      if (!name || !company || !phone || !email) {
-        openSuccessModal('Por favor, complete todos los campos requeridos en el formulario (Nombre, Empresa, Teléfono y Correo) antes de enviar su solicitud.');
-        return;
+      if (currentFormAudience === 'company') {
+        const company = document.getElementById('formCompany').value.trim();
+        const colabCount = colabInput.value;
+        const selectedServiceText = serviceSelector.options[serviceSelector.selectedIndex].text;
+
+        if (!name || !company || !phone || !email) {
+          openSuccessModal('Por favor, complete todos los campos requeridos en el formulario (Nombre, Empresa, Teléfono y Correo) antes de enviar su solicitud.');
+          return;
+        }
+
+        openSuccessModal(`¡Muchas gracias ${name}! Hemos recibido su solicitud corporativa para la empresa "${company}". Erika Quijada preparará un dossier formal para atender la campaña de salud visual de sus ${colabCount} colaboradores bajo el servicio de "${selectedServiceText}". Nos comunicaremos con usted a la brevedad.`);
+      } else {
+        const personServiceText = document.getElementById('personService').options[document.getElementById('personService').selectedIndex].text;
+
+        if (!name || !phone || !email) {
+          openSuccessModal('Por favor, complete su Nombre, Teléfono y Correo antes de enviar su solicitud.');
+          return;
+        }
+
+        openSuccessModal(`¡Muchas gracias ${name}! Hemos recibido su solicitud para agendar: "${personServiceText}". Nos comunicaremos con usted a la brevedad para confirmar fecha y horario en nuestro consultorio.`);
       }
-
-      openSuccessModal(`¡Muchas gracias ${name}! Hemos recibido su solicitud corporativa para la empresa "${company}". Erika Quijada preparará un dossier formal para atender la campaña de salud visual de sus ${colabCount} colaboradores bajo el servicio de "${selectedServiceText}". Nos comunicaremos con usted a la brevedad.`);
     }
 
     function sendQuickWhatsApp() {
       const name = document.getElementById('formName').value.trim();
-      const company = document.getElementById('formCompany').value.trim();
-      const colabCount = colabSlider.value;
-      const selectedServiceText = serviceSelector.options[serviceSelector.selectedIndex].text;
 
-      let msg = `Hola Lic. Erika Quijada. Me interesa agendar una jornada de salud visual móvil.`;
-      if (name) msg += ` Mi nombre es ${name}.`;
-      if (company) msg += ` Represento a la empresa: ${company}.`;
-      msg += ` Estimamos atender a un grupo aproximado de ${colabCount} colaboradores para el servicio de: ${selectedServiceText}.`;
+      let msg;
+      if (currentFormAudience === 'company') {
+        const company = document.getElementById('formCompany').value.trim();
+        const colabCount = colabInput.value;
+        const selectedServiceText = serviceSelector.options[serviceSelector.selectedIndex].text;
+
+        msg = `Hola Lic. Erika Quijada. Me interesa agendar una jornada de salud visual móvil.`;
+        if (name) msg += ` Mi nombre es ${name}.`;
+        if (company) msg += ` Represento a la empresa: ${company}.`;
+        msg += ` Estimamos atender a un grupo aproximado de ${colabCount} colaboradores para el servicio de: ${selectedServiceText}.`;
+      } else {
+        const personServiceText = document.getElementById('personService').options[document.getElementById('personService').selectedIndex].text;
+        msg = `Hola Lic. Erika Quijada. Me gustaría agendar una cita personal.`;
+        if (name) msg += ` Mi nombre es ${name}.`;
+        msg += ` Estoy interesado(a) en: ${personServiceText}.`;
+      }
 
       window.open(`https://wa.me/524421295277?text=${encodeURIComponent(msg)}`, '_blank');
     }
