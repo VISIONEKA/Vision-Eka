@@ -1,0 +1,981 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Visión EKA Kids - Cuidado visual divertido y profesional para niños en Querétaro. Detectamos a tiempo problemas de visión que afectan el aprendizaje, con armazones resistentes y coloridos pensados para ellos.">
+  <title>Visión EKA Kids | Cuidado Visual para Niños en Querétaro</title>
+
+  <!-- Fonts & Typography (same family as the main site, for visual consistency) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CSS & AOS Animations -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://unpkg.com/aos@2.3.1/dist/aos.css">
+
+  <!-- Face detection engine for the live try-on widget (lenses + crowns) -->
+  <script defer src="https://cdn.jsdelivr.net/npm/@vladmandic/face-api/dist/face-api.js"></script>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              navy: '#FFFFFF',
+              dark: '#F7FAFC',
+              mid: '#EDF4F7',
+              light: '#E2F0F2',
+              sky: '#86B8CB',
+              teal: '#5FA8C7',
+              gold: '#5FA8C7',
+              coral: '#5FA8C7',
+              sun: '#B0FEFF',
+              cyan: '#B0FEFF',
+              ink: '#1A2F4F'
+            }
+          },
+          fontFamily: {
+            sans: ['Plus Jakarta Sans', 'sans-serif'],
+            display: ['Space Grotesk', 'sans-serif']
+          },
+          borderRadius: {
+            '4xl': '2rem',
+            '5xl': '2.5rem'
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: #EDF4F7; }
+    ::-webkit-scrollbar-thumb { background: #86B8CB; border-radius: 10px; }
+
+    .bento-card {
+      transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+      border: 1px solid rgba(15, 27, 45, 0.04);
+    }
+    .bento-card:hover {
+      transform: translateY(-6px) rotate(-0.5deg);
+      border-color: rgba(251, 113, 133, 0.3);
+      box-shadow: 0 30px 60px -20px rgba(251, 113, 133, 0.2);
+    }
+
+    .float-bob {
+      animation: floatBob 4s ease-in-out infinite;
+    }
+    @keyframes floatBob {
+      0%, 100% { transform: translateY(0) rotate(-2deg); }
+      50% { transform: translateY(-14px) rotate(2deg); }
+    }
+
+    .wiggle-hover:hover {
+      animation: wiggle 0.5s ease-in-out;
+    }
+    @keyframes wiggle {
+      0%, 100% { transform: rotate(0deg) scale(1); }
+      25% { transform: rotate(-4deg) scale(1.05); }
+      75% { transform: rotate(4deg) scale(1.05); }
+    }
+
+    .quiz-step {
+      opacity: 0;
+      transform: translateY(8px);
+    }
+    .quiz-step.fade-in-step {
+      opacity: 1;
+      transform: translateY(0);
+      transition: opacity 0.45s ease, transform 0.45s ease;
+    }
+
+    .shine-cta {
+      position: relative;
+      overflow: hidden;
+      isolation: isolate;
+    }
+    .shine-cta::after {
+      content: '';
+      position: absolute;
+      top: 0; left: -75%;
+      width: 50%; height: 100%;
+      background: linear-gradient(120deg, transparent, rgba(255,255,255,0.45), transparent);
+      transform: skewX(-20deg);
+      transition: left 0.75s cubic-bezier(0.16, 1, 0.3, 1);
+      z-index: 1;
+      pointer-events: none;
+    }
+    .shine-cta:hover::after { left: 125%; }
+
+    a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible {
+      outline: 2px solid #86B8CB;
+      outline-offset: 2px;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.001ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.001ms !important;
+      }
+    }
+  </style>
+</head>
+<body class="bg-brand-navy text-slate-700 font-sans antialiased overflow-x-hidden selection:bg-brand-coral selection:text-brand-ink">
+
+  <!-- ========== NAVBAR (consistent with main site, with a "back" link) ========== -->
+  <header class="fixed top-0 left-0 w-full z-50 py-6">
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="flex items-center justify-between bg-brand-dark/70 backdrop-blur-xl border border-slate-900/5 px-6 lg:px-8 py-4 rounded-full shadow-xl">
+
+        <a href="index.html" class="flex items-center gap-3 group">
+          <div class="w-10 h-10 bg-gradient-to-tr from-brand-coral to-brand-sun rounded-xl flex items-center justify-center shadow-lg shadow-brand-coral/25 group-hover:scale-105 transition-all duration-300 wiggle-hover">
+            <span class="text-lg">🧒</span>
+          </div>
+          <div>
+            <span class="font-display font-bold text-xl tracking-tight text-brand-ink block">Visión <span class="text-brand-sky font-extrabold">EKA</span> <span class="text-brand-coral">Kids</span></span>
+            <span class="text-[8px] tracking-widest uppercase text-slate-500 font-extrabold block -mt-1">Cuidado Visual Infantil</span>
+          </div>
+        </a>
+
+        <nav class="hidden lg:flex items-center gap-8">
+          <a href="#porque" class="text-xs font-semibold text-slate-600 hover:text-brand-coral transition-colors tracking-wider uppercase">¿Por qué revisar?</a>
+          <a href="#senales" class="text-xs font-semibold text-slate-600 hover:text-brand-coral transition-colors tracking-wider uppercase">Señales</a>
+          <a href="#pruebatelos" class="text-xs font-semibold text-slate-600 hover:text-brand-coral transition-colors tracking-wider uppercase">Pruébatelos</a>
+          <a href="#quiz" class="text-xs font-semibold text-slate-600 hover:text-brand-coral transition-colors tracking-wider uppercase">Juego Visual</a>
+          <a href="#armazones" class="text-xs font-semibold text-slate-600 hover:text-brand-coral transition-colors tracking-wider uppercase">Armazones</a>
+        </nav>
+
+        <div class="flex items-center gap-4">
+          <a href="index.html" class="hidden sm:inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-slate-600 hover:text-brand-ink transition-colors">
+            ← Sitio principal
+          </a>
+          <a href="#contacto" class="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest bg-gradient-to-r from-brand-coral to-brand-sun text-brand-ink py-3 px-6 rounded-full transition-all hover:shadow-lg hover:shadow-brand-coral/35 transform hover:-translate-y-0.5">
+            Agendar Cita
+          </a>
+        </div>
+
+      </div>
+    </div>
+  </header>
+
+  <!-- ========== HERO ========== -->
+  <section class="relative min-h-screen flex items-center justify-center overflow-hidden pt-28 lg:pt-20">
+    <div class="absolute inset-0 z-0">
+      <img src="https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?w=1600&q=80" alt="Niño feliz con lentes" class="w-full h-full object-cover object-center scale-105 brightness-105">
+      <div class="absolute inset-0 bg-gradient-to-r from-brand-navy via-brand-navy/93 to-brand-navy/55"></div>
+      <div class="absolute inset-0 bg-gradient-to-t from-brand-navy via-transparent to-brand-navy/40"></div>
+    </div>
+
+    <!-- Floating playful shapes -->
+    <div class="absolute top-[18%] left-[8%] text-4xl float-bob pointer-events-none select-none" style="animation-delay: 0s;">⭐</div>
+    <div class="absolute top-[65%] left-[14%] text-3xl float-bob pointer-events-none select-none" style="animation-delay: 1.2s;">🌈</div>
+    <div class="absolute top-[25%] right-[10%] text-4xl float-bob pointer-events-none select-none" style="animation-delay: 2s;">👓</div>
+    <div class="absolute top-[70%] right-[16%] text-3xl float-bob pointer-events-none select-none" style="animation-delay: 0.6s;">✨</div>
+
+    <div class="max-w-7xl mx-auto px-6 w-full relative z-20 py-12">
+      <div class="flex flex-col items-center text-center max-w-4xl mx-auto">
+
+        <div class="inline-flex items-center gap-2 px-4 py-2 bg-brand-coral/10 border border-brand-coral/30 rounded-full text-brand-coral text-xs font-bold uppercase mb-8 backdrop-blur-md" data-aos="fade-down">
+          <span class="w-2 h-2 rounded-full bg-brand-sun animate-pulse"></span>
+          Visión EKA Kids • Para los más pequeños de la familia
+        </div>
+
+        <h1 class="font-display font-bold text-4xl sm:text-5xl lg:text-7xl tracking-tight text-brand-ink leading-[1.08] mb-6" data-aos="fade-up" data-aos-delay="100">
+          Que ver bien <span class="bg-clip-text text-transparent bg-gradient-to-r from-brand-coral via-brand-sun to-amber-500">nunca</span> sea el problema para aprender.
+        </h1>
+
+        <p class="text-slate-600 text-lg sm:text-xl leading-relaxed mb-10 font-medium max-w-2xl" data-aos="fade-up" data-aos-delay="200">
+          Revisamos la vista de tus hijos con la misma seriedad clínica de siempre — pero con paciencia, colores y un poquito de juego, para que no le tengan miedo a la consulta.
+        </p>
+
+        <div class="flex flex-col sm:flex-row gap-4 w-full sm:w-auto justify-center" data-aos="fade-up" data-aos-delay="300">
+          <a href="#contacto" class="shine-cta flex items-center justify-center gap-3 bg-gradient-to-r from-brand-coral to-brand-sun text-brand-ink font-extrabold py-4 px-10 rounded-full shadow-lg shadow-brand-coral/30 transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
+            🧸 Agendar Examen para mi Hijo/a
+          </a>
+          <a href="#quiz" class="flex items-center justify-center gap-3 bg-slate-900/5 border border-slate-900/10 text-slate-700 hover:text-brand-ink hover:border-brand-coral/30 font-bold py-4 px-10 rounded-full transition-all duration-300 hover:-translate-y-1">
+            🎮 Probar el Juego Visual
+          </a>
+        </div>
+
+        <a href="#pruebatelos" class="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-brand-sky hover:text-brand-coral transition-colors mt-6" data-aos="fade-up" data-aos-delay="350">
+          👑 ¿Ya viste el probador de lentes y coronas en vivo?
+        </a>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== ¿POR QUÉ REVISAR LA VISTA DE MI HIJO? ========== -->
+  <section id="porque" class="py-24 bg-brand-dark/40 border-y border-slate-900/5">
+    <div class="max-w-7xl mx-auto px-6">
+
+      <div class="text-center max-w-3xl mx-auto mb-16" data-aos="fade-up">
+        <span class="text-brand-coral font-bold text-xs tracking-widest uppercase mb-3 block">Para Papás y Mamás</span>
+        <h2 class="font-display font-bold text-3xl sm:text-4xl tracking-tight text-brand-ink mb-4">¿Por qué revisar la vista de mi hijo?</h2>
+        <p class="text-slate-500 text-sm max-w-xl mx-auto">Muchos niños no saben que ven mal — simplemente creen que así es como todos ven el mundo. Por eso la detección temprana hace toda la diferencia.</p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+
+        <div class="bento-card rounded-3xl bg-brand-navy p-8 flex flex-col text-center items-center" data-aos="fade-up">
+          <div class="w-16 h-16 rounded-2xl bg-brand-sky/10 flex items-center justify-center text-3xl mb-5">📚</div>
+          <h3 class="font-display font-bold text-lg text-brand-ink mb-3">Aprendizaje y Rendimiento</h3>
+          <p class="text-xs text-slate-500 leading-relaxed">Hasta 8 de cada 10 cosas que un niño aprende en la escuela entran por la vista. Un problema visual no detectado puede confundirse con falta de atención.</p>
+        </div>
+
+        <div class="bento-card rounded-3xl bg-brand-navy p-8 flex flex-col text-center items-center" data-aos="fade-up" data-aos-delay="100">
+          <div class="w-16 h-16 rounded-2xl bg-brand-coral/10 flex items-center justify-center text-3xl mb-5">⏳</div>
+          <h3 class="font-display font-bold text-lg text-brand-ink mb-3">Ventana de Desarrollo</h3>
+          <p class="text-xs text-slate-500 leading-relaxed">El sistema visual de un niño se sigue desarrollando hasta los 7-9 años. Entre más temprano se detecte una dificultad, más fácil es corregirla.</p>
+        </div>
+
+        <div class="bento-card rounded-3xl bg-brand-navy p-8 flex flex-col text-center items-center" data-aos="fade-up" data-aos-delay="200">
+          <div class="w-16 h-16 rounded-2xl bg-brand-sun/10 flex items-center justify-center text-3xl mb-5">😊</div>
+          <h3 class="font-display font-bold text-lg text-brand-ink mb-3">Confianza y Autoestima</h3>
+          <p class="text-xs text-slate-500 leading-relaxed">Ver bien la pizarra, el balón o las caras de sus amigos también es cuestión de confianza dentro y fuera del salón de clases.</p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== SEÑALES DE ALERTA ========== -->
+  <section id="senales" class="py-24 bg-brand-navy">
+    <div class="max-w-7xl mx-auto px-6">
+
+      <div class="text-center max-w-3xl mx-auto mb-16" data-aos="fade-up">
+        <span class="text-brand-sky font-bold text-xs tracking-widest uppercase mb-3 block">Cosas que puedes notar en casa</span>
+        <h2 class="font-display font-bold text-3xl sm:text-4xl tracking-tight text-brand-ink mb-4">Señales que vale la pena observar</h2>
+        <p class="text-slate-500 text-sm max-w-xl mx-auto">Ninguna de estas señales significa algo grave por sí sola — pero si notas varias, es un buen momento para hacer una revisión.</p>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+
+        <div class="rounded-3xl border border-slate-900/5 bg-brand-dark p-6 text-center hover:border-brand-coral/30 hover:-translate-y-1 transition-all duration-300" data-aos="fade-up">
+          <span class="text-3xl block mb-3">📺</span>
+          <p class="text-xs text-slate-600 font-semibold leading-relaxed">Se acerca mucho a la tele, tablet o pizarrón</p>
+        </div>
+
+        <div class="rounded-3xl border border-slate-900/5 bg-brand-dark p-6 text-center hover:border-brand-coral/30 hover:-translate-y-1 transition-all duration-300" data-aos="fade-up" data-aos-delay="80">
+          <span class="text-3xl block mb-3">😣</span>
+          <p class="text-xs text-slate-600 font-semibold leading-relaxed">Entrecierra los ojos o ladea la cabeza para ver</p>
+        </div>
+
+        <div class="rounded-3xl border border-slate-900/5 bg-brand-dark p-6 text-center hover:border-brand-coral/30 hover:-translate-y-1 transition-all duration-300" data-aos="fade-up" data-aos-delay="160">
+          <span class="text-3xl block mb-3">📖</span>
+          <p class="text-xs text-slate-600 font-semibold leading-relaxed">Pierde el renglón al leer o usa el dedo con frecuencia</p>
+        </div>
+
+        <div class="rounded-3xl border border-slate-900/5 bg-brand-dark p-6 text-center hover:border-brand-coral/30 hover:-translate-y-1 transition-all duration-300" data-aos="fade-up" data-aos-delay="240">
+          <span class="text-3xl block mb-3">🤕</span>
+          <p class="text-xs text-slate-600 font-semibold leading-relaxed">Se queja de dolor de cabeza después de leer o tarea</p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== JUEGO VISUAL (KID-FRIENDLY QUIZ) ========== -->
+  <section id="quiz" class="py-24 lg:py-32 bg-brand-dark/40 border-y border-slate-900/5 relative overflow-hidden">
+    <div class="absolute top-[10%] left-[-8%] w-[400px] h-[400px] bg-brand-coral/5 rounded-full pointer-events-none"></div>
+    <div class="absolute bottom-[5%] right-[-8%] w-[350px] h-[350px] bg-brand-sun/10 rounded-full pointer-events-none"></div>
+
+    <div class="max-w-3xl mx-auto px-6 relative z-10">
+
+      <div class="text-center mb-14" data-aos="fade-up">
+        <span class="text-brand-coral font-bold text-xs tracking-widest uppercase mb-3 block">¡Un Juego Rápido!</span>
+        <h2 class="font-display font-bold text-3xl sm:text-4xl tracking-tight text-brand-ink mb-5">¿Cómo ve mi hijo/a? Juguemos a descubrirlo</h2>
+        <p class="text-slate-500 text-sm max-w-xl mx-auto">3 preguntas sencillas, pensadas para responder junto a tu hijo/a. No sustituye un examen real, pero es un buen primer paso — ¡y se vale reír!</p>
+      </div>
+
+      <div class="bg-brand-navy border border-slate-900/5 rounded-4xl shadow-2xl overflow-hidden" data-aos="zoom-in">
+
+        <div class="h-1.5 w-full bg-slate-900/5">
+          <div id="kidsQuizBar" class="h-full bg-gradient-to-r from-brand-coral to-brand-sun transition-all duration-500 ease-out" style="width: 0%;"></div>
+        </div>
+
+        <div class="p-8 sm:p-12">
+
+          <div id="kidsStepLabel" class="mb-8">
+            <span class="text-[10px] uppercase tracking-widest font-extrabold text-brand-coral">Pregunta 1 de 3</span>
+          </div>
+
+          <!-- Question 1 -->
+          <div id="kidsQ1" class="quiz-step fade-in-step">
+            <div class="text-5xl mb-5 text-center">📺</div>
+            <h3 class="font-display font-bold text-xl sm:text-2xl text-brand-ink mb-8 leading-snug text-center">¿Tu hijo/a se sienta muy cerca de la pantalla para ver bien?</h3>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <button onclick="kidsAnswer(1, 1)" class="text-left p-5 rounded-2xl bg-slate-900/5 border border-slate-900/10 hover:border-brand-coral/40 hover:bg-brand-coral/5 transition-all duration-300 text-slate-700 font-semibold text-sm">😟 Sí, casi siempre</button>
+              <button onclick="kidsAnswer(1, 0)" class="text-left p-5 rounded-2xl bg-slate-900/5 border border-slate-900/10 hover:border-brand-coral/40 hover:bg-brand-coral/5 transition-all duration-300 text-slate-700 font-semibold text-sm">😊 No, ve normal</button>
+            </div>
+          </div>
+
+          <!-- Question 2 -->
+          <div id="kidsQ2" class="quiz-step hidden">
+            <div class="text-5xl mb-5 text-center">📖</div>
+            <h3 class="font-display font-bold text-xl sm:text-2xl text-brand-ink mb-8 leading-snug text-center">Cuando lee, ¿se le pierde el renglón o usa el dedo para seguir las letras?</h3>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <button onclick="kidsAnswer(2, 1)" class="text-left p-5 rounded-2xl bg-slate-900/5 border border-slate-900/10 hover:border-brand-coral/40 hover:bg-brand-coral/5 transition-all duration-300 text-slate-700 font-semibold text-sm">😟 Sí, le cuesta seguir</button>
+              <button onclick="kidsAnswer(2, 0)" class="text-left p-5 rounded-2xl bg-slate-900/5 border border-slate-900/10 hover:border-brand-coral/40 hover:bg-brand-coral/5 transition-all duration-300 text-slate-700 font-semibold text-sm">😊 No, lee fluido</button>
+            </div>
+          </div>
+
+          <!-- Question 3 -->
+          <div id="kidsQ3" class="quiz-step hidden">
+            <div class="text-5xl mb-5 text-center">🤕</div>
+            <h3 class="font-display font-bold text-xl sm:text-2xl text-brand-ink mb-8 leading-snug text-center">¿Se queja de dolor de cabeza o se talla mucho los ojos después de la tarea?</h3>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <button onclick="kidsAnswer(3, 1)" class="text-left p-5 rounded-2xl bg-slate-900/5 border border-slate-900/10 hover:border-brand-coral/40 hover:bg-brand-coral/5 transition-all duration-300 text-slate-700 font-semibold text-sm">😟 Sí, seguido</button>
+              <button onclick="kidsAnswer(3, 0)" class="text-left p-5 rounded-2xl bg-slate-900/5 border border-slate-900/10 hover:border-brand-coral/40 hover:bg-brand-coral/5 transition-all duration-300 text-slate-700 font-semibold text-sm">😊 No, casi nunca</button>
+            </div>
+          </div>
+
+          <!-- Result -->
+          <div id="kidsResult" class="quiz-step hidden text-center">
+            <div id="kidsResultIcon" class="text-5xl mb-5">🎈</div>
+            <span class="text-brand-coral font-bold text-xs tracking-widest uppercase mb-3 block">Resultado del juego</span>
+            <h3 id="kidsResultTitle" class="font-display font-bold text-2xl sm:text-3xl text-brand-ink mb-4">¡Todo en orden!</h3>
+            <p id="kidsResultText" class="text-slate-600 text-sm sm:text-base leading-relaxed mb-8 max-w-lg mx-auto">Cargando resultado...</p>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+              <a href="#contacto" class="flex items-center justify-center gap-2 bg-gradient-to-r from-brand-coral to-brand-sun text-brand-ink font-extrabold py-3.5 px-8 rounded-full transition-all hover:-translate-y-0.5 shadow-lg shadow-brand-coral/25">
+                Agendar Examen Real
+              </a>
+              <button onclick="kidsResetQuiz()" class="flex items-center justify-center gap-2 bg-slate-900/5 border border-slate-900/10 text-slate-600 hover:text-brand-ink font-bold py-3.5 px-8 rounded-full transition-all">
+                Jugar de Nuevo
+              </button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <p class="text-center text-[11px] text-slate-500 mt-6 italic">Este juego es solo orientativo y no sustituye un examen optométrico profesional.</p>
+
+    </div>
+  </section>
+
+  <!-- ========== PRUÉBATELOS EN VIVO (lentes + coronas de princesa/príncipe) ========== -->
+  <section id="pruebatelos" class="py-24 lg:py-32 bg-brand-navy relative overflow-hidden">
+    <div class="absolute top-[12%] right-[-10%] w-[400px] h-[400px] bg-brand-cyan/10 rounded-full pointer-events-none"></div>
+    <div class="absolute bottom-[8%] left-[-10%] w-[350px] h-[350px] bg-brand-sky/10 rounded-full pointer-events-none"></div>
+
+    <!-- Floating playful shapes -->
+    <div class="absolute top-[15%] left-[6%] text-3xl float-bob pointer-events-none select-none" style="animation-delay: 0.4s;">👑</div>
+    <div class="absolute top-[70%] right-[8%] text-3xl float-bob pointer-events-none select-none" style="animation-delay: 1.6s;">✨</div>
+
+    <div class="max-w-7xl mx-auto px-6 relative z-10">
+
+      <div class="text-center max-w-3xl mx-auto mb-16" data-aos="fade-up">
+        <span class="text-brand-coral font-bold text-xs tracking-widest uppercase mb-3 block">Probador Mágico en Vivo</span>
+        <h2 class="font-display font-bold text-3xl sm:text-4xl lg:text-5xl tracking-tight text-brand-ink mb-5">¿Quieres ver cómo te quedan? 🪄</h2>
+        <p class="text-slate-500 text-sm sm:text-base leading-relaxed">
+          Prende tu cámara y pruébate lentes divertidos — o conviértete en princesa o príncipe por un momento. Todo pasa en tu navegador, nada se guarda ni se envía a ningún lado.
+        </p>
+      </div>
+
+      <div class="max-w-5xl mx-auto bg-brand-dark/40 border border-slate-900/5 rounded-4xl shadow-2xl overflow-hidden mb-6" data-aos="zoom-in">
+        <div class="grid grid-cols-1 lg:grid-cols-[1fr_320px]">
+
+          <!-- Camera viewport -->
+          <div class="relative bg-black aspect-[4/3] lg:aspect-auto lg:min-h-[480px] flex items-center justify-center overflow-hidden">
+
+            <video id="kidsTryonVideo" autoplay muted playsinline class="absolute inset-0 w-full h-full object-cover scale-x-[-1] hidden"></video>
+            <canvas id="kidsTryonCanvas" class="absolute inset-0 w-full h-full scale-x-[-1] hidden"></canvas>
+
+            <!-- Idle state -->
+            <div id="kidsTryonIdle" class="relative z-10 flex flex-col items-center text-center p-8">
+              <div class="w-16 h-16 rounded-2xl bg-brand-coral/10 border border-brand-coral/20 flex items-center justify-center mb-5 text-3xl wiggle-hover">🪄</div>
+              <p class="text-slate-300 text-sm mb-6 max-w-xs">Activamos tu cámara solo en este navegador. Ninguna foto se guarda ni se envía a nuestros servidores.</p>
+              <button onclick="kidsStartTryOn()" id="kidsTryonStartBtn" class="shine-cta flex items-center gap-2 bg-gradient-to-r from-brand-coral to-brand-sun text-brand-ink font-extrabold py-3.5 px-7 rounded-full shadow-lg shadow-brand-coral/25 transition-all hover:-translate-y-0.5">
+                📸 Activar Cámara
+              </button>
+            </div>
+
+            <!-- Loading models state -->
+            <div id="kidsTryonLoading" class="hidden absolute inset-0 z-20 flex flex-col items-center justify-center bg-brand-navy/95 text-center p-8">
+              <div class="w-10 h-10 border-2 border-brand-coral/30 border-t-brand-coral rounded-full animate-spin mb-4"></div>
+              <p class="text-slate-300 text-xs uppercase tracking-widest font-bold">Preparando la magia...</p>
+            </div>
+
+            <!-- Error state -->
+            <div id="kidsTryonError" class="hidden absolute inset-0 z-20 flex flex-col items-center justify-center bg-brand-navy/95 text-center p-8">
+              <span class="text-3xl mb-3">😅</span>
+              <p class="text-slate-300 text-xs max-w-xs" id="kidsTryonErrorText">No pudimos abrir tu cámara. Revisa los permisos de tu navegador e inténtalo de nuevo.</p>
+              <button onclick="kidsStartTryOn()" class="mt-4 text-brand-coral text-xs font-bold uppercase tracking-widest underline">Reintentar</button>
+            </div>
+
+            <!-- Live badge -->
+            <div id="kidsTryonLiveBadge" class="hidden absolute top-4 left-4 z-20 items-center gap-2 bg-brand-navy/90 border border-slate-900/10 px-3 py-1.5 rounded-full backdrop-blur-md">
+              <span class="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse"></span>
+              <span class="text-[9px] uppercase font-bold text-brand-ink tracking-widest">En vivo</span>
+            </div>
+
+            <!-- No face detected hint -->
+            <div id="kidsTryonNoFaceHint" class="hidden absolute bottom-4 left-1/2 -translate-x-1/2 z-20 bg-brand-navy/90 border border-slate-900/10 px-4 py-2 rounded-full backdrop-blur-md">
+              <span class="text-[10px] text-brand-ink font-semibold">Acércate un poco a la cámara 🙂</span>
+            </div>
+
+          </div>
+
+          <!-- Catalog / controls panel -->
+          <div class="bg-brand-navy/60 p-6 flex flex-col">
+            <div class="flex items-center justify-between mb-4">
+              <span class="text-[10px] uppercase font-extrabold tracking-widest text-brand-coral block">Elige tu look</span>
+              <span class="text-[9px] text-slate-500">✨ ¡a jugar!</span>
+            </div>
+
+            <div id="kidsLensCatalog" class="grid grid-cols-3 gap-3 mb-5">
+              <!-- Lens/crown options injected by JS -->
+            </div>
+
+            <button onclick="kidsCaptureTryOnPhoto()" id="kidsTryonCaptureBtn" class="hidden flex items-center justify-center gap-2 bg-slate-900/5 border border-slate-900/10 hover:border-brand-coral/40 hover:text-brand-coral text-slate-600 font-bold text-[11px] uppercase tracking-wider py-3 rounded-xl transition-all duration-300 mb-5">
+              📸 Capturar mi foto
+            </button>
+
+            <div class="mt-auto pt-4 border-t border-slate-900/10">
+              <p class="text-[10px] text-slate-500 leading-relaxed">Elige un lente o una corona y muévete frente a la cámara — ¡te sigue a donde vayas!</p>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <p class="text-center text-[11px] text-slate-500 max-w-lg mx-auto">
+        Este probador es solo para divertirse y conocer los modelos. El ajuste y la graduación final siempre se confirman en consultorio.
+      </p>
+
+    </div>
+  </section>
+
+  <!-- ========== ARMAZONES PARA NIÑOS ========== -->
+  <section id="armazones" class="py-24 bg-brand-navy">
+    <div class="max-w-7xl mx-auto px-6">
+
+      <div class="text-center max-w-3xl mx-auto mb-16" data-aos="fade-up">
+        <span class="text-brand-sky font-bold text-xs tracking-widest uppercase mb-3 block">Hechos para Sobrevivir el Recreo</span>
+        <h2 class="font-display font-bold text-3xl sm:text-4xl tracking-tight text-brand-ink mb-4">Armazones resistentes y a su gusto</h2>
+        <p class="text-slate-500 text-sm max-w-xl mx-auto">Materiales flexibles de alta resistencia a caídas y dobleces, en colores y diseños que ellos mismos elegirán con gusto.</p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+
+        <div class="bento-card rounded-3xl overflow-hidden bg-brand-dark flex flex-col" data-aos="fade-up">
+          <div class="h-48 bg-gradient-to-br from-brand-coral/20 to-brand-sun/20 flex items-center justify-center text-6xl">🕶️</div>
+          <div class="p-6 flex flex-col flex-grow">
+            <span class="text-[9px] font-extrabold text-brand-coral uppercase tracking-widest mb-1.5 block">Flex Indestructible</span>
+            <h4 class="font-display font-bold text-base text-brand-ink mb-2">Línea Aventura</h4>
+            <p class="text-xs text-slate-500 leading-relaxed mb-4">Bisagras de silicón que se doblan sin romperse — ideal para los más activos.</p>
+            <button onclick="kidsGoTryOnLens('kids-star')" class="mt-auto flex items-center justify-center gap-2 text-[10px] font-bold uppercase tracking-widest text-brand-coral border border-brand-coral/30 hover:bg-brand-coral/10 rounded-full py-2.5 transition-all duration-300">
+              📸 Pruébatelo en vivo
+            </button>
+          </div>
+        </div>
+
+        <div class="bento-card rounded-3xl overflow-hidden bg-brand-dark flex flex-col" data-aos="fade-up" data-aos-delay="100">
+          <div class="h-48 bg-gradient-to-br from-brand-sky/20 to-brand-teal/20 flex items-center justify-center text-6xl">🦖</div>
+          <div class="p-6 flex flex-col flex-grow">
+            <span class="text-[9px] font-extrabold text-brand-sky uppercase tracking-widest mb-1.5 block">Diseños Temáticos</span>
+            <h4 class="font-display font-bold text-base text-brand-ink mb-2">Línea Exploradores</h4>
+            <p class="text-xs text-slate-500 leading-relaxed mb-4">Dinosaurios, espacio y animales — para que usar lentes sea parte de su personalidad, no algo que esconder.</p>
+            <button onclick="kidsGoTryOnLens('kids-dino')" class="mt-auto flex items-center justify-center gap-2 text-[10px] font-bold uppercase tracking-widest text-brand-sky border border-brand-sky/30 hover:bg-brand-sky/10 rounded-full py-2.5 transition-all duration-300">
+              📸 Pruébatelo en vivo
+            </button>
+          </div>
+        </div>
+
+        <div class="bento-card rounded-3xl overflow-hidden bg-brand-dark flex flex-col" data-aos="fade-up" data-aos-delay="200">
+          <div class="h-48 bg-gradient-to-br from-brand-sun/20 to-brand-gold/20 flex items-center justify-center text-6xl">🌟</div>
+          <div class="p-6 flex flex-col flex-grow">
+            <span class="text-[9px] font-extrabold text-brand-gold uppercase tracking-widest mb-1.5 block">Para Primeros Lentes</span>
+            <h4 class="font-display font-bold text-base text-brand-ink mb-2">Línea Primera Vez</h4>
+            <p class="text-xs text-slate-500 leading-relaxed mb-4">Ultraligeros y con ajuste especial para que se acostumbren a usarlos sin molestias.</p>
+            <button onclick="kidsGoTryOnLens('kids-star')" class="mt-auto flex items-center justify-center gap-2 text-[10px] font-bold uppercase tracking-widest text-brand-gold border border-brand-gold/30 hover:bg-brand-gold/10 rounded-full py-2.5 transition-all duration-300">
+              📸 Pruébatelo en vivo
+            </button>
+          </div>
+        </div>
+
+        <div class="bento-card rounded-3xl overflow-hidden bg-brand-dark flex flex-col" data-aos="fade-up" data-aos-delay="300">
+          <div class="h-48 bg-gradient-to-br from-brand-cyan/30 to-brand-sky/20 flex items-center justify-center text-6xl">👑</div>
+          <div class="p-6 flex flex-col flex-grow">
+            <span class="text-[9px] font-extrabold text-brand-sky uppercase tracking-widest mb-1.5 block">Modo Fantasía</span>
+            <h4 class="font-display font-bold text-base text-brand-ink mb-2">Corona de Princesa o Príncipe</h4>
+            <p class="text-xs text-slate-500 leading-relaxed mb-4">Para los días en que quieren ser realeza por un rato — pruébatela en vivo y descubre cuál te gusta más.</p>
+            <div class="mt-auto flex gap-2">
+              <button onclick="kidsGoTryOnLens('kids-princess')" class="flex-1 flex items-center justify-center gap-1 text-[10px] font-bold uppercase tracking-widest text-brand-sky border border-brand-sky/30 hover:bg-brand-sky/10 rounded-full py-2.5 transition-all duration-300">
+                👸 Princesa
+              </button>
+              <button onclick="kidsGoTryOnLens('kids-prince')" class="flex-1 flex items-center justify-center gap-1 text-[10px] font-bold uppercase tracking-widest text-brand-sky border border-brand-sky/30 hover:bg-brand-sky/10 rounded-full py-2.5 transition-all duration-300">
+                🤴 Príncipe
+              </button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== CONTACT CTA ========== -->
+  <section id="contacto" class="py-24 lg:py-32 bg-brand-dark/40 border-t border-slate-900/5">
+    <div class="max-w-3xl mx-auto px-6 text-center">
+      <span class="text-brand-coral font-bold text-xs tracking-widest uppercase mb-3 block">Agenda su Primera Revisión</span>
+      <h2 class="font-display font-bold text-3xl sm:text-4xl tracking-tight text-brand-ink mb-6">Hagamos que cuidar su vista sea fácil y divertido</h2>
+      <p class="text-slate-600 text-sm sm:text-base leading-relaxed mb-10 max-w-xl mx-auto">
+        Cuéntanos la edad de tu hijo/a y qué te gustaría revisar. La Lic. Erika Quijada te contactará para agendar la cita — en consultorio o, si tu escuela organiza una jornada, también en sitio.
+      </p>
+      <div class="flex flex-col sm:flex-row gap-4 justify-center">
+        <a href="https://wa.me/524421295277" onclick="event.preventDefault(); window.open('https://wa.me/524421295277?text=' + encodeURIComponent('Hola, me gustaría agendar un examen de la vista para mi hijo/a 🧒👓'), '_blank');" class="shine-cta flex items-center justify-center gap-2 bg-gradient-to-r from-[#25D366] to-[#128C7E] text-brand-ink py-4 px-8 rounded-full font-bold transition-all hover:-translate-y-0.5 shadow-lg shadow-emerald-500/20">
+          💬 Agendar por WhatsApp
+        </a>
+        <a href="index.html#contact" class="flex items-center justify-center gap-2 bg-slate-900/5 border border-slate-900/10 text-slate-700 hover:text-brand-ink font-bold py-4 px-8 rounded-full transition-all hover:-translate-y-0.5">
+          Ir al formulario completo
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== FOOTER ========== -->
+  <footer class="bg-brand-navy border-t border-slate-900/5 pt-14 pb-8 text-slate-500">
+    <div class="max-w-7xl mx-auto px-6 flex flex-col sm:flex-row items-center justify-between gap-6">
+      <div class="flex items-center gap-3">
+        <div class="w-9 h-9 bg-gradient-to-tr from-brand-coral to-brand-sun rounded-lg flex items-center justify-center text-base">🧒</div>
+        <span class="font-display font-bold text-sm text-brand-ink">Visión EKA <span class="text-brand-coral">Kids</span></span>
+      </div>
+      <p class="text-[11px] text-center">© 2026 Visión EKA. Parte del mismo equipo de salud visual de siempre, ahora pensado para los más pequeños.</p>
+      <a href="index.html" class="text-[11px] font-bold uppercase tracking-widest text-brand-sky hover:text-brand-coral transition-colors">Volver al sitio principal →</a>
+    </div>
+  </footer>
+
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+  <script>
+    AOS.init({ duration: 700, once: true, offset: 40 });
+
+    // ---- Kids 3-question playful quiz engine ----
+    let kidsScore = 0;
+    const kidsTotalSteps = 3;
+
+    function kidsGoToStep(stepKey) {
+      document.querySelectorAll('.quiz-step').forEach(el => {
+        el.classList.add('hidden');
+        el.classList.remove('fade-in-step');
+      });
+      const target = document.getElementById(stepKey);
+      target.classList.remove('hidden');
+      requestAnimationFrame(() => target.classList.add('fade-in-step'));
+    }
+
+    function kidsUpdateProgress(step) {
+      const pct = Math.min((step / kidsTotalSteps) * 100, 100);
+      document.getElementById('kidsQuizBar').style.width = pct + '%';
+      const label = document.getElementById('kidsStepLabel');
+      if (step <= kidsTotalSteps) {
+        label.innerHTML = `<span class="text-[10px] uppercase tracking-widest font-extrabold text-brand-coral">Pregunta ${step} de ${kidsTotalSteps}</span>`;
+      } else {
+        label.innerHTML = `<span class="text-[10px] uppercase tracking-widest font-extrabold text-brand-sky">¡Juego completo!</span>`;
+      }
+    }
+
+    function kidsAnswer(questionNumber, points) {
+      kidsScore += points;
+      const next = questionNumber + 1;
+      if (next <= kidsTotalSteps) {
+        kidsUpdateProgress(next);
+        kidsGoToStep('kidsQ' + next);
+      } else {
+        kidsUpdateProgress(kidsTotalSteps + 1);
+        kidsShowResult();
+      }
+    }
+
+    function kidsShowResult() {
+      const icon = document.getElementById('kidsResultIcon');
+      const title = document.getElementById('kidsResultTitle');
+      const text = document.getElementById('kidsResultText');
+
+      if (kidsScore >= 2) {
+        icon.textContent = '🔎';
+        title.textContent = 'Vale la pena revisarlo de cerca';
+        text.textContent = 'Notamos varias señales que conviene confirmar con un examen real. No es motivo de alarma — entre más pronto se revise, más fácil es ayudar a que vea mejor.';
+      } else if (kidsScore === 1) {
+        icon.textContent = '👀';
+        title.textContent = 'Una señal a vigilar';
+        text.textContent = 'Encontramos una señal aislada. Probablemente no sea nada, pero un chequeo preventivo siempre ayuda a estar tranquilos.';
+      } else {
+        icon.textContent = '🎉';
+        title.textContent = '¡Todo en orden por ahora!';
+        text.textContent = 'No notamos señales de alerta. Aun así, recomendamos un chequeo visual una vez al año — muchos niños no se quejan aunque vean mal.';
+      }
+
+      kidsGoToStep('kidsResult');
+    }
+
+    function kidsResetQuiz() {
+      kidsScore = 0;
+      kidsUpdateProgress(1);
+      kidsGoToStep('kidsQ1');
+    }
+
+    // =========================================================
+    // ---- LIVE CAMERA TRY-ON ENGINE (lenses + crowns) ----
+    // Same face-api.js engine as the main site's "Pruébatelos", extended
+    // with a second overlay mode ("crown") anchored above the eyebrows
+    // instead of over the eyes — used for the princess/prince crowns.
+    // =========================================================
+
+    // Hand-drawn SVG placeholders so the widget always looks alive before
+    // you publish real product photos. Replace these by adding entries to
+    // lentes/catalogo-kids.json (same flow as the main site's admin panel).
+    const kidsPlaceholderLensDino = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 160">
+      <path d="M 178 60 Q 200 50 222 60" stroke="#1A2F4F" stroke-width="9" fill="none" stroke-linecap="round"/>
+      <circle cx="105" cy="78" r="58" fill="rgba(176,254,255,0.35)" stroke="#1A2F4F" stroke-width="9"/>
+      <circle cx="295" cy="78" r="58" fill="rgba(176,254,255,0.35)" stroke="#1A2F4F" stroke-width="9"/>
+      <path d="M 30 65 L -8 50" stroke="#1A2F4F" stroke-width="9" stroke-linecap="round"/>
+      <path d="M 370 65 L 408 50" stroke="#1A2F4F" stroke-width="9" stroke-linecap="round"/>
+      <path d="M 80 30 L 92 8 L 104 30 Z" fill="#5FA8C7"/>
+      <path d="M 296 30 L 308 8 L 320 30 Z" fill="#5FA8C7"/>
+    </svg>`;
+
+    const kidsPlaceholderLensStar = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 160">
+      <path d="M 178 58 Q 200 48 222 58" stroke="#1A2F4F" stroke-width="7" fill="none" stroke-linecap="round"/>
+      <path d="M 35 65 Q 32 30 95 26 Q 165 24 178 58 Q 182 95 140 112 Q 80 122 45 100 Q 32 88 35 65 Z" fill="rgba(134,184,203,0.25)" stroke="#1A2F4F" stroke-width="6.5" stroke-linejoin="round"/>
+      <path d="M 365 65 Q 368 30 305 26 Q 235 24 222 58 Q 218 95 260 112 Q 320 122 355 100 Q 368 88 365 65 Z" fill="rgba(134,184,203,0.25)" stroke="#1A2F4F" stroke-width="6.5" stroke-linejoin="round"/>
+      <path d="M 35 70 L -8 56" stroke="#1A2F4F" stroke-width="6.5" stroke-linecap="round"/>
+      <path d="M 365 70 L 408 56" stroke="#1A2F4F" stroke-width="6.5" stroke-linecap="round"/>
+      <path d="M 100 50 l 4 9 10 1 -7 7 2 10 -9 -5 -9 5 2 -10 -7 -7 10 -1 z" fill="#86B8CB"/>
+      <path d="M 300 50 l 4 9 10 1 -7 7 2 10 -9 -5 -9 5 2 -10 -7 -7 10 -1 z" fill="#86B8CB"/>
+    </svg>`;
+
+    // Princess crown: pastel jewels in the brand blues, sized to sit on the forehead
+    const kidsPlaceholderCrownPrincess = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 220">
+      <path d="M 30 190 L 30 110 L 95 150 L 140 70 L 200 130 L 260 70 L 305 150 L 370 110 L 370 190 Z" fill="#B0FEFF" stroke="#1A2F4F" stroke-width="8" stroke-linejoin="round"/>
+      <rect x="25" y="185" width="350" height="22" rx="6" fill="#86B8CB" stroke="#1A2F4F" stroke-width="6"/>
+      <circle cx="200" cy="118" r="16" fill="#FFFFFF" stroke="#1A2F4F" stroke-width="6"/>
+      <circle cx="120" cy="138" r="11" fill="#86B8CB" stroke="#1A2F4F" stroke-width="5"/>
+      <circle cx="280" cy="138" r="11" fill="#86B8CB" stroke="#1A2F4F" stroke-width="5"/>
+    </svg>`;
+
+    // Prince crown: simpler silhouette, deeper navy jewel tones
+    const kidsPlaceholderCrownPrince = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 220">
+      <path d="M 35 195 L 35 115 L 110 150 L 150 60 L 200 100 L 250 60 L 290 150 L 365 115 L 365 195 Z" fill="#86B8CB" stroke="#1A2F4F" stroke-width="8" stroke-linejoin="round"/>
+      <rect x="30" y="190" width="340" height="22" rx="6" fill="#1A2F4F"/>
+      <circle cx="200" cy="92" r="14" fill="#B0FEFF" stroke="#1A2F4F" stroke-width="6"/>
+      <rect x="130" y="128" width="20" height="20" fill="#FFFFFF" stroke="#1A2F4F" stroke-width="5" transform="rotate(45 140 138)"/>
+      <rect x="250" y="128" width="20" height="20" fill="#FFFFFF" stroke="#1A2F4F" stroke-width="5" transform="rotate(45 260 138)"/>
+    </svg>`;
+
+    function kidsSvgToDataUri(svgString) {
+      return 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svgString);
+    }
+
+    // Catalog: each entry has a "mode" — "lens" overlays on the eyes (like
+    // regular glasses), "crown" overlays above the eyebrows (princess/prince).
+    // Replace "img" with your own transparent PNG photos when ready — same
+    // publishing flow as the main site (see lentes/catalogo.json instructions).
+    const kidsLensCatalogData = [
+      { id: 'kids-dino', name: 'Dino Explorador', mode: 'lens', img: kidsSvgToDataUri(kidsPlaceholderLensDino) },
+      { id: 'kids-star', name: 'Estrella Fugaz', mode: 'lens', img: kidsSvgToDataUri(kidsPlaceholderLensStar) },
+      { id: 'kids-princess', name: 'Corona de Princesa', mode: 'crown', img: kidsSvgToDataUri(kidsPlaceholderCrownPrincess) },
+      { id: 'kids-prince', name: 'Corona de Príncipe', mode: 'crown', img: kidsSvgToDataUri(kidsPlaceholderCrownPrince) }
+    ];
+
+    let kidsTryonActiveImg = null;
+    let kidsTryonActiveMode = 'lens';
+    let kidsTryonModelsLoaded = false;
+    let kidsTryonStream = null;
+    let kidsTryonRafId = null;
+    let kidsTryonSmoothedBox = null;
+
+    const kidsTryonVideo = document.getElementById('kidsTryonVideo');
+    const kidsTryonCanvas = document.getElementById('kidsTryonCanvas');
+    const kidsTryonCtx = kidsTryonCanvas.getContext('2d');
+
+    function kidsRenderLensCatalog() {
+      const wrap = document.getElementById('kidsLensCatalog');
+      wrap.innerHTML = '';
+      kidsLensCatalogData.forEach((lens) => {
+        const btn = document.createElement('button');
+        btn.className = 'kids-lens-thumb-btn group relative aspect-square rounded-xl overflow-hidden border-2 border-slate-900/10 hover:border-brand-coral/50 transition-all duration-300 bg-brand-navy flex items-center justify-center p-2 hover:scale-105 wiggle-hover';
+        btn.setAttribute('data-lens-id', lens.id);
+        const icon = lens.mode === 'crown' ? '👑' : '🕶️';
+        btn.innerHTML = `
+          <img src="${lens.img}" alt="${lens.name}" class="w-full h-auto object-contain">
+          <span class="absolute inset-x-0 bottom-0 bg-brand-navy/90 text-[8px] text-slate-600 font-bold uppercase tracking-wide py-1 text-center">${icon} ${lens.name}</span>
+        `;
+        btn.addEventListener('click', () => kidsSelectLens(lens.img, lens.mode, btn));
+        wrap.appendChild(btn);
+      });
+      const firstBtn = wrap.querySelector('.kids-lens-thumb-btn');
+      if (firstBtn) kidsSelectLens(kidsLensCatalogData[0].img, kidsLensCatalogData[0].mode, firstBtn);
+    }
+
+    function kidsSelectLens(imgUrl, mode, btnEl) {
+      document.querySelectorAll('.kids-lens-thumb-btn').forEach(b => b.classList.remove('border-brand-coral', 'ring-2', 'ring-brand-coral/40'));
+      if (btnEl) btnEl.classList.add('border-brand-coral', 'ring-2', 'ring-brand-coral/40');
+
+      kidsTryonActiveMode = mode;
+      const img = new Image();
+      img.crossOrigin = 'anonymous';
+      img.onload = () => { kidsTryonActiveImg = img; };
+      img.onerror = () => { kidsTryonActiveImg = null; };
+      img.src = imgUrl;
+    }
+
+    // Called from the "armazones" cards ("Pruébatelo en vivo") to jump straight
+    // into the try-on widget with that specific lens or crown preselected.
+    function kidsGoTryOnLens(lensId) {
+      const lens = kidsLensCatalogData.find(l => l.id === lensId);
+      document.getElementById('pruebatelos').scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+      setTimeout(() => {
+        const btn = document.querySelector(`.kids-lens-thumb-btn[data-lens-id="${lensId}"]`);
+        if (lens) kidsSelectLens(lens.img, lens.mode, btn);
+        if (!document.getElementById('kidsTryonVideo').srcObject) {
+          kidsStartTryOn();
+        }
+      }, 650);
+    }
+
+    async function kidsLoadTryonModels() {
+      if (kidsTryonModelsLoaded) return;
+      const MODEL_URL = 'https://cdn.jsdelivr.net/npm/@vladmandic/face-api/model';
+      await Promise.all([
+        faceapi.nets.tinyFaceDetector.loadFromUri(MODEL_URL),
+        faceapi.nets.faceLandmark68Net.loadFromUri(MODEL_URL)
+      ]);
+      kidsTryonModelsLoaded = true;
+    }
+
+    async function kidsStartTryOn() {
+      if (kidsTryonStream && kidsTryonVideo.srcObject) return;
+
+      const idle = document.getElementById('kidsTryonIdle');
+      const loading = document.getElementById('kidsTryonLoading');
+      const errorBox = document.getElementById('kidsTryonError');
+      const liveBadge = document.getElementById('kidsTryonLiveBadge');
+      const errorText = document.getElementById('kidsTryonErrorText');
+
+      idle.classList.add('hidden');
+      errorBox.classList.add('hidden');
+      loading.classList.remove('hidden');
+
+      if (location.protocol !== 'https:' && location.hostname !== 'localhost' && location.hostname !== '127.0.0.1') {
+        loading.classList.add('hidden');
+        errorBox.classList.remove('hidden');
+        errorText.textContent = 'La cámara solo funciona en sitios publicados con HTTPS (por ejemplo, GitHub Pages ya lo da automáticamente).';
+        return;
+      }
+
+      try {
+        await kidsLoadTryonModels();
+
+        kidsTryonStream = await navigator.mediaDevices.getUserMedia({
+          video: { facingMode: 'user', width: { ideal: 960 }, height: { ideal: 720 } },
+          audio: false
+        });
+
+        kidsTryonVideo.srcObject = kidsTryonStream;
+        await new Promise(resolve => { kidsTryonVideo.onloadedmetadata = resolve; });
+        await kidsTryonVideo.play();
+
+        kidsTryonCanvas.width = kidsTryonVideo.videoWidth;
+        kidsTryonCanvas.height = kidsTryonVideo.videoHeight;
+
+        loading.classList.add('hidden');
+        kidsTryonVideo.classList.remove('hidden');
+        kidsTryonCanvas.classList.remove('hidden');
+        liveBadge.classList.remove('hidden');
+        liveBadge.classList.add('flex');
+        document.getElementById('kidsTryonCaptureBtn').classList.remove('hidden');
+        document.getElementById('kidsTryonCaptureBtn').classList.add('flex');
+
+        const firstThumb = document.querySelector('.kids-lens-thumb-btn');
+        if (firstThumb && !kidsTryonActiveImg) {
+          kidsSelectLens(kidsLensCatalogData[0].img, kidsLensCatalogData[0].mode, firstThumb);
+        }
+
+        kidsTryonDetectLoop();
+
+      } catch (err) {
+        console.error('Kids try-on camera error:', err);
+        loading.classList.add('hidden');
+        errorBox.classList.remove('hidden');
+        errorText.textContent = err.name === 'NotAllowedError'
+          ? 'Necesitamos permiso de tu cámara para jugar. Actívalo en la configuración de tu navegador.'
+          : 'No pudimos abrir tu cámara. Revisa que no esté siendo usada por otra aplicación.';
+      }
+    }
+
+    async function kidsTryonDetectLoop() {
+      if (!kidsTryonVideo.srcObject) return;
+
+      const detection = await faceapi
+        .detectSingleFace(kidsTryonVideo, new faceapi.TinyFaceDetectorOptions({ inputSize: 224, scoreThreshold: 0.5 }))
+        .withFaceLandmarks();
+
+      kidsTryonCtx.clearRect(0, 0, kidsTryonCanvas.width, kidsTryonCanvas.height);
+
+      const noFaceHint = document.getElementById('kidsTryonNoFaceHint');
+
+      if (detection) {
+        noFaceHint.classList.add('hidden');
+
+        const landmarks = detection.landmarks;
+        const leftEye = landmarks.getLeftEye();
+        const rightEye = landmarks.getRightEye();
+        const leftBrow = landmarks.getLeftEyeBrow();
+        const rightBrow = landmarks.getRightEyeBrow();
+
+        const leftEyeCenter = kidsAveragePoint(leftEye);
+        const rightEyeCenter = kidsAveragePoint(rightEye);
+        const leftBrowTop = kidsHighestPoint(leftBrow);
+        const rightBrowTop = kidsHighestPoint(rightBrow);
+
+        const target = {
+          lx: leftEyeCenter.x, ly: leftEyeCenter.y,
+          rx: rightEyeCenter.x, ry: rightEyeCenter.y,
+          blx: leftBrowTop.x, bly: leftBrowTop.y,
+          brx: rightBrowTop.x, bry: rightBrowTop.y
+        };
+
+        kidsTryonSmoothedBox = kidsTryonSmoothedBox
+          ? {
+              lx: kidsLerp(kidsTryonSmoothedBox.lx, target.lx, 0.45),
+              ly: kidsLerp(kidsTryonSmoothedBox.ly, target.ly, 0.45),
+              rx: kidsLerp(kidsTryonSmoothedBox.rx, target.rx, 0.45),
+              ry: kidsLerp(kidsTryonSmoothedBox.ry, target.ry, 0.45),
+              blx: kidsLerp(kidsTryonSmoothedBox.blx, target.blx, 0.45),
+              bly: kidsLerp(kidsTryonSmoothedBox.bly, target.bly, 0.45),
+              brx: kidsLerp(kidsTryonSmoothedBox.brx, target.brx, 0.45),
+              bry: kidsLerp(kidsTryonSmoothedBox.bry, target.bry, 0.45)
+            }
+          : target;
+
+        if (kidsTryonActiveImg && kidsTryonActiveImg.complete) {
+          if (kidsTryonActiveMode === 'crown') {
+            kidsDrawCrownOverlay(kidsTryonSmoothedBox);
+          } else {
+            kidsDrawLensOverlay(kidsTryonSmoothedBox);
+          }
+        }
+      } else {
+        noFaceHint.classList.remove('hidden');
+      }
+
+      kidsTryonRafId = requestAnimationFrame(kidsTryonDetectLoop);
+    }
+
+    function kidsAveragePoint(points) {
+      const sum = points.reduce((acc, p) => ({ x: acc.x + p.x, y: acc.y + p.y }), { x: 0, y: 0 });
+      return { x: sum.x / points.length, y: sum.y / points.length };
+    }
+
+    function kidsHighestPoint(points) {
+      // Lowest y value = visually highest point on screen (canvas y grows downward)
+      return points.reduce((top, p) => (p.y < top.y ? p : top), points[0]);
+    }
+
+    function kidsLerp(a, b, t) {
+      return a + (b - a) * t;
+    }
+
+    function kidsDrawLensOverlay(box) {
+      const eyeDistance = Math.hypot(box.rx - box.lx, box.ry - box.ly);
+      const angle = Math.atan2(box.ry - box.ly, box.rx - box.lx);
+
+      const midX = (box.lx + box.rx) / 2;
+      const midY = (box.ly + box.ry) / 2;
+
+      const frameWidth = eyeDistance * 2.35;
+      const frameHeight = frameWidth * (kidsTryonActiveImg.height / kidsTryonActiveImg.width);
+
+      kidsTryonCtx.save();
+      kidsTryonCtx.translate(midX, midY);
+      kidsTryonCtx.rotate(angle);
+      kidsTryonCtx.drawImage(kidsTryonActiveImg, -frameWidth / 2, -frameHeight / 2.1, frameWidth, frameHeight);
+      kidsTryonCtx.restore();
+    }
+
+    function kidsDrawCrownOverlay(box) {
+      // Anchor the crown above the eyebrows, using the same inter-eye
+      // distance for scale and angle so it tracks head tilt naturally.
+      const eyeDistance = Math.hypot(box.rx - box.lx, box.ry - box.ly);
+      const angle = Math.atan2(box.ry - box.ly, box.rx - box.lx);
+
+      const browMidX = (box.blx + box.brx) / 2;
+      const browMidY = (box.bly + box.bry) / 2;
+
+      const crownWidth = eyeDistance * 2.9;
+      const crownHeight = crownWidth * (kidsTryonActiveImg.height / kidsTryonActiveImg.width);
+
+      kidsTryonCtx.save();
+      kidsTryonCtx.translate(browMidX, browMidY);
+      kidsTryonCtx.rotate(angle);
+      // Sit the crown's base just above the eyebrow line
+      kidsTryonCtx.drawImage(kidsTryonActiveImg, -crownWidth / 2, -crownHeight * 0.92, crownWidth, crownHeight);
+      kidsTryonCtx.restore();
+    }
+
+    function kidsCaptureTryOnPhoto() {
+      if (!kidsTryonVideo.srcObject) return;
+
+      const snapCanvas = document.createElement('canvas');
+      snapCanvas.width = kidsTryonCanvas.width;
+      snapCanvas.height = kidsTryonCanvas.height;
+      const snapCtx = snapCanvas.getContext('2d');
+
+      snapCtx.save();
+      snapCtx.translate(snapCanvas.width, 0);
+      snapCtx.scale(-1, 1);
+      snapCtx.drawImage(kidsTryonVideo, 0, 0, snapCanvas.width, snapCanvas.height);
+      snapCtx.drawImage(kidsTryonCanvas, 0, 0, snapCanvas.width, snapCanvas.height);
+      snapCtx.restore();
+
+      const padding = 18;
+      snapCtx.font = `${Math.round(snapCanvas.width * 0.028)}px sans-serif`;
+      snapCtx.textAlign = 'right';
+      snapCtx.fillStyle = 'rgba(255,255,255,0.9)';
+      snapCtx.shadowColor = 'rgba(0,0,0,0.6)';
+      snapCtx.shadowBlur = 6;
+      snapCtx.fillText('👑 Visión EKA Kids', snapCanvas.width - padding, snapCanvas.height - padding);
+
+      snapCanvas.toBlob((blob) => {
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = 'vision-eka-kids-pruebatelo.png';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        setTimeout(() => URL.revokeObjectURL(url), 2000);
+      }, 'image/png');
+
+      const btn = document.getElementById('kidsTryonCaptureBtn');
+      const originalHTML = btn.innerHTML;
+      btn.innerHTML = '✅ ¡Foto guardada!';
+      setTimeout(() => { btn.innerHTML = originalHTML; }, 1800);
+    }
+
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden && kidsTryonStream) {
+        kidsTryonStream.getTracks().forEach(t => t.stop());
+        kidsTryonStream = null;
+        kidsTryonVideo.srcObject = null;
+        document.getElementById('kidsTryonCaptureBtn').classList.add('hidden');
+        document.getElementById('kidsTryonCaptureBtn').classList.remove('flex');
+        if (kidsTryonRafId) {
+          cancelAnimationFrame(kidsTryonRafId);
+          kidsTryonRafId = null;
+        }
+      }
+    });
+
+    kidsRenderLensCatalog();
+  </script>
+
+</body>
+</html>
