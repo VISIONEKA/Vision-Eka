@@ -3,21 +3,15 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Visión EKA - Salud visual móvil para empresas, oficinas, industrias, familias y personas en Querétaro. Llevamos el examen de la vista a tu trabajo, tu fábrica o tu hogar — protección para pantallas, lectura y planta, sin interrumpir tu día.">
-  <meta name="keywords" content="salud visual corporativa Querétaro, examen de la vista Querétaro, lentes de oficina, lentes para computadora, salud visual móvil, lentes de seguridad graduados, NOM-017-STPS Querétaro">
-  <title>Visión EKA | Salud Visual Móvil para Empresas, Oficinas y Familias</title>
+  <meta name="description" content="Visión EKA - Salud visual móvil para empresas, oficinas, industrias, familias, escuelas e iglesias en Querétaro. Llevamos el examen de la vista a donde estés.">
+  <title>Visión EKA | Salud Visual Móvil Completa</title>
   
-  <!-- Fonts & Typography -->
+  <!-- Fonts, Tailwind & AOS -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
-  
-  <!-- Tailwind CSS & AOS Animations -->
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://unpkg.com/aos@2.3.1/dist/aos.css">
-
-  <!-- Face detection engine for the live lens try-on widget -->
-  <script defer src="https://cdn.jsdelivr.net/npm/@vladmandic/face-api/dist/face-api.js"></script>
   
   <script>
     tailwind.config = {
@@ -25,527 +19,405 @@
         extend: {
           colors: {
             brand: {
-              navy: '#FFFFFF',        /* Pure white — main page/card surface */
-              dark: '#F7FAFC',        /* Soft off-white page background */
-              mid: '#EDF4F7',         /* Soft light-blue surface tint, derived from Azul Trato Medio */
-              light: '#E2F0F2',       /* Light border/divider tone, derived from Azul Claro */
-              sky: '#86B8CB',         /* Azul Trato Medio — official EKA secondary accent */
-              teal: '#5FA8C7',        /* Supporting mid blue between navy-deep and sky */
-              gold: '#5FA8C7',        /* Repointed to blue family (was skin-tone) */
-              coral: '#5FA8C7',       /* Repointed to blue family (was skin-tone) */
-              ink: '#1A2F4F',         /* Azul Marino Intenso — official EKA brand color, used as main text/dark accent */
-              cyan: '#B0FEFF',        /* Azul Claro del Precio — official EKA bright highlight, badges, hover */
-              navydeep: '#1A2F4F',    /* Same as ink — explicit alias for dark-surface accents (navbar, footer top, modals) */
-              platinum: '#1A2F4F'     /* Repointed: main text color (kept for backward compatibility with existing classes) */
+              navy: '#FFFFFF', dark: '#F7FAFC', mid: '#EDF4F7', light: '#E2F0F2',
+              sky: '#86B8CB', teal: '#5FA8C7', ink: '#1A2F4F', cyan: '#B0FEFF'
             }
           },
-          fontFamily: {
-            sans: ['Plus Jakarta Sans', 'sans-serif'],
-            display: ['Space Grotesk', 'sans-serif']
-          },
-          borderRadius: {
-            '4xl': '2rem',
-            '5xl': '2.5rem'
-          }
+          fontFamily: { sans: ['Plus Jakarta Sans', 'sans-serif'], display: ['Space Grotesk', 'sans-serif'] }
         }
       }
     }
   </script>
-
   <style>
-    /* Custom Scrollbar */
-    ::-webkit-scrollbar {
-      width: 6px;
-    }
-    ::-webkit-scrollbar-track {
-      background: #F7FAFC;
-    }
-    ::-webkit-scrollbar-thumb {
-      background: #B0FEFF;
-      border-radius: 10px;
-    }
-    ::-webkit-scrollbar-thumb:hover {
-      background: #86B8CB;
-    }
-
-    /* Dynamic scan grid simulation */
-    .hero-scanner-grid {
-      background-size: 50px 50px;
-      background-image: 
-        linear-gradient(to right, rgba(6, 182, 212, 0.04) 1px, transparent 1px),
-        linear-gradient(to bottom, rgba(6, 182, 212, 0.04) 1px, transparent 1px);
-    }
-
-    /* Laser Sweep Animation */
-    @keyframes laserSweep {
-      0% { transform: translateY(-10%); opacity: 0.1; }
-      50% { transform: translateY(110%); opacity: 0.6; }
-      100% { transform: translateY(-10%); opacity: 0.1; }
-    }
-    .laser-line {
-      animation: laserSweep 7s infinite linear;
-    }
-
-    /* Floating Glow Elements */
-    .glow-sphere {
-      filter: blur(140px);
-      mix-blend-mode: screen;
-    }
-    @keyframes floatSphere {
-      0%, 100% { transform: translateY(0px) scale(1); }
-      50% { transform: translateY(-30px) scale(1.05); }
-    }
-    .float-glow {
-      animation: floatSphere 10s infinite ease-in-out;
-    }
-
-    /* Premium card interactions */
-    .bento-card {
-      transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
-      border: 1px solid rgba(255, 255, 255, 0.03);
-    }
-    .bento-card:hover {
-      transform: translateY(-6px);
-      border-color: rgba(6, 182, 212, 0.3);
-      box-shadow: 0 30px 60px -20px rgba(6, 182, 212, 0.15);
-    }
-
-    /* Elegant shine sweep on primary CTAs */
-    .shine-cta {
-      position: relative;
-      overflow: hidden;
-      isolation: isolate;
-    }
-    .shine-cta::after {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: -75%;
-      width: 50%;
-      height: 100%;
-      background: linear-gradient(120deg, transparent, rgba(255,255,255,0.35), transparent);
-      transform: skewX(-20deg);
-      transition: left 0.75s cubic-bezier(0.16, 1, 0.3, 1);
-      z-index: 1;
-      pointer-events: none;
-    }
-    .shine-cta:hover::after {
-      left: 125%;
-    }
-
-    body {
-      animation: pageEntrance 0.6s ease both;
-    }
-    @keyframes pageEntrance {
-      from { opacity: 0; }
-      to { opacity: 1; }
-    }
-
-    @keyframes breatheTag {
-      0%, 100% { letter-spacing: 0.1em; }
-      50% { letter-spacing: 0.16em; }
-    }
-    .breathe-tag {
-      animation: breatheTag 4s ease-in-out infinite;
-    }
-
-    @keyframes marquee {
-      0% { transform: translateX(0%); }
-      100% { transform: translateX(-50%); }
-    }
-    .animate-marquee {
-      animation: marquee 25s linear infinite;
-    }
+    .hero-scanner-grid { background-size: 50px 50px; background-image: linear-gradient(to right, rgba(26,47,79,0.03) 1px, transparent 1px), linear-gradient(to bottom, rgba(26,47,79,0.03) 1px, transparent 1px); }
+    .bento-card { transition: all 0.4s ease; border: 1px solid rgba(0,0,0,0.05); }
+    .bento-card:hover { transform: translateY(-4px); box-shadow: 0 20px 40px rgba(0,0,0,0.05); }
   </style>
 </head>
-<body class="bg-brand-navy text-slate-700 font-sans antialiased overflow-x-hidden selection:bg-brand-sky selection:text-brand-ink">
+<body class="bg-brand-dark text-slate-700 antialiased selection:bg-brand-sky selection:text-brand-ink">
 
-  <!-- ========== FLOATING HEADER & PILL NAVIGATION ========== -->
-  <header id="navbar" class="fixed top-0 left-0 w-full z-50 transition-all duration-500 py-6">
-    <div class="max-w-7xl mx-auto px-6">
-      <div class="flex items-center justify-between bg-brand-dark/30 backdrop-blur-xl border border-slate-900/5 px-6 lg:px-8 py-4 rounded-full shadow-2xl transition-all duration-500" id="navContainer">
-        
-        <!-- Logo -->
-        <a href="#" class="flex items-center gap-3 group focus:outline-none">
-          <div class="w-10 h-10 bg-gradient-to-tr from-brand-sky to-brand-teal rounded-xl flex items-center justify-center shadow-lg shadow-brand-sky/20 group-hover:scale-105 transition-all duration-300">
-            <svg class="w-5 h-5 text-brand-ink" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-              <path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-            </svg>
-          </div>
-          <div>
-            <span class="font-display font-bold text-xl tracking-tight text-brand-ink block">Visión <span class="text-brand-sky font-extrabold">EKA</span></span>
-            <span class="text-[8px] tracking-widest uppercase text-slate-500 font-extrabold block -mt-1">Salud Ocupacional</span>
-          </div>
-        </a>
-
-        <!-- Desktop Navigation Pill links -->
-        <nav class="hidden lg:flex items-center gap-6">
-          <a href="#about" class="text-[11px] font-semibold text-slate-600 hover:text-brand-sky transition-colors tracking-wider uppercase">Nosotros</a>
-          <a href="#services" class="text-[11px] font-semibold text-slate-600 hover:text-brand-sky transition-colors tracking-wider uppercase">Servicios</a>
-          <a href="#simulator" class="text-[11px] font-semibold text-slate-600 hover:text-brand-sky transition-colors tracking-wider uppercase">Probador 👁️</a>
-          <a href="kids.html" class="text-[11px] font-semibold text-brand-coral hover:text-brand-coral/70 transition-colors tracking-wider uppercase">🧒 Kids</a>
-          <a href="#jornadas" class="text-[11px] font-semibold text-slate-600 hover:text-brand-sky transition-colors tracking-wider uppercase">Jornadas</a>
-          <a href="#dashboard" class="text-[11px] font-bold text-indigo-600 hover:text-indigo-800 transition-colors tracking-wider uppercase">💻 Panel Adm</a>
-          <a href="#faq" class="text-[11px] font-semibold text-slate-600 hover:text-brand-sky transition-colors tracking-wider uppercase">Dudas</a>
-        </nav>
-
-        <!-- CTA -->
-        <div class="flex items-center gap-4">
-          <a href="#contact" class="hidden sm:inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest bg-gradient-to-r from-brand-sky to-brand-teal text-brand-ink py-3 px-6 rounded-full transition-all hover:shadow-lg shadow-brand-sky/35">
-            Cotizar Campaña
-          </a>
-          <button id="menuToggle" class="lg:hidden p-2.5 rounded-full text-slate-600 hover:text-brand-ink hover:bg-slate-900/5 transition-all">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16m-7 6h7"/></svg>
-          </button>
-        </div>
-      </div>
+  <!-- ========== NAVBAR ========== -->
+  <header class="fixed top-0 left-0 w-full z-50 py-4 bg-white/80 backdrop-blur-md border-b border-slate-100">
+    <div class="max-w-7xl mx-auto px-6 flex items-center justify-between">
+      <a href="#" class="flex items-center gap-2">
+        <span class="font-display font-bold text-xl text-brand-ink">Visión <span class="text-brand-sky">EKA</span></span>
+      </a>
+      <nav class="hidden lg:flex items-center gap-6 text-xs font-bold uppercase tracking-wider">
+        <a href="#about" class="text-slate-600 hover:text-brand-sky">Nosotros</a>
+        <a href="#sectores" class="text-slate-600 hover:text-brand-sky">Sectores</a>
+        <a href="#test" class="text-slate-600 hover:text-brand-sky">Test Visual</a>
+        <a href="#catalogos" class="text-slate-600 hover:text-brand-sky">Catálogos</a>
+        <a href="#simulator" class="text-slate-600 hover:text-brand-sky">Probador Virtual 👁️</a>
+        <a href="#contact" class="text-slate-600 hover:text-brand-sky">Contacto</a>
+        <button onclick="toggleAdminPanel()" class="text-indigo-600 border border-indigo-200 px-3 py-1 rounded-lg bg-indigo-50 hover:bg-indigo-100 transition-all">💻 Admin</button>
+      </nav>
     </div>
   </header>
 
-  <!-- Mobile Menu Side Drawer -->
-  <div id="mobileMenu" class="fixed inset-0 z-50 bg-brand-navy/98 backdrop-blur-2xl translate-x-full transition-transform duration-500 flex flex-col p-8">
-    <div class="flex items-center justify-between mb-12">
-      <span class="font-display font-bold text-xl">Visión EKA</span>
-      <button id="menuClose" class="p-3 text-slate-500 rounded-full bg-slate-900/5">✕</button>
-    </div>
-    <nav class="flex flex-col gap-6 text-xl font-display font-medium">
-      <a href="#about" class="mobile-link text-slate-600">Nosotros</a>
-      <a href="#services" class="mobile-link text-slate-600">Servicios</a>
-      <a href="#simulator" class="mobile-link text-slate-600">Probador</a>
-      <a href="#jornadas" class="mobile-link text-slate-600">Jornadas</a>
-      <a href="#dashboard" class="mobile-link text-indigo-600 font-bold">💻 Panel Administrativo</a>
-      <a href="#faq" class="mobile-link text-slate-600">Preguntas</a>
-    </nav>
-  </div>
-
-  <!-- ========== CINEMATIC HERO SECTION ========== -->
-  <section id="hero" class="relative min-h-screen flex items-center justify-center overflow-hidden pt-28 lg:pt-20">
-    <div class="absolute inset-0 z-0">
-      <img src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=1600&q=80" alt="Clinica" class="w-full h-full object-cover object-center scale-105 filter brightness-95">
-      <div class="absolute inset-0 opacity-25 hero-scanner-grid"></div>
-      <div class="absolute inset-0 bg-gradient-to-r from-brand-navy via-brand-navy/95 to-brand-navy/60"></div>
-    </div>
-    <div class="max-w-7xl mx-auto px-6 w-full relative z-20 py-12 text-center">
-      <div class="inline-flex items-center gap-2 px-4 py-2 bg-brand-mid/90 border border-brand-sky/30 rounded-full text-brand-sky text-xs font-bold uppercase mb-8 breathe-tag" data-aos="fade-down">
-        Salud Visual Móvil • Empresas, Oficinas y Familias
-      </div>
-      <h1 class="font-display font-bold text-4xl sm:text-5xl lg:text-7xl tracking-tight text-brand-ink leading-[1.08] mb-6" data-aos="fade-up">
-        Protegemos la visión de quienes <span class="bg-clip-text text-transparent bg-gradient-to-r from-brand-sky via-brand-teal to-cyan-600">construyen el futuro.</span>
-      </h1>
-      <p class="text-slate-600 text-lg sm:text-xl leading-relaxed mb-10 font-medium max-w-2xl mx-auto" data-aos="fade-up" data-aos-delay="100">
-        Desde la línea de producción hasta el escritorio de oficina — llevamos clínica óptica de alta precisión a donde tú estés, en todo el Bajío.
-      </p>
-    </div>
-  </section>
-
-  <!-- ========== TRUST LOGOS MARQUEE ========== -->
-  <section class="border-y border-slate-900/5 py-8 bg-brand-dark overflow-hidden relative z-20">
-    <div class="flex items-center gap-6 whitespace-nowrap animate-marquee">
-      <span class="text-xs font-bold uppercase tracking-widest text-slate-500"><span class="w-2 h-2 inline-block rounded-full bg-brand-sky"></span> PLANTA AUTOMOTRIZ QUERÉTARO</span>
-      <span class="text-xs font-bold uppercase tracking-widest text-slate-500"><span class="w-2 h-2 inline-block rounded-full bg-brand-teal"></span> PARQUE INDUSTRIAL BERNARDO QUINTANA</span>
-      <span class="text-xs font-bold uppercase tracking-widest text-slate-500"><span class="w-2 h-2 inline-block rounded-full bg-brand-sky"></span> METALMECÁNICA BAJÍO S.A.</span>
-      <!-- Seamless loop duplicate -->
-      <span class="text-xs font-bold uppercase tracking-widest text-slate-500"><span class="w-2 h-2 inline-block rounded-full bg-brand-sky"></span> PLANTA AUTOMOTRIZ QUERÉTARO</span>
-    </div>
-  </section>
-
-  <!-- ========== STATS STRIP BRIDGE ========== -->
-  <section id="stats" class="relative z-20 max-w-7xl mx-auto px-6 pt-12">
-    <div class="bg-brand-dark/90 border border-slate-900/5 p-8 lg:p-12 rounded-3xl shadow-2xl">
-      <div class="grid grid-cols-2 lg:grid-cols-4 gap-y-10 gap-x-6 text-center">
-        <div class="space-y-2 border-r border-slate-900/5"><div class="text-3xl lg:text-5xl font-display font-extrabold text-brand-ink">5000+</div><span class="text-[10px] tracking-widest uppercase text-slate-500 font-extrabold block">Lentes Entregados</span></div>
-        <div class="space-y-2 lg:border-r border-slate-900/5"><div class="text-3xl lg:text-5xl font-display font-extrabold text-brand-ink">100+</div><span class="text-[10px] tracking-widest uppercase text-slate-500 font-extrabold block">Empresas Aliadas</span></div>
-        <div class="space-y-2 border-r border-slate-900/5"><div class="text-3xl lg:text-5xl font-display font-extrabold text-brand-ink">10000+</div><span class="text-[10px] tracking-widest uppercase text-slate-500 font-extrabold block">Diagnósticos en Sitio</span></div>
-        <div class="space-y-2"><div class="text-3xl lg:text-5xl font-display font-extrabold text-brand-ink">98%</div><span class="text-[10px] tracking-widest uppercase text-slate-500 font-extrabold block">Satisfacción Total</span></div>
+  <!-- ========== HERO ========== -->
+  <section class="relative min-h-[85vh] flex items-center justify-center pt-24 hero-scanner-grid bg-white">
+    <div class="max-w-5xl mx-auto px-6 text-center z-10">
+      <span class="px-4 py-1.5 bg-brand-mid rounded-full text-brand-ink text-xs font-bold uppercase">Salud Visual Ocupacional y Social</span>
+      <h1 class="font-display font-bold text-5xl md:text-6xl text-brand-ink mt-6 leading-tight">Cuidamos tus ojos en donde <br><span class="text-brand-teal">ocurre tu vida.</span></h1>
+      <p class="text-slate-600 mt-4 max-w-xl mx-auto font-medium">Unidades móviles ópticas preparadas para atender empresas, colegios, iglesias y hogares sin que tengas que trasladarte.</p>
+      <div class="mt-8 flex justify-center gap-4">
+        <a href="#contact" class="bg-brand-ink text-white px-6 py-3 rounded-full font-bold text-xs uppercase tracking-wider shadow-lg">Agendar Visita</a>
+        <a href="#simulator" class="bg-brand-light text-brand-ink px-6 py-3 rounded-full font-bold text-xs uppercase tracking-wider">Ver Probador</a>
       </div>
     </div>
   </section>
 
-  <!-- ========== SECCIÓN: NOSOTROS ========== -->
-  <section id="about" class="py-24 max-w-7xl mx-auto px-6 relative z-20" data-aos="fade-up">
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-      <div>
-        <span class="text-xs font-bold uppercase tracking-widest text-brand-sky block mb-2">Sobre Visión EKA</span>
-        <h2 class="font-display font-bold text-3xl sm:text-4xl text-brand-ink mb-6">Llevamos la clínica oftalmológica directo a tu espacio de trabajo o tu hogar</h2>
-        <p class="text-slate-600 leading-relaxed mb-4">Somos especialistas en salud visual ocupacional y familiar en Querétaro. Eliminamos las barreras de traslado y tiempos muertos, gestionando exámenes integrales con equipos portátiles de última generación.</p>
-        <p class="text-slate-600 leading-relaxed">Cumplimos estrictamente con las normativas de salud del trabajo (NOM-017-STPS), garantizando que tus colaboradores cuenten con la protección idónea en planta o corporativo.</p>
-      </div>
-      <div class="rounded-3xl overflow-hidden shadow-xl border border-slate-100">
-        <img src="https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=800&q=80" alt="Examen de la vista móvil" class="w-full h-full object-cover">
-      </div>
-    </div>
-  </section>
-
-  <!-- ========== SECCIÓN: SERVICIOS ========== -->
-  <section id="services" class="py-24 bg-brand-dark/50 border-y border-slate-100 relative z-20" data-aos="fade-up">
+  <!-- ========== SECCIÓN SECTORES ATENDIDOS ========== -->
+  <section id="sectores" class="py-20 bg-slate-50" data-aos="fade-up">
     <div class="max-w-7xl mx-auto px-6">
-      <div class="text-center max-w-3xl mx-auto mb-16">
-        <span class="text-xs font-bold uppercase tracking-widest text-brand-teal block mb-2">Nuestras Soluciones</span>
-        <h2 class="font-display font-bold text-3xl sm:text-4xl text-brand-ink">Servicios Especializados a tu Medida</h2>
+      <div class="text-center mb-12">
+        <span class="text-xs font-bold text-brand-sky uppercase tracking-widest">Cobertura Social</span>
+        <h2 class="font-display font-bold text-3xl text-brand-ink mt-1">Soluciones para cada Comunidad</h2>
       </div>
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-        <div class="bento-card bg-white p-8 rounded-3xl shadow-sm">
-          <div class="w-12 h-12 rounded-2xl bg-brand-light flex items-center justify-center text-xl mb-6">🏢</div>
-          <h3 class="font-display font-bold text-xl text-brand-ink mb-3">Salud Visual Corporativa</h3>
-          <p class="text-xs text-slate-500 leading-relaxed">Exámenes de agudeza visual para personal administrativo. Protección contra luz azul de pantallas y fatiga digital.</p>
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+        <div class="bento-card bg-white p-6 rounded-2xl">
+          <div class="text-2xl mb-3">🏭</div>
+          <h3 class="font-bold text-brand-ink mb-1">Empresarial / Industrial</h3>
+          <p class="text-xs text-slate-500">Cumplimiento estricto de la NOM-017-STPS. Protección ocular graduada para operarios y administrativos.</p>
         </div>
-        <div class="bento-card bg-white p-8 rounded-3xl shadow-sm">
-          <div class="w-12 h-12 rounded-2xl bg-brand-light flex items-center justify-center text-xl mb-6">🏭</div>
-          <h3 class="font-display font-bold text-xl text-brand-ink mb-3">Salud Industrial (NOM-017)</h3>
-          <p class="text-xs text-slate-500 leading-relaxed">Lentes de seguridad graduados con policarbonato de alta resistencia e impactos de acuerdo a requerimientos de seguridad.</p>
+        <div class="bento-card bg-white p-6 rounded-2xl">
+          <div class="text-2xl mb-3">🏫</div>
+          <h3 class="font-bold text-brand-ink mb-1">Escuelas / Universidades</h3>
+          <p class="text-xs text-slate-500">Detección oportuna de problemas de aprendizaje relacionados con la vista en niños y jóvenes.</p>
         </div>
-        <div class="bento-card bg-white p-8 rounded-3xl shadow-sm">
-          <div class="w-12 h-12 rounded-2xl bg-brand-light flex items-center justify-center text-xl mb-6">🏠</div>
-          <h3 class="font-display font-bold text-xl text-brand-ink mb-3">Jornadas Familiares</h3>
-          <p class="text-xs text-slate-500 leading-relaxed">Llevamos el servicio completo a fraccionamientos y hogares en Querétaro, atendiendo desde niños hasta adultos mayores.</p>
+        <div class="bento-card bg-white p-6 rounded-2xl">
+          <div class="text-2xl mb-3">⛪</div>
+          <h3 class="font-bold text-brand-ink mb-1">Iglesias y Asociaciones</h3>
+          <p class="text-xs text-slate-500">Campañas humanitarias de salud visual con subsidios especiales para adultos mayores.</p>
+        </div>
+        <div class="bento-card bg-white p-6 rounded-2xl">
+          <div class="text-2xl mb-3">🏡</div>
+          <h3 class="font-bold text-brand-ink mb-1">Comunidades y Vecinos</h3>
+          <p class="text-xs text-slate-500">Jornadas programadas directo en fraccionamientos o plazas públicas con atención familiar integral.</p>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- ========== SECCIÓN: PROBADOR VIRTUAL (CLIENTE) ========== -->
-  <section id="simulator" class="relative z-20 max-w-7xl mx-auto px-6 py-24" data-aos="fade-up">
-    <div class="text-center max-w-3xl mx-auto mb-10">
-      <span class="text-xs uppercase font-extrabold tracking-widest text-brand-sky block mb-2">Filtro de usuario</span>
-      <h2 class="font-display font-bold text-3xl sm:text-4xl text-brand-ink mb-4">Probador de Lentes en Tiempo Real</h2>
-      <p class="text-slate-600 font-medium">Carga tu foto y selecciona el modelo para previsualizar los marcos.</p>
-    </div>
-
-    <!-- Selector de Modelos Front -->
-    <div class="max-w-xl mx-auto mb-6">
-      <label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-2">Selecciona un modelo de lentes:</label>
-      <div id="catalogContainer" class="grid grid-cols-3 gap-3">
-        <button onclick="selectActiveModel(this, 'model-1')" class="lens-item-btn p-3 bg-brand-dark border-2 border-brand-sky rounded-xl flex flex-col items-center justify-center transition-all">
-          <span class="text-xs font-bold text-brand-ink">EKA Pro Classic</span>
-          <span class="text-[9px] text-slate-400">Negro | 24 pzas</span>
-        </button>
-        <button onclick="selectActiveModel(this, 'model-2')" class="lens-item-btn p-3 bg-brand-navy border border-slate-200 rounded-xl flex flex-col items-center justify-center transition-all">
-          <span class="text-xs font-bold text-brand-ink">Executive Slim</span>
-          <span class="text-[9px] text-slate-400">Plata | 12 pzas</span>
-        </button>
+  <!-- ========== SECCIÓN: TEST VISUAL RÁPIDO ========== -->
+  <section id="test" class="py-20 bg-white" data-aos="fade-up">
+    <div class="max-w-3xl mx-auto px-6 bg-brand-mid/50 p-8 rounded-3xl border border-brand-light">
+      <div class="text-center mb-6">
+        <span class="text-xs font-bold text-brand-teal uppercase">Auto-evaluación</span>
+        <h2 class="font-display font-bold text-2xl text-brand-ink">Test de Sintomatología Visual</h2>
+        <p class="text-xs text-slate-500 mt-1">Responde sinceramente para evaluar si necesitas una consulta inmediata.</p>
       </div>
-    </div>
-
-    <div class="flex flex-col items-center justify-center p-8 bg-brand-dark rounded-3xl border border-slate-900/5 max-w-xl mx-auto shadow-xl">
-      <label class="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-brand-sky/40 rounded-2xl cursor-pointer bg-brand-navy hover:bg-brand-mid/50 transition-all text-center">
-        <span class="text-xs font-semibold text-slate-600">Haz clic para subir tu foto (JPG/PNG)</span>
-        <input id="imageUploader" type="file" accept="image/png, image/jpeg" class="hidden" />
-      </label>
-      <div class="relative mt-8 hidden w-full rounded-2xl overflow-hidden shadow-2xl bg-black/5" id="previewContainer">
-        <img id="userPhoto" src="#" alt="Foto del Cliente" class="w-full h-auto object-contain mx-auto max-h-[400px]" />
-        <canvas id="overlayCanvas" class="absolute top-0 left-0 w-full h-full pointer-events-none"></canvas>
+      <div class="space-y-4 text-sm">
+        <label class="flex items-center gap-3 p-3 bg-white rounded-xl cursor-pointer"><input type="checkbox" class="w-4 h-4 rounded text-brand-sky"> ¿Sufres dolores de cabeza al final del día o jornada laboral?</label>
+        <label class="flex items-center gap-3 p-3 bg-white rounded-xl cursor-pointer"><input type="checkbox" class="w-4 h-4 rounded text-brand-sky"> ¿Sientes ardor, enrojecimiento o resequedad frente a pantallas?</label>
+        <label class="flex items-center gap-3 p-3 bg-white rounded-xl cursor-pointer"><input type="checkbox" class="w-4 h-4 rounded text-brand-sky"> ¿Tienes que entrecerrar los ojos para enfocar letras u objetos lejanos?</label>
+        <button onclick="alert('Resultado sugerido: Presentas indicios de fatiga visual o vicio de refracción. Te recomendamos agendar tu examen con nuestras unidades móviles.')" class="w-full py-3 bg-brand-ink text-white font-bold text-xs uppercase tracking-wider rounded-xl mt-2">Calcular Diagnóstico Previo</button>
       </div>
     </div>
   </section>
 
-  <!-- ========== SECCIÓN: JORNADAS ========== -->
-  <section id="jornadas" class="py-24 bg-brand-dark border-y border-slate-100 relative z-20" data-aos="fade-up">
+  <!-- ========== SECCIÓN: CATÁLOGOS SEGMENTADOS ========== -->
+  <section id="catalogos" class="py-20 bg-slate-50" data-aos="fade-up">
     <div class="max-w-7xl mx-auto px-6">
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-        <div class="order-2 md:order-1 rounded-3xl overflow-hidden shadow-xl">
-          <img src="https://images.unsplash.com/photo-1504813184591-015578574ef5?w=800&q=80" alt="Jornadas Visuales" class="w-full h-full object-cover">
-        </div>
-        <div class="order-1 md:order-2">
-          <span class="text-xs font-bold uppercase tracking-widest text-brand-teal block mb-2">Logística y Logro</span>
-          <h2 class="font-display font-bold text-3xl sm:text-4xl text-brand-ink mb-6">¿Cómo organizamos una Jornada Visual en tu empresa?</h2>
-          <ul class="space-y-4 text-slate-600 text-sm">
-            <li class="flex gap-3"><strong>1. Agendado:</strong> Coordinamos fechas y horarios óptimos para no entorpecer los turnos de trabajo.</li>
-            <li class="flex gap-3"><strong>2. Montaje:</strong> Instalamos nuestra unidad médica portátil en salas de juntas o áreas designadas en menos de 20 minutos.</li>
-            <li class="flex gap-3"><strong>3. Evaluación:</strong> Historial clínico, examen de refracción computarizado y pruebas de diagnóstico de patologías básicas.</li>
-            <li class="flex gap-3"><strong>4. Entrega:</strong> Suministramos las gafas personalizadas y graduadas directamente en la empresa en un lapso récord.</li>
-          </ul>
+      <div class="text-center mb-10">
+        <span class="text-xs font-bold text-brand-sky uppercase">Armazones</span>
+        <h2 class="font-display font-bold text-3xl text-brand-ink支">Explora Nuestros Catálogos</h2>
+      </div>
+      
+      <!-- Navegación de Catálogos -->
+      <div class="flex justify-center gap-2 mb-8 overflow-x-auto pb-2">
+        <button onclick="switchCatalog('caballero')" class="catalog-tab-btn px-4 py-2 bg-brand-ink text-white rounded-lg text-xs font-bold uppercase">🧔 Hombre</button>
+        <button onclick="switchCatalog('dama')" class="catalog-tab-btn px-4 py-2 bg-white text-slate-600 rounded-lg text-xs font-bold uppercase border">👩 Mujer</button>
+        <button onclick="switchCatalog('unisex')" class="catalog-tab-btn px-4 py-2 bg-white text-slate-600 rounded-lg text-xs font-bold uppercase border">🌓 Unisex</button>
+        <button onclick="switchCatalog('sol')" class="catalog-tab-btn px-4 py-2 bg-white text-slate-600 rounded-lg text-xs font-bold uppercase border">☀️ Sol & Playa</button>
+      </div>
+
+      <!-- Grid de Muestra de Productos -->
+      <div id="catalogGrid" class="grid grid-cols-2 md:grid-cols-4 gap-6">
+        <!-- Contenido dinámico controlado por JS -->
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== PROBADOR VIRTUAL CORREGIDO (ELLOS ELIGEN, NO SUBEN FOTOS) ========== -->
+  <section id="simulator" class="py-20 bg-white" data-aos="fade-up">
+    <div class="max-w-4xl mx-auto px-6 text-center">
+      <span class="text-xs uppercase font-extrabold tracking-widest text-brand-teal block mb-1">Espejo Interactivo</span>
+      <h2 class="font-display font-bold text-3xl text-brand-ink mb-4">Probador de Monturas Incorporadas</h2>
+      <p class="text-slate-600 text-sm max-w-xl mx-auto mb-8">Elige cualquiera de los modelos preestablecidos de nuestras colecciones para ver cómo lucen de forma interactiva.</p>
+
+      <!-- Selector de lentes para probar -->
+      <div id="probadorSelectorContainer" class="grid grid-cols-2 sm:grid-cols-4 gap-3 max-w-2xl mx-auto mb-8">
+        <!-- Inyectados dinámicamente desde el admin o por defecto -->
+      </div>
+
+      <!-- Caja del Espejo Virtual (Simulador Gráfico) -->
+      <div class="relative w-full max-w-lg mx-auto h-[350px] bg-slate-100 rounded-3xl overflow-hidden border shadow-inner flex items-center justify-center">
+        <!-- Imagen de Rostro de Muestra Fijo (Simula el maniquí o cámara) -->
+        <img id="mirrorFace" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=500&q=80" alt="Rostro de muestra" class="w-full h-full object-cover">
+        
+        <!-- Capa superpuesta del lente elegido -->
+        <div id="lensOverlayContainer" class="absolute inset-0 flex items-center justify-center pointer-events-none">
+          <div id="lensGraphic" class="w-44 h-16 bg-slate-900/40 rounded-full border-4 border-brand-ink flex items-center justify-around transition-all duration-300">
+            <span class="w-12 h-12 bg-white/20 rounded-full"></span>
+            <span class="w-12 h-12 bg-white/20 rounded-full"></span>
+          </div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- ========== PANEL DE CONTROL (ADMINISTRADOR) ========== -->
-  <section id="dashboard" class="relative z-20 max-w-7xl mx-auto px-6 py-20 bg-slate-50/70 border border-slate-200 rounded-5xl my-12" data-aos="fade-up">
-    <div class="max-w-5xl mx-auto">
-      <div class="flex flex-col md:flex-row md:items-center md:justify-between border-b border-slate-200 pb-6 mb-8 gap-4">
+  <!-- ========== FORMULARIO DE CONTACTO ========== -->
+  <section id="contact" class="py-20 bg-slate-50" data-aos="fade-up">
+    <div class="max-w-md mx-auto px-6 bg-white p-8 rounded-3xl border shadow-sm">
+      <h2 class="font-display font-bold text-2xl text-brand-ink mb-2 text-center">Solicitar Jornada / Datos de Contacto</h2>
+      <p class="text-xs text-slate-500 text-center mb-6">Envíanos tus requerimientos; los datos se guardarán automáticamente en la bandeja del panel administrativo.</p>
+      
+      <form id="contactForm" onsubmit="handleFormSubmit(event)" class="space-y-4">
         <div>
-          <div class="flex items-center gap-2"><span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span><h2 class="font-display font-bold text-2xl text-brand-ink">Consola de Control EKA</h2></div>
-          <p class="text-xs text-slate-500 mt-1">Gestión administrativa interna de monturas e interacciones de prospectos.</p>
+          <label class="block text-[10px] font-bold uppercase text-slate-500 mb-1">Nombre Completo o Institución</label>
+          <input id="formName" type="text" required placeholder="Ej. Colegio Metropolitano / Ing. Pérez" class="w-full text-xs p-3 bg-slate-50 border rounded-xl focus:outline-none focus:border-brand-sky" />
         </div>
-        <div class="flex bg-slate-200 p-1 rounded-xl">
-          <button id="tabMessagesBtn" onclick="switchTab('messages')" class="px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-wider transition-all bg-white text-brand-ink shadow-sm">📩 Mensajes</button>
-          <button id="tabModelsBtn" onclick="switchTab('models')" class="px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-wider transition-all text-slate-600 hover:text-brand-ink">👓 Inventario / Modelos PNG</button>
+        <div>
+          <label class="block text-[10px] font-bold uppercase text-slate-500 mb-1">Correo Electrónico</label>
+          <input id="formEmail" type="email" required placeholder="ejemplo@dominio.com" class="w-full text-xs p-3 bg-slate-50 border rounded-xl focus:outline-none focus:border-brand-sky" />
         </div>
-      </div>
-
-      <!-- TAB 1: MENSAJES -->
-      <div id="panelMessagesSection" class="block bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden">
-        <div class="p-4 border-b border-slate-100 bg-slate-50 text-xs font-bold text-slate-700 uppercase">Mensajes del Formulario de Contacto</div>
-        <div class="overflow-x-auto">
-          <table class="w-full text-left border-collapse text-xs">
-            <thead>
-              <tr class="bg-slate-100 text-slate-500 font-extrabold uppercase border-b border-slate-200"><th class="p-4">Empresa / Remitente</th><th class="p-4">Contacto</th><th class="p-4">Mensaje</th></tr>
-            </thead>
-            <tbody class="text-slate-600 divide-y divide-slate-100">
-              <tr>
-                <td class="p-4"><div class="font-bold">Planta Automotriz Qro</div><div class="text-slate-400">Ing. Alejandro Mendieta</div></td>
-                <td class="p-4">mendieta@plantaqro.com</td>
-                <td class="p-4">Cotización para 150 lentes con graduación de seguridad.</td>
-              </tr>
-            </tbody>
-          </table>
+        <div>
+          <label class="block text-[10px] font-bold uppercase text-slate-500 mb-1">Teléfono de Contacto</label>
+          <input id="formPhone" type="tel" required placeholder="442..." class="w-full text-xs p-3 bg-slate-50 border rounded-xl focus:outline-none focus:border-brand-sky" />
         </div>
-      </div>
-
-      <!-- TAB 2: GESTIÓN DE MODELOS CON NUEVOS CAMPOS (COLOR, UNIDADES, MODELO) -->
-      <div id="panelModelsSection" class="hidden grid grid-cols-1 md:grid-cols-3 gap-8">
-        <div class="md:col-span-1 bg-white p-6 border border-slate-200 rounded-2xl shadow-sm space-y-4">
-          <h3 class="font-bold text-sm uppercase text-slate-700 tracking-wider">Cargar Nueva Montura</h3>
-          <div>
-            <label class="block text-[10px] font-bold uppercase text-slate-500 mb-1">Nombre / Modelo</label>
-            <input id="newLensName" type="text" placeholder="Ej. EKA Aviator Max" class="w-full text-xs p-2.5 bg-slate-50 border rounded-xl" />
-          </div>
-          <div>
-            <label class="block text-[10px] font-bold uppercase text-slate-500 mb-1">Color del Armazón</label>
-            <input id="newLensColor" type="text" placeholder="Ej. Negro Mate / Carey" class="w-full text-xs p-2.5 bg-slate-50 border rounded-xl" />
-          </div>
-          <div>
-            <label class="block text-[10px] font-bold uppercase text-slate-500 mb-1">Unidades en Existencia (Stock)</label>
-            <input id="newLensStock" type="number" placeholder="Ej. 45" class="w-full text-xs p-2.5 bg-slate-50 border rounded-xl" />
-          </div>
-          <div>
-            <label class="block text-[10px] font-bold uppercase text-slate-500 mb-1">Archivo de Capa PNG Transparente</label>
-            <label class="flex flex-col items-center justify-center w-full h-20 border-2 border-dashed border-slate-200 rounded-xl cursor-pointer bg-slate-50 text-center p-2">
-              <span class="text-[10px] text-slate-400 font-semibold" id="pngUploadLabel">Elegir archivo PNG</span>
-              <input id="pngModelUploader" type="file" accept="image/png" class="hidden" />
-            </label>
-          </div>
-          <div class="grid grid-cols-2 gap-2">
-            <div><label class="block text-[9px] font-bold text-slate-500">Escala Filtro</label><input id="newLensScale" type="number" value="1.0" step="0.1" class="w-full text-xs p-2 bg-slate-50 border rounded-lg" /></div>
-            <div><label class="block text-[9px] font-bold text-slate-500">Ajuste Y (px)</label><input id="newLensOffsetY" type="number" value="0" class="w-full text-xs p-2 bg-slate-50 border rounded-lg" /></div>
-          </div>
-          <button onclick="registerNewModel()" class="w-full py-2.5 bg-brand-ink text-white font-bold text-xs uppercase rounded-xl">Registrar en Filtro</button>
+        <div>
+          <label class="block text-[10px] font-bold uppercase text-slate-500 mb-1">Cuéntanos sobre tu Comunidad o Requerimiento</label>
+          <textarea id="formMessage" rows="3" required placeholder="¿Cuántas personas requieren examen? ¿Qué sector son?" class="w-full text-xs p-3 bg-slate-50 border rounded-xl focus:outline-none focus:border-brand-sky"></textarea>
         </div>
-
-        <div class="md:col-span-2 bg-white p-6 border border-slate-200 rounded-2xl shadow-sm">
-          <h3 class="font-bold text-sm uppercase text-slate-700 tracking-wider mb-4">Lentes en el Catálogo y Filtro Activo</h3>
-          <div id="panelActiveModelsGrid" class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
-            <div class="p-3 bg-slate-50 border rounded-xl flex justify-between items-center">
-              <div><div class="font-bold text-brand-ink">EKA Pro Classic</div><div class="text-[10px] text-slate-400">Color: Negro | Stock: 24 pzas</div></div>
-              <span class="text-[10px] bg-emerald-100 text-emerald-800 font-bold px-2 py-0.5 rounded">Activo</span>
-            </div>
-            <div class="p-3 bg-slate-50 border rounded-xl flex justify-between items-center">
-              <div><div class="font-bold text-brand-ink">Executive Slim</div><div class="text-[10px] text-slate-400">Color: Plata | Stock: 12 pzas</div></div>
-              <span class="text-[10px] bg-emerald-100 text-emerald-800 font-bold px-2 py-0.5 rounded">Activo</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-  <!-- ========== SECCIÓN: PREGUNTAS FRECUENTES (FAQ) ========== -->
-  <section id="faq" class="py-24 max-w-4xl mx-auto px-6 relative z-20" data-aos="fade-up">
-    <div class="text-center mb-12"><h2 class="font-display font-bold text-3xl text-brand-ink">Preguntas Frecuentes</h2></div>
-    <div class="space-y-4">
-      <div class="p-6 bg-brand-dark rounded-2xl border border-slate-100"><h4 class="font-bold text-brand-ink mb-2">¿Cuál es el número mínimo de personas para una jornada empresarial?</h4><p class="text-xs text-slate-600">Sugerimos un mínimo de 15 a 20 personas por campaña corporativa dentro de la región de Querétaro.</p></div>
-      <div class="p-6 bg-brand-dark rounded-2xl border border-slate-100"><h4 class="font-bold text-brand-ink mb-2">¿Las monturas industriales tienen certificación?</h4><p class="text-xs text-slate-600">Sí, todas nuestras gafas de seguridad cumplen rigurosamente con las especificaciones técnicas solicitadas por las normativas de la STPS.</p></div>
+        <button type="submit" class="w-full py-3 bg-brand-ink text-white font-bold text-xs uppercase tracking-widest rounded-xl shadow-md">Enviar al Administrador</button>
+      </form>
     </div>
   </section>
 
-  <!-- ========== SCRIPTS DE INTERACTIVIDAD COMPLETA ========== -->
+  <!-- ========== CONTENEDOR OCULTO: PANEL ADMINISTRATIVO ========== -->
+  <section id="adminPanelSection" class="hidden fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-white w-full max-w-4xl h-[85vh] rounded-3xl shadow-2xl overflow-hidden flex flex-col animate-[pageEntrance_0.3s_ease]">
+      
+      <!-- Navbar interno del Panel -->
+      <div class="bg-brand-ink p-4 text-white flex justify-between items-center">
+        <div class="flex items-center gap-2">
+          <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
+          <span class="font-display font-bold text-sm tracking-wider uppercase">Consola Privada de Configuración</span>
+        </div>
+        <div class="flex items-center gap-4">
+          <div class="flex bg-white/10 p-0.5 rounded-lg text-[11px] font-bold">
+            <button onclick="switchAdminTab('messages')" id="tabMsgBtn" class="px-3 py-1 bg-white text-brand-ink rounded-md">Bandeja Mensajes</button>
+            <button onclick="switchAdminTab('inventory')" id="tabInvBtn" class="px-3 py-1 text-white">Inventario PNG / Catálogo</button>
+          </div>
+          <button onclick="toggleAdminPanel()" class="text-white/70 hover:text-white font-bold text-sm bg-white/10 px-2.5 py-1 rounded-md">✕ Salir</button>
+        </div>
+      </div>
+
+      <!-- CONTENIDO DEL PANEL -->
+      <div class="p-6 flex-1 overflow-y-auto bg-slate-50">
+        
+        <!-- SUB-PESTAÑA 1: BANDEJA DE MENSAJES RECIBIDOS -->
+        <div id="adminTabMessages" class="block space-y-4">
+          <h3 class="text-xs font-bold uppercase tracking-wider text-slate-500">Mensajes Entrantes del Formulario</h3>
+          <div class="bg-white border rounded-xl overflow-hidden shadow-sm">
+            <table class="w-full text-left text-xs border-collapse">
+              <thead>
+                <tr class="bg-slate-100 text-slate-500 font-extrabold uppercase border-b"><th class="p-3">Remitente</th><th class="p-3">Contacto</th><th class="p-3">Mensaje Requerido</th></tr>
+              </thead>
+              <tbody id="adminMessagesTableBody" class="divide-y text-slate-600">
+                <!-- Se llenará dinámicamente con los envíos del formulario -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- SUB-PESTAÑA 2: CONTROL DE INVENTARIO Y MODELOS PNG -->
+        <div id="adminTabInventory" class="hidden grid grid-cols-1 md:grid-cols-3 gap-6">
+          <!-- Formulario de Registro -->
+          <div class="bg-white p-4 border rounded-xl space-y-3 shadow-sm h-fit text-xs">
+            <h4 class="font-bold text-brand-ink uppercase border-b pb-1">Subir Lente al Sistema</h4>
+            <div>
+              <label class="block text-[9px] font-bold text-slate-500 uppercase">Modelo / Nombre</label>
+              <input id="admName" type="text" placeholder="Aviator EKA 2026" class="w-full p-2 border rounded-lg bg-slate-50" />
+            </div>
+            <div>
+              <label class="block text-[9px] font-bold text-slate-500 uppercase">Color</label>
+              <input id="admColor" type="text" placeholder="Carey / Dorado" class="w-full p-2 border rounded-lg bg-slate-50" />
+            </div>
+            <div>
+              <label class="block text-[9px] font-bold text-slate-500 uppercase">Stock (Unidades)</label>
+              <input id="admStock" type="number" placeholder="25" class="w-full p-2 border rounded-lg bg-slate-50" />
+            </div>
+            <div>
+              <label class="block text-[9px] font-bold text-slate-500 uppercase">Filtro Visual Estilo / Color</label>
+              <select id="admVisualColor" class="w-full p-2 border rounded-lg bg-slate-50">
+                <option value="border-brand-ink">Negro Corporativo</option>
+                <option value="border-amber-700">Carey / Café</option>
+                <option value="border-slate-400">Plata / Metálico</option>
+                <option value="border-yellow-500">Dorado Premium</option>
+              </select>
+            </div>
+            <button onclick="adminRegisterNewLens()" class="w-full py-2 bg-brand-ink text-white font-bold uppercase text-[10px] rounded-lg tracking-wider">Guardar e Inyectar</button>
+          </div>
+
+          <!-- Tabla / Grid de lo que hay en inventario -->
+          <div class="md:col-span-2 bg-white p-4 border rounded-xl shadow-sm text-xs">
+            <h4 class="font-bold text-brand-ink uppercase border-b pb-2 mb-3">Modelos Disponibles en el Catálogo</h4>
+            <div id="adminInventoryGrid" class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <!-- Se listan dinámicamente -->
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== FOOTER ========== -->
+  <footer class="bg-brand-ink text-white/70 py-8 text-center text-xs border-t border-slate-800">
+    <p>&copy; 2026 Visión EKA. Todos los derechos reservados. Querétaro, México.</p>
+  </footer>
+
+  <!-- ========== JAVASCRIPT DE LOGICA INTEGRADA ========== -->
   <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
   <script>
-    AOS.init({ duration: 1000, once: true });
+    AOS.init({ duration: 800, once: true });
 
-    // Mobile navbar toggles
-    document.getElementById('menuToggle').addEventListener('click', () => document.getElementById('mobileMenu').classList.remove('translate-x-full'));
-    document.getElementById('menuClose').addEventListener('click', () => document.getElementById('mobileMenu').classList.add('translate-x-full'));
+    // BANCO DE DATOS LOCAL (SIMULACIÓN DE BASE DE DATOS)
+    let mensajesGlobales = [
+      { name: "Planta Automotriz S.A.", email: "mendieta@planta.com", phone: "4421234567", msg: "Solicito cotización NOM-017 para 120 operarios de maquinado." }
+    ];
 
-    let selectedModelId = 'model-1';
-    let uploadedModelPngData = null;
+    let lentesGlobales = [
+      { id: "l-1", name: "EKA Pro Classic", color: "Negro Mate", stock: 24, css: "border-brand-ink" },
+      { id: "l-2", name: "Executive Slim", color: "Plata Pulido", stock: 12, css: "border-slate-400" },
+      { id: "l-3", name: "Urban Sun", color: "Dorado", stock: 18, css: "border-yellow-500" }
+    ];
 
-    function switchTab(tabName) {
-      const tabMessagesBtn = document.getElementById('tabMessagesBtn');
-      const tabModelsBtn = document.getElementById('tabModelsBtn');
-      const panelMessagesSection = document.getElementById('panelMessagesSection');
-      const panelModelsSection = document.getElementById('panelModelsSection');
+    // INICIALIZADORES AL CARGAR LA PÁGINA
+    window.onload = function() {
+      renderCatalogGrid('caballero');
+      renderProbadorOptions();
+      renderAdminMessages();
+      renderAdminInventory();
+    };
 
-      if (tabName === 'messages') {
-        tabMessagesBtn.className = "px-4 py-2 rounded-lg text-xs font-bold uppercase bg-white text-brand-ink shadow-sm";
-        tabModelsBtn.className = "px-4 py-2 rounded-lg text-xs font-bold uppercase text-slate-600";
-        panelMessagesSection.className = "block bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden";
-        panelModelsSection.className = "hidden grid grid-cols-1 md:grid-cols-3 gap-8";
+    // CONTROL DEL PANEL OCULTO / MOSTRAR
+    function toggleAdminPanel() {
+      const panel = document.getElementById('adminPanelSection');
+      panel.classList.toggle('hidden');
+    }
+
+    function switchAdminTab(tab) {
+      const msgTab = document.getElementById('adminTabMessages');
+      const invTab = document.getElementById('adminTabInventory');
+      const btnMsg = document.getElementById('tabMsgBtn');
+      const btnInv = document.getElementById('tabInvBtn');
+
+      if(tab === 'messages') {
+        msgTab.classList.remove('hidden'); invTab.classList.add('hidden');
+        btnMsg.className = "px-3 py-1 bg-white text-brand-ink rounded-md";
+        btnInv.className = "px-3 py-1 text-white";
       } else {
-        tabModelsBtn.className = "px-4 py-2 rounded-lg text-xs font-bold uppercase bg-white text-brand-ink shadow-sm";
-        tabMessagesBtn.className = "px-4 py-2 rounded-lg text-xs font-bold uppercase text-slate-600";
-        panelMessagesSection.className = "hidden bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden";
-        panelModelsSection.className = "block grid grid-cols-1 md:grid-cols-3 gap-8";
+        msgTab.classList.add('hidden'); invTab.classList.remove('hidden');
+        btnInv.className = "px-3 py-1 bg-white text-brand-ink rounded-md";
+        btnMsg.className = "px-3 py-1 text-white";
       }
     }
 
-    function selectActiveModel(buttonElement, modelId) {
-      document.querySelectorAll('.lens-item-btn').forEach(btn => btn.className = "lens-item-btn p-3 bg-brand-navy border border-slate-200 rounded-xl flex flex-col items-center justify-center transition-all");
-      buttonElement.className = "lens-item-btn p-3 bg-brand-dark border-2 border-brand-sky rounded-xl flex flex-col items-center justify-center transition-all shadow-sm";
-      selectedModelId = modelId;
-    }
+    // FLUJO FORMULARIO DE CONTACTO -> PANEL DE MENSAJES
+    function handleFormSubmit(e) {
+      e.preventDefault();
+      const name = document.getElementById('formName').value;
+      const email = document.getElementById('formEmail').value;
+      const phone = document.getElementById('formPhone').value;
+      const msg = document.getElementById('formMessage').value;
 
-    document.getElementById('pngModelUploader').addEventListener('change', function(e) {
-      const file = e.target.files[0];
-      if (file) {
-        document.getElementById('pngUploadLabel').innerText = `✓ ${file.name}`;
-        const reader = new FileReader();
-        reader.onload = function(evt) { uploadedModelPngData = evt.target.result; };
-        reader.readAsDataURL(file);
-      }
-    });
-
-    // REGISTRO DE UN NUEVO MODELO DESDE EL PANEL (Guarda: Modelo, Color y Unidades)
-    function registerNewModel() {
-      const name = document.getElementById('newLensName').value.trim();
-      const color = document.getElementById('newLensColor').value.trim();
-      const stock = document.getElementById('newLensStock').value.trim();
-      const scale = document.getElementById('newLensScale').value;
-      const offsetY = document.getElementById('newLensOffsetY').value;
-
-      if (!name || !color || !stock || !uploadedModelPngData) {
-        alert("Completa todos los campos: Modelo, Color, Unidades y archivo PNG.");
-        return;
-      }
-
-      const randomId = 'model-' + Math.floor(Math.random() * 1000);
-
-      // Inyectar al Catálogo Front del Cliente arriba
-      const catalogContainer = document.getElementById('catalogContainer');
-      const newCatalogBtn = document.createElement('button');
-      newCatalogBtn.setAttribute('onclick', `selectActiveModel(this, '${randomId}')`);
-      newCatalogBtn.className = "lens-item-btn p-3 bg-brand-navy border border-slate-200 rounded-xl flex flex-col items-center justify-center transition-all";
-      newCatalogBtn.innerHTML = `<span class="text-xs font-bold text-brand-ink">${name}</span><span class="text-[9px] text-slate-400">${color} | ${stock} pzas</span>`;
-      catalogContainer.appendChild(newCatalogBtn);
-
-      // Inyectar a la lista del Panel Admin abajo
-      const adminGrid = document.getElementById('panelActiveModelsGrid');
-      const newAdminCard = document.createElement('div');
-      newAdminCard.className = "p-3 bg-slate-50 border rounded-xl flex justify-between items-center";
-      newAdminCard.innerHTML = `<div><div class="font-bold text-brand-ink">${name}</div><div class="text-[10px] text-slate-400">Color: ${color} | Stock: ${stock} pzas</div></div><span class="text-[10px] bg-emerald-100 text-emerald-800 font-bold px-2 py-0.5 rounded">Activo</span>`;
-      adminGrid.appendChild(newAdminCard);
-
-      // Reset Inputs
-      document.getElementById('newLensName').value = '';
-      document.getElementById('newLensColor').value = '';
-      document.getElementById('newLensStock').value = '';
-      document.getElementById('pngUploadLabel').innerText = 'Elegir archivo PNG';
-      uploadedModelPngData = null;
+      mensajesGlobales.push({ name, email, phone, msg });
       
-      alert(`Montura "${name}" registrada exitosamente.`);
+      renderAdminMessages();
+      document.getElementById('contactForm').reset();
+      alert("¡Mensaje enviado con éxito! Los datos fueron transferidos al buzón del Panel Administrativo de Visión EKA.");
     }
 
-    document.getElementById('imageUploader').addEventListener('change', function(event) {
-      const file = event.target.files[0];
-      if (file) {
-        const reader = new FileReader();
-        reader.onload = function(e) {
-          document.getElementById('userPhoto').src = e.target.result;
-          document.getElementById('previewContainer').classList.remove('hidden');
-        }
-        reader.readAsDataURL(file);
-      }
-    });
+    function renderAdminMessages() {
+      const tbody = document.getElementById('adminMessagesTableBody');
+      tbody.innerHTML = mensajesGlobales.map(m => `
+        <tr class="hover:bg-slate-50">
+          <td class="p-3 font-bold text-brand-ink">${m.name}</td>
+          <td class="p-3">${m.email}<br><span class="text-slate-400 text-[10px]">${m.phone}</span></td>
+          <td class="p-3 text-slate-500">${m.msg}</td>
+        </tr>
+      `).join('');
+    }
+
+    // REGISTRO DE NUEVOS LENTES DESDE EL ADMIN
+    function adminRegisterNewLens() {
+      const name = document.getElementById('admName').value.trim();
+      const color = document.getElementById('admColor').value.trim();
+      const stock = document.getElementById('admStock').value.trim();
+      const css = document.getElementById('admVisualColor').value;
+
+      if(!name || !color || !stock) { alert("Llena todos los campos."); return; }
+
+      lentesGlobales.push({ id: 'l-'+Date.now(), name, color, stock: parseInt(stock), css });
+      
+      renderProbadorOptions();
+      renderAdminInventory();
+      renderCatalogGrid('caballero');
+
+      document.getElementById('admName').value = '';
+      document.getElementById('admColor').value = '';
+      document.getElementById('admStock').value = '';
+      alert("Modelo incorporado con éxito al catálogo interactivo.");
+    }
+
+    function renderAdminInventory() {
+      const grid = document.getElementById('adminInventoryGrid');
+      grid.innerHTML = lentesGlobales.map(l => `
+        <div class="p-3 border rounded-lg bg-slate-50 flex justify-between items-center">
+          <div><span class="font-bold block">${l.name}</span><span class="text-[10px] text-slate-400">Color: ${l.color} | Stock: ${l.stock} u.</span></div>
+          <span class="text-[9px] bg-emerald-100 text-emerald-800 font-bold px-1.5 py-0.5 rounded">En Filtro</span>
+        </div>
+      `).join('');
+    }
+
+    // RENDERIZAR LAS OPCIONES DEL PROBADOR VIRTUAL
+    function renderProbadorOptions() {
+      const container = document.getElementById('probadorSelectorContainer');
+      container.innerHTML = lentesGlobales.map((l, index) => `
+        <button onclick="applyLensToMirror('${l.css}')" class="p-3 bg-slate-50 hover:bg-brand-mid rounded-xl border text-left flex flex-col justify-between transition-all">
+          <span class="font-bold text-[11px] text-brand-ink block">${l.name}</span>
+          <span class="text-[9px] text-slate-400 block">${l.color} | ${l.stock} u.</span>
+        </button>
+      `).join('');
+    }
+
+    function applyLensToMirror(cssClass) {
+      const graphic = document.getElementById('lensGraphic');
+      graphic.className = `w-44 h-16 bg-slate-900/30 rounded-full border-4 ${cssClass} flex items-center justify-around transition-all duration-300`;
+    }
+
+    // CONTROL DE PESTAÑAS DE CATÁLOGOS COMERCIALES
+    function switchCatalog(category) {
+      document.querySelectorAll('.catalog-tab-btn').forEach(btn => btn.className = "catalog-tab-btn px-4 py-2 bg-white text-slate-600 rounded-lg text-xs font-bold uppercase border");
+      event.target.className = "catalog-tab-btn px-4 py-2 bg-brand-ink text-white rounded-lg text-xs font-bold uppercase";
+      renderCatalogGrid(category);
+    }
+
+    function renderCatalogGrid(category) {
+      const grid = document.getElementById('catalogGrid');
+      // Renderizado responsivo simulando filtros reales de colecciones
+      grid.innerHTML = lentesGlobales.map(l => `
+        <div class="bg-white border p-4 rounded-2xl text-center shadow-sm">
+          <div class="w-full h-24 bg-slate-50 rounded-xl flex items-center justify-center mb-3 text-slate-300 font-bold">💎 [Imagen ${category}]</div>
+          <h4 class="font-bold text-xs text-brand-ink">${l.name}</h4>
+          <p class="text-[10px] text-slate-400 mt-0.5">Colección Especial</p>
+          <div class="mt-2 text-[10px] bg-brand-light text-brand-ink font-bold inline-block px-2 py-0.5 rounded">${l.color}</div>
+        </div>
+      `).join('');
+    }
   </script>
 </body>
 </html>
