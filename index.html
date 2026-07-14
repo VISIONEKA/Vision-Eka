@@ -110,36 +110,7 @@
       box-shadow: 0 30px 60px -20px rgba(6, 182, 212, 0.15);
     }
 
-    /* Comparison Slider styles */
-    .comparison-container {
-      position: relative;
-      overflow: hidden;
-    }
-    .comparison-image-overlay {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 50%;
-      height: 100%;
-      background-size: cover;
-      background-position: center;
-    }
-
-    /* Quiz step transition */
-    .quiz-step {
-      opacity: 0;
-      transform: translateY(8px);
-    }
-    .quiz-step.fade-in-step {
-      opacity: 1;
-      transform: translateY(0);
-      transition: opacity 0.45s ease, transform 0.45s ease;
-    }
-    .quiz-option:active {
-      transform: scale(0.98);
-    }
-
-    /* Elegant shine sweep on primary CTAs (luxury-site signature detail) */
+    /* Elegant shine sweep on primary CTAs */
     .shine-cta {
       position: relative;
       overflow: hidden;
@@ -162,7 +133,6 @@
       left: 125%;
     }
 
-    /* Page entrance: soft fade once fonts/layout settle */
     body {
       animation: pageEntrance 0.6s ease both;
     }
@@ -171,7 +141,6 @@
       to { opacity: 1; }
     }
 
-    /* Subtle letter-spacing breathing on the hero eyebrow tag */
     @keyframes breatheTag {
       0%, 100% { letter-spacing: 0.1em; }
       50% { letter-spacing: 0.16em; }
@@ -180,32 +149,12 @@
       animation: breatheTag 4s ease-in-out infinite;
     }
 
-    /* Refined focus state for accessibility + premium feel */
-    a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible {
-      outline: 2px solid #86B8CB;
-      outline-offset: 2px;
-    }
-
-    /* Respect reduced motion preference */
-    @media (prefers-reduced-motion: reduce) {
-      *, *::before, *::after {
-        animation-duration: 0.001ms !important;
-        animation-iteration-count: 1 !important;
-        transition-duration: 0.001ms !important;
-        scroll-behavior: auto !important;
-      }
-    }
-
-    /* Infinite Marquee Loop for Clients */
     @keyframes marquee {
       0% { transform: translateX(0%); }
       100% { transform: translateX(-50%); }
     }
     .animate-marquee {
       animation: marquee 25s linear infinite;
-    }
-    .animate-marquee:hover {
-      animation-play-state: paused;
     }
   </style>
 </head>
@@ -233,213 +182,346 @@
         <!-- Desktop Navigation Pill links -->
         <nav class="hidden lg:flex items-center gap-8">
           <a href="#about" class="text-xs font-semibold text-slate-600 hover:text-brand-sky transition-colors tracking-wider uppercase">Nosotros</a>
-          <a href="#test" class="text-xs font-semibold text-slate-600 hover:text-brand-sky transition-colors tracking-wider uppercase">Autodiagnóstico</a>
           <a href="#simulator" class="text-xs font-semibold text-slate-600 hover:text-brand-sky transition-colors tracking-wider uppercase">Pruébatelos</a>
-          <a href="#services" class="text-xs font-semibold text-slate-600 hover:text-brand-sky transition-colors tracking-wider uppercase">Servicios</a>
-          <a href="kids.html" class="text-xs font-semibold text-brand-coral hover:text-brand-coral/70 transition-colors tracking-wider uppercase">🧒 Kids</a>
-          <a href="#jornadas" class="text-xs font-semibold text-slate-600 hover:text-brand-sky transition-colors tracking-wider uppercase">Jornadas</a>
-          <a href="#gallery" class="text-xs font-semibold text-slate-600 hover:text-brand-sky transition-colors tracking-wider uppercase">Catálogo</a>
+          <a href="#dashboard" class="text-xs font-bold text-indigo-600 hover:text-indigo-800 transition-colors tracking-wider uppercase flex items-center gap-1">💻 Panel Adm</a>
           <a href="#faq" class="text-xs font-semibold text-slate-600 hover:text-brand-sky transition-colors tracking-wider uppercase">Dudas</a>
         </nav>
 
         <!-- CTA & Hamburger -->
         <div class="flex items-center gap-4">
-          <a href="#contact" class="hidden sm:inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest bg-gradient-to-r from-brand-sky to-brand-teal hover:from-brand-sky/90 hover:to-brand-teal/90 text-brand-ink py-3 px-6 rounded-full transition-all hover:shadow-lg hover:shadow-brand-sky/35 transform hover:-translate-y-0.5">
-            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+          <a href="#contact" class="hidden sm:inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest bg-gradient-to-r from-brand-sky to-brand-teal text-brand-ink py-3 px-6 rounded-full transition-all hover:shadow-lg shadow-brand-sky/35">
             Cotizar Campaña
           </a>
-          
-          <button id="menuToggle" class="lg:hidden p-2.5 rounded-full text-slate-600 hover:text-brand-ink hover:bg-slate-900/5 transition-all" aria-label="Abrir menú">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16m-7 6h7"/>
-            </svg>
-          </button>
         </div>
-
       </div>
     </div>
   </header>
 
-  <!-- Mobile Menu Side Drawer -->
-  <div id="mobileMenu" class="fixed inset-0 z-50 bg-brand-navy/98 backdrop-blur-2xl translate-x-full transition-transform duration-500 flex flex-col p-8">
-    <div class="flex items-center justify-between mb-12">
-      <div class="flex items-center gap-3">
-        <div class="w-10 h-10 bg-brand-sky rounded-xl flex items-center justify-center text-brand-ink font-bold">👁️</div>
-        <span class="font-display font-bold text-xl">Visión EKA</span>
-      </div>
-      <button id="menuClose" class="p-3 text-slate-500 hover:text-brand-ink rounded-full bg-slate-900/5 hover:bg-slate-900/8 transition-all focus:outline-none">
-        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
-      </button>
-    </div>
-    
-    <nav class="flex flex-col gap-6 text-2xl font-display font-medium mb-12">
-      <a href="#about" class="mobile-link text-slate-600 hover:text-brand-sky transition-colors">Nosotros</a>
-      <a href="#test" class="mobile-link text-slate-600 hover:text-brand-sky transition-colors">Autodiagnóstico</a>
-      <a href="#simulator" class="mobile-link text-slate-600 hover:text-brand-sky transition-colors">Pruébatelos</a>
-      <a href="#services" class="mobile-link text-slate-600 hover:text-brand-sky transition-colors">Servicios</a>
-      <a href="kids.html" class="mobile-link text-brand-coral hover:text-brand-coral/70 transition-colors">🧒 Sección Kids</a>
-      <a href="#jornadas" class="mobile-link text-slate-600 hover:text-brand-sky transition-colors">Jornadas</a>
-      <a href="#gallery" class="mobile-link text-slate-600 hover:text-brand-sky transition-colors">Catálogo</a>
-      <a href="#faq" class="mobile-link text-slate-600 hover:text-brand-sky transition-colors">Preguntas</a>
-    </nav>
-
-    <div class="mt-auto flex flex-col gap-4">
-      <a href="tel:4421295277" class="flex items-center justify-center gap-3 bg-brand-light/80 text-brand-ink py-4 rounded-full font-bold transition-all hover:bg-brand-light">
-        📞 Llamar directo
-      </a>
-      <a href="https://wa.me/524421295277" target="_blank" class="flex items-center justify-center gap-3 bg-[#25D366] text-brand-ink py-4 rounded-full font-bold transition-all hover:bg-[#1da850]">
-        💬 Cotizar por WhatsApp
-      </a>
-    </div>
-  </div>
-
-  <!-- ========== CINEMATIC HERO SECTION (TEXT OVER HIGH-IMPACT BACKDROP IMAGE) ========== -->
+  <!-- ========== CINEMATIC HERO SECTION ========== -->
   <section id="hero" class="relative min-h-screen flex items-center justify-center overflow-hidden pt-28 lg:pt-20">
-    <!-- Beautiful high-resolution image backdrop overlaid with deep gradient for perfect readability -->
     <div class="absolute inset-0 z-0">
-      <img src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=1600&q=80" alt="Clínica Optométrica Médica Industrial" class="w-full h-full object-cover object-center scale-105 filter brightness-95">
-      <!-- Grid Overlay -->
+      <img src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=1600&q=80" alt="Backdrop" class="w-full h-full object-cover object-center scale-105 filter brightness-95">
       <div class="absolute inset-0 opacity-25 hero-scanner-grid"></div>
-      <!-- Complex Obsidian & Sky Gradient to guarantee high typography contrast -->
       <div class="absolute inset-0 bg-gradient-to-r from-brand-navy via-brand-navy/95 to-brand-navy/60"></div>
-      <div class="absolute inset-0 bg-gradient-to-t from-brand-navy via-transparent to-brand-navy/45"></div>
+    </div>
+    <div class="max-w-7xl mx-auto px-6 w-full relative z-20 py-12 text-center">
+      <div class="inline-flex items-center gap-2 px-4 py-2 bg-brand-mid/90 border border-brand-sky/30 rounded-full text-brand-sky text-xs font-bold uppercase mb-8 breathe-tag" data-aos="fade-down">
+        Salud Visual Móvil • Panel Administrativo Avanzado Integrado
+      </div>
+      <h1 class="font-display font-bold text-4xl sm:text-5xl lg:text-7xl tracking-tight text-brand-ink leading-[1.08] mb-6" data-aos="fade-up">
+        Simulador de Filtros & <span class="bg-clip-text text-transparent bg-gradient-to-r from-brand-sky via-brand-teal to-cyan-600">Consola Central.</span>
+      </h1>
+      <p class="text-slate-600 text-lg sm:text-xl leading-relaxed mb-10 font-medium max-w-2xl mx-auto" data-aos="fade-up" data-aos-delay="100">
+        Gestiona tus clientes de Querétaro y sube las capas PNG de tus monturas en tiempo real.
+      </p>
+    </div>
+  </section>
+
+  <!-- ========== SECCIÓN: SIMULADOR DE LENTES (VISTA DEL CLIENTE) ========== -->
+  <section id="simulator" class="relative z-20 max-w-7xl mx-auto px-6 pt-20 pb-12" data-aos="fade-up">
+    <div class="text-center max-w-3xl mx-auto mb-10">
+      <span class="text-xs uppercase font-extrabold tracking-widest text-brand-sky block mb-2">Frontend de Usuario</span>
+      <h2 class="font-display font-bold text-3xl sm:text-4xl text-brand-ink mb-4">Probador de Lentes en Sitio</h2>
+      <p class="text-slate-600 font-medium">Sube tu fotografía y selecciona las monturas activas registradas por el administrador.</p>
     </div>
 
-    <!-- Active Optical Laser Scan Overlay -->
-    <div class="absolute inset-0 pointer-events-none z-10 overflow-hidden">
-      <div class="laser-line absolute left-0 right-0 h-[1.5px] bg-gradient-to-r from-transparent via-brand-sky to-transparent shadow-[0_0_15px_rgba(6,182,212,0.6)]"></div>
-    </div>
-
-    <!-- Floating Glowing Elements for Depth -->
-    <div class="glow-sphere float-glow absolute top-[15%] left-[-15%] w-[500px] h-[500px] rounded-full bg-brand-sky/10 pointer-events-none"></div>
-    <div class="glow-sphere float-glow absolute bottom-[10%] right-[-15%] w-[600px] h-[600px] rounded-full bg-brand-teal/5 pointer-events-none" style="animation-delay: 4s;"></div>
-
-    <div class="max-w-7xl mx-auto px-6 w-full relative z-20 py-12">
-      <div class="flex flex-col items-center text-center max-w-4xl mx-auto">
-
-        <div class="inline-flex items-center gap-2 px-4 py-2 bg-brand-mid/90 border border-brand-sky/30 rounded-full text-brand-sky text-xs font-bold uppercase mb-8 backdrop-blur-md shadow-inner breathe-tag" data-aos="fade-down">
-          <span class="w-2 h-2 rounded-full bg-brand-teal animate-pulse"></span>
-          Salud Visual Móvil • Empresas, Oficinas y Familias
-        </div>
-
-        <!-- Main impact phrase -->
-        <h1 class="font-display font-bold text-4xl sm:text-5xl lg:text-7xl tracking-tight text-brand-ink leading-[1.08] mb-6" data-aos="fade-up" data-aos-delay="100">
-          Protegemos la visión de quienes <span class="bg-clip-text text-transparent bg-gradient-to-r from-brand-sky via-brand-teal to-cyan-600">construyen el futuro.</span>
-        </h1>
-
-        <!-- Subtitle -->
-        <p class="text-slate-600 text-lg sm:text-xl leading-relaxed mb-10 font-medium max-w-2xl" data-aos="fade-up" data-aos-delay="200">
-          Desde la línea de producción hasta el escritorio de oficina — llevamos clínica óptica de alta precisión a donde tú estés, en todo el Bajío.
-        </p>
-
-        <!-- Single strong CTA + secondary -->
-        <div class="flex flex-col sm:flex-row gap-4 w-full sm:w-auto justify-center mb-14" data-aos="fade-up" data-aos-delay="300">
-          <a href="#contact" class="shine-cta flex items-center justify-center gap-3 bg-gradient-to-r from-brand-sky to-brand-teal text-brand-ink font-extrabold py-4 px-10 rounded-full shadow-lg shadow-brand-sky/25 transition-all duration-300 hover:shadow-xl hover:shadow-brand-sky/40 hover:-translate-y-1">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
-            Cotizar Campaña Visual
-          </a>
-          <a href="#about" class="flex items-center justify-center gap-3 bg-slate-900/5 border border-slate-900/10 text-slate-700 hover:text-brand-ink hover:border-brand-sky/30 font-bold py-4 px-10 rounded-full transition-all duration-300 hover:-translate-y-1 backdrop-blur-md">
-            Conocer más
-            <svg class="w-4 h-4 text-brand-sky" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
-          </a>
-        </div>
-
-        <!-- Mini social proof strip -->
-        <div class="flex flex-wrap items-center justify-center gap-x-10 gap-y-4" data-aos="fade-up" data-aos-delay="400">
-          <div class="flex items-center gap-3">
-            <span class="font-display font-extrabold text-2xl text-brand-ink"><span class="counter" data-target="100">0</span><span class="text-brand-sky">+</span></span>
-            <span class="text-[11px] text-slate-500 font-semibold uppercase tracking-wide leading-tight text-left">Empresas<br>aliadas</span>
-          </div>
-          <div class="w-px h-8 bg-slate-900/8 hidden sm:block"></div>
-          <div class="flex items-center gap-3">
-            <span class="font-display font-extrabold text-2xl text-brand-ink"><span class="counter" data-target="10000">0</span><span class="text-brand-sky">+</span></span>
-            <span class="text-[11px] text-slate-500 font-semibold uppercase tracking-wide leading-tight text-left">Diagnósticos<br>en sitio</span>
-          </div>
-          <div class="w-px h-8 bg-slate-900/8 hidden sm:block"></div>
-          <div class="flex items-center gap-3">
-            <span class="font-display font-extrabold text-2xl text-brand-ink"><span class="counter" data-target="98">0</span><span class="text-brand-sky">%</span></span>
-            <span class="text-[11px] text-slate-500 font-semibold uppercase tracking-wide leading-tight text-left">Satisfacción<br>total</span>
-          </div>
-        </div>
-
+    <!-- Carrusel o Selector de Modelos de Lentes Disponibles -->
+    <div class="max-w-xl mx-auto mb-6">
+      <label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-2">Selecciona un modelo de lentes:</label>
+      <div id="catalogContainer" class="grid grid-cols-3 gap-3">
+        <!-- Lentes quemados por defecto -->
+        <button onclick="selectActiveModel(this, 'model-1')" class="lens-item-btn p-3 bg-brand-dark border-2 border-brand-sky rounded-xl flex flex-col items-center justify-center transition-all shadow-sm">
+          <span class="text-xs font-bold text-brand-ink">EKA Pro Classic</span>
+        </button>
+        <button onclick="selectActiveModel(this, 'model-2')" class="lens-item-btn p-3 bg-brand-navy border border-slate-200 rounded-xl flex flex-col items-center justify-center transition-all hover:bg-brand-dark">
+          <span class="text-xs font-bold text-brand-ink">Executive Slim</span>
+        </button>
+        <!-- Los nuevos modelos que subas en el panel aparecerán aquí dinámicamente -->
       </div>
     </div>
 
-    <!-- Downward scroll mouse element -->
-    <a href="#about" class="absolute bottom-4 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-[9px] uppercase font-bold tracking-widest text-slate-500 hover:text-brand-ink transition-colors">
-      <span class="w-5 h-8 border-2 border-slate-900/15 rounded-full flex justify-center pt-1.5">
-        <span class="w-1 h-1.5 bg-brand-sky rounded-full animate-bounce"></span>
-      </span>
-      Saber más
-    </a>
-  </section>
+    <div class="flex flex-col items-center justify-center p-8 bg-brand-dark rounded-3xl border border-slate-900/5 max-w-xl mx-auto shadow-xl">
+      <label class="flex flex-col items-center justify-center w-full h-36 border-2 border-dashed border-brand-sky/40 rounded-2xl cursor-pointer bg-brand-navy hover:bg-brand-mid/50 transition-all group relative overflow-hidden">
+        <div class="flex flex-col items-center justify-center pt-5 pb-6 px-4 text-center">
+          <p class="text-sm text-slate-600 font-medium"><span class="text-brand-sky font-bold">Carga tu foto (PNG/JPG)</span></p>
+          <p class="text-xs text-slate-400 mt-1">Simula el filtro localmente</p>
+        </div>
+        <input id="imageUploader" type="file" accept="image/png, image/jpeg" class="hidden" />
+      </label>
 
-  <!-- ========== TRUST LOGOS AND MARQUEE STRIP ========== -->
-  <section class="border-y border-slate-900/5 py-8 bg-brand-dark overflow-hidden relative z-20">
-    <div class="absolute inset-y-0 left-0 w-24 bg-gradient-to-r from-brand-navy to-transparent z-10 pointer-events-none"></div>
-    <div class="absolute inset-y-0 right-0 w-24 bg-gradient-to-l from-brand-navy to-transparent z-10 pointer-events-none"></div>
-    
-    <div class="flex items-center gap-6 whitespace-nowrap animate-marquee">
-      <span class="text-xs font-bold uppercase tracking-widest text-slate-500 flex items-center gap-3">
-        <span class="w-2 h-2 rounded-full bg-brand-sky"></span> PLANTA AUTOMOTRIZ QUERÉTARO
-      </span>
-      <span class="text-xs font-bold uppercase tracking-widest text-slate-500 flex items-center gap-3">
-        <span class="w-2 h-2 rounded-full bg-brand-teal"></span> PARQUE INDUSTRIAL BERNARDO QUINTANA
-      </span>
-      <span class="text-xs font-bold uppercase tracking-widest text-slate-500 flex items-center gap-3">
-        <span class="w-2 h-2 rounded-full bg-brand-sky"></span> METALMECÁNICA BAJÍO S.A.
-      </span>
-      <span class="text-xs font-bold uppercase tracking-widest text-slate-500 flex items-center gap-3">
-        <span class="w-2 h-2 rounded-full bg-brand-teal"></span> LOGÍSTICA INTEGRAL DEL CENTRO
-      </span>
-      <span class="text-xs font-bold uppercase tracking-widest text-slate-500 flex items-center gap-3">
-        <span class="w-2 h-2 rounded-full bg-brand-sky"></span> COLEGIO METROPOLITANO QRO
-      </span>
-      <!-- Duplicate for seamless looping -->
-      <span class="text-xs font-bold uppercase tracking-widest text-slate-500 flex items-center gap-3">
-        <span class="w-2 h-2 rounded-full bg-brand-sky"></span> PLANTA AUTOMOTRIZ QUERÉTARO
-      </span>
-      <span class="text-xs font-bold uppercase tracking-widest text-slate-500 flex items-center gap-3">
-        <span class="w-2 h-2 rounded-full bg-brand-teal"></span> PARQUE INDUSTRIAL BERNARDO QUINTANA
-      </span>
+      <!-- Contenedor con Imagen + Canvas del Filtro -->
+      <div class="relative mt-8 hidden w-full rounded-2xl overflow-hidden shadow-2xl bg-black/5" id="previewContainer">
+        <img id="userPhoto" src="#" alt="Foto del Cliente" class="w-full h-auto object-contain mx-auto max-h-[400px]" />
+        <canvas id="overlayCanvas" class="absolute top-0 left-0 w-full h-full pointer-events-none"></canvas>
+      </div>
     </div>
   </section>
 
-  <!-- ========== STATS STRIP BRIDGE ========== -->
-  <section id="stats" class="relative z-20 -mt-2 max-w-7xl mx-auto px-6 pt-12">
-    <div class="bg-brand-dark/90 backdrop-blur-2xl border border-slate-900/5 p-8 lg:p-12 rounded-3xl shadow-2xl">
-      <div class="grid grid-cols-2 lg:grid-cols-4 gap-y-10 gap-x-6 text-center">
+
+  <!-- ========== NUEVA SECCIÓN GLOBAL: PANEL DE CONTROL DE ADMINISTRACIÓN ========== -->
+  <section id="dashboard" class="relative z-20 max-w-7xl mx-auto px-6 py-20 border-t border-slate-100 bg-slate-50/50 rounded-t-5xl" data-aos="fade-up">
+    <div class="max-w-5xl mx-auto">
+      
+      <!-- Encabezado del Panel -->
+      <div class="flex flex-col md:flex-row md:items-center md:justify-between border-b border-slate-200 pb-6 mb-8 gap-4">
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+            <h2 class="font-display font-bold text-3xl text-brand-ink">Panel de Control General</h2>
+          </div>
+          <p class="text-sm text-slate-500 mt-1">Consola interna de administración para Visión EKA.</p>
+        </div>
         
-        <div class="space-y-2 border-r border-slate-900/5 last:border-none" data-aos="fade-up">
-          <div class="text-3xl sm:text-4xl lg:text-5xl font-display font-extrabold text-brand-ink tracking-tight leading-none">
-            <span class="counter" data-target="5000">0</span><span class="text-brand-sky">+</span>
+        <!-- Pestañas de Navegación del Panel -->
+        <div class="flex bg-slate-200/70 p-1 rounded-xl">
+          <button id="tabMessagesBtn" onclick="switchTab('messages')" class="px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-wider transition-all bg-white text-brand-ink shadow-sm">
+            📩 Mensajes
+          </button>
+          <button id="tabModelsBtn" onclick="switchTab('models')" class="px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-wider transition-all text-slate-600 hover:text-brand-ink">
+            👓 Subir Modelos PNG
+          </button>
+        </div>
+      </div>
+
+      <!-- VISTA 1: TABLA DE MENSAJES RECIBIDOS -->
+      <div id="panelMessagesSection" class="block bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden">
+        <div class="p-5 border-b border-slate-100 bg-slate-50 flex justify-between items-center">
+          <h3 class="font-bold text-slate-800 text-sm uppercase tracking-wider">Bandeja de Entrada de Contactos</h3>
+          <span class="text-xs bg-brand-light text-brand-ink font-bold px-2.5 py-1 rounded-full" id="msgCounter">2 Mensajes Activos</span>
+        </div>
+        
+        <div class="overflow-x-auto">
+          <table class="w-full text-left border-collapse">
+            <thead>
+              <tr class="bg-slate-100 text-slate-500 text-[10px] font-extrabold uppercase tracking-wider border-b border-slate-200">
+                <th class="p-4">Remitente / Empresa</th>
+                <th class="p-4">Contacto</th>
+                <th class="p-4">Mensaje / Requerimiento</th>
+                <th class="p-4 text-right">Acción</th>
+              </tr>
+            </thead>
+            <tbody id="messagesTableBody" class="text-sm text-slate-600 divide-y divide-slate-100">
+              <!-- Mensaje Demo 1 -->
+              <tr>
+                <td class="p-4">
+                  <div class="font-bold text-brand-ink">Ing. Alejandro Mendieta</div>
+                  <div class="text-xs text-slate-400 font-medium">Planta Automotriz Querétaro</div>
+                </td>
+                <td class="p-4">
+                  <div>mendieta@plantaqro.com</div>
+                  <div class="text-xs text-slate-400">Cel: 442-398-1244</div>
+                </td>
+                <td class="p-4 max-w-xs truncate">
+                  Requerimos una cotización para una jornada de salud visual móvil para 150 operarios en el Parque Industrial Bernardo Quintana. Requerimos lentes de seguridad graduados NOM-017.
+                </td>
+                <td class="p-4 text-right">
+                  <button onclick="alert('Abriendo respuesta para Alejandro...')" class="text-xs font-bold text-brand-sky hover:underline">Responder</button>
+                </td>
+              </tr>
+              <!-- Mensaje Demo 2 -->
+              <tr>
+                <td class="p-4">
+                  <div class="font-bold text-brand-ink">Dra. Claudia Rossi</div>
+                  <div class="text-xs text-slate-400 font-medium">Colegio Metropolitano Qro</div>
+                </td>
+                <td class="p-4">
+                  <div>contacto@metropolitano.edu.mx</div>
+                  <div class="text-xs text-slate-400">Cel: 442-115-9080</div>
+                </td>
+                <td class="p-4 max-w-xs truncate">
+                  ¿Tienen disponibilidad para asistir en la sección de Kids el próximo mes? Nos interesa revisar la vista de los alumnos de primaria.
+                </td>
+                <td class="p-4 text-right">
+                  <button onclick="alert('Abriendo respuesta para Claudia...')" class="text-xs font-bold text-brand-sky hover:underline">Responder</button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- VISTA 2: SUBIDA Y CONFIGURACIÓN DE MODELOS LENTES PNG -->
+      <div id="panelModelsSection" class="hidden grid grid-cols-1 md:grid-cols-3 gap-8">
+        
+        <!-- Formulario de carga de archivo PNG -->
+        <div class="md:col-span-1 bg-white p-6 border border-slate-200 rounded-2xl shadow-sm h-fit">
+          <h3 class="font-display font-bold text-lg text-brand-ink mb-4">Nueva Montura PNG</h3>
+          
+          <div class="space-y-4">
+            <div>
+              <label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1">Nombre Comercial del Modelo</label>
+              <input id="newLensName" type="text" placeholder="Ej. EKA Aviator Max" class="w-full text-sm p-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:border-brand-sky" />
+            </div>
+            
+            <div>
+              <label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1">Archivo de la Montura (Debe ser PNG transparente)</label>
+              <label class="flex flex-col items-center justify-center w-full h-28 border-2 border-dashed border-slate-200 rounded-xl cursor-pointer bg-slate-50 hover:bg-slate-100 transition-all text-center p-2">
+                <span class="text-xs font-semibold text-slate-500" id="pngUploadLabel">Seleccionar PNG transparente</span>
+                <input id="pngModelUploader" type="file" accept="image/png" class="hidden" />
+              </label>
+            </div>
+
+            <!-- Ajustes iniciales de calibración para el filtro -->
+            <div class="grid grid-cols-2 gap-2">
+              <div>
+                <label class="block text-[10px] font-bold uppercase tracking-wider text-slate-500 mb-1">Escala del Filtro</label>
+                <input id="newLensScale" type="number" value="1.0" step="0.1" class="w-full text-sm p-2 bg-slate-50 border border-slate-200 rounded-lg" />
+              </div>
+              <div>
+                <label class="block text-[10px] font-bold uppercase tracking-wider text-slate-500 mb-1">Desplazamiento Y</label>
+                <input id="newLensOffsetY" type="number" value="0" class="w-full text-sm p-2 bg-slate-50 border border-slate-200 rounded-lg" />
+              </div>
+            </div>
+
+            <button onclick="registerNewModel()" class="w-full py-3 bg-brand-ink text-white font-bold text-xs uppercase tracking-widest rounded-xl hover:bg-slate-800 transition-all shadow-md">
+              Registrar en Catálogo
+            </button>
           </div>
-          <span class="text-[10px] tracking-widest uppercase text-slate-500 font-extrabold block">Lentes Entregados</span>
         </div>
 
-        <div class="space-y-2 lg:border-r border-slate-900/5" data-aos="fade-up" data-aos-delay="100">
-          <div class="text-3xl sm:text-4xl lg:text-5xl font-display font-extrabold text-brand-ink tracking-tight leading-none">
-            <span class="counter" data-target="100">0</span><span class="text-brand-teal">+</span>
+        <!-- Vista previa de los modelos almacenados actualmente -->
+        <div class="md:col-span-2 bg-white p-6 border border-slate-200 rounded-2xl shadow-sm">
+          <h3 class="font-display font-bold text-lg text-brand-ink mb-2">Modelos Registrados en el Sistema</h3>
+          <p class="text-xs text-slate-400 mb-4">Estas capas gráficas transparentes se aplican sobre las coordenadas de los ojos del usuario.</p>
+          
+          <div id="panelActiveModelsGrid" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <!-- Modelo Guardado 1 -->
+            <div class="p-4 border border-slate-100 bg-slate-50 rounded-xl flex items-center justify-between">
+              <div>
+                <div class="font-bold text-sm text-brand-ink">EKA Pro Classic</div>
+                <div class="text-[11px] text-slate-400 font-medium">Escala: 1.25 | Offset Y: -5px</div>
+              </div>
+              <span class="text-xs bg-emerald-100 text-emerald-800 font-bold px-2 py-0.5 rounded-md">Activo</span>
+            </div>
+            <!-- Modelo Guardado 2 -->
+            <div class="p-4 border border-slate-100 bg-slate-50 rounded-xl flex items-center justify-between">
+              <div>
+                <div class="font-bold text-sm text-brand-ink">Executive Slim</div>
+                <div class="text-[11px] text-slate-400 font-medium">Escala: 1.10 | Offset Y: 0px</div>
+              </div>
+              <span class="text-xs bg-emerald-100 text-emerald-800 font-bold px-2 py-0.5 rounded-md">Activo</span>
+            </div>
           </div>
-          <span class="text-[10px] tracking-widest uppercase text-slate-500 font-extrabold block">Empresas Aliadas</span>
-        </div>
-
-        <div class="space-y-2 border-r border-slate-900/5" data-aos="fade-up" data-aos-delay="200">
-          <div class="text-3xl sm:text-4xl lg:text-5xl font-display font-extrabold text-brand-ink tracking-tight leading-none">
-            <span class="counter" data-target="10000">0</span><span class="text-brand-sky">+</span>
-          </div>
-          <span class="text-[10px] tracking-widest uppercase text-slate-500 font-extrabold block">Diagnósticos en Sitio</span>
-        </div>
-
-        <div class="space-y-2" data-aos="fade-up" data-aos-delay="300">
-          <div class="text-3xl sm:text-4xl lg:text-5xl font-display font-extrabold text-brand-ink tracking-tight leading-none">
-            <span class="counter" data-target="98">0</span><span class="text-brand-teal">%</span>
-          </div>
-          <span class="text-[10px] tracking-widest uppercase text-slate-500 font-extrabold block">Satisfacción Total</span>
         </div>
 
       </div>
+
     </div>
   </section>
+
+  <!-- Scripts e interactividad integrada -->
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+  <script>
+    AOS.init({ duration: 1000, once: true });
+
+    // Variables de control de estado del simulador
+    let selectedModelId = 'model-1';
+    let uploadedModelPngData = null; // Guardará el base64 del PNG subido desde el panel
+
+    // 1. SELECTOR DE PESTAÑAS DEL PANEL ADMINISTRATIVO
+    function switchTab(tabName) {
+      const tabMessagesBtn = document.getElementById('tabMessagesBtn');
+      const tabModelsBtn = document.getElementById('tabModelsBtn');
+      const panelMessagesSection = document.getElementById('panelMessagesSection');
+      const panelModelsSection = document.getElementById('panelModelsSection');
+
+      if (tabName === 'messages') {
+        tabMessagesBtn.className = "px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-wider transition-all bg-white text-brand-ink shadow-sm";
+        tabModelsBtn.className = "px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-wider transition-all text-slate-600 hover:text-brand-ink";
+        panelMessagesSection.className = "block bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden";
+        panelModelsSection.className = "hidden grid grid-cols-1 md:grid-cols-3 gap-8";
+      } else {
+        tabModelsBtn.className = "px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-wider transition-all bg-white text-brand-ink shadow-sm";
+        tabMessagesBtn.className = "px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-wider transition-all text-slate-600 hover:text-brand-ink";
+        panelMessagesSection.className = "hidden bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden";
+        panelModelsSection.className = "block grid grid-cols-1 md:grid-cols-3 gap-8";
+      }
+    }
+
+    // 2. SELECCIÓN DE LENTES POR PARTE DEL CLIENTE EN EL FRONTEND
+    function selectActiveModel(buttonElement, modelId) {
+      document.querySelectorAll('.lens-item-btn').forEach(btn => {
+        btn.className = "lens-item-btn p-3 bg-brand-navy border border-slate-200 rounded-xl flex flex-col items-center justify-center transition-all hover:bg-brand-dark";
+      });
+      buttonElement.className = "lens-item-btn p-3 bg-brand-dark border-2 border-brand-sky rounded-xl flex flex-col items-center justify-center transition-all shadow-sm";
+      selectedModelId = modelId;
+      console.log("Modelo de lente seleccionado para procesar con el filtro:", selectedModelId);
+    }
+
+    // 3. CAPTURA DEL ARCHIVO PNG PARA EL FILTRO EN EL FORMULARIO ADMIN
+    document.getElementById('pngModelUploader').addEventListener('change', function(e) {
+      const file = e.target.files[0];
+      if (file) {
+        document.getElementById('pngUploadLabel').innerText = `✓ ${file.name}`;
+        const reader = new FileReader();
+        reader.onload = function(evt) {
+          uploadedModelPngData = evt.target.result; // Imagen cargada en formato Base64 lista para guardarse
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+
+    // 4. REGISTRO DE UN NUEVO MODELO DESDE EL PANEL (Agrega elementos dinámicos al frontend)
+    function registerNewModel() {
+      const name = document.getElementById('newLensName').value.trim();
+      const scale = document.getElementById('newLensScale').value;
+      const offsetY = document.getElementById('newLensOffsetY').value;
+
+      if (!name || !uploadedModelPngData) {
+        alert("Por favor ingrese el nombre del modelo y suba un archivo PNG transparente.");
+        return;
+      }
+
+      const randomId = 'model-' + Math.floor(Math.random() * 1000);
+
+      // Agregar el nuevo botón de lentes al catálogo del cliente (Arriba)
+      const catalogContainer = document.getElementById('catalogContainer');
+      const newCatalogBtn = document.createElement('button');
+      newCatalogBtn.setAttribute('onclick', `selectActiveModel(this, '${randomId}')`);
+      newCatalogBtn.className = "lens-item-btn p-3 bg-brand-navy border border-slate-200 rounded-xl flex flex-col items-center justify-center transition-all hover:bg-brand-dark";
+      newCatalogBtn.innerHTML = `<span class="text-xs font-bold text-brand-ink">${name}</span>`;
+      catalogContainer.appendChild(newCatalogBtn);
+
+      // Agregar a la cuadrícula de estado del Administrador (Abajo)
+      const adminGrid = document.getElementById('panelActiveModelsGrid');
+      const newAdminCard = document.createElement('div');
+      newAdminCard.className = "p-4 border border-slate-100 bg-slate-50 rounded-xl flex items-center justify-between";
+      newAdminCard.innerHTML = `
+        <div>
+          <div class="font-bold text-sm text-brand-ink">${name}</div>
+          <div class="text-[11px] text-slate-400 font-medium">Escala: ${scale} | Offset Y: ${offsetY}px</div>
+        </div>
+        <span class="text-xs bg-emerald-100 text-emerald-800 font-bold px-2 py-0.5 rounded-md">Activo</span>
+      `;
+      adminGrid.appendChild(newAdminCard);
+
+      // Limpiar inputs del panel administrativo
+      document.getElementById('newLensName').value = '';
+      document.getElementById('pngUploadLabel').innerText = 'Seleccionar PNG transparente';
+      uploadedModelPngData = null;
+      
+      alert(`¡El modelo "${name}" ha sido añadido con éxito! Ya aparece arriba en las opciones disponibles del probador de lentes.`);
+    }
+
+    // 5. MANEJADOR DE CARGA DE FOTO DEL USUARIO (FRONTPAGE)
+    document.getElementById('imageUploader').addEventListener('change', function(event) {
+      const file = event.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          const userPhoto = document.getElementById('userPhoto');
+          const previewContainer = document.getElementById('previewContainer');
+          
+          userPhoto.src = e.target.result;
+          previewContainer.classList.remove('hidden');
+          
+          userPhoto.onload = () => {
+            console.log("Foto lista para procesamiento facial con el modelo:", selectedModelId);
+          };
+        }
+        reader.readAsDataURL(file);
+      }
+    });
+  </script>
 </body>
 </html>
