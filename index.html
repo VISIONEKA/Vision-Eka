@@ -1063,67 +1063,15 @@
         <p class="text-slate-500 text-sm">Contamos con marcas líderes y armazones industriales certificados para responder a los estándares más exigentes.</p>
       </div>
 
-      <!-- Filters Row -->
-      <div class="flex flex-wrap justify-center gap-3 mb-12" data-aos="fade-up">
+      <!-- Filters Row: se genera dinámicamente según las categorías reales del catálogo -->
+      <div id="productFilterRow" class="flex flex-wrap justify-center gap-3 mb-12" data-aos="fade-up">
         <button class="filter-btn active px-6 py-3 rounded-full border border-slate-900/5 bg-brand-dark hover:border-brand-sky/30 text-xs font-bold uppercase tracking-wider transition-all" data-filter="all">Todos</button>
-        <button class="filter-btn px-6 py-3 rounded-full border border-slate-900/5 bg-brand-dark hover:border-brand-sky/30 text-xs font-bold uppercase tracking-wider transition-all" data-filter="seguridad">Seguridad Industrial</button>
-        <button class="filter-btn px-6 py-3 rounded-full border border-slate-900/5 bg-brand-dark hover:border-brand-sky/30 text-xs font-bold uppercase tracking-wider transition-all" data-filter="ejecutivos">Ejecutivos / Oficina</button>
-        <button class="filter-btn px-6 py-3 rounded-full border border-slate-900/5 bg-brand-dark hover:border-brand-sky/30 text-xs font-bold uppercase tracking-wider transition-all" data-filter="dama">Para Dama</button>
-        <button class="filter-btn px-6 py-3 rounded-full border border-slate-900/5 bg-brand-dark hover:border-brand-sky/30 text-xs font-bold uppercase tracking-wider transition-all" data-filter="caballero">Para Caballero</button>
       </div>
 
-      <!-- Grid Showcase -->
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-        
-        <!-- Frame 1 -->
-        <div class="gallery-item rounded-3xl overflow-hidden border border-slate-900/5 bg-brand-dark flex flex-col hover:border-brand-sky/30 hover:-translate-y-2 transition-all duration-300" data-category="seguridad" data-aos="fade-up">
-          <div class="h-56 relative overflow-hidden bg-slate-900 flex items-center justify-center">
-            <img src="https://images.unsplash.com/photo-1504439904031-93ded9f93e4e?w=600&q=80" alt="Lente industrial" class="w-full h-full object-cover">
-          </div>
-          <div class="p-6 flex flex-col flex-grow">
-            <span class="text-[9px] font-extrabold text-brand-teal uppercase tracking-widest mb-1.5">Protección Industrial</span>
-            <h4 class="font-display font-bold text-base text-brand-ink mb-2">Armazón de Seguridad ANSI Z87.1</h4>
-            <p class="text-xs text-slate-500 leading-relaxed mb-4">Diseñado con escudos laterales integrales y micas de policarbonato de alta resistencia química e impacto mecánico.</p>
-            <button onclick="goTryOnLens('seguridad-ansi')" class="mt-auto flex items-center justify-center gap-2 text-[10px] font-bold uppercase tracking-widest text-brand-sky border border-brand-sky/30 hover:bg-brand-sky/10 rounded-full py-2.5 transition-all duration-300">
-              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
-              Pruébatelo en vivo
-            </button>
-          </div>
-        </div>
-
-        <!-- Frame 2 -->
-        <div class="gallery-item rounded-3xl overflow-hidden border border-slate-900/5 bg-brand-dark flex flex-col hover:border-brand-sky/30 hover:-translate-y-2 transition-all duration-300" data-category="ejecutivos" data-aos="fade-up" data-aos-delay="80">
-          <div class="h-56 relative overflow-hidden bg-slate-900 flex items-center justify-center">
-            <img src="https://images.unsplash.com/photo-1574258495973-f010dfbb5371?w=600&q=80" alt="Lente corporativo" class="w-full h-full object-cover">
-          </div>
-          <div class="p-6 flex flex-col flex-grow">
-            <span class="text-[9px] font-extrabold text-brand-sky uppercase tracking-widest mb-1.5">Corporativos</span>
-            <h4 class="font-display font-bold text-base text-brand-ink mb-2">Marcos Ejecutivos Ultraligeros</h4>
-            <p class="text-xs text-slate-500 leading-relaxed mb-4">Línea ejecutiva en aleación flexible. Ideal para combinar confort y ergonomía óptima frente a pantallas.</p>
-            <button onclick="goTryOnLens('ejecutivo')" class="mt-auto flex items-center justify-center gap-2 text-[10px] font-bold uppercase tracking-widest text-brand-sky border border-brand-sky/30 hover:bg-brand-sky/10 rounded-full py-2.5 transition-all duration-300">
-              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
-              Pruébatelo en vivo
-            </button>
-          </div>
-        </div>
-
-        <!-- Frame 3 -->
-        <div class="gallery-item rounded-3xl overflow-hidden border border-slate-900/5 bg-brand-dark flex flex-col hover:border-brand-sky/30 hover:-translate-y-2 transition-all duration-300" data-category="dama" data-aos="fade-up" data-aos-delay="160">
-          <div class="h-56 relative overflow-hidden bg-slate-900 flex items-center justify-center">
-            <img src="https://images.unsplash.com/photo-1583394293292-cb7f2e4b2ef3?w=600&q=80" alt="Lentes dama" class="w-full h-full object-cover">
-          </div>
-          <div class="p-6 flex flex-col flex-grow">
-            <span class="text-[9px] font-extrabold text-brand-sky uppercase tracking-widest mb-1.5">Tendencias Dama</span>
-            <h4 class="font-display font-bold text-base text-brand-ink mb-2">Colección Acetato Italiano</h4>
-            <p class="text-xs text-slate-500 leading-relaxed mb-4">Estructuras estéticas contemporáneas que realzan el estilo formal con un ajuste sumamente cómodo.</p>
-            <button onclick="goTryOnLens('dama-acetato')" class="mt-auto flex items-center justify-center gap-2 text-[10px] font-bold uppercase tracking-widest text-brand-sky border border-brand-sky/30 hover:bg-brand-sky/10 rounded-full py-2.5 transition-all duration-300">
-              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
-              Pruébatelo en vivo
-            </button>
-          </div>
-        </div>
-
-      </div>
+      <!-- Grid Showcase: se llena con los lentes publicados desde el panel de administrador -->
+      <div id="productGalleryLoading" class="text-center text-xs text-slate-500 py-10">Cargando catálogo...</div>
+      <div id="productGalleryEmpty" class="hidden text-center text-sm text-slate-500 py-10">Muy pronto publicaremos nuestro catálogo de armazones aquí.</div>
+      <div id="productGalleryGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8"></div>
 
 
     </div>
@@ -1620,7 +1568,7 @@
       <div class="flex items-center justify-between mb-10">
         <div>
           <span class="text-brand-sky font-bold text-xs tracking-widest uppercase mb-1 block">Visión EKA</span>
-          <h2 class="font-display font-bold text-2xl text-brand-ink">Gestión de Catálogo de Armazones</h2>
+          <h2 class="font-display font-bold text-2xl text-brand-ink">Gestión de Lentes y Probador Virtual</h2>
         </div>
         <a href="#" onclick="closeAdminPanel()" class="flex items-center gap-2 text-slate-500 hover:text-brand-ink text-xs font-bold uppercase tracking-wider">
           ✕ Cerrar Panel
@@ -1629,17 +1577,78 @@
 
       <!-- Step-by-step instructions -->
       <div class="bg-brand-navy border border-slate-900/10 rounded-3xl p-6 mb-8">
-        <h3 class="font-display font-bold text-sm text-brand-ink mb-3">📋 Cómo publicar un armazón nuevo</h3>
+        <h3 class="font-display font-bold text-sm text-brand-ink mb-3">📋 Cómo funciona este panel</h3>
         <ol class="text-xs text-slate-600 space-y-2 list-decimal list-inside leading-relaxed">
-          <li>Escriba el nombre del armazón.</li>
-          <li>Arrastre la foto (PNG, fondo transparente recomendado) al recuadro, o haga clic para elegirla desde su computadora.</li>
-          <li>Presione <strong class="text-brand-ink">"Subir y publicar"</strong>. La imagen se guarda en Firebase y aparece de inmediato en el catálogo del sitio — no hay que tocar GitHub ni ningún archivo.</li>
+          <li><strong class="text-brand-ink">Catálogo de Lentes:</strong> registre cada lente con su modelo, color, unidades y precio, y asígnelo a una categoría (elija una existente o cree una nueva, por ejemplo "Armazones Ligeros"). Desde la lista puede ocultarlo temporalmente (deja de mostrarse al público sin perder el registro) o eliminarlo por completo si se agotó.</li>
+          <li><strong class="text-brand-ink">Filtros del Probador Virtual:</strong> suba, aparte, la imagen recortada (PNG con fondo transparente recomendado) de cada armazón junto con el modelo al que corresponde. Esa imagen es la que se superpone sobre la cara en la cámara del probador en vivo.</li>
+          <li>Todo se guarda en Firebase y aparece de inmediato en el sitio — no hay que tocar GitHub ni ningún archivo.</li>
         </ol>
       </div>
 
-      <!-- Add new frame form (direct upload to Firebase Storage + Firestore) -->
+      <!-- Add new lens/product form (modelo, color, unidades, precio, categoría) -->
       <div class="bg-brand-navy border border-slate-900/10 rounded-3xl p-6 mb-8">
-        <h3 class="font-display font-bold text-sm text-brand-ink mb-4">➕ Agregar Armazón</h3>
+        <h3 class="font-display font-bold text-sm text-brand-ink mb-4">🕶️ Agregar Lente al Catálogo</h3>
+
+        <div class="grid sm:grid-cols-2 gap-4 mb-4">
+          <div>
+            <label class="block text-[9px] uppercase tracking-widest text-slate-500 font-extrabold mb-2">Modelo</label>
+            <input type="text" id="adminProductModel" placeholder="Aviador Clásico" class="w-full p-3.5 bg-brand-dark border border-slate-900/10 rounded-xl text-sm text-brand-ink focus:border-brand-sky focus:outline-none">
+          </div>
+          <div>
+            <label class="block text-[9px] uppercase tracking-widest text-slate-500 font-extrabold mb-2">Color</label>
+            <input type="text" id="adminProductColor" placeholder="Dorado" class="w-full p-3.5 bg-brand-dark border border-slate-900/10 rounded-xl text-sm text-brand-ink focus:border-brand-sky focus:outline-none">
+          </div>
+          <div>
+            <label class="block text-[9px] uppercase tracking-widest text-slate-500 font-extrabold mb-2">Unidades disponibles <span class="normal-case text-slate-600/70 font-medium">(opcional)</span></label>
+            <input type="number" min="0" step="1" id="adminProductUnits" placeholder="Ej. 12" class="w-full p-3.5 bg-brand-dark border border-slate-900/10 rounded-xl text-sm text-brand-ink focus:border-brand-sky focus:outline-none">
+          </div>
+          <div>
+            <label class="block text-[9px] uppercase tracking-widest text-slate-500 font-extrabold mb-2">Precio <span class="normal-case text-slate-600/70 font-medium">(opcional)</span></label>
+            <input type="number" min="0" step="0.01" id="adminProductPrice" placeholder="Ej. 890.00" class="w-full p-3.5 bg-brand-dark border border-slate-900/10 rounded-xl text-sm text-brand-ink focus:border-brand-sky focus:outline-none">
+          </div>
+        </div>
+
+        <div class="mb-4">
+          <label class="block text-[9px] uppercase tracking-widest text-slate-500 font-extrabold mb-2">Categoría</label>
+          <select id="adminProductCategorySelect" class="w-full p-3.5 bg-brand-dark border border-slate-900/10 rounded-xl text-sm text-brand-ink focus:border-brand-sky focus:outline-none mb-2">
+            <option value="">Seleccione una categoría...</option>
+            <option value="__new__">+ Crear nueva categoría</option>
+          </select>
+          <input type="text" id="adminProductNewCategoryInput" placeholder="Ej. Armazones Ligeros" class="hidden w-full p-3.5 bg-brand-dark border border-slate-900/10 rounded-xl text-sm text-brand-ink focus:border-brand-sky focus:outline-none">
+        </div>
+
+        <div class="mb-4">
+          <label class="block text-[9px] uppercase tracking-widest text-slate-500 font-extrabold mb-2">Foto del lente <span class="normal-case text-slate-600/70 font-medium">(opcional)</span></label>
+          <div id="adminProductDropzone" class="relative border-2 border-dashed border-slate-900/15 hover:border-brand-sky/50 rounded-2xl p-6 text-center transition-all cursor-pointer bg-brand-dark/40">
+            <input type="file" id="adminProductFileInput" accept="image/png,image/webp,image/jpeg" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer">
+            <div id="adminProductDropzoneIdle">
+              <span class="text-2xl block mb-2">🖼️</span>
+              <p class="text-xs text-slate-500">Arrastre la foto aquí o haga clic para elegirla</p>
+            </div>
+            <div id="adminProductDropzonePreviewWrap" class="hidden flex-col items-center gap-2">
+              <img id="adminProductDropzonePreview" class="max-h-24 object-contain" alt="Vista previa">
+              <span id="adminProductDropzoneFileName" class="text-[10px] text-slate-500"></span>
+            </div>
+          </div>
+        </div>
+
+        <button onclick="adminAddProduct()" id="adminAddProductBtn" class="bg-brand-sky/10 border border-brand-sky/30 text-brand-sky font-bold text-xs uppercase tracking-wider py-3 px-6 rounded-full hover:bg-brand-sky/20 transition-all">
+          Agregar Lente
+        </button>
+        <p id="adminAddProductStatus" class="text-[11px] text-slate-500 mt-3"></p>
+      </div>
+
+      <!-- Products currently published, editable (ocultar/mostrar o eliminar) -->
+      <div class="bg-brand-navy border border-slate-900/10 rounded-3xl p-6 mb-8">
+        <h3 class="font-display font-bold text-sm text-brand-ink mb-4">📦 Lentes en Catálogo</h3>
+        <div id="adminProductList" class="space-y-3 mb-2">
+          <p id="adminProductListEmpty" class="text-xs text-slate-600/80 italic">Aún no hay lentes registrados.</p>
+        </div>
+      </div>
+
+      <!-- Add try-on filter image, linked to a model (feeds the live camera widget) -->
+      <div class="bg-brand-navy border border-slate-900/10 rounded-3xl p-6 mb-8">
+        <h3 class="font-display font-bold text-sm text-brand-ink mb-4">🎥 Imagen del Filtro para el Probador Virtual</h3>
         <div class="mb-4">
           <label class="block text-[9px] uppercase tracking-widest text-slate-500 font-extrabold mb-2">Nombre del armazón</label>
           <input type="text" id="adminLensName" placeholder="Aviador Dorado" class="w-full p-3.5 bg-brand-dark border border-slate-900/10 rounded-xl text-sm text-brand-ink focus:border-brand-sky focus:outline-none">
@@ -1666,9 +1675,9 @@
 
       <!-- Frames currently published (live from Firestore) -->
       <div class="bg-brand-navy border border-slate-900/10 rounded-3xl p-6">
-        <h3 class="font-display font-bold text-sm text-brand-ink mb-4">🕶️ Armazones publicados</h3>
+        <h3 class="font-display font-bold text-sm text-brand-ink mb-4">🎥 Filtros publicados en el probador</h3>
         <div id="adminLensList" class="space-y-3 mb-2">
-          <p id="adminLensListEmpty" class="text-xs text-slate-600/80 italic">Aún no hay armazones publicados.</p>
+          <p id="adminLensListEmpty" class="text-xs text-slate-600/80 italic">Aún no hay filtros publicados.</p>
         </div>
       </div>
 
@@ -2114,8 +2123,115 @@
       tryonCtx.restore();
     }
 
+    // =========================================================
+    // ---- PUBLIC PRODUCT GALLERY (sección "Portafolio Óptico") ----
+    // Se alimenta directamente de lo que se publica en el panel de
+    // administrador (colección productos_lentes). Los lentes marcados
+    // como "oculto" ahí NUNCA se muestran aquí.
+    // =========================================================
+
+    function escapeHtml(str) {
+      return String(str).replace(/[&<>"']/g, (c) => ({
+        '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+      }[c]));
+    }
+
+    function slugifyCategory(nombre) {
+      return String(nombre).toLowerCase()
+        .normalize('NFD').replace(/[\u0300-\u036f]/g, '') // quita acentos
+        .replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+    }
+
+    async function loadPublicProductGallery() {
+      const loading = document.getElementById('productGalleryLoading');
+      const empty = document.getElementById('productGalleryEmpty');
+      const grid = document.getElementById('productGalleryGrid');
+      const filterRow = document.getElementById('productFilterRow');
+
+      try {
+        const fb = await window.firebaseReady;
+        const items = (await fb.fetchProducts()).filter(p => !p.oculto);
+
+        loading.classList.add('hidden');
+
+        if (items.length === 0) {
+          empty.classList.remove('hidden');
+          grid.innerHTML = '';
+          return;
+        }
+        empty.classList.add('hidden');
+
+        // ---- Filtros dinámicos según las categorías realmente publicadas ----
+        const categorias = [...new Set(items.map(p => p.categoria).filter(Boolean))];
+        filterRow.innerHTML = '<button class="filter-btn active px-6 py-3 rounded-full border border-slate-900/5 bg-brand-dark hover:border-brand-sky/30 text-xs font-bold uppercase tracking-wider transition-all" data-filter="all">Todos</button>' +
+          categorias.map(cat => `<button class="filter-btn px-6 py-3 rounded-full border border-slate-900/5 bg-brand-dark hover:border-brand-sky/30 text-xs font-bold uppercase tracking-wider transition-all" data-filter="${slugifyCategory(cat)}">${escapeHtml(cat)}</button>`).join('');
+
+        // ---- Tarjetas de producto ----
+        grid.innerHTML = items.map(p => {
+          const precioText = (p.precio !== null && p.precio !== undefined)
+            ? `$${Number(p.precio).toLocaleString('es-MX', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} MXN`
+            : null;
+          let stockBadge = '';
+          if (p.unidades !== null && p.unidades !== undefined) {
+            stockBadge = p.unidades > 0
+              ? `<span class="text-[9px] font-bold text-brand-teal">${p.unidades} disponibles</span>`
+              : `<span class="text-[9px] font-bold text-red-400">Agotado</span>`;
+          }
+          const imgTag = p.img
+            ? `<img src="${p.img}" alt="${escapeHtml(p.modelo)}" class="w-full h-full object-cover">`
+            : `<div class="w-full h-full flex items-center justify-center text-4xl">🕶️</div>`;
+
+          return `
+            <div class="gallery-item rounded-3xl overflow-hidden border border-slate-900/5 bg-brand-dark flex flex-col hover:border-brand-sky/30 hover:-translate-y-2 transition-all duration-300" data-category="${slugifyCategory(p.categoria)}">
+              <div class="h-56 relative overflow-hidden bg-slate-900 flex items-center justify-center">
+                ${imgTag}
+              </div>
+              <div class="p-6 flex flex-col flex-grow">
+                <span class="text-[9px] font-extrabold text-brand-sky uppercase tracking-widest mb-1.5">${escapeHtml(p.categoria)}</span>
+                <h4 class="font-display font-bold text-base text-brand-ink mb-1">${escapeHtml(p.modelo)}</h4>
+                <p class="text-xs text-slate-500 mb-3">Color: ${escapeHtml(p.color)}</p>
+                <div class="flex items-center justify-between mt-auto mb-4">
+                  <span class="text-sm font-display font-bold text-brand-ink">${precioText || ''}</span>
+                  ${stockBadge}
+                </div>
+                <a href="#simulator" class="flex items-center justify-center gap-2 text-[10px] font-bold uppercase tracking-widest text-brand-sky border border-brand-sky/30 hover:bg-brand-sky/10 rounded-full py-2.5 transition-all duration-300">
+                  <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                  Pruébatelo en vivo
+                </a>
+              </div>
+            </div>
+          `;
+        }).join('');
+
+        bindGalleryFilters();
+      } catch (err) {
+        console.error('Error al cargar el catálogo público:', err);
+        loading.classList.add('hidden');
+        empty.classList.remove('hidden');
+        empty.textContent = 'No se pudo cargar el catálogo en este momento.';
+      }
+    }
+
+    function bindGalleryFilters() {
+      const buttons = document.querySelectorAll('#productFilterRow .filter-btn');
+      buttons.forEach(btn => {
+        btn.addEventListener('click', () => {
+          buttons.forEach(b => b.classList.remove('active', 'border-brand-sky', 'text-brand-sky'));
+          btn.classList.add('active', 'border-brand-sky', 'text-brand-sky');
+
+          const activeFilter = btn.getAttribute('data-filter');
+          document.querySelectorAll('#productGalleryGrid .gallery-item').forEach(item => {
+            item.style.display = (activeFilter === 'all' || item.getAttribute('data-category') === activeFilter) ? 'flex' : 'none';
+          });
+        });
+      });
+      const activeBtn = document.querySelector('#productFilterRow .filter-btn.active');
+      if (activeBtn) activeBtn.classList.add('border-brand-sky', 'text-brand-sky');
+    }
+
     // Initialize catalog: load the published catalogo.json (falls back to demo)
     loadPublishedCatalog();
+    loadPublicProductGallery();
 
     // =========================================================
     // ---- HIDDEN ADMIN PANEL (now backed by Firebase Authentication) ----
@@ -2135,6 +2251,8 @@
           if (fb.isAdminLoggedIn()) {
             document.getElementById('adminLogin').classList.add('hidden');
             document.getElementById('adminDashboard').classList.remove('hidden');
+            adminLoadCategories();
+            adminLoadProductList();
             adminLoadLensList();
           } else {
             document.getElementById('adminLogin').classList.remove('hidden');
@@ -2169,6 +2287,8 @@
         document.getElementById('adminDashboard').classList.remove('hidden');
         errorMsg.classList.add('hidden');
         passInput.value = '';
+        adminLoadCategories();
+        adminLoadProductList();
         adminLoadLensList();
       } catch (err) {
         console.error('Admin login error:', err);
@@ -2267,7 +2387,7 @@
         const items = await fb.fetchCatalog();
 
         if (!items || items.length === 0) {
-          list.innerHTML = '<p id="adminLensListEmpty" class="text-xs text-slate-600/80 italic">Aún no hay armazones publicados.</p>';
+          list.innerHTML = '<p id="adminLensListEmpty" class="text-xs text-slate-600/80 italic">Aún no hay filtros publicados.</p>';
           return;
         }
 
@@ -2296,6 +2416,219 @@
       } catch (err) {
         console.error('Error al eliminar armazón:', err);
         alert('No se pudo eliminar el armazón. Intente de nuevo.');
+      }
+    }
+
+    // =========================================================
+    // ---- CATÁLOGO DE LENTES (modelo, color, unidades, precio, categoría) ----
+    // =========================================================
+
+    async function adminLoadCategories() {
+      const select = document.getElementById('adminProductCategorySelect');
+      if (!select) return;
+      try {
+        const fb = await window.firebaseReady;
+        const cats = await fb.fetchCategories();
+        const currentVal = select.value;
+
+        select.innerHTML = '<option value="">Seleccione una categoría...</option>' +
+          cats.map(c => `<option value="${c.nombre.replace(/"/g, '&quot;')}">${c.nombre}</option>`).join('') +
+          '<option value="__new__">+ Crear nueva categoría</option>';
+
+        if ([...select.options].some(o => o.value === currentVal)) {
+          select.value = currentVal;
+        }
+      } catch (err) {
+        console.error('Error al cargar categorías:', err);
+      }
+    }
+
+    document.getElementById('adminProductCategorySelect')?.addEventListener('change', (e) => {
+      const newCatInput = document.getElementById('adminProductNewCategoryInput');
+      if (e.target.value === '__new__') {
+        newCatInput.classList.remove('hidden');
+        newCatInput.focus();
+      } else {
+        newCatInput.classList.add('hidden');
+        newCatInput.value = '';
+      }
+    });
+
+    // ---- Dropzone (drag & drop + click-to-choose) para la foto del lente ----
+    let adminProductSelectedFile = null;
+    const adminProductDropzone = document.getElementById('adminProductDropzone');
+    const adminProductFileInput = document.getElementById('adminProductFileInput');
+    const adminProductDropzoneIdle = document.getElementById('adminProductDropzoneIdle');
+    const adminProductDropzonePreviewWrap = document.getElementById('adminProductDropzonePreviewWrap');
+    const adminProductDropzonePreview = document.getElementById('adminProductDropzonePreview');
+    const adminProductDropzoneFileName = document.getElementById('adminProductDropzoneFileName');
+
+    function adminHandleProductFile(file) {
+      if (!file || !file.type.startsWith('image/')) return;
+      adminProductSelectedFile = file;
+      const url = URL.createObjectURL(file);
+      adminProductDropzonePreview.src = url;
+      adminProductDropzoneFileName.textContent = file.name;
+      adminProductDropzoneIdle.classList.add('hidden');
+      adminProductDropzonePreviewWrap.classList.remove('hidden');
+      adminProductDropzonePreviewWrap.classList.add('flex');
+    }
+
+    adminProductFileInput?.addEventListener('change', (e) => adminHandleProductFile(e.target.files[0]));
+    ['dragover', 'dragenter'].forEach(evt => {
+      adminProductDropzone?.addEventListener(evt, (e) => { e.preventDefault(); adminProductDropzone.classList.add('border-brand-sky/60'); });
+    });
+    ['dragleave', 'drop'].forEach(evt => {
+      adminProductDropzone?.addEventListener(evt, (e) => { e.preventDefault(); adminProductDropzone.classList.remove('border-brand-sky/60'); });
+    });
+    adminProductDropzone?.addEventListener('drop', (e) => {
+      e.preventDefault();
+      const file = e.dataTransfer.files[0];
+      if (file) adminHandleProductFile(file);
+    });
+
+    async function adminAddProduct() {
+      const modelInput = document.getElementById('adminProductModel');
+      const colorInput = document.getElementById('adminProductColor');
+      const unitsInput = document.getElementById('adminProductUnits');
+      const priceInput = document.getElementById('adminProductPrice');
+      const catSelect = document.getElementById('adminProductCategorySelect');
+      const newCatInput = document.getElementById('adminProductNewCategoryInput');
+      const status = document.getElementById('adminAddProductStatus');
+      const btn = document.getElementById('adminAddProductBtn');
+
+      const modelo = modelInput.value.trim();
+      const color = colorInput.value.trim();
+      const unidadesRaw = unitsInput.value.trim();
+      const precioRaw = priceInput.value.trim();
+      let categoria = catSelect.value;
+      if (categoria === '__new__') {
+        categoria = newCatInput.value.trim();
+      }
+
+      if (!modelo || !color || !categoria) {
+        status.textContent = 'Escriba el modelo, el color y seleccione o cree una categoría antes de publicar.';
+        status.className = 'text-[11px] text-red-400 mt-3';
+        return;
+      }
+
+      btn.disabled = true;
+      status.textContent = 'Publicando lente...';
+      status.className = 'text-[11px] text-slate-500 mt-3';
+
+      try {
+        const fb = await window.firebaseReady;
+
+        // Crea la categoría si es nueva (o reutiliza la existente con ese nombre)
+        await fb.addCategory(categoria);
+
+        await fb.addProduct({
+          modelo,
+          color,
+          unidades: unidadesRaw ? parseInt(unidadesRaw, 10) : null,
+          precio: precioRaw ? parseFloat(precioRaw) : null,
+          categoria
+        }, adminProductSelectedFile);
+
+        status.textContent = '✓ Lente publicado en el catálogo.';
+        status.className = 'text-[11px] text-brand-teal mt-3 font-semibold';
+
+        // Reset form
+        modelInput.value = '';
+        colorInput.value = '';
+        unitsInput.value = '';
+        priceInput.value = '';
+        catSelect.value = '';
+        newCatInput.value = '';
+        newCatInput.classList.add('hidden');
+        adminProductSelectedFile = null;
+        adminProductFileInput.value = '';
+        adminProductDropzoneIdle.classList.remove('hidden');
+        adminProductDropzonePreviewWrap.classList.add('hidden');
+        adminProductDropzonePreviewWrap.classList.remove('flex');
+
+        adminLoadCategories();
+        adminLoadProductList();
+        loadPublicProductGallery();
+      } catch (err) {
+        console.error('Error al publicar lente:', err);
+        status.textContent = 'No se pudo publicar el lente. Verifique su conexión e intente de nuevo.';
+        status.className = 'text-[11px] text-red-400 mt-3';
+      } finally {
+        btn.disabled = false;
+      }
+    }
+
+    async function adminLoadProductList() {
+      const list = document.getElementById('adminProductList');
+      if (!list) return;
+      list.innerHTML = '<p class="text-xs text-slate-600/80 italic">Cargando...</p>';
+      try {
+        const fb = await window.firebaseReady;
+        const items = await fb.fetchProducts();
+
+        if (!items || items.length === 0) {
+          list.innerHTML = '<p id="adminProductListEmpty" class="text-xs text-slate-600/80 italic">Aún no hay lentes registrados.</p>';
+          return;
+        }
+
+        list.innerHTML = items.map(p => {
+          const precioText = (p.precio !== null && p.precio !== undefined)
+            ? `$${Number(p.precio).toLocaleString('es-MX', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
+            : 'Sin precio';
+          const unidadesText = (p.unidades !== null && p.unidades !== undefined) ? `${p.unidades} u.` : 'Sin especificar';
+          const ocultoBadge = p.oculto
+            ? '<span class="text-[9px] font-bold uppercase tracking-wide text-amber-500 bg-amber-500/10 px-2 py-0.5 rounded-full whitespace-nowrap">Oculto</span>'
+            : '<span class="text-[9px] font-bold uppercase tracking-wide text-brand-teal bg-brand-teal/10 px-2 py-0.5 rounded-full whitespace-nowrap">Visible</span>';
+          const thumb = p.img
+            ? `<img src="${p.img}" alt="${p.modelo}" class="w-10 h-10 object-contain rounded-lg bg-brand-navy border border-slate-900/5 p-1 flex-shrink-0">`
+            : '<div class="w-10 h-10 rounded-lg bg-brand-navy border border-slate-900/5 flex-shrink-0"></div>';
+
+          return `
+            <div class="flex flex-wrap items-center justify-between gap-3 bg-brand-dark border border-slate-900/5 rounded-xl p-3.5">
+              <div class="flex items-center gap-3 min-w-0">
+                ${thumb}
+                <div class="min-w-0">
+                  <span class="block text-brand-ink text-xs font-semibold truncate">${p.modelo} · ${p.color}</span>
+                  <span class="block text-[10px] text-slate-500 truncate">${p.categoria} · ${precioText} · ${unidadesText}</span>
+                </div>
+              </div>
+              <div class="flex items-center gap-3 flex-shrink-0">
+                ${ocultoBadge}
+                <button onclick="adminToggleProductVisibility('${p.id}', ${p.oculto ? 'false' : 'true'})" class="text-brand-sky hover:text-brand-teal text-xs font-bold uppercase tracking-wide">${p.oculto ? 'Mostrar' : 'Ocultar'}</button>
+                <button onclick="adminRemoveProduct('${p.id}', '${(p.storagePath || '').replace(/'/g, "\\'")}')" class="text-red-400 hover:text-red-300 text-xs font-bold uppercase tracking-wide">Eliminar</button>
+              </div>
+            </div>
+          `;
+        }).join('');
+      } catch (err) {
+        console.error('Error al cargar la lista de lentes:', err);
+        list.innerHTML = '<p class="text-xs text-red-400 italic">No se pudo cargar la lista.</p>';
+      }
+    }
+
+    async function adminToggleProductVisibility(id, newOculto) {
+      try {
+        const fb = await window.firebaseReady;
+        await fb.updateProductVisibility(id, newOculto);
+        adminLoadProductList();
+        loadPublicProductGallery();
+      } catch (err) {
+        console.error('Error al actualizar visibilidad del lente:', err);
+        alert('No se pudo actualizar el lente. Intente de nuevo.');
+      }
+    }
+
+    async function adminRemoveProduct(id, storagePath) {
+      if (!confirm('¿Eliminar este lente del catálogo? Esta acción no se puede deshacer.')) return;
+      try {
+        const fb = await window.firebaseReady;
+        await fb.deleteProduct(id, storagePath);
+        adminLoadProductList();
+        loadPublicProductGallery();
+      } catch (err) {
+        console.error('Error al eliminar lente:', err);
+        alert('No se pudo eliminar el lente. Intente de nuevo.');
       }
     }
 
@@ -2616,22 +2949,8 @@
     document.querySelector('.tab-btn.active').classList.add('bg-brand-sky', 'text-brand-ink');
 
     // ---- Product Showcase Filter System ----
-    document.querySelectorAll('.filter-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active', 'border-brand-sky', 'text-brand-sky'));
-        btn.classList.add('active', 'border-brand-sky', 'text-brand-sky');
-
-        const activeFilter = btn.getAttribute('data-filter');
-        document.querySelectorAll('.gallery-item').forEach(item => {
-          if (activeFilter === 'all' || item.getAttribute('data-category') === activeFilter) {
-            item.style.display = 'flex';
-          } else {
-            item.style.display = 'none';
-          }
-        });
-      });
-    });
-    document.querySelector('.filter-btn.active').classList.add('border-brand-sky', 'text-brand-sky');
+    // (el binding de los botones de filtro ahora se hace dinámicamente en
+    // bindGalleryFilters(), después de que el catálogo público se renderiza)
 
     // ---- Accordion UI Function ----
     document.querySelectorAll('.faq-question').forEach(btn => {
@@ -2743,7 +3062,7 @@
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-app.js";
     import { getAnalytics, isSupported as analyticsIsSupported } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-analytics.js";
     import {
-      getFirestore, collection, addDoc, getDocs, deleteDoc, doc,
+      getFirestore, collection, addDoc, getDocs, deleteDoc, doc, updateDoc,
       query, orderBy, limit, serverTimestamp
     } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-firestore.js";
     import {
@@ -2772,6 +3091,8 @@
 
     const CATALOG_COLLECTION = 'catalogo_lentes';
     const COMMENTS_COLLECTION = 'comentarios';
+    const PRODUCTS_COLLECTION = 'productos_lentes';
+    const CATEGORIES_COLLECTION = 'categorias_lentes';
 
     // ---- Catálogo de armazones (fotos) ----
     async function fetchCatalog() {
@@ -2796,6 +3117,67 @@
 
     async function deleteCatalogItem(id, storagePath) {
       await deleteDoc(doc(db, CATALOG_COLLECTION, id));
+      if (storagePath) {
+        try { await deleteObject(ref(storage, storagePath)); } catch (e) { /* image may already be gone */ }
+      }
+    }
+
+    // ---- Categorías del catálogo de lentes (ej. "Armazones Ligeros") ----
+    async function fetchCategories() {
+      const q = query(collection(db, CATEGORIES_COLLECTION), orderBy('nombre', 'asc'));
+      const snap = await getDocs(q);
+      return snap.docs.map(d => ({ id: d.id, ...d.data() }));
+    }
+
+    async function addCategory(nombre) {
+      const nombreLimpio = String(nombre).trim();
+      const existentes = await fetchCategories();
+      const encontrada = existentes.find(c => c.nombre.trim().toLowerCase() === nombreLimpio.toLowerCase());
+      if (encontrada) return encontrada;
+      const docRef = await addDoc(collection(db, CATEGORIES_COLLECTION), {
+        nombre: nombreLimpio,
+        createdAt: serverTimestamp()
+      });
+      return { id: docRef.id, nombre: nombreLimpio };
+    }
+
+    // ---- Catálogo de lentes (modelo, color, unidades, precio, categoría) ----
+    async function fetchProducts() {
+      const q = query(collection(db, PRODUCTS_COLLECTION), orderBy('createdAt', 'desc'));
+      const snap = await getDocs(q);
+      return snap.docs.map(d => ({ id: d.id, ...d.data() }));
+    }
+
+    async function addProduct(data, file) {
+      let imgUrl = null;
+      let storagePath = null;
+
+      if (file) {
+        storagePath = `lentes_productos/${Date.now()}_${file.name}`;
+        const fileRef = ref(storage, storagePath);
+        await uploadBytes(fileRef, file);
+        imgUrl = await getDownloadURL(fileRef);
+      }
+
+      await addDoc(collection(db, PRODUCTS_COLLECTION), {
+        modelo: data.modelo,
+        color: data.color,
+        unidades: (data.unidades === null || data.unidades === undefined || isNaN(data.unidades)) ? null : data.unidades,
+        precio: (data.precio === null || data.precio === undefined || isNaN(data.precio)) ? null : data.precio,
+        categoria: data.categoria,
+        img: imgUrl,
+        storagePath,
+        oculto: false,
+        createdAt: serverTimestamp()
+      });
+    }
+
+    async function updateProductVisibility(id, oculto) {
+      await updateDoc(doc(db, PRODUCTS_COLLECTION, id), { oculto: !!oculto });
+    }
+
+    async function deleteProduct(id, storagePath) {
+      await deleteDoc(doc(db, PRODUCTS_COLLECTION, id));
       if (storagePath) {
         try { await deleteObject(ref(storage, storagePath)); } catch (e) { /* image may already be gone */ }
       }
@@ -2843,7 +3225,13 @@
       signInAdmin,
       signOutAdmin,
       isAdminLoggedIn,
-      onAdminAuthChange
+      onAdminAuthChange,
+      fetchCategories,
+      addCategory,
+      fetchProducts,
+      addProduct,
+      updateProductVisibility,
+      deleteProduct
     });
   </script>
 </body>
