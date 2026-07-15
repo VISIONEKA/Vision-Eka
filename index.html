@@ -1617,21 +1617,17 @@
           <input type="text" id="adminProductNewCategoryInput" placeholder="Ej. Armazones Ligeros" class="hidden w-full p-3.5 bg-brand-dark border border-slate-900/10 rounded-xl text-sm text-brand-ink focus:border-brand-sky focus:outline-none">
         </div>
 
-        <div class="mb-4">
-          <label class="block text-[9px] uppercase tracking-widest text-slate-500 font-extrabold mb-2">Foto del lente <span class="normal-case text-slate-600/70 font-medium">(opcional)</span></label>
+          <div class="mb-4">
+          <label class="block text-[9px] uppercase tracking-widest text-slate-500 font-extrabold mb-2">Fotos del lente <span class="normal-case text-slate-600/70 font-medium">(opcional — puedes subir varias: modelo puesto, solo el armazón, distintos ángulos, etc.)</span></label>
           <div id="adminProductDropzone" class="relative border-2 border-dashed border-slate-900/15 hover:border-brand-sky/50 rounded-2xl p-6 text-center transition-all cursor-pointer bg-brand-dark/40">
-            <input type="file" id="adminProductFileInput" accept="image/png,image/webp,image/jpeg" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer">
+            <input type="file" id="adminProductFileInput" accept="image/png,image/webp,image/jpeg" multiple class="absolute inset-0 w-full h-full opacity-0 cursor-pointer">
             <div id="adminProductDropzoneIdle">
               <span class="text-2xl block mb-2">🖼️</span>
-              <p class="text-xs text-slate-500">Arrastre la foto aquí o haga clic para elegirla</p>
-            </div>
-            <div id="adminProductDropzonePreviewWrap" class="hidden flex-col items-center gap-2">
-              <img id="adminProductDropzonePreview" class="max-h-24 object-contain" alt="Vista previa">
-              <span id="adminProductDropzoneFileName" class="text-[10px] text-slate-500"></span>
+              <p class="text-xs text-slate-500">Arrastre una o varias fotos aquí, o haga clic para elegirlas</p>
             </div>
           </div>
+          <div id="adminProductDropzonePreviewGrid" class="hidden grid grid-cols-4 sm:grid-cols-6 gap-3 mt-4"></div>
         </div>
-
         <button onclick="adminAddProduct()" id="adminAddProductBtn" class="bg-brand-sky/10 border border-brand-sky/30 text-brand-sky font-bold text-xs uppercase tracking-wider py-3 px-6 rounded-full hover:bg-brand-sky/20 transition-all">
           Agregar Lente
         </button>
@@ -2177,14 +2173,23 @@
               ? `<span class="text-[9px] font-bold text-brand-teal">${p.unidades} disponibles</span>`
               : `<span class="text-[9px] font-bold text-red-400">Agotado</span>`;
           }
-          const imgTag = p.img
-            ? `<img src="${p.img}" alt="${escapeHtml(p.modelo)}" class="w-full h-full object-cover">`
+          const imgsArr = (p.imgs && p.imgs.length) ? p.imgs : (p.img ? [p.img] : []);
+          window.__galleryImgs = window.__galleryImgs || {};
+          window.__galleryImgs[p.id] = imgsArr;
+          const imgTag = imgsArr.length
+            ? `<img id="galImg-${p.id}" src="${imgsArr[0]}" alt="${escapeHtml(p.modelo)}" class="w-full h-full object-cover">`
             : `<div class="w-full h-full flex items-center justify-center text-4xl">🕶️</div>`;
+          const navArrows = imgsArr.length > 1 ? `
+            <button onclick="event.preventDefault(); galleryNav('${p.id}', -1)" class="absolute left-2 top-1/2 -translate-y-1/2 w-7 h-7 rounded-full bg-brand-navy/80 text-brand-ink text-xs flex items-center justify-center">‹</button>
+            <button onclick="event.preventDefault(); galleryNav('${p.id}', 1)" class="absolute right-2 top-1/2 -translate-y-1/2 w-7 h-7 rounded-full bg-brand-navy/80 text-brand-ink text-xs flex items-center justify-center">›</button>
+            <span class="absolute bottom-2 right-2 bg-brand-navy/80 text-brand-ink text-[9px] font-bold px-2 py-0.5 rounded-full">1/${imgsArr.length}</span>
+          ` : '';
 
           return `
             <div class="gallery-item rounded-3xl overflow-hidden border border-slate-900/5 bg-brand-dark flex flex-col hover:border-brand-sky/30 hover:-translate-y-2 transition-all duration-300" data-category="${slugifyCategory(p.categoria)}">
-              <div class="h-56 relative overflow-hidden bg-slate-900 flex items-center justify-center">
+             <div class="h-56 relative overflow-hidden bg-slate-900 flex items-center justify-center" id="galWrap-${p.id}">
                 ${imgTag}
+                ${navArrows}
               </div>
               <div class="p-6 flex flex-col flex-grow">
                 <span class="text-[9px] font-extrabold text-brand-sky uppercase tracking-widest mb-1.5">${escapeHtml(p.categoria)}</span>
@@ -2229,8 +2234,21 @@
       if (activeBtn) activeBtn.classList.add('border-brand-sky', 'text-brand-sky');
     }
 
+    function galleryNav(id, dir) {
+      const imgs = (window.__galleryImgs && window.__galleryImgs[id]) || [];
+      if (imgs.length < 2) return;
+      const imgEl = document.getElementById(`galImg-${id}`);
+      let idx = imgs.indexOf(imgEl.src);
+      if (idx === -1) idx = 0;
+      idx = (idx + dir + imgs.length) % imgs.length;
+      imgEl.src = imgs[idx];
+      const counter = imgEl.closest('#galWrap-' + id)?.querySelector('span');
+      if (counter) counter.textContent = `${idx + 1}/${imgs.length}`;
+    }
+
     // Initialize catalog: load the published catalogo.json (falls back to demo)
     loadPublishedCatalog();
+    loadPublicProductGallery();
     loadPublicProductGallery();
 
     // =========================================================
@@ -2455,26 +2473,39 @@
     });
 
     // ---- Dropzone (drag & drop + click-to-choose) para la foto del lente ----
-    let adminProductSelectedFile = null;
+  let adminProductSelectedFiles = []; // ahora es un arreglo de File
     const adminProductDropzone = document.getElementById('adminProductDropzone');
     const adminProductFileInput = document.getElementById('adminProductFileInput');
     const adminProductDropzoneIdle = document.getElementById('adminProductDropzoneIdle');
-    const adminProductDropzonePreviewWrap = document.getElementById('adminProductDropzonePreviewWrap');
-    const adminProductDropzonePreview = document.getElementById('adminProductDropzonePreview');
-    const adminProductDropzoneFileName = document.getElementById('adminProductDropzoneFileName');
+    const adminProductDropzonePreviewGrid = document.getElementById('adminProductDropzonePreviewGrid');
 
-    function adminHandleProductFile(file) {
-      if (!file || !file.type.startsWith('image/')) return;
-      adminProductSelectedFile = file;
-      const url = URL.createObjectURL(file);
-      adminProductDropzonePreview.src = url;
-      adminProductDropzoneFileName.textContent = file.name;
-      adminProductDropzoneIdle.classList.add('hidden');
-      adminProductDropzonePreviewWrap.classList.remove('hidden');
-      adminProductDropzonePreviewWrap.classList.add('flex');
+    function adminRenderProductPreviews() {
+      if (adminProductSelectedFiles.length === 0) {
+        adminProductDropzonePreviewGrid.classList.add('hidden');
+        adminProductDropzonePreviewGrid.innerHTML = '';
+        return;
+      }
+      adminProductDropzonePreviewGrid.classList.remove('hidden');
+      adminProductDropzonePreviewGrid.innerHTML = adminProductSelectedFiles.map((file, idx) => `
+        <div class="relative group">
+          <img src="${URL.createObjectURL(file)}" class="w-full aspect-square object-cover rounded-xl border border-slate-900/10" alt="${file.name}">
+          <button type="button" onclick="adminRemoveProductPreview(${idx})" class="absolute -top-2 -right-2 w-6 h-6 rounded-full bg-red-500 text-white text-xs font-bold flex items-center justify-center shadow-lg">✕</button>
+        </div>
+      `).join('');
     }
 
-    adminProductFileInput?.addEventListener('change', (e) => adminHandleProductFile(e.target.files[0]));
+    function adminRemoveProductPreview(idx) {
+      adminProductSelectedFiles.splice(idx, 1);
+      adminRenderProductPreviews();
+    }
+
+    function adminHandleProductFiles(fileList) {
+      const files = Array.from(fileList || []).filter(f => f.type.startsWith('image/'));
+      adminProductSelectedFiles = adminProductSelectedFiles.concat(files);
+      adminRenderProductPreviews();
+    }
+
+    adminProductFileInput?.addEventListener('change', (e) => { adminHandleProductFiles(e.target.files); adminProductFileInput.value = ''; });
     ['dragover', 'dragenter'].forEach(evt => {
       adminProductDropzone?.addEventListener(evt, (e) => { e.preventDefault(); adminProductDropzone.classList.add('border-brand-sky/60'); });
     });
@@ -2483,8 +2514,7 @@
     });
     adminProductDropzone?.addEventListener('drop', (e) => {
       e.preventDefault();
-      const file = e.dataTransfer.files[0];
-      if (file) adminHandleProductFile(file);
+      adminHandleProductFiles(e.dataTransfer.files);
     });
 
     async function adminAddProduct() {
@@ -2541,12 +2571,9 @@
         catSelect.value = '';
         newCatInput.value = '';
         newCatInput.classList.add('hidden');
-        adminProductSelectedFile = null;
+       adminProductSelectedFiles = [];
         adminProductFileInput.value = '';
-        adminProductDropzoneIdle.classList.remove('hidden');
-        adminProductDropzonePreviewWrap.classList.add('hidden');
-        adminProductDropzonePreviewWrap.classList.remove('flex');
-
+        adminRenderProductPreviews();
         adminLoadCategories();
         adminLoadProductList();
         loadPublicProductGallery();
@@ -2580,8 +2607,9 @@
           const ocultoBadge = p.oculto
             ? '<span class="text-[9px] font-bold uppercase tracking-wide text-amber-500 bg-amber-500/10 px-2 py-0.5 rounded-full whitespace-nowrap">Oculto</span>'
             : '<span class="text-[9px] font-bold uppercase tracking-wide text-brand-teal bg-brand-teal/10 px-2 py-0.5 rounded-full whitespace-nowrap">Visible</span>';
-          const thumb = p.img
-            ? `<img src="${p.img}" alt="${p.modelo}" class="w-10 h-10 object-contain rounded-lg bg-brand-navy border border-slate-900/5 p-1 flex-shrink-0">`
+         const imgsArr = (p.imgs && p.imgs.length) ? p.imgs : (p.img ? [p.img] : []);
+          const thumb = imgsArr.length
+            ? `<div class="relative flex-shrink-0"><img src="${imgsArr[0]}" alt="${p.modelo}" class="w-10 h-10 object-cover rounded-lg bg-brand-navy border border-slate-900/5">${imgsArr.length > 1 ? `<span class="absolute -bottom-1 -right-1 bg-brand-sky text-brand-ink text-[8px] font-bold rounded-full w-4 h-4 flex items-center justify-center">${imgsArr.length}</span>` : ''}</div>`
             : '<div class="w-10 h-10 rounded-lg bg-brand-navy border border-slate-900/5 flex-shrink-0"></div>';
 
           return `
@@ -2596,7 +2624,7 @@
               <div class="flex items-center gap-3 flex-shrink-0">
                 ${ocultoBadge}
                 <button onclick="adminToggleProductVisibility('${p.id}', ${p.oculto ? 'false' : 'true'})" class="text-brand-sky hover:text-brand-teal text-xs font-bold uppercase tracking-wide">${p.oculto ? 'Mostrar' : 'Ocultar'}</button>
-                <button onclick="adminRemoveProduct('${p.id}', '${(p.storagePath || '').replace(/'/g, "\\'")}')" class="text-red-400 hover:text-red-300 text-xs font-bold uppercase tracking-wide">Eliminar</button>
+                <button onclick='adminRemoveProduct("${p.id}", ${JSON.stringify(p.storagePaths || (p.storagePath ? [p.storagePath] : []))})' class="text-red-400 hover:text-red-300 text-xs font-bold uppercase tracking-wide">Eliminar</button>
               </div>
             </div>
           `;
@@ -3148,15 +3176,18 @@
       return snap.docs.map(d => ({ id: d.id, ...d.data() }));
     }
 
-    async function addProduct(data, file) {
-      let imgUrl = null;
-      let storagePath = null;
+  async function addProduct(data, files) {
+      const fileArray = Array.isArray(files) ? files : (files ? [files] : []);
+      const imgs = [];
+      const storagePaths = [];
 
-      if (file) {
-        storagePath = `lentes_productos/${Date.now()}_${file.name}`;
+      for (const file of fileArray) {
+        const storagePath = `lentes_productos/${Date.now()}_${Math.random().toString(36).slice(2)}_${file.name}`;
         const fileRef = ref(storage, storagePath);
         await uploadBytes(fileRef, file);
-        imgUrl = await getDownloadURL(fileRef);
+        const url = await getDownloadURL(fileRef);
+        imgs.push(url);
+        storagePaths.push(storagePath);
       }
 
       await addDoc(collection(db, PRODUCTS_COLLECTION), {
@@ -3165,8 +3196,10 @@
         unidades: (data.unidades === null || data.unidades === undefined || isNaN(data.unidades)) ? null : data.unidades,
         precio: (data.precio === null || data.precio === undefined || isNaN(data.precio)) ? null : data.precio,
         categoria: data.categoria,
-        img: imgUrl,
-        storagePath,
+        imgs,
+        storagePaths,
+        img: imgs[0] || null,           // compatibilidad con código viejo
+        storagePath: storagePaths[0] || null,
         oculto: false,
         createdAt: serverTimestamp()
       });
@@ -3176,10 +3209,11 @@
       await updateDoc(doc(db, PRODUCTS_COLLECTION, id), { oculto: !!oculto });
     }
 
-    async function deleteProduct(id, storagePath) {
+async function deleteProduct(id, storagePaths) {
       await deleteDoc(doc(db, PRODUCTS_COLLECTION, id));
-      if (storagePath) {
-        try { await deleteObject(ref(storage, storagePath)); } catch (e) { /* image may already be gone */ }
+      const paths = Array.isArray(storagePaths) ? storagePaths : (storagePaths ? [storagePaths] : []);
+      for (const p of paths) {
+        try { await deleteObject(ref(storage, p)); } catch (e) { /* image may already be gone */ }
       }
     }
 
