@@ -218,21 +218,21 @@
 <body class="bg-brand-navy text-slate-700 font-sans antialiased overflow-x-hidden selection:bg-brand-sky selection:text-brand-ink">
 
   <!-- ========== FLOATING HEADER & PILL NAVIGATION ========== -->
-  <header id="navbar" class="fixed top-0 left-0 w-full z-50 transition-all duration-500 py-6">
-    <div class="max-w-7xl mx-auto px-6">
-      <div class="flex items-center justify-between bg-brand-dark/30 backdrop-blur-xl border border-slate-900/5 px-6 lg:px-8 py-4 rounded-full shadow-2xl transition-all duration-500" id="navContainer">
+  <header id="navbar" class="fixed top-0 left-0 w-full z-50 transition-all duration-500 py-3 sm:py-6">
+    <div class="max-w-7xl mx-auto px-3 sm:px-6">
+      <div class="flex items-center justify-between bg-brand-dark/30 backdrop-blur-xl border border-slate-900/5 px-3 sm:px-6 lg:px-8 py-2.5 sm:py-4 rounded-full shadow-2xl transition-all duration-500" id="navContainer">
         
         <!-- Logo -->
-        <a href="#" class="flex items-center gap-3 group focus:outline-none">
-          <div class="w-10 h-10 bg-gradient-to-tr from-brand-sky to-brand-teal rounded-xl flex items-center justify-center shadow-lg shadow-brand-sky/20 group-hover:scale-105 transition-all duration-300">
-            <svg class="w-5 h-5 text-brand-ink" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+        <a href="#" class="flex items-center gap-2 sm:gap-3 group focus:outline-none min-w-0">
+          <div class="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-tr from-brand-sky to-brand-teal rounded-xl flex items-center justify-center shadow-lg shadow-brand-sky/20 group-hover:scale-105 transition-all duration-300 flex-shrink-0">
+            <svg class="w-4 h-4 sm:w-5 sm:h-5 text-brand-ink" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
               <path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
             </svg>
           </div>
-          <div>
-            <span class="font-display font-bold text-xl tracking-tight text-brand-ink block">Visión <span class="text-brand-sky font-extrabold">EKA</span></span>
-            <span class="text-[8px] tracking-widest uppercase text-slate-500 font-extrabold block -mt-1">Salud Ocupacional</span>
+          <div class="min-w-0">
+            <span class="font-display font-bold text-sm sm:text-xl tracking-tight text-brand-ink block truncate">Visión <span class="text-brand-sky font-extrabold">EKA</span></span>
+            <span class="hidden sm:block text-[7px] sm:text-[8px] tracking-widest uppercase text-slate-500 font-extrabold -mt-1 truncate">Salud Ocupacional</span>
           </div>
         </a>
 
@@ -249,15 +249,15 @@
         </nav>
 
         <!-- CTA & Hamburger -->
-        <div class="flex items-center gap-4">
+        <div class="flex items-center gap-1 sm:gap-4 flex-shrink-0">
           <button onclick="openAccountModal()" id="navAccountBtn" class="hidden sm:flex items-center gap-1.5 text-slate-500 hover:text-brand-ink text-xs font-bold" title="Mi cuenta">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
             <span id="navAccountLabel">Mi Cuenta</span>
           </button>
 
-          <button onclick="openCartDrawer()" class="relative p-2 text-slate-500 hover:text-brand-ink" title="Carrito">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
-            <span id="cartBadge" class="hidden absolute -top-1 -right-1 bg-brand-coral text-white text-[9px] font-extrabold w-4.5 h-4.5 min-w-[18px] px-1 rounded-full items-center justify-center">0</span>
+          <button onclick="openCartDrawer()" class="relative p-1.5 sm:p-2 text-slate-500 hover:text-brand-ink" title="Carrito">
+            <svg class="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+            <span id="cartBadge" class="hidden absolute -top-0.5 -right-0.5 sm:-top-1 sm:-right-1 bg-brand-coral text-white text-[8px] sm:text-[9px] font-extrabold w-[16px] h-[16px] sm:w-[18px] sm:h-[18px] rounded-full items-center justify-center">0</span>
           </button>
 
           <a href="#contact" class="hidden sm:inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest bg-gradient-to-r from-brand-sky to-brand-teal hover:from-brand-sky/90 hover:to-brand-teal/90 text-brand-ink py-3 px-6 rounded-full transition-all hover:shadow-lg hover:shadow-brand-sky/35 transform hover:-translate-y-0.5">
@@ -265,8 +265,8 @@
             Cotizar Campaña
           </a>
           
-          <button id="menuToggle" class="lg:hidden p-2.5 rounded-full text-slate-600 hover:text-brand-ink hover:bg-slate-900/5 transition-all" aria-label="Abrir menú">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+          <button id="menuToggle" class="lg:hidden p-1.5 sm:p-2.5 rounded-full text-slate-600 hover:text-brand-ink hover:bg-slate-900/5 transition-all" aria-label="Abrir menú">
+            <svg class="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16m-7 6h7"/>
             </svg>
           </button>
@@ -305,7 +305,7 @@
       </button>
       <button onclick="openCartDrawer()" class="relative flex items-center justify-center gap-3 bg-slate-900/5 text-brand-ink py-4 rounded-full font-bold transition-all hover:bg-slate-900/10">
         🛒 Ver Carrito
-        <span id="cartBadgeMobile" class="hidden absolute top-2 right-6 bg-brand-coral text-white text-[9px] font-extrabold w-4.5 h-4.5 min-w-[18px] px-1 rounded-full items-center justify-center">0</span>
+        <span id="cartBadgeMobile" class="hidden absolute top-2 right-6 bg-brand-coral text-white text-[9px] font-extrabold w-[18px] h-[18px] rounded-full items-center justify-center">0</span>
       </button>
       <a href="tel:4421295277" class="flex items-center justify-center gap-3 bg-brand-light/80 text-brand-ink py-4 rounded-full font-bold transition-all hover:bg-brand-light">
         📞 Llamar directo
@@ -317,7 +317,7 @@
   </div>
 
   <!-- ========== CINEMATIC HERO SECTION (TEXT OVER HIGH-IMPACT BACKDROP IMAGE) ========== -->
-  <section id="hero" class="relative min-h-screen flex items-center justify-center overflow-hidden pt-28 lg:pt-20">
+  <section id="hero" class="relative min-h-screen flex items-center justify-center overflow-hidden pt-24 lg:pt-20">
     <!-- Beautiful high-resolution image backdrop overlaid with deep gradient for perfect readability -->
     <div class="absolute inset-0 z-0">
       <img src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=1600&q=80" alt="Clínica Optométrica Médica Industrial" class="w-full h-full object-cover object-center scale-105 filter brightness-95">
@@ -357,11 +357,11 @@
 
         <!-- Single strong CTA + secondary -->
         <div class="flex flex-col sm:flex-row gap-4 w-full sm:w-auto justify-center mb-14" data-aos="fade-up" data-aos-delay="300">
-          <a href="#contact" class="shine-cta flex items-center justify-center gap-3 bg-gradient-to-r from-brand-sky to-brand-teal text-brand-ink font-extrabold py-4 px-10 rounded-full shadow-lg shadow-brand-sky/25 transition-all duration-300 hover:shadow-xl hover:shadow-brand-sky/40 hover:-translate-y-1">
+          <a href="#contact" class="shine-cta flex items-center justify-center gap-3 bg-gradient-to-r from-brand-sky to-brand-teal text-brand-ink font-extrabold py-3.5 sm:py-4 px-6 sm:px-10 rounded-full shadow-lg shadow-brand-sky/25 transition-all duration-300 hover:shadow-xl hover:shadow-brand-sky/40 hover:-translate-y-1">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
             Cotizar Campaña Visual
           </a>
-          <a href="#about" class="flex items-center justify-center gap-3 bg-slate-900/5 border border-slate-900/10 text-slate-700 hover:text-brand-ink hover:border-brand-sky/30 font-bold py-4 px-10 rounded-full transition-all duration-300 hover:-translate-y-1 backdrop-blur-md">
+          <a href="#about" class="flex items-center justify-center gap-3 bg-slate-900/5 border border-slate-900/10 text-slate-700 hover:text-brand-ink hover:border-brand-sky/30 font-bold py-3.5 sm:py-4 px-6 sm:px-10 rounded-full transition-all duration-300 hover:-translate-y-1 backdrop-blur-md">
             Conocer más
             <svg class="w-4 h-4 text-brand-sky" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
           </a>
@@ -465,8 +465,33 @@
     </div>
   </section>
 
+  <!-- ========== GALLERY & PRODUCTS ========== -->
+  <section id="gallery" class="py-16 sm:py-24 bg-brand-navy">
+    <div class="max-w-7xl mx-auto px-6">
+      
+      <div class="text-center max-w-3xl mx-auto mb-16" data-aos="fade-up">
+        <span class="text-brand-sky font-bold text-xs tracking-widest uppercase mb-3 block">Productos e Innovación</span>
+        <h2 class="font-display font-bold text-3xl sm:text-4xl tracking-tight text-brand-ink mb-4">Portafolio Óptico Seleccionado</h2>
+        <p class="text-slate-500 text-sm">Contamos con marcas líderes y armazones industriales certificados para responder a los estándares más exigentes.</p>
+      </div>
+
+      <!-- Filters Row: se genera dinámicamente según las categorías reales del catálogo -->
+      <div id="productFilterRow" class="flex flex-wrap justify-center gap-3 mb-12" data-aos="fade-up">
+        <button class="filter-btn active px-6 py-3 rounded-full border border-slate-900/5 bg-brand-dark hover:border-brand-sky/30 text-xs font-bold uppercase tracking-wider transition-all" data-filter="all">Todos</button>
+      </div>
+
+      <!-- Grid Showcase: se llena con los lentes publicados desde el panel de administrador -->
+      <div id="productGalleryLoading" class="text-center text-xs text-slate-500 py-10">Cargando catálogo...</div>
+      <div id="productGalleryEmpty" class="hidden text-center text-sm text-slate-500 py-10">Muy pronto publicaremos nuestro catálogo de armazones aquí.</div>
+      <div id="productGalleryGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8"></div>
+
+
+    </div>
+  </section>
+
+
   <!-- ========== AUTODIAGNOSTIC TEST (4 QUESTIONS, ELEGANT FLOW) ========== -->
-  <section id="test" class="py-24 lg:py-32 bg-brand-dark border-y border-slate-900/5 relative overflow-hidden">
+  <section id="test" class="py-16 sm:py-24 lg:py-32 bg-brand-dark border-y border-slate-900/5 relative overflow-hidden">
     <div class="glow-sphere float-glow absolute top-[10%] left-[-10%] w-[450px] h-[450px] bg-brand-teal/5 rounded-full pointer-events-none"></div>
     <div class="glow-sphere float-glow absolute bottom-[5%] right-[-10%] w-[400px] h-[400px] bg-brand-sky/5 rounded-full pointer-events-none" style="animation-delay: 3s;"></div>
 
@@ -579,7 +604,7 @@
   </section>
 
   <!-- ========== BENTO GRID VALUE PROPOSITION (ABOUT US) ========== -->
-  <section id="about" class="py-24 lg:py-32 bg-brand-navy">
+  <section id="about" class="py-16 sm:py-24 lg:py-32 bg-brand-navy">
     <div class="max-w-7xl mx-auto px-6">
       
       <div class="text-center max-w-3xl mx-auto mb-20" data-aos="fade-up">
@@ -676,7 +701,7 @@
   </section>
 
   <!-- ========== INTERACTIVE LENS SIMULATOR (THE SPECTACULAR HOVER WIDGET) ========== -->
-  <section id="simulator" class="py-24 lg:py-32 bg-brand-dark border-y border-slate-900/5 relative overflow-hidden">
+  <section id="simulator" class="py-16 sm:py-24 lg:py-32 bg-brand-dark border-y border-slate-900/5 relative overflow-hidden">
     <div class="glow-sphere float-glow absolute top-[15%] right-[-12%] w-[450px] h-[450px] bg-brand-sky/5 rounded-full pointer-events-none"></div>
     <div class="glow-sphere float-glow absolute bottom-[10%] left-[-12%] w-[400px] h-[400px] bg-brand-teal/5 rounded-full pointer-events-none" style="animation-delay: 5s;"></div>
 
@@ -827,7 +852,7 @@
   </section>
 
   <!-- ========== SECTORES DE COBERTURA ========== -->
-  <section id="coverage" class="py-24 bg-brand-navy">
+  <section id="coverage" class="py-16 sm:py-24 bg-brand-navy">
     <div class="max-w-7xl mx-auto px-6">
       
       <div class="text-center max-w-3xl mx-auto mb-16" data-aos="fade-up">
@@ -880,7 +905,7 @@
   </section>
 
   <!-- ========== SERVICES PORTFOLIO ========== -->
-  <section id="services" class="py-24 bg-brand-dark/40 border-y border-slate-900/5">
+  <section id="services" class="py-16 sm:py-24 bg-brand-dark/40 border-y border-slate-900/5">
     <div class="max-w-7xl mx-auto px-6">
       
       <div class="flex flex-col md:flex-row md:items-end justify-between gap-8 mb-16" data-aos="fade-up">
@@ -989,7 +1014,7 @@
   </section>
 
   <!-- ========== JORNADAS LOGISTICS TIMELINE ========== -->
-  <section id="jornadas" class="py-24 lg:py-32 bg-brand-navy relative">
+  <section id="jornadas" class="py-16 sm:py-24 lg:py-32 bg-brand-navy relative">
     <div class="absolute inset-0 bg-gradient-to-tr from-brand-sky/5 via-transparent to-brand-teal/5 pointer-events-none"></div>
 
     <div class="max-w-7xl mx-auto px-6 relative z-10">
@@ -1070,32 +1095,8 @@
     </div>
   </section>
 
-  <!-- ========== GALLERY & PRODUCTS ========== -->
-  <section id="gallery" class="py-24 bg-brand-navy">
-    <div class="max-w-7xl mx-auto px-6">
-      
-      <div class="text-center max-w-3xl mx-auto mb-16" data-aos="fade-up">
-        <span class="text-brand-sky font-bold text-xs tracking-widest uppercase mb-3 block">Productos e Innovación</span>
-        <h2 class="font-display font-bold text-3xl sm:text-4xl tracking-tight text-brand-ink mb-4">Portafolio Óptico Seleccionado</h2>
-        <p class="text-slate-500 text-sm">Contamos con marcas líderes y armazones industriales certificados para responder a los estándares más exigentes.</p>
-      </div>
-
-      <!-- Filters Row: se genera dinámicamente según las categorías reales del catálogo -->
-      <div id="productFilterRow" class="flex flex-wrap justify-center gap-3 mb-12" data-aos="fade-up">
-        <button class="filter-btn active px-6 py-3 rounded-full border border-slate-900/5 bg-brand-dark hover:border-brand-sky/30 text-xs font-bold uppercase tracking-wider transition-all" data-filter="all">Todos</button>
-      </div>
-
-      <!-- Grid Showcase: se llena con los lentes publicados desde el panel de administrador -->
-      <div id="productGalleryLoading" class="text-center text-xs text-slate-500 py-10">Cargando catálogo...</div>
-      <div id="productGalleryEmpty" class="hidden text-center text-sm text-slate-500 py-10">Muy pronto publicaremos nuestro catálogo de armazones aquí.</div>
-      <div id="productGalleryGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8"></div>
-
-
-    </div>
-  </section>
-
   <!-- ========== SUCCESS CLIENT TESTIMONIALS ========== -->
-  <section id="success" class="py-24 bg-brand-dark/40 border-t border-slate-900/5">
+  <section id="success" class="py-16 sm:py-24 bg-brand-dark/40 border-t border-slate-900/5">
     <div class="max-w-7xl mx-auto px-6">
       
       <div class="text-center max-w-3xl mx-auto mb-16" data-aos="fade-up">
@@ -1203,7 +1204,7 @@
   </section>
 
   <!-- ========== THE MEDICAL SPECIALIST ========== -->
-  <section id="specialist" class="py-24 lg:py-32 bg-brand-navy relative">
+  <section id="specialist" class="py-16 sm:py-24 lg:py-32 bg-brand-navy relative">
     <div class="max-w-7xl mx-auto px-6 relative z-10">
       
       <div class="grid grid-cols-1 lg:grid-cols-12 gap-16 items-center">
@@ -1273,7 +1274,7 @@
   </section>
 
   <!-- ========== FAQ ACCORDION SECTION ========== -->
-  <section id="faq" class="py-24 bg-brand-dark border-t border-slate-900/5">
+  <section id="faq" class="py-16 sm:py-24 bg-brand-dark border-t border-slate-900/5">
     <div class="max-w-4xl mx-auto px-6">
       
       <div class="text-center max-w-2xl mx-auto mb-16" data-aos="fade-up">
@@ -1342,7 +1343,7 @@
   </section>
 
   <!-- ========== CONTACTO Y COTIZADOR INTERACTIVO ========== -->
-  <section id="contact" class="py-24 lg:py-32 bg-brand-navy relative">
+  <section id="contact" class="py-16 sm:py-24 lg:py-32 bg-brand-navy relative">
     <div class="absolute inset-0 bg-gradient-to-b from-transparent to-brand-dark pointer-events-none"></div>
 
     <div class="max-w-7xl mx-auto px-6 relative z-10">
@@ -1389,13 +1390,20 @@
           <div class="rounded-3xl overflow-hidden border border-slate-900/5 bg-brand-dark p-5 flex flex-col gap-3">
             <span class="text-[9px] uppercase font-extrabold tracking-widest text-slate-500">Ubicación y Cobertura</span>
             <span class="text-xs text-brand-sky font-semibold">✓ Servicio en todo Querétaro y Parques Industriales</span>
-            <div class="w-full h-36 bg-brand-navy rounded-2xl flex items-center justify-center border border-slate-900/5 relative overflow-hidden">
-              <div class="absolute inset-0 opacity-10 bg-[radial-gradient(#86B8CB_1px,transparent_1px)] [background-size:16px_16px]"></div>
-              <div class="text-center z-10 p-4">
-                <span class="text-brand-ink text-xs font-bold block mb-1">🏥 Sucursal Matriz</span>
-                <span class="text-[10px] text-slate-500 block leading-relaxed">Blvd. Metropolitano Corregidora, Qro.</span>
-              </div>
+            <div class="text-center">
+              <span class="text-brand-ink text-xs font-bold block mb-1">🏥 Sucursal Matriz</span>
+              <span class="text-[10px] text-slate-500 block leading-relaxed mb-3">Plaza El Manantial, Local 10, Blvd. Metropolitano, Corregidora, Qro.</span>
             </div>
+            <div class="w-full h-48 sm:h-56 rounded-2xl overflow-hidden border border-slate-900/5">
+              <iframe
+                src="https://www.google.com/maps?q=20.505998,-100.401669&z=15&output=embed"
+                class="w-full h-full border-0"
+                loading="lazy"
+                referrerpolicy="no-referrer-when-downgrade"
+                title="Ubicación de Visión EKA en Plaza El Manantial, Corregidora">
+              </iframe>
+            </div>
+            <a href="https://www.google.com/maps?q=20.505998,-100.401669" target="_blank" class="text-[10px] text-brand-sky font-bold text-center hover:text-brand-teal">Abrir en Google Maps →</a>
           </div>
 
         </div>
@@ -1905,6 +1913,11 @@
   </div>
 
   <!-- ========== CUSTOM PREMIUM NOTIFICATION DIALOG (Zero Alerts) ========== -->
+  <!-- ========== BOTÓN FLOTANTE: MÁS INFORMACIÓN ========== -->
+  <button onclick="openQuickInfoModal()" class="fixed bottom-5 right-5 sm:bottom-6 sm:right-6 z-40 w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-gradient-to-tr from-brand-sky to-brand-teal text-brand-ink shadow-2xl shadow-brand-sky/30 flex items-center justify-center text-lg sm:text-xl hover:scale-105 transition-all duration-300" title="Más información" aria-label="Más información">
+    💬
+  </button>
+
   <div id="successModal" class="fixed inset-0 z-50 flex items-center justify-center p-6 bg-brand-navy/80 backdrop-blur-md hidden opacity-0 transition-opacity duration-300">
     <div class="bg-brand-dark border-2 border-brand-sky/40 p-8 rounded-3xl max-w-md w-full shadow-2xl text-center transform scale-95 transition-transform duration-300" id="successModalCard">
       <div class="w-16 h-16 bg-brand-sky/15 rounded-full flex items-center justify-center text-4xl mx-auto mb-6">
@@ -1952,13 +1965,40 @@
 
       <label class="block text-[9px] uppercase tracking-widest text-slate-500 font-extrabold mb-2">Tipo de pedido</label>
       <div class="grid grid-cols-2 gap-3 mb-4">
-        <button type="button" onclick="setCheckoutTipo('armazon')" id="checkoutTipoArmazonBtn" class="checkout-tipo-btn text-left p-3 rounded-xl border-2 border-brand-sky text-brand-sky text-xs font-bold transition-all">🕶️ Solo armazón<br><span class="font-normal normal-case text-[10px] text-slate-500">Ya me hicieron el examen</span></button>
-        <button type="button" onclick="setCheckoutTipo('receta')" id="checkoutTipoRecetaBtn" class="checkout-tipo-btn text-left p-3 rounded-xl border-2 border-slate-900/10 text-slate-500 text-xs font-bold transition-all">📋 Con receta<br><span class="font-normal normal-case text-[10px] text-slate-500">Necesito graduación</span></button>
+        <button type="button" onclick="setCheckoutTipo('receta')" id="checkoutTipoRecetaBtn" class="checkout-tipo-btn text-left p-3 rounded-xl border-2 border-brand-sky text-brand-sky text-xs font-bold transition-all">📋 Ya tengo receta<br><span class="font-normal normal-case text-[10px] text-slate-500">Conozco mi graduación</span></button>
+        <button type="button" onclick="setCheckoutTipo('examen')" id="checkoutTipoExamenBtn" class="checkout-tipo-btn text-left p-3 rounded-xl border-2 border-slate-900/10 text-slate-500 text-xs font-bold transition-all">🏠 Necesito examen<br><span class="font-normal normal-case text-[10px] text-slate-500">Agendar a domicilio</span></button>
       </div>
 
       <div id="checkoutRecetaWrap" class="hidden mb-4">
         <label class="block text-[9px] uppercase tracking-widest text-slate-500 font-extrabold mb-2">Su receta / graduación</label>
         <textarea id="checkoutReceta" rows="2" placeholder="Escriba su graduación (ej. OD -2.00 OI -1.50) o pegue el enlace de la foto de su receta" class="w-full p-3.5 bg-brand-navy border border-slate-900/10 rounded-xl text-sm text-brand-ink focus:border-brand-sky focus:outline-none"></textarea>
+      </div>
+
+      <!-- Sub-flujo: agendar examen de la vista a domicilio -->
+      <div id="checkoutExamenWrap" class="hidden mb-4 p-4 bg-brand-navy rounded-2xl border border-slate-900/10">
+        <p class="text-[11px] text-slate-500 mb-3 leading-relaxed">Vamos a su domicilio a realizar el examen de la vista. El costo depende de cuántas personas se lo harán y qué tan lejos está de nuestra sucursal (Plaza El Manantial, Corregidora).</p>
+
+        <label class="block text-[9px] uppercase tracking-widest text-slate-500 font-extrabold mb-2">Número de personas a examinar</label>
+        <input type="number" id="checkoutExamenPersonas" min="1" step="1" value="1" class="w-full p-3.5 mb-4 bg-brand-dark border border-slate-900/10 rounded-xl text-sm text-brand-ink focus:border-brand-sky focus:outline-none">
+
+        <label class="block text-[9px] uppercase tracking-widest text-slate-500 font-extrabold mb-2">Distancia desde nuestra sucursal</label>
+        <button type="button" onclick="checkoutUseMyLocation()" id="checkoutGeoBtn" class="w-full flex items-center justify-center gap-2 text-xs font-bold text-brand-sky border border-brand-sky/30 hover:bg-brand-sky/10 rounded-xl py-3 mb-2 transition-all">
+          📍 Calcular con mi ubicación
+        </button>
+        <select id="checkoutExamenDistancia" onchange="updateExamenCostDisplay()" class="w-full p-3.5 mb-1 bg-brand-dark border border-slate-900/10 rounded-xl text-sm text-brand-ink focus:border-brand-sky focus:outline-none">
+          <option value="0">Menos de 1.5 km (gratis)</option>
+          <option value="150">1.5 – 5 km</option>
+          <option value="250">5 – 10 km</option>
+          <option value="350">Más de 10 km</option>
+        </select>
+        <p id="checkoutGeoStatus" class="text-[10px] text-slate-500 mb-3"></p>
+
+        <div id="checkoutExamenCostBox" class="text-xs text-slate-600 space-y-1 pt-3 border-t border-slate-900/10">
+          <div class="flex justify-between"><span>Examen (<span id="checkoutExamenPersonasText">1</span> persona × $300)</span><span id="checkoutExamenSubtotal">$300.00</span></div>
+          <div class="flex justify-between"><span>Traslado</span><span id="checkoutExamenTraslado">$0.00</span></div>
+          <div id="checkoutExamenBonoRow" class="hidden flex justify-between text-brand-teal font-semibold"><span>Bonificación 50% (por pedir lentes)</span><span id="checkoutExamenBono">-$0.00</span></div>
+          <div class="flex justify-between font-bold text-brand-ink pt-1"><span>Total examen</span><span id="checkoutExamenTotal">$300.00</span></div>
+        </div>
       </div>
 
       <div class="grid sm:grid-cols-2 gap-4 mb-4">
@@ -3858,7 +3898,7 @@
     }
     function tipoPedidoBadge(tipo) {
       const map = {
-        armazon: '<span class="text-[9px] font-bold uppercase tracking-wide text-brand-sky bg-brand-sky/10 px-2 py-0.5 rounded-full whitespace-nowrap">🕶️ Solo armazón</span>',
+        examen: '<span class="text-[9px] font-bold uppercase tracking-wide text-brand-sky bg-brand-sky/10 px-2 py-0.5 rounded-full whitespace-nowrap">🏠 Examen a domicilio</span>',
         receta: '<span class="text-[9px] font-bold uppercase tracking-wide text-brand-coral bg-brand-coral/10 px-2 py-0.5 rounded-full whitespace-nowrap">📋 Con receta</span>'
       };
       return map[tipo] || '';
@@ -3884,8 +3924,9 @@
             ? `<div class="mt-1 mb-1 space-y-0.5">${items.map(it => `<p>• ${it.modelo || ''}${it.color ? ' · ' + it.color : ''} ${it.cantidad > 1 ? `x${it.cantidad}` : ''} ${it.precio ? `— $${Number(it.precio).toLocaleString('es-MX', {minimumFractionDigits:2, maximumFractionDigits:2})}` : ''}</p>`).join('')}</div>`
             : (p.producto ? `<p><strong class="text-brand-ink">Producto:</strong> ${p.producto} ${p.cantidad ? `(x${p.cantidad})` : ''}</p>` : '');
 
+          const itemsSum = items.reduce((sum, it) => sum + (Number(it.precio || 0) * Number(it.cantidad || 1)), 0);
           const totalPrecio = items.length
-            ? items.reduce((sum, it) => sum + (Number(it.precio || 0) * Number(it.cantidad || 1)), 0)
+            ? itemsSum + (p.examen ? Number(p.examen.total || 0) : 0)
             : p.precio;
 
           return `
@@ -3903,6 +3944,7 @@
               ${p.telefono ? `<p><strong class="text-brand-ink">Tel:</strong> ${p.telefono}</p>` : ''}
               ${p.email ? `<p><strong class="text-brand-ink">Correo:</strong> ${p.email}</p>` : ''}
               ${p.receta ? `<p><strong class="text-brand-ink">Receta:</strong> ${p.receta}</p>` : ''}
+              ${p.examen ? `<p><strong class="text-brand-ink">Examen a domicilio:</strong> ${p.examen.personas} persona${p.examen.personas > 1 ? 's' : ''} — Subtotal $${Number(p.examen.subtotal).toFixed(2)} + Traslado $${Number(p.examen.traslado).toFixed(2)}${p.examen.bono > 0 ? ` − Bonificación $${Number(p.examen.bono).toFixed(2)}` : ''} = <strong>$${Number(p.examen.total).toFixed(2)}</strong></p>` : ''}
               ${p.notas ? `<p><strong class="text-brand-ink">Notas:</strong> ${p.notas}</p>` : ''}
             </div>
             <div class="flex flex-wrap items-center gap-3">
@@ -4160,26 +4202,114 @@
     // =========================================================
     // ---- CHECKOUT (finalizar pedido) ----
     // =========================================================
-    let checkoutTipo = 'armazon';
+    // ---- Precios del examen de la vista a domicilio (AJUSTE ESTOS VALORES SEGÚN SU NEGOCIO) ----
+    const EXAM_PRICE_PER_PERSON = 300;   // MXN por persona examinada
+    const EXAM_FREE_RADIUS_KM = 1.5;     // Radio gratuito de traslado
+    const EXAM_TRAVEL_TIERS = [           // Costo de traslado según distancia (más allá del radio gratuito)
+      { maxKm: 5, price: 150 },
+      { maxKm: 10, price: 250 },
+      { maxKm: Infinity, price: 350 }
+    ];
+    const EXAM_BONUS_PERCENT = 0.5; // 50% de bonificación del examen si también piden lentes
+    const CLINIC_LAT = 20.505998;   // Plaza El Manantial, Corregidora, Qro.
+    const CLINIC_LNG = -100.401669;
+
+    let checkoutTipo = 'receta';
+
+    function haversineKm(lat1, lng1, lat2, lng2) {
+      const R = 6371;
+      const dLat = (lat2 - lat1) * Math.PI / 180;
+      const dLng = (lng2 - lng1) * Math.PI / 180;
+      const a = Math.sin(dLat / 2) ** 2 + Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * Math.sin(dLng / 2) ** 2;
+      return R * (2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a)));
+    }
+
+    function travelFeeForKm(km) {
+      if (km <= EXAM_FREE_RADIUS_KM) return 0;
+      for (const tier of EXAM_TRAVEL_TIERS) {
+        if (km <= tier.maxKm) return tier.price;
+      }
+      return EXAM_TRAVEL_TIERS[EXAM_TRAVEL_TIERS.length - 1].price;
+    }
+
+    function checkoutUseMyLocation() {
+      const status = document.getElementById('checkoutGeoStatus');
+      const btn = document.getElementById('checkoutGeoBtn');
+      if (!navigator.geolocation) {
+        status.textContent = 'Su navegador no permite ubicación automática. Elija la opción más cercana manualmente.';
+        return;
+      }
+      btn.disabled = true;
+      status.textContent = 'Calculando distancia...';
+      navigator.geolocation.getCurrentPosition(
+        (pos) => {
+          const km = haversineKm(CLINIC_LAT, CLINIC_LNG, pos.coords.latitude, pos.coords.longitude);
+          const select = document.getElementById('checkoutExamenDistancia');
+          const fee = travelFeeForKm(km);
+          select.value = String(fee);
+          status.textContent = `Está a ${km.toFixed(1)} km de nuestra sucursal.`;
+          updateExamenCostDisplay();
+          btn.disabled = false;
+        },
+        () => {
+          status.textContent = 'No pudimos obtener su ubicación. Elija la opción más cercana manualmente.';
+          btn.disabled = false;
+        },
+        { timeout: 8000 }
+      );
+    }
+
+    function checkoutExamCost() {
+      const personas = Math.max(1, parseInt(document.getElementById('checkoutExamenPersonas').value, 10) || 1);
+      const traslado = Number(document.getElementById('checkoutExamenDistancia').value) || 0;
+      const subtotal = personas * EXAM_PRICE_PER_PERSON;
+      const bruto = subtotal + traslado;
+      const conBono = cart.length > 0;
+      const bono = conBono ? bruto * EXAM_BONUS_PERCENT : 0;
+      const total = bruto - bono;
+      return { personas, traslado, subtotal, bruto, bono, total, conBono };
+    }
+
+    function updateExamenCostDisplay() {
+      const c = checkoutExamCost();
+      document.getElementById('checkoutExamenPersonasText').textContent = c.personas;
+      document.getElementById('checkoutExamenSubtotal').textContent = `$${c.subtotal.toLocaleString('es-MX', { minimumFractionDigits: 2 })}`;
+      document.getElementById('checkoutExamenTraslado').textContent = c.traslado > 0 ? `$${c.traslado.toLocaleString('es-MX', { minimumFractionDigits: 2 })}` : 'Gratis';
+      const bonoRow = document.getElementById('checkoutExamenBonoRow');
+      if (c.conBono) {
+        bonoRow.classList.remove('hidden');
+        bonoRow.classList.add('flex');
+        document.getElementById('checkoutExamenBono').textContent = `-$${c.bono.toLocaleString('es-MX', { minimumFractionDigits: 2 })}`;
+      } else {
+        bonoRow.classList.add('hidden');
+        bonoRow.classList.remove('flex');
+      }
+      document.getElementById('checkoutExamenTotal').textContent = `$${c.total.toLocaleString('es-MX', { minimumFractionDigits: 2 })}`;
+    }
+    document.getElementById('checkoutExamenPersonas')?.addEventListener('input', updateExamenCostDisplay);
 
     function setCheckoutTipo(tipo) {
       checkoutTipo = tipo;
-      const armazonBtn = document.getElementById('checkoutTipoArmazonBtn');
+      const examenBtn = document.getElementById('checkoutTipoExamenBtn');
       const recetaBtn = document.getElementById('checkoutTipoRecetaBtn');
       const recetaWrap = document.getElementById('checkoutRecetaWrap');
+      const examenWrap = document.getElementById('checkoutExamenWrap');
 
-      if (tipo === 'receta') {
-        recetaBtn.classList.add('border-brand-sky', 'text-brand-sky');
-        recetaBtn.classList.remove('border-slate-900/10', 'text-slate-500');
-        armazonBtn.classList.remove('border-brand-sky', 'text-brand-sky');
-        armazonBtn.classList.add('border-slate-900/10', 'text-slate-500');
-        recetaWrap.classList.remove('hidden');
-      } else {
-        armazonBtn.classList.add('border-brand-sky', 'text-brand-sky');
-        armazonBtn.classList.remove('border-slate-900/10', 'text-slate-500');
+      if (tipo === 'examen') {
+        examenBtn.classList.add('border-brand-sky', 'text-brand-sky');
+        examenBtn.classList.remove('border-slate-900/10', 'text-slate-500');
         recetaBtn.classList.remove('border-brand-sky', 'text-brand-sky');
         recetaBtn.classList.add('border-slate-900/10', 'text-slate-500');
+        examenWrap.classList.remove('hidden');
         recetaWrap.classList.add('hidden');
+        updateExamenCostDisplay();
+      } else {
+        recetaBtn.classList.add('border-brand-sky', 'text-brand-sky');
+        recetaBtn.classList.remove('border-slate-900/10', 'text-slate-500');
+        examenBtn.classList.remove('border-brand-sky', 'text-brand-sky');
+        examenBtn.classList.add('border-slate-900/10', 'text-slate-500');
+        recetaWrap.classList.remove('hidden');
+        examenWrap.classList.add('hidden');
       }
     }
 
@@ -4198,8 +4328,11 @@
         }
       } catch (e) { /* guest checkout, no problem */ }
 
-      setCheckoutTipo('armazon');
+      setCheckoutTipo('receta');
       document.getElementById('checkoutReceta').value = '';
+      document.getElementById('checkoutExamenPersonas').value = '1';
+      document.getElementById('checkoutExamenDistancia').value = '0';
+      document.getElementById('checkoutGeoStatus').textContent = '';
       document.getElementById('checkoutStatus').textContent = '';
       openModal('checkoutModal');
     }
@@ -4231,7 +4364,9 @@
       status.textContent = 'Enviando pedido...';
 
       const items = cart.map(it => ({ modelo: it.modelo, color: it.color, precio: it.precio, cantidad: it.cantidad }));
-      const total = cartTotal();
+      const lentesTotal = cartTotal();
+      const examen = checkoutTipo === 'examen' ? checkoutExamCost() : null;
+      const total = lentesTotal + (examen ? examen.total : 0);
 
       try {
         const fb = await window.firebaseReady;
@@ -4243,6 +4378,14 @@
           tipoPedido: checkoutTipo,
           receta,
           items,
+          examen: examen ? {
+            personas: examen.personas,
+            subtotal: examen.subtotal,
+            traslado: examen.traslado,
+            bono: examen.bono,
+            total: examen.total
+          } : null,
+          precio: total,
           estadoPago: 'pendiente',
           estadoEnvio: 'preparando',
           uid: user ? user.uid : null
@@ -4250,9 +4393,15 @@
 
         // Mensaje de WhatsApp con el resumen del pedido
         const itemsText = items.map(it => `• ${it.modelo} (${it.color})${it.cantidad > 1 ? ` x${it.cantidad}` : ''}${it.precio ? ` — $${Number(it.precio).toFixed(2)}` : ''}`).join('%0A');
-        const tipoText = checkoutTipo === 'receta' ? 'Pedido CON RECETA' : 'Pedido de SOLO ARMAZÓN (ya con examen)';
-        let msg = `Hola, quiero confirmar mi pedido en Visión EKA:%0A%0A${tipoText}%0A${itemsText}%0A%0ATotal estimado: $${total.toFixed(2)} MXN%0A%0ANombre: ${nombre}%0ATeléfono: ${telefono}`;
+        const tipoText = checkoutTipo === 'receta' ? 'Pedido CON RECETA' : 'Pedido con EXAMEN A DOMICILIO';
+        let msg = `Hola, quiero confirmar mi pedido en Visión EKA:%0A%0A${tipoText}%0A${itemsText}`;
         if (checkoutTipo === 'receta') msg += `%0AReceta: ${receta}`;
+        if (examen) {
+          msg += `%0A%0AExamen a domicilio (${examen.personas} persona${examen.personas > 1 ? 's' : ''}): $${examen.subtotal.toFixed(2)}%0ATraslado: $${examen.traslado.toFixed(2)}`;
+          if (examen.bono > 0) msg += `%0ABonificación 50%25 por pedir lentes: -$${examen.bono.toFixed(2)}`;
+          msg += `%0ATotal examen: $${examen.total.toFixed(2)}`;
+        }
+        msg += `%0A%0ATotal general estimado: $${total.toFixed(2)} MXN%0A%0ANombre: ${nombre}%0ATeléfono: ${telefono}`;
 
         cart = [];
         saveCart();
@@ -4698,12 +4847,21 @@ async function deleteProduct(id, storagePaths) {
     }
 
     async function addOrder(data) {
+      const examen = data.examen ? {
+        personas: Number(data.examen.personas) || 1,
+        subtotal: Number(data.examen.subtotal) || 0,
+        traslado: Number(data.examen.traslado) || 0,
+        bono: Number(data.examen.bono) || 0,
+        total: Number(data.examen.total) || 0
+      } : null;
+
       await addDoc(collection(db, ORDERS_COLLECTION), {
         cliente: String(data.cliente || '').slice(0, 120),
         telefono: String(data.telefono || '').slice(0, 40),
         email: String(data.email || '').slice(0, 120),
-        tipoPedido: data.tipoPedido || 'manual', // 'armazon' | 'receta' | 'manual'
+        tipoPedido: data.tipoPedido || 'manual', // 'examen' | 'receta' | 'manual'
         receta: String(data.receta || '').slice(0, 1000),
+        examen,
         producto: String(data.producto || '').slice(0, 200),
         cantidad: data.cantidad || 1,
         precio: (data.precio === null || data.precio === undefined || isNaN(data.precio)) ? null : data.precio,
