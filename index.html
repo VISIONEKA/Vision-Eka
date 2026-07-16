@@ -250,6 +250,16 @@
 
         <!-- CTA & Hamburger -->
         <div class="flex items-center gap-4">
+          <button onclick="openAccountModal()" id="navAccountBtn" class="hidden sm:flex items-center gap-1.5 text-slate-500 hover:text-brand-ink text-xs font-bold" title="Mi cuenta">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+            <span id="navAccountLabel">Mi Cuenta</span>
+          </button>
+
+          <button onclick="openCartDrawer()" class="relative p-2 text-slate-500 hover:text-brand-ink" title="Carrito">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+            <span id="cartBadge" class="hidden absolute -top-1 -right-1 bg-brand-coral text-white text-[9px] font-extrabold w-4.5 h-4.5 min-w-[18px] px-1 rounded-full items-center justify-center">0</span>
+          </button>
+
           <a href="#contact" class="hidden sm:inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest bg-gradient-to-r from-brand-sky to-brand-teal hover:from-brand-sky/90 hover:to-brand-teal/90 text-brand-ink py-3 px-6 rounded-full transition-all hover:shadow-lg hover:shadow-brand-sky/35 transform hover:-translate-y-0.5">
             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
             Cotizar Campaña
@@ -290,6 +300,13 @@
     </nav>
 
     <div class="mt-auto flex flex-col gap-4">
+      <button onclick="openAccountModal()" class="flex items-center justify-center gap-3 bg-slate-900/5 text-brand-ink py-4 rounded-full font-bold transition-all hover:bg-slate-900/10">
+        👤 <span id="navAccountLabelMobile">Mi Cuenta</span>
+      </button>
+      <button onclick="openCartDrawer()" class="relative flex items-center justify-center gap-3 bg-slate-900/5 text-brand-ink py-4 rounded-full font-bold transition-all hover:bg-slate-900/10">
+        🛒 Ver Carrito
+        <span id="cartBadgeMobile" class="hidden absolute top-2 right-6 bg-brand-coral text-white text-[9px] font-extrabold w-4.5 h-4.5 min-w-[18px] px-1 rounded-full items-center justify-center">0</span>
+      </button>
       <a href="tel:4421295277" class="flex items-center justify-center gap-3 bg-brand-light/80 text-brand-ink py-4 rounded-full font-bold transition-all hover:bg-brand-light">
         📞 Llamar directo
       </a>
@@ -1359,6 +1376,15 @@
 
           </div>
 
+          <div class="flex flex-wrap gap-3 mb-8">
+            <button onclick="openQuickCallModal()" class="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-brand-sky border border-brand-sky/30 hover:bg-brand-sky/10 rounded-full py-3 px-5 transition-all">
+              📞 Agendar una llamada
+            </button>
+            <button onclick="openQuickInfoModal()" class="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-slate-500 border border-slate-900/10 hover:border-brand-sky/30 hover:text-brand-sky rounded-full py-3 px-5 transition-all">
+              💬 Solo quiero más información
+            </button>
+          </div>
+
           <!-- Maps Concept Card -->
           <div class="rounded-3xl overflow-hidden border border-slate-900/5 bg-brand-dark p-5 flex flex-col gap-3">
             <span class="text-[9px] uppercase font-extrabold tracking-widest text-slate-500">Ubicación y Cobertura</span>
@@ -1607,7 +1633,7 @@
 
       <!-- Add new lens/product form (modelo, color, unidades, precio, categoría) -->
       <div class="bg-brand-navy border border-slate-900/10 rounded-3xl p-6 mb-8">
-        <h3 class="font-display font-bold text-sm text-brand-ink mb-4">🕶️ Agregar Lente al Catálogo</h3>
+        <h3 id="adminProductFormTitle" class="font-display font-bold text-sm text-brand-ink mb-4">🕶️ Agregar Lente al Catálogo</h3>
 
         <div class="grid sm:grid-cols-2 gap-4 mb-4">
           <div>
@@ -1643,9 +1669,14 @@
           <p class="text-[10px] text-slate-600/70 mt-1.5">Suba la foto a Google Fotos, Imgur, Cloudinary, Facebook, etc., copie el enlace directo de la imagen y péguelo aquí (una URL por línea, puede pegar varias).</p>
           <div id="adminProductDropzonePreviewGrid" class="hidden grid grid-cols-4 sm:grid-cols-6 gap-3 mt-4"></div>
         </div>
-        <button onclick="adminAddProduct()" id="adminAddProductBtn" class="bg-brand-sky/10 border border-brand-sky/30 text-brand-sky font-bold text-xs uppercase tracking-wider py-3 px-6 rounded-full hover:bg-brand-sky/20 transition-all">
-          Agregar Lente
-        </button>
+        <div class="flex items-center gap-4 flex-wrap">
+          <button onclick="adminAddProduct()" id="adminAddProductBtn" class="bg-brand-sky/10 border border-brand-sky/30 text-brand-sky font-bold text-xs uppercase tracking-wider py-3 px-6 rounded-full hover:bg-brand-sky/20 transition-all">
+            Agregar Lente
+          </button>
+          <button onclick="adminCancelEditProduct()" id="adminCancelEditProductBtn" class="hidden text-slate-500 hover:text-brand-ink text-xs font-bold uppercase tracking-wider">
+            Cancelar edición
+          </button>
+        </div>
         <p id="adminAddProductStatus" class="text-[11px] text-slate-500 mt-3"></p>
       </div>
 
@@ -1796,7 +1827,7 @@
 
         <div class="bg-brand-navy border border-slate-900/10 rounded-3xl p-6 mb-8">
           <h3 class="font-display font-bold text-sm text-brand-ink mb-3">📦 Pedidos</h3>
-          <p class="text-xs text-slate-600 leading-relaxed">Registre y dé seguimiento a los pedidos de lentes de sus clientes: modelo, cantidad, precio y estatus (pendiente, en proceso, listo o entregado).</p>
+          <p class="text-xs text-slate-600 leading-relaxed">Los pedidos que los clientes hacen desde el carrito del sitio aparecen aquí automáticamente. También puede registrar aquí un pedido tomado por teléfono. Cada pedido tiene dos estatus independientes: <strong class="text-brand-ink">pago</strong> (pendiente / en proceso / pagado) y <strong class="text-brand-ink">envío</strong> (preparando / en camino / entregado).</p>
         </div>
 
         <!-- Add order form -->
@@ -1824,11 +1855,18 @@
               <input type="number" min="0" step="0.01" id="adminPedidoPrecio" placeholder="Ej. 1780.00" class="w-full p-3.5 bg-brand-dark border border-slate-900/10 rounded-xl text-sm text-brand-ink focus:border-brand-sky focus:outline-none">
             </div>
             <div>
-              <label class="block text-[9px] uppercase tracking-widest text-slate-500 font-extrabold mb-2">Estatus</label>
-              <select id="adminPedidoEstado" class="w-full p-3.5 bg-brand-dark border border-slate-900/10 rounded-xl text-sm text-brand-ink focus:border-brand-sky focus:outline-none">
+              <label class="block text-[9px] uppercase tracking-widest text-slate-500 font-extrabold mb-2">Estatus de pago</label>
+              <select id="adminPedidoEstadoPago" class="w-full p-3.5 bg-brand-dark border border-slate-900/10 rounded-xl text-sm text-brand-ink focus:border-brand-sky focus:outline-none">
                 <option value="pendiente" selected>Pendiente</option>
                 <option value="proceso">En proceso</option>
-                <option value="listo">Listo para entrega</option>
+                <option value="pagado">Pagado</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-[9px] uppercase tracking-widest text-slate-500 font-extrabold mb-2">Estatus de envío</label>
+              <select id="adminPedidoEstadoEnvio" class="w-full p-3.5 bg-brand-dark border border-slate-900/10 rounded-xl text-sm text-brand-ink focus:border-brand-sky focus:outline-none">
+                <option value="preparando" selected>Preparando</option>
+                <option value="camino">En camino</option>
                 <option value="entregado">Entregado</option>
               </select>
             </div>
@@ -1879,6 +1917,151 @@
       <button onclick="closeSuccessModal()" class="w-full bg-brand-sky hover:bg-brand-sky/90 text-brand-ink font-bold py-3 px-6 rounded-xl transition-all">
         Entendido
       </button>
+    </div>
+  </div>
+
+  <!-- ========== CARRITO (drawer) ========== -->
+  <div id="cartModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-brand-navy/80 backdrop-blur-md hidden opacity-0 transition-opacity duration-300">
+    <div class="bg-brand-dark border-2 border-brand-sky/40 rounded-3xl max-w-lg w-full shadow-2xl transform scale-95 transition-transform duration-300 max-h-[85vh] flex flex-col" id="cartModalCard">
+      <div class="flex items-center justify-between p-6 border-b border-slate-900/10">
+        <h3 class="font-display font-bold text-lg text-brand-ink">🛒 Tu Carrito</h3>
+        <button onclick="closeCartDrawer()" class="text-slate-500 hover:text-brand-ink text-xl leading-none">✕</button>
+      </div>
+      <div id="cartItemsList" class="flex-1 overflow-y-auto p-6 space-y-4">
+        <p id="cartEmptyMsg" class="text-xs text-slate-600/80 italic text-center py-8">Tu carrito está vacío. Agrega algún lente desde el catálogo.</p>
+      </div>
+      <div class="p-6 border-t border-slate-900/10">
+        <div class="flex items-center justify-between mb-4">
+          <span class="text-xs uppercase tracking-widest font-extrabold text-slate-500">Total estimado</span>
+          <span id="cartTotalText" class="font-display font-bold text-xl text-brand-ink">$0.00</span>
+        </div>
+        <button onclick="startCheckout()" id="cartCheckoutBtn" class="w-full bg-gradient-to-r from-brand-sky to-brand-teal text-brand-ink font-bold py-3.5 rounded-xl transition-all hover:shadow-lg">
+          Continuar con mi pedido
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== CHECKOUT (finalizar pedido) ========== -->
+  <div id="checkoutModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-brand-navy/80 backdrop-blur-md hidden opacity-0 transition-opacity duration-300">
+    <div class="bg-brand-dark border-2 border-brand-sky/40 rounded-3xl max-w-lg w-full shadow-2xl transform scale-95 transition-transform duration-300 max-h-[85vh] overflow-y-auto p-6" id="checkoutModalCard">
+      <div class="flex items-center justify-between mb-5">
+        <h3 class="font-display font-bold text-lg text-brand-ink">Finalizar pedido</h3>
+        <button onclick="closeCheckoutModal()" class="text-slate-500 hover:text-brand-ink text-xl leading-none">✕</button>
+      </div>
+
+      <label class="block text-[9px] uppercase tracking-widest text-slate-500 font-extrabold mb-2">Tipo de pedido</label>
+      <div class="grid grid-cols-2 gap-3 mb-4">
+        <button type="button" onclick="setCheckoutTipo('armazon')" id="checkoutTipoArmazonBtn" class="checkout-tipo-btn text-left p-3 rounded-xl border-2 border-brand-sky text-brand-sky text-xs font-bold transition-all">🕶️ Solo armazón<br><span class="font-normal normal-case text-[10px] text-slate-500">Ya me hicieron el examen</span></button>
+        <button type="button" onclick="setCheckoutTipo('receta')" id="checkoutTipoRecetaBtn" class="checkout-tipo-btn text-left p-3 rounded-xl border-2 border-slate-900/10 text-slate-500 text-xs font-bold transition-all">📋 Con receta<br><span class="font-normal normal-case text-[10px] text-slate-500">Necesito graduación</span></button>
+      </div>
+
+      <div id="checkoutRecetaWrap" class="hidden mb-4">
+        <label class="block text-[9px] uppercase tracking-widest text-slate-500 font-extrabold mb-2">Su receta / graduación</label>
+        <textarea id="checkoutReceta" rows="2" placeholder="Escriba su graduación (ej. OD -2.00 OI -1.50) o pegue el enlace de la foto de su receta" class="w-full p-3.5 bg-brand-navy border border-slate-900/10 rounded-xl text-sm text-brand-ink focus:border-brand-sky focus:outline-none"></textarea>
+      </div>
+
+      <div class="grid sm:grid-cols-2 gap-4 mb-4">
+        <div>
+          <label class="block text-[9px] uppercase tracking-widest text-slate-500 font-extrabold mb-2">Nombre</label>
+          <input type="text" id="checkoutNombre" class="w-full p-3.5 bg-brand-navy border border-slate-900/10 rounded-xl text-sm text-brand-ink focus:border-brand-sky focus:outline-none">
+        </div>
+        <div>
+          <label class="block text-[9px] uppercase tracking-widest text-slate-500 font-extrabold mb-2">Teléfono / WhatsApp</label>
+          <input type="tel" id="checkoutTelefono" class="w-full p-3.5 bg-brand-navy border border-slate-900/10 rounded-xl text-sm text-brand-ink focus:border-brand-sky focus:outline-none">
+        </div>
+      </div>
+      <div class="mb-5">
+        <label class="block text-[9px] uppercase tracking-widest text-slate-500 font-extrabold mb-2">Correo <span class="normal-case text-slate-600/70 font-medium">(opcional)</span></label>
+        <input type="email" id="checkoutEmail" class="w-full p-3.5 bg-brand-navy border border-slate-900/10 rounded-xl text-sm text-brand-ink focus:border-brand-sky focus:outline-none">
+      </div>
+
+      <button onclick="submitCheckout()" id="checkoutSubmitBtn" class="w-full bg-gradient-to-r from-brand-sky to-brand-teal text-brand-ink font-bold py-3.5 rounded-xl transition-all hover:shadow-lg mb-2">
+        Enviar pedido por WhatsApp
+      </button>
+      <p class="text-[10px] text-slate-500 text-center">Le indicaremos las formas de pago disponibles por WhatsApp una vez recibido su pedido.</p>
+      <p id="checkoutStatus" class="text-[11px] text-red-400 mt-2 text-center"></p>
+    </div>
+  </div>
+
+  <!-- ========== MI CUENTA (login / registro / invitado) ========== -->
+  <div id="accountModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-brand-navy/80 backdrop-blur-md hidden opacity-0 transition-opacity duration-300">
+    <div class="bg-brand-dark border-2 border-brand-sky/40 rounded-3xl max-w-md w-full shadow-2xl transform scale-95 transition-transform duration-300 p-6" id="accountModalCard">
+      <div class="flex items-center justify-between mb-5">
+        <h3 class="font-display font-bold text-lg text-brand-ink">Mi Cuenta</h3>
+        <button onclick="closeAccountModal()" class="text-slate-500 hover:text-brand-ink text-xl leading-none">✕</button>
+      </div>
+
+      <!-- Logged out view -->
+      <div id="accountLoggedOutView">
+        <div class="flex gap-2 mb-5 p-1 bg-brand-navy rounded-full">
+          <button onclick="setAccountTab('login')" id="accountTabLoginBtn" class="flex-1 py-2.5 rounded-full text-xs font-bold uppercase tracking-wider bg-brand-sky text-brand-ink transition-all">Iniciar sesión</button>
+          <button onclick="setAccountTab('register')" id="accountTabRegisterBtn" class="flex-1 py-2.5 rounded-full text-xs font-bold uppercase tracking-wider text-slate-500 transition-all">Crear cuenta</button>
+        </div>
+
+        <div id="accountLoginForm">
+          <input type="email" id="loginEmail" placeholder="Correo" autocomplete="username" class="w-full p-3.5 mb-3 bg-brand-navy border border-slate-900/10 rounded-xl text-sm text-brand-ink focus:border-brand-sky focus:outline-none">
+          <input type="password" id="loginPassword" placeholder="Contraseña" autocomplete="current-password" class="w-full p-3.5 mb-3 bg-brand-navy border border-slate-900/10 rounded-xl text-sm text-brand-ink focus:border-brand-sky focus:outline-none">
+          <button onclick="submitCustomerLogin()" id="loginBtn" class="w-full bg-brand-sky text-brand-ink font-bold py-3 rounded-xl mb-2">Entrar</button>
+        </div>
+
+        <div id="accountRegisterForm" class="hidden">
+          <input type="text" id="registerNombre" placeholder="Nombre" class="w-full p-3.5 mb-3 bg-brand-navy border border-slate-900/10 rounded-xl text-sm text-brand-ink focus:border-brand-sky focus:outline-none">
+          <input type="tel" id="registerTelefono" placeholder="Teléfono" class="w-full p-3.5 mb-3 bg-brand-navy border border-slate-900/10 rounded-xl text-sm text-brand-ink focus:border-brand-sky focus:outline-none">
+          <input type="email" id="registerEmail" placeholder="Correo" autocomplete="username" class="w-full p-3.5 mb-3 bg-brand-navy border border-slate-900/10 rounded-xl text-sm text-brand-ink focus:border-brand-sky focus:outline-none">
+          <input type="password" id="registerPassword" placeholder="Contraseña (mínimo 6 caracteres)" autocomplete="new-password" class="w-full p-3.5 mb-3 bg-brand-navy border border-slate-900/10 rounded-xl text-sm text-brand-ink focus:border-brand-sky focus:outline-none">
+          <button onclick="submitCustomerRegister()" id="registerBtn" class="w-full bg-brand-sky text-brand-ink font-bold py-3 rounded-xl mb-2">Crear cuenta</button>
+        </div>
+
+        <p id="accountAuthStatus" class="text-[11px] text-red-400 mt-1 mb-3 text-center"></p>
+
+        <button onclick="closeAccountModal()" class="w-full text-slate-500 hover:text-brand-ink text-xs font-bold uppercase tracking-wider py-2">Continuar sin cuenta</button>
+      </div>
+
+      <!-- Logged in view -->
+      <div id="accountLoggedInView" class="hidden text-center">
+        <div class="w-16 h-16 bg-brand-sky/15 rounded-full flex items-center justify-center text-3xl mx-auto mb-4">👤</div>
+        <p class="text-sm text-brand-ink font-semibold mb-1" id="accountGreeting">Hola</p>
+        <p class="text-xs text-slate-500 mb-6" id="accountEmailText"></p>
+        <button onclick="submitCustomerLogout()" class="w-full border border-slate-900/10 hover:border-red-400/40 text-red-400 font-bold py-3 rounded-xl text-xs uppercase tracking-wider">Cerrar sesión</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== AGENDAR LLAMADA (rápido) ========== -->
+  <div id="quickCallModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-brand-navy/80 backdrop-blur-md hidden opacity-0 transition-opacity duration-300">
+    <div class="bg-brand-dark border-2 border-brand-sky/40 rounded-3xl max-w-md w-full shadow-2xl transform scale-95 transition-transform duration-300 p-6" id="quickCallModalCard">
+      <div class="flex items-center justify-between mb-5">
+        <h3 class="font-display font-bold text-lg text-brand-ink">📞 Agendar una llamada</h3>
+        <button onclick="closeQuickCallModal()" class="text-slate-500 hover:text-brand-ink text-xl leading-none">✕</button>
+      </div>
+      <p class="text-xs text-slate-500 mb-4">Le llamamos nosotros. Solo déjenos sus datos y el mejor horario para contactarle.</p>
+      <input type="text" id="quickCallNombre" placeholder="Nombre" class="w-full p-3.5 mb-3 bg-brand-navy border border-slate-900/10 rounded-xl text-sm text-brand-ink focus:border-brand-sky focus:outline-none">
+      <input type="tel" id="quickCallTelefono" placeholder="Teléfono" class="w-full p-3.5 mb-3 bg-brand-navy border border-slate-900/10 rounded-xl text-sm text-brand-ink focus:border-brand-sky focus:outline-none">
+      <select id="quickCallHorario" class="w-full p-3.5 mb-4 bg-brand-navy border border-slate-900/10 rounded-xl text-sm text-brand-ink focus:border-brand-sky focus:outline-none">
+        <option value="">¿Mejor horario? (opcional)</option>
+        <option value="Mañana (9am-12pm)">Mañana (9am-12pm)</option>
+        <option value="Mediodía (12pm-3pm)">Mediodía (12pm-3pm)</option>
+        <option value="Tarde (3pm-6pm)">Tarde (3pm-6pm)</option>
+        <option value="Noche (6pm-8pm)">Noche (6pm-8pm)</option>
+      </select>
+      <button onclick="submitQuickCall()" id="quickCallBtn" class="w-full bg-gradient-to-r from-brand-sky to-brand-teal text-brand-ink font-bold py-3.5 rounded-xl">Solicitar llamada</button>
+      <p id="quickCallStatus" class="text-[11px] text-red-400 mt-2 text-center"></p>
+    </div>
+  </div>
+
+  <!-- ========== MÁS INFORMACIÓN (rápido) ========== -->
+  <div id="quickInfoModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-brand-navy/80 backdrop-blur-md hidden opacity-0 transition-opacity duration-300">
+    <div class="bg-brand-dark border-2 border-brand-sky/40 rounded-3xl max-w-md w-full shadow-2xl transform scale-95 transition-transform duration-300 p-6" id="quickInfoModalCard">
+      <div class="flex items-center justify-between mb-5">
+        <h3 class="font-display font-bold text-lg text-brand-ink">💬 Más información</h3>
+        <button onclick="closeQuickInfoModal()" class="text-slate-500 hover:text-brand-ink text-xl leading-none">✕</button>
+      </div>
+      <p class="text-xs text-slate-500 mb-4">Déjenos su contacto y nosotros le buscamos con la información que necesite.</p>
+      <input type="text" id="quickInfoNombre" placeholder="Nombre" class="w-full p-3.5 mb-3 bg-brand-navy border border-slate-900/10 rounded-xl text-sm text-brand-ink focus:border-brand-sky focus:outline-none">
+      <input type="text" id="quickInfoTelefono" placeholder="Teléfono o correo" class="w-full p-3.5 mb-4 bg-brand-navy border border-slate-900/10 rounded-xl text-sm text-brand-ink focus:border-brand-sky focus:outline-none">
+      <button onclick="submitQuickInfo()" id="quickInfoBtn" class="w-full bg-gradient-to-r from-brand-sky to-brand-teal text-brand-ink font-bold py-3.5 rounded-xl">Enviar</button>
+      <p id="quickInfoStatus" class="text-[11px] text-red-400 mt-2 text-center"></p>
     </div>
   </div>
 
@@ -2340,13 +2523,17 @@
           categorias.map(cat => `<button class="filter-btn px-6 py-3 rounded-full border border-slate-900/5 bg-brand-dark hover:border-brand-sky/30 text-xs font-bold uppercase tracking-wider transition-all" data-filter="${slugifyCategory(cat)}">${escapeHtml(cat)}</button>`).join('');
 
         // ---- Tarjetas de producto ----
+        window.__publicProductsCache = {};
         grid.innerHTML = items.map(p => {
+          window.__publicProductsCache[p.id] = p;
           const precioText = (p.precio !== null && p.precio !== undefined)
             ? `$${Number(p.precio).toLocaleString('es-MX', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} MXN`
             : null;
           let stockBadge = '';
+          let agotado = false;
           if (p.unidades !== null && p.unidades !== undefined) {
-            stockBadge = p.unidades > 0
+            agotado = p.unidades <= 0;
+            stockBadge = !agotado
               ? `<span class="text-[9px] font-bold text-brand-teal">${p.unidades} disponibles</span>`
               : `<span class="text-[9px] font-bold text-red-400">Agotado</span>`;
           }
@@ -2373,13 +2560,18 @@
                 <h4 class="font-display font-bold text-base text-brand-ink mb-1">${escapeHtml(p.modelo)}</h4>
                 <p class="text-xs text-slate-500 mb-3">Color: ${escapeHtml(p.color)}</p>
                 <div class="flex items-center justify-between mt-auto mb-4">
-                  <span class="text-sm font-display font-bold text-brand-ink">${precioText || ''}</span>
+                  <span class="text-sm font-display font-bold text-brand-ink">${precioText || 'Consultar precio'}</span>
                   ${stockBadge}
                 </div>
-                <a href="#simulator" class="flex items-center justify-center gap-2 text-[10px] font-bold uppercase tracking-widest text-brand-sky border border-brand-sky/30 hover:bg-brand-sky/10 rounded-full py-2.5 transition-all duration-300">
-                  <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
-                  Pruébatelo en vivo
-                </a>
+                <div class="flex flex-col gap-2">
+                  ${agotado ? '' : `<button onclick="addToCart('${p.id}')" class="flex items-center justify-center gap-2 text-[10px] font-bold uppercase tracking-widest text-brand-ink bg-gradient-to-r from-brand-sky to-brand-teal rounded-full py-2.5 transition-all duration-300 hover:shadow-lg hover:shadow-brand-sky/30">
+                    🛒 Agregar al carrito
+                  </button>`}
+                  <a href="#simulator" class="flex items-center justify-center gap-2 text-[10px] font-bold uppercase tracking-widest text-brand-sky border border-brand-sky/30 hover:bg-brand-sky/10 rounded-full py-2.5 transition-all duration-300">
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                    Pruébatelo en vivo
+                  </a>
+                </div>
               </div>
             </div>
           `;
@@ -2429,13 +2621,30 @@
     loadPublicProductGallery();
 
     // =========================================================
-    // ---- HIDDEN ADMIN PANEL (now backed by Firebase Authentication) ----
+    // ---- HIDDEN ADMIN PANEL (backed by Firebase Authentication) ----
     // Accessing yoursite.com/#admin just reveals the login screen — it isn't a
-    // secret door by itself. Real protection now comes from Firebase: only
-    // someone who signs in with a real admin account (created in the Firebase
-    // console) can write to the catalog, because the Firestore/Storage rules
-    // require request.auth != null for writes to catalogo_lentes.
+    // secret door by itself. Real protection comes from two layers:
+    // 1) Only a Firebase Auth account whose email matches ADMIN_EMAIL is
+    //    treated as an admin by isAdminLoggedIn() below (client-side gate).
+    // 2) The Firestore security rules must ALSO check
+    //    request.auth.token.email == '0712220035@alumnos.univa.mx' for writes
+    //    to catalogo_lentes / categorias_lentes / productos_lentes / citas /
+    //    pedidos (status updates) — this is the real protection, since any
+    //    customer can now create a normal Firebase Auth account through the
+    //    "Mi Cuenta" registration form.
     // =========================================================
+
+    // ---- Convierte automáticamente enlaces de GitHub (página) al enlace directo de la imagen (raw) ----
+    function normalizeImageUrl(url) {
+      if (!url) return url;
+      let u = url.trim();
+      const ghMatch = u.match(/^https?:\/\/github\.com\/([^\/]+)\/([^\/]+)\/blob\/(.+?)(\?.*)?$/i);
+      if (ghMatch) {
+        const [, owner, repo, path] = ghMatch;
+        return `https://raw.githubusercontent.com/${owner}/${repo}/${path}`;
+      }
+      return u;
+    }
 
     function checkAdminUrlHash() {
       if (window.location.hash === '#admin') {
@@ -2479,6 +2688,14 @@
       try {
         const fb = await window.firebaseReady;
         await fb.signInAdmin(email, password);
+
+        if (!fb.isAdminLoggedIn()) {
+          await fb.signOutAdmin();
+          errorMsg.textContent = 'Esta cuenta no tiene permisos de administrador.';
+          errorMsg.classList.remove('hidden');
+          return;
+        }
+
         document.getElementById('adminLogin').classList.add('hidden');
         document.getElementById('adminDashboard').classList.remove('hidden');
         errorMsg.classList.add('hidden');
@@ -2510,7 +2727,7 @@
     const adminDropzonePreview = document.getElementById('adminDropzonePreview');
 
     adminLensUrlInput?.addEventListener('input', () => {
-      const url = adminLensUrlInput.value.trim();
+      const url = normalizeImageUrl(adminLensUrlInput.value.trim());
       if (!url) {
         adminDropzonePreviewWrap.classList.add('hidden');
         adminDropzonePreviewWrap.classList.remove('flex');
@@ -2526,7 +2743,7 @@
       const status = document.getElementById('adminAddLensStatus');
       const btn = document.getElementById('adminAddLensBtn');
       const name = nameInput.value.trim();
-      const imgUrl = adminLensUrlInput.value.trim();
+      const imgUrl = normalizeImageUrl(adminLensUrlInput.value.trim());
 
       if (!name || !imgUrl) {
         status.textContent = 'Escriba un nombre y pegue el enlace de la foto antes de publicar.';
@@ -2644,7 +2861,7 @@
     function adminGetProductUrls() {
       return (adminProductUrlsInput?.value || '')
         .split('\n')
-        .map(u => u.trim())
+        .map(u => normalizeImageUrl(u.trim()))
         .filter(Boolean);
     }
 
@@ -2664,6 +2881,9 @@
     }
 
     adminProductUrlsInput?.addEventListener('input', adminRenderProductPreviews);
+
+    let adminAllProducts = [];
+    let adminEditingProductId = null;
 
     async function adminAddProduct() {
       const modelInput = document.getElementById('adminProductModel');
@@ -2690,8 +2910,9 @@
         return;
       }
 
+      const isEditing = !!adminEditingProductId;
       btn.disabled = true;
-      status.textContent = 'Publicando lente...';
+      status.textContent = isEditing ? 'Guardando cambios...' : 'Publicando lente...';
       status.className = 'text-[11px] text-slate-500 mt-3';
 
       try {
@@ -2700,37 +2921,79 @@
         // Crea la categoría si es nueva (o reutiliza la existente con ese nombre)
         await fb.addCategory(categoria);
 
-        await fb.addProduct({
+        const productData = {
           modelo,
           color,
           unidades: unidadesRaw ? parseInt(unidadesRaw, 10) : null,
           precio: precioRaw ? parseFloat(precioRaw) : null,
           categoria
-        }, adminGetProductUrls());
+        };
 
-        status.textContent = '✓ Lente publicado en el catálogo.';
+        if (isEditing) {
+          await fb.updateProduct(adminEditingProductId, productData, adminGetProductUrls());
+          status.textContent = '✓ Cambios guardados.';
+        } else {
+          await fb.addProduct(productData, adminGetProductUrls());
+          status.textContent = '✓ Lente publicado en el catálogo.';
+        }
         status.className = 'text-[11px] text-brand-teal mt-3 font-semibold';
 
-        // Reset form
-        modelInput.value = '';
-        colorInput.value = '';
-        unitsInput.value = '';
-        priceInput.value = '';
-        catSelect.value = '';
-        newCatInput.value = '';
-        newCatInput.classList.add('hidden');
-        adminProductUrlsInput.value = '';
-        adminRenderProductPreviews();
+        adminCancelEditProduct(); // reset form + edit state (also clears fields)
         adminLoadCategories();
         adminLoadProductList();
         loadPublicProductGallery();
       } catch (err) {
-        console.error('Error al publicar lente:', err);
-        status.textContent = 'No se pudo publicar el lente. Verifique su conexión e intente de nuevo.';
+        console.error('Error al guardar el lente:', err);
+        status.textContent = 'No se pudo guardar el lente. Verifique su conexión e intente de nuevo.';
         status.className = 'text-[11px] text-red-400 mt-3';
       } finally {
         btn.disabled = false;
       }
+    }
+
+    function adminEditProduct(id) {
+      const p = adminAllProducts.find(item => item.id === id);
+      if (!p) return;
+      adminEditingProductId = id;
+
+      document.getElementById('adminProductModel').value = p.modelo || '';
+      document.getElementById('adminProductColor').value = p.color || '';
+      document.getElementById('adminProductUnits').value = (p.unidades ?? '') === null ? '' : (p.unidades ?? '');
+      document.getElementById('adminProductPrice').value = (p.precio ?? '') === null ? '' : (p.precio ?? '');
+
+      const catSelect = document.getElementById('adminProductCategorySelect');
+      if ([...catSelect.options].some(o => o.value === p.categoria)) {
+        catSelect.value = p.categoria;
+      }
+      document.getElementById('adminProductNewCategoryInput').classList.add('hidden');
+
+      const imgsArr = (p.imgs && p.imgs.length) ? p.imgs : (p.img ? [p.img] : []);
+      adminProductUrlsInput.value = imgsArr.join('\n');
+      adminRenderProductPreviews();
+
+      document.getElementById('adminProductFormTitle').textContent = `✏️ Editando: ${p.modelo} · ${p.color}`;
+      document.getElementById('adminAddProductBtn').textContent = 'Guardar Cambios';
+      document.getElementById('adminCancelEditProductBtn').classList.remove('hidden');
+      document.getElementById('adminAddProductStatus').textContent = '';
+
+      document.getElementById('adminProductFormTitle').scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+
+    function adminCancelEditProduct() {
+      adminEditingProductId = null;
+      document.getElementById('adminProductModel').value = '';
+      document.getElementById('adminProductColor').value = '';
+      document.getElementById('adminProductUnits').value = '';
+      document.getElementById('adminProductPrice').value = '';
+      document.getElementById('adminProductCategorySelect').value = '';
+      document.getElementById('adminProductNewCategoryInput').value = '';
+      document.getElementById('adminProductNewCategoryInput').classList.add('hidden');
+      adminProductUrlsInput.value = '';
+      adminRenderProductPreviews();
+
+      document.getElementById('adminProductFormTitle').textContent = '🕶️ Agregar Lente al Catálogo';
+      document.getElementById('adminAddProductBtn').textContent = 'Agregar Lente';
+      document.getElementById('adminCancelEditProductBtn').classList.add('hidden');
     }
 
     async function adminLoadProductList() {
@@ -2740,6 +3003,7 @@
       try {
         const fb = await window.firebaseReady;
         const items = await fb.fetchProducts();
+        adminAllProducts = items || [];
 
         if (!items || items.length === 0) {
           list.innerHTML = '<p id="adminProductListEmpty" class="text-xs text-slate-600/80 italic">Aún no hay lentes registrados.</p>';
@@ -2770,6 +3034,7 @@
               </div>
               <div class="flex items-center gap-3 flex-shrink-0">
                 ${ocultoBadge}
+                <button onclick="adminEditProduct('${p.id}')" class="text-brand-teal hover:text-brand-sky text-xs font-bold uppercase tracking-wide">Editar</button>
                 <button onclick="adminToggleProductVisibility('${p.id}', ${p.oculto ? 'false' : 'true'})" class="text-brand-sky hover:text-brand-teal text-xs font-bold uppercase tracking-wide">${p.oculto ? 'Mostrar' : 'Ocultar'}</button>
                 <button onclick='adminRemoveProduct("${p.id}", ${JSON.stringify(p.storagePaths || (p.storagePath ? [p.storagePath] : []))})' class="text-red-400 hover:text-red-300 text-xs font-bold uppercase tracking-wide">Eliminar</button>
               </div>
@@ -3313,6 +3578,8 @@
 
         list.innerHTML = messages.map(m => {
           const audienciaLabel = m.audiencia === 'company' ? '🏢 Empresa' : '🙋 Persona';
+          const tipoLabelMap = { llamada: '📞 Llamada', info: '💬 Info rápida', formulario: '📋 Formulario' };
+          const tipoLabel = tipoLabelMap[m.tipo] || '';
           const waPhone = (m.phone || '').replace(/\D/g, '');
           return `
           <div class="p-4 bg-brand-dark border ${m.leido ? 'border-slate-900/10' : 'border-brand-sky/40'} rounded-2xl">
@@ -3320,6 +3587,7 @@
               <div>
                 <span class="font-bold text-sm text-brand-ink">${m.name || 'Sin nombre'}</span>
                 <span class="ml-2 text-[9px] uppercase tracking-widest font-extrabold text-brand-sky">${audienciaLabel}</span>
+                ${tipoLabel ? `<span class="ml-2 text-[9px] uppercase tracking-widest font-extrabold text-brand-teal">${tipoLabel}</span>` : ''}
                 ${!m.leido ? '<span class="ml-2 text-[9px] uppercase tracking-widest font-extrabold text-red-400">● Nuevo</span>' : ''}
               </div>
               <span class="text-[10px] text-slate-500 whitespace-nowrap">${formatFecha(m.createdAt)}</span>
@@ -3329,6 +3597,7 @@
               ${m.servicio ? `<p><strong class="text-brand-ink">Servicio:</strong> ${m.servicio}</p>` : ''}
               ${m.phone ? `<p><strong class="text-brand-ink">Tel:</strong> ${m.phone}</p>` : ''}
               ${m.email ? `<p><strong class="text-brand-ink">Correo:</strong> ${m.email}</p>` : ''}
+              ${m.horario ? `<p><strong class="text-brand-ink">Horario preferido:</strong> ${m.horario}</p>` : ''}
               ${m.message ? `<p><strong class="text-brand-ink">Mensaje:</strong> ${m.message}</p>` : ''}
             </div>
             <div class="flex flex-wrap gap-2">
@@ -3577,15 +3846,22 @@
     // =========================================================
     // ---- ADMIN PANEL: PEDIDOS ----
     // =========================================================
-    function estadoPedidoBadge(estado) {
-      const map = {
-        pendiente: 'text-amber-500',
-        proceso: 'text-brand-sky',
-        listo: 'text-brand-teal',
-        entregado: 'text-emerald-500'
-      };
-      const labelMap = { pendiente: 'Pendiente', proceso: 'En proceso', listo: 'Listo para entrega', entregado: 'Entregado' };
+    function estadoPagoBadge(estado) {
+      const map = { pendiente: 'text-amber-500', proceso: 'text-brand-sky', pagado: 'text-emerald-500' };
+      const labelMap = { pendiente: 'Pago pendiente', proceso: 'Pago en proceso', pagado: 'Pagado' };
       return `<span class="text-[9px] uppercase tracking-widest font-extrabold ${map[estado] || 'text-slate-500'}">${labelMap[estado] || estado}</span>`;
+    }
+    function estadoEnvioBadge(estado) {
+      const map = { preparando: 'text-amber-500', camino: 'text-brand-sky', entregado: 'text-emerald-500' };
+      const labelMap = { preparando: 'Preparando', camino: 'En camino', entregado: 'Entregado' };
+      return `<span class="text-[9px] uppercase tracking-widest font-extrabold ${map[estado] || 'text-slate-500'}">${labelMap[estado] || estado}</span>`;
+    }
+    function tipoPedidoBadge(tipo) {
+      const map = {
+        armazon: '<span class="text-[9px] font-bold uppercase tracking-wide text-brand-sky bg-brand-sky/10 px-2 py-0.5 rounded-full whitespace-nowrap">🕶️ Solo armazón</span>',
+        receta: '<span class="text-[9px] font-bold uppercase tracking-wide text-brand-coral bg-brand-coral/10 px-2 py-0.5 rounded-full whitespace-nowrap">📋 Con receta</span>'
+      };
+      return map[tipo] || '';
     }
 
     async function adminLoadPedidos() {
@@ -3603,26 +3879,49 @@
 
         list.innerHTML = pedidos.map(p => {
           const waPhone = (p.telefono || '').replace(/\D/g, '');
+          const items = Array.isArray(p.items) ? p.items : [];
+          const itemsHtml = items.length
+            ? `<div class="mt-1 mb-1 space-y-0.5">${items.map(it => `<p>• ${it.modelo || ''}${it.color ? ' · ' + it.color : ''} ${it.cantidad > 1 ? `x${it.cantidad}` : ''} ${it.precio ? `— $${Number(it.precio).toLocaleString('es-MX', {minimumFractionDigits:2, maximumFractionDigits:2})}` : ''}</p>`).join('')}</div>`
+            : (p.producto ? `<p><strong class="text-brand-ink">Producto:</strong> ${p.producto} ${p.cantidad ? `(x${p.cantidad})` : ''}</p>` : '');
+
+          const totalPrecio = items.length
+            ? items.reduce((sum, it) => sum + (Number(it.precio || 0) * Number(it.cantidad || 1)), 0)
+            : p.precio;
+
           return `
           <div class="p-4 bg-brand-dark border border-slate-900/10 rounded-2xl">
             <div class="flex items-start justify-between gap-3 mb-2">
-              <span class="font-bold text-sm text-brand-ink">${p.cliente || 'Sin nombre'}</span>
+              <div class="flex items-center gap-2 flex-wrap">
+                <span class="font-bold text-sm text-brand-ink">${p.cliente || 'Sin nombre'}</span>
+                ${tipoPedidoBadge(p.tipoPedido)}
+              </div>
               <span class="text-[10px] text-slate-500 whitespace-nowrap">${formatFecha(p.createdAt)}</span>
             </div>
             <div class="text-xs text-slate-600 space-y-1 mb-3">
-              <p><strong class="text-brand-ink">Producto:</strong> ${p.producto || '-'} ${p.cantidad ? `(x${p.cantidad})` : ''}</p>
-              ${p.precio ? `<p><strong class="text-brand-ink">Precio:</strong> $${Number(p.precio).toFixed(2)}</p>` : ''}
+              ${itemsHtml}
+              ${totalPrecio ? `<p><strong class="text-brand-ink">Total:</strong> $${Number(totalPrecio).toLocaleString('es-MX', {minimumFractionDigits:2, maximumFractionDigits:2})}</p>` : ''}
               ${p.telefono ? `<p><strong class="text-brand-ink">Tel:</strong> ${p.telefono}</p>` : ''}
+              ${p.email ? `<p><strong class="text-brand-ink">Correo:</strong> ${p.email}</p>` : ''}
+              ${p.receta ? `<p><strong class="text-brand-ink">Receta:</strong> ${p.receta}</p>` : ''}
               ${p.notas ? `<p><strong class="text-brand-ink">Notas:</strong> ${p.notas}</p>` : ''}
             </div>
             <div class="flex flex-wrap items-center gap-3">
-              <label class="text-[9px] uppercase tracking-widest text-slate-500 font-extrabold">Estatus:</label>
-              <select onchange="adminSetPedidoEstado('${p.id}', this.value)" class="text-[11px] p-2 bg-brand-navy border border-slate-900/10 rounded-lg text-brand-ink focus:border-brand-sky focus:outline-none">
-                <option value="pendiente" ${p.estado === 'pendiente' ? 'selected' : ''}>Pendiente</option>
-                <option value="proceso" ${p.estado === 'proceso' ? 'selected' : ''}>En proceso</option>
-                <option value="listo" ${p.estado === 'listo' ? 'selected' : ''}>Listo para entrega</option>
-                <option value="entregado" ${p.estado === 'entregado' ? 'selected' : ''}>Entregado</option>
-              </select>
+              <div class="flex items-center gap-1.5">
+                <label class="text-[9px] uppercase tracking-widest text-slate-500 font-extrabold">Pago:</label>
+                <select onchange="adminSetPedidoPago('${p.id}', this.value)" class="text-[11px] p-2 bg-brand-navy border border-slate-900/10 rounded-lg text-brand-ink focus:border-brand-sky focus:outline-none">
+                  <option value="pendiente" ${p.estadoPago === 'pendiente' ? 'selected' : ''}>Pendiente</option>
+                  <option value="proceso" ${p.estadoPago === 'proceso' ? 'selected' : ''}>En proceso</option>
+                  <option value="pagado" ${p.estadoPago === 'pagado' ? 'selected' : ''}>Pagado</option>
+                </select>
+              </div>
+              <div class="flex items-center gap-1.5">
+                <label class="text-[9px] uppercase tracking-widest text-slate-500 font-extrabold">Envío:</label>
+                <select onchange="adminSetPedidoEnvio('${p.id}', this.value)" class="text-[11px] p-2 bg-brand-navy border border-slate-900/10 rounded-lg text-brand-ink focus:border-brand-sky focus:outline-none">
+                  <option value="preparando" ${p.estadoEnvio === 'preparando' ? 'selected' : ''}>Preparando</option>
+                  <option value="camino" ${p.estadoEnvio === 'camino' ? 'selected' : ''}>En camino</option>
+                  <option value="entregado" ${p.estadoEnvio === 'entregado' ? 'selected' : ''}>Entregado</option>
+                </select>
+              </div>
               ${waPhone ? `<a href="https://wa.me/52${waPhone}" target="_blank" class="text-[10px] uppercase tracking-widest font-bold text-emerald-500 hover:text-emerald-400">💬 WhatsApp</a>` : ''}
               <button onclick="adminRemovePedido('${p.id}')" class="text-[10px] uppercase tracking-widest font-bold text-red-400 hover:text-red-300 ml-auto">Eliminar</button>
             </div>
@@ -3639,7 +3938,8 @@
       const producto = document.getElementById('adminPedidoProducto').value.trim();
       const cantidad = document.getElementById('adminPedidoCantidad').value;
       const precio = document.getElementById('adminPedidoPrecio').value;
-      const estado = document.getElementById('adminPedidoEstado').value;
+      const estadoPago = document.getElementById('adminPedidoEstadoPago').value;
+      const estadoEnvio = document.getElementById('adminPedidoEstadoEnvio').value;
       const notas = document.getElementById('adminPedidoNotas').value.trim();
       const status = document.getElementById('adminAddPedidoStatus');
       const btn = document.getElementById('adminAddPedidoBtn');
@@ -3659,7 +3959,8 @@
           cliente, telefono, producto,
           cantidad: cantidad ? parseInt(cantidad) : 1,
           precio: precio ? parseFloat(precio) : null,
-          estado, notas
+          tipoPedido: 'manual',
+          estadoPago, estadoEnvio, notas
         });
 
         document.getElementById('adminPedidoCliente').value = '';
@@ -3667,7 +3968,8 @@
         document.getElementById('adminPedidoProducto').value = '';
         document.getElementById('adminPedidoCantidad').value = '1';
         document.getElementById('adminPedidoPrecio').value = '';
-        document.getElementById('adminPedidoEstado').value = 'pendiente';
+        document.getElementById('adminPedidoEstadoPago').value = 'pendiente';
+        document.getElementById('adminPedidoEstadoEnvio').value = 'preparando';
         document.getElementById('adminPedidoNotas').value = '';
 
         status.textContent = '✓ Pedido guardado correctamente.';
@@ -3682,13 +3984,23 @@
       }
     }
 
-    async function adminSetPedidoEstado(id, estado) {
+    async function adminSetPedidoPago(id, estadoPago) {
       try {
         const fb = await window.firebaseReady;
-        await fb.updateOrderStatus(id, estado);
+        await fb.updateOrderPago(id, estadoPago);
         adminLoadPedidos();
       } catch (e) {
-        console.error('Error al actualizar pedido:', e);
+        console.error('Error al actualizar el pago del pedido:', e);
+      }
+    }
+
+    async function adminSetPedidoEnvio(id, estadoEnvio) {
+      try {
+        const fb = await window.firebaseReady;
+        await fb.updateOrderEnvio(id, estadoEnvio);
+        adminLoadPedidos();
+      } catch (e) {
+        console.error('Error al actualizar el envío del pedido:', e);
       }
     }
 
@@ -3702,6 +4014,467 @@
         console.error('Error al eliminar pedido:', e);
       }
     }
+
+    // =========================================================
+    // ---- MODAL HELPERS (genéricos, mismo patrón que successModal) ----
+    // =========================================================
+    function openModal(id) {
+      const modal = document.getElementById(id);
+      const card = document.getElementById(id + 'Card');
+      modal.classList.remove('hidden');
+      requestAnimationFrame(() => {
+        modal.classList.add('opacity-100');
+        card.classList.add('scale-100');
+      });
+    }
+    function closeModal(id) {
+      const modal = document.getElementById(id);
+      const card = document.getElementById(id + 'Card');
+      modal.classList.remove('opacity-100');
+      card.classList.remove('scale-100');
+      setTimeout(() => modal.classList.add('hidden'), 300);
+    }
+
+    // =========================================================
+    // ---- CARRITO (persistido en localStorage) ----
+    // =========================================================
+    let cart = [];
+    try { cart = JSON.parse(localStorage.getItem('vekaCart') || '[]'); } catch (e) { cart = []; }
+
+    function saveCart() {
+      localStorage.setItem('vekaCart', JSON.stringify(cart));
+      renderCartBadge();
+    }
+
+    function renderCartBadge() {
+      const count = cart.reduce((sum, it) => sum + it.cantidad, 0);
+      [document.getElementById('cartBadge'), document.getElementById('cartBadgeMobile')].forEach(badge => {
+        if (!badge) return;
+        if (count > 0) {
+          badge.textContent = count;
+          badge.classList.remove('hidden');
+          badge.classList.add('flex');
+        } else {
+          badge.classList.add('hidden');
+          badge.classList.remove('flex');
+        }
+      });
+    }
+
+    function addToCart(productId) {
+      const p = (window.__publicProductsCache || {})[productId];
+      if (!p) return;
+      const existing = cart.find(it => it.id === productId);
+      if (existing) {
+        existing.cantidad += 1;
+      } else {
+        const imgsArr = (p.imgs && p.imgs.length) ? p.imgs : (p.img ? [p.img] : []);
+        cart.push({
+          id: productId,
+          modelo: p.modelo,
+          color: p.color,
+          precio: (p.precio === null || p.precio === undefined) ? null : p.precio,
+          img: imgsArr[0] || null,
+          cantidad: 1
+        });
+      }
+      saveCart();
+      openCartDrawer();
+    }
+
+    function cartChangeQty(id, delta) {
+      const item = cart.find(it => it.id === id);
+      if (!item) return;
+      item.cantidad += delta;
+      if (item.cantidad <= 0) {
+        cart = cart.filter(it => it.id !== id);
+      }
+      saveCart();
+      renderCartDrawer();
+    }
+
+    function cartRemoveItem(id) {
+      cart = cart.filter(it => it.id !== id);
+      saveCart();
+      renderCartDrawer();
+    }
+
+    function cartTotal() {
+      return cart.reduce((sum, it) => sum + (Number(it.precio || 0) * it.cantidad), 0);
+    }
+
+    function renderCartDrawer() {
+      const list = document.getElementById('cartItemsList');
+      const emptyMsg = document.getElementById('cartEmptyMsg');
+      const totalText = document.getElementById('cartTotalText');
+      const checkoutBtn = document.getElementById('cartCheckoutBtn');
+
+      if (cart.length === 0) {
+        list.innerHTML = '';
+        list.appendChild(emptyMsg);
+        totalText.textContent = '$0.00';
+        checkoutBtn.disabled = true;
+        checkoutBtn.classList.add('opacity-50');
+        return;
+      }
+
+      checkoutBtn.disabled = false;
+      checkoutBtn.classList.remove('opacity-50');
+
+      list.innerHTML = cart.map(it => {
+        const precioText = (it.precio !== null && it.precio !== undefined)
+          ? `$${Number(it.precio).toLocaleString('es-MX', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
+          : 'Consultar precio';
+        const thumb = it.img
+          ? `<img src="${it.img}" class="w-14 h-14 object-cover rounded-xl bg-brand-navy border border-slate-900/10 flex-shrink-0">`
+          : `<div class="w-14 h-14 rounded-xl bg-brand-navy border border-slate-900/10 flex items-center justify-center text-xl flex-shrink-0">🕶️</div>`;
+        return `
+        <div class="flex items-center gap-3">
+          ${thumb}
+          <div class="flex-1 min-w-0">
+            <p class="text-sm font-semibold text-brand-ink truncate">${it.modelo}</p>
+            <p class="text-[11px] text-slate-500 truncate">${it.color} · ${precioText}</p>
+            <div class="flex items-center gap-2 mt-1">
+              <button onclick="cartChangeQty('${it.id}', -1)" class="w-6 h-6 rounded-full bg-brand-navy border border-slate-900/10 text-brand-ink text-xs font-bold flex items-center justify-center">−</button>
+              <span class="text-xs font-bold text-brand-ink w-4 text-center">${it.cantidad}</span>
+              <button onclick="cartChangeQty('${it.id}', 1)" class="w-6 h-6 rounded-full bg-brand-navy border border-slate-900/10 text-brand-ink text-xs font-bold flex items-center justify-center">+</button>
+            </div>
+          </div>
+          <button onclick="cartRemoveItem('${it.id}')" class="text-red-400 hover:text-red-300 text-[10px] font-bold uppercase tracking-wide flex-shrink-0">Quitar</button>
+        </div>
+      `; }).join('');
+
+      totalText.textContent = `$${cartTotal().toLocaleString('es-MX', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+    }
+
+    function openCartDrawer() {
+      renderCartDrawer();
+      openModal('cartModal');
+    }
+    function closeCartDrawer() {
+      closeModal('cartModal');
+    }
+
+    renderCartBadge(); // set badge state on page load
+
+    // =========================================================
+    // ---- CHECKOUT (finalizar pedido) ----
+    // =========================================================
+    let checkoutTipo = 'armazon';
+
+    function setCheckoutTipo(tipo) {
+      checkoutTipo = tipo;
+      const armazonBtn = document.getElementById('checkoutTipoArmazonBtn');
+      const recetaBtn = document.getElementById('checkoutTipoRecetaBtn');
+      const recetaWrap = document.getElementById('checkoutRecetaWrap');
+
+      if (tipo === 'receta') {
+        recetaBtn.classList.add('border-brand-sky', 'text-brand-sky');
+        recetaBtn.classList.remove('border-slate-900/10', 'text-slate-500');
+        armazonBtn.classList.remove('border-brand-sky', 'text-brand-sky');
+        armazonBtn.classList.add('border-slate-900/10', 'text-slate-500');
+        recetaWrap.classList.remove('hidden');
+      } else {
+        armazonBtn.classList.add('border-brand-sky', 'text-brand-sky');
+        armazonBtn.classList.remove('border-slate-900/10', 'text-slate-500');
+        recetaBtn.classList.remove('border-brand-sky', 'text-brand-sky');
+        recetaBtn.classList.add('border-slate-900/10', 'text-slate-500');
+        recetaWrap.classList.add('hidden');
+      }
+    }
+
+    async function startCheckout() {
+      if (cart.length === 0) return;
+      closeCartDrawer();
+
+      // Prefill contact fields if the customer is logged in
+      try {
+        const fb = await window.firebaseReady;
+        const profile = await fb.getCurrentUserProfile();
+        if (profile) {
+          document.getElementById('checkoutNombre').value = profile.nombre || '';
+          document.getElementById('checkoutTelefono').value = profile.telefono || '';
+          document.getElementById('checkoutEmail').value = profile.email || '';
+        }
+      } catch (e) { /* guest checkout, no problem */ }
+
+      setCheckoutTipo('armazon');
+      document.getElementById('checkoutReceta').value = '';
+      document.getElementById('checkoutStatus').textContent = '';
+      openModal('checkoutModal');
+    }
+
+    function closeCheckoutModal() {
+      closeModal('checkoutModal');
+    }
+
+    async function submitCheckout() {
+      const nombre = document.getElementById('checkoutNombre').value.trim();
+      const telefono = document.getElementById('checkoutTelefono').value.trim();
+      const email = document.getElementById('checkoutEmail').value.trim();
+      const receta = document.getElementById('checkoutReceta').value.trim();
+      const status = document.getElementById('checkoutStatus');
+      const btn = document.getElementById('checkoutSubmitBtn');
+
+      if (!nombre || !telefono) {
+        status.textContent = 'Por favor complete su nombre y teléfono.';
+        return;
+      }
+      if (checkoutTipo === 'receta' && !receta) {
+        status.textContent = 'Escriba su graduación o pegue el enlace de su receta.';
+        return;
+      }
+
+      btn.disabled = true;
+      status.textContent = '';
+      status.className = 'text-[11px] text-slate-500 mt-2 text-center';
+      status.textContent = 'Enviando pedido...';
+
+      const items = cart.map(it => ({ modelo: it.modelo, color: it.color, precio: it.precio, cantidad: it.cantidad }));
+      const total = cartTotal();
+
+      try {
+        const fb = await window.firebaseReady;
+        const user = fb.getCurrentUser();
+        await fb.addOrder({
+          cliente: nombre,
+          telefono,
+          email,
+          tipoPedido: checkoutTipo,
+          receta,
+          items,
+          estadoPago: 'pendiente',
+          estadoEnvio: 'preparando',
+          uid: user ? user.uid : null
+        });
+
+        // Mensaje de WhatsApp con el resumen del pedido
+        const itemsText = items.map(it => `• ${it.modelo} (${it.color})${it.cantidad > 1 ? ` x${it.cantidad}` : ''}${it.precio ? ` — $${Number(it.precio).toFixed(2)}` : ''}`).join('%0A');
+        const tipoText = checkoutTipo === 'receta' ? 'Pedido CON RECETA' : 'Pedido de SOLO ARMAZÓN (ya con examen)';
+        let msg = `Hola, quiero confirmar mi pedido en Visión EKA:%0A%0A${tipoText}%0A${itemsText}%0A%0ATotal estimado: $${total.toFixed(2)} MXN%0A%0ANombre: ${nombre}%0ATeléfono: ${telefono}`;
+        if (checkoutTipo === 'receta') msg += `%0AReceta: ${receta}`;
+
+        cart = [];
+        saveCart();
+
+        status.textContent = '';
+        closeCheckoutModal();
+        openSuccessModal('¡Gracias! Su pedido fue registrado. Le contactaremos por WhatsApp con las formas de pago disponibles y el seguimiento de su envío.');
+        window.open(`https://wa.me/524421295277?text=${msg}`, '_blank');
+      } catch (err) {
+        console.error('Error al enviar el pedido:', err);
+        status.textContent = 'No se pudo enviar el pedido. Intente de nuevo.';
+        status.className = 'text-[11px] text-red-400 mt-2 text-center';
+      } finally {
+        btn.disabled = false;
+      }
+    }
+
+    // =========================================================
+    // ---- MI CUENTA (registro / login / invitado) ----
+    // =========================================================
+    function openAccountModal() {
+      refreshAccountView();
+      openModal('accountModal');
+    }
+    function closeAccountModal() {
+      closeModal('accountModal');
+    }
+
+    function setAccountTab(tab) {
+      const loginBtn = document.getElementById('accountTabLoginBtn');
+      const registerBtn = document.getElementById('accountTabRegisterBtn');
+      const loginForm = document.getElementById('accountLoginForm');
+      const registerForm = document.getElementById('accountRegisterForm');
+      document.getElementById('accountAuthStatus').textContent = '';
+
+      if (tab === 'register') {
+        registerBtn.classList.add('bg-brand-sky', 'text-brand-ink');
+        registerBtn.classList.remove('text-slate-500');
+        loginBtn.classList.remove('bg-brand-sky', 'text-brand-ink');
+        loginBtn.classList.add('text-slate-500');
+        registerForm.classList.remove('hidden');
+        loginForm.classList.add('hidden');
+      } else {
+        loginBtn.classList.add('bg-brand-sky', 'text-brand-ink');
+        loginBtn.classList.remove('text-slate-500');
+        registerBtn.classList.remove('bg-brand-sky', 'text-brand-ink');
+        registerBtn.classList.add('text-slate-500');
+        loginForm.classList.remove('hidden');
+        registerForm.classList.add('hidden');
+      }
+    }
+
+    async function refreshAccountView() {
+      try {
+        const fb = await window.firebaseReady;
+        const user = fb.getCurrentUser();
+        const loggedOutView = document.getElementById('accountLoggedOutView');
+        const loggedInView = document.getElementById('accountLoggedInView');
+
+        if (user && !(user.email && user.email.toLowerCase() === '0712220035@alumnos.univa.mx')) {
+          const profile = await fb.getCurrentUserProfile();
+          loggedOutView.classList.add('hidden');
+          loggedInView.classList.remove('hidden');
+          document.getElementById('accountGreeting').textContent = `Hola, ${profile?.nombre || user.email}`;
+          document.getElementById('accountEmailText').textContent = user.email;
+          [document.getElementById('navAccountLabel'), document.getElementById('navAccountLabelMobile')].forEach(el => { if (el) el.textContent = profile?.nombre?.split(' ')[0] || 'Mi Cuenta'; });
+        } else {
+          loggedOutView.classList.remove('hidden');
+          loggedInView.classList.add('hidden');
+        }
+      } catch (e) {
+        console.error('Error al revisar la sesión:', e);
+      }
+    }
+
+    async function submitCustomerLogin() {
+      const email = document.getElementById('loginEmail').value.trim();
+      const password = document.getElementById('loginPassword').value;
+      const status = document.getElementById('accountAuthStatus');
+      const btn = document.getElementById('loginBtn');
+
+      if (!email || !password) {
+        status.textContent = 'Ingrese su correo y contraseña.';
+        return;
+      }
+      btn.disabled = true;
+      status.textContent = '';
+      try {
+        const fb = await window.firebaseReady;
+        await fb.customerLogin(email, password);
+        document.getElementById('loginEmail').value = '';
+        document.getElementById('loginPassword').value = '';
+        await refreshAccountView();
+      } catch (err) {
+        console.error('Error al iniciar sesión:', err);
+        status.textContent = 'Correo o contraseña incorrectos.';
+      } finally {
+        btn.disabled = false;
+      }
+    }
+
+    async function submitCustomerRegister() {
+      const nombre = document.getElementById('registerNombre').value.trim();
+      const telefono = document.getElementById('registerTelefono').value.trim();
+      const email = document.getElementById('registerEmail').value.trim();
+      const password = document.getElementById('registerPassword').value;
+      const status = document.getElementById('accountAuthStatus');
+      const btn = document.getElementById('registerBtn');
+
+      if (!nombre || !email || !password) {
+        status.textContent = 'Complete al menos nombre, correo y contraseña.';
+        return;
+      }
+      if (password.length < 6) {
+        status.textContent = 'La contraseña debe tener al menos 6 caracteres.';
+        return;
+      }
+      btn.disabled = true;
+      status.textContent = '';
+      try {
+        const fb = await window.firebaseReady;
+        await fb.customerRegister(email, password, nombre, telefono);
+        document.getElementById('registerNombre').value = '';
+        document.getElementById('registerTelefono').value = '';
+        document.getElementById('registerEmail').value = '';
+        document.getElementById('registerPassword').value = '';
+        await refreshAccountView();
+      } catch (err) {
+        console.error('Error al crear la cuenta:', err);
+        status.textContent = err.code === 'auth/email-already-in-use'
+          ? 'Ese correo ya tiene una cuenta. Intente iniciar sesión.'
+          : 'No se pudo crear la cuenta. Verifique sus datos.';
+      } finally {
+        btn.disabled = false;
+      }
+    }
+
+    async function submitCustomerLogout() {
+      try {
+        const fb = await window.firebaseReady;
+        await fb.customerLogout();
+        [document.getElementById('navAccountLabel'), document.getElementById('navAccountLabelMobile')].forEach(el => { if (el) el.textContent = 'Mi Cuenta'; });
+        await refreshAccountView();
+      } catch (e) {
+        console.error('Error al cerrar sesión:', e);
+      }
+    }
+
+    // Muestra el botón "Mi Cuenta" y sincroniza el nombre cuando cambia el estado de sesión
+    window.firebaseReady.then(fb => {
+      document.getElementById('navAccountBtn')?.classList.remove('hidden');
+      fb.onCustomerAuthChange(() => refreshAccountView());
+    });
+
+    // =========================================================
+    // ---- AGENDAR LLAMADA (rápido) ----
+    // =========================================================
+    function openQuickCallModal() { openModal('quickCallModal'); }
+    function closeQuickCallModal() { closeModal('quickCallModal'); }
+
+    async function submitQuickCall() {
+      const nombre = document.getElementById('quickCallNombre').value.trim();
+      const telefono = document.getElementById('quickCallTelefono').value.trim();
+      const horario = document.getElementById('quickCallHorario').value;
+      const status = document.getElementById('quickCallStatus');
+      const btn = document.getElementById('quickCallBtn');
+
+      if (!nombre || !telefono) {
+        status.textContent = 'Por favor escriba su nombre y teléfono.';
+        return;
+      }
+      btn.disabled = true;
+      status.textContent = '';
+      try {
+        const fb = await window.firebaseReady;
+        await fb.addMessage({ tipo: 'llamada', audiencia: 'person', name: nombre, phone: telefono, horario, servicio: 'Solicitud de llamada' });
+        document.getElementById('quickCallNombre').value = '';
+        document.getElementById('quickCallTelefono').value = '';
+        document.getElementById('quickCallHorario').value = '';
+        closeQuickCallModal();
+        openSuccessModal(`¡Gracias ${nombre}! Le llamaremos ${horario ? 'en el horario de ' + horario : 'a la brevedad'}.`);
+      } catch (err) {
+        console.error('Error al solicitar llamada:', err);
+        status.textContent = 'No se pudo enviar. Intente de nuevo.';
+      } finally {
+        btn.disabled = false;
+      }
+    }
+
+    // =========================================================
+    // ---- MÁS INFORMACIÓN (rápido) ----
+    // =========================================================
+    function openQuickInfoModal() { openModal('quickInfoModal'); }
+    function closeQuickInfoModal() { closeModal('quickInfoModal'); }
+
+    async function submitQuickInfo() {
+      const nombre = document.getElementById('quickInfoNombre').value.trim();
+      const contacto = document.getElementById('quickInfoTelefono').value.trim();
+      const status = document.getElementById('quickInfoStatus');
+      const btn = document.getElementById('quickInfoBtn');
+
+      if (!nombre || !contacto) {
+        status.textContent = 'Por favor escriba su nombre y un teléfono o correo.';
+        return;
+      }
+      btn.disabled = true;
+      status.textContent = '';
+      try {
+        const fb = await window.firebaseReady;
+        const isEmail = contacto.includes('@');
+        await fb.addMessage({ tipo: 'info', audiencia: 'person', name: nombre, phone: isEmail ? '' : contacto, email: isEmail ? contacto : '', servicio: 'Solicitud de información' });
+        document.getElementById('quickInfoNombre').value = '';
+        document.getElementById('quickInfoTelefono').value = '';
+        closeQuickInfoModal();
+        openSuccessModal(`¡Gracias ${nombre}! Le enviaremos la información a la brevedad.`);
+      } catch (err) {
+        console.error('Error al solicitar información:', err);
+        status.textContent = 'No se pudo enviar. Intente de nuevo.';
+      } finally {
+        btn.disabled = false;
+      }
+    }
   </script>
 
   <!-- ========================================================= -->
@@ -3713,14 +4486,14 @@
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-app.js";
     import { getAnalytics, isSupported as analyticsIsSupported } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-analytics.js";
     import {
-      getFirestore, collection, addDoc, getDocs, deleteDoc, doc, updateDoc,
+      getFirestore, collection, addDoc, getDocs, deleteDoc, doc, updateDoc, setDoc, getDoc,
       query, orderBy, limit, serverTimestamp
     } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-firestore.js";
     import {
       getStorage, ref, uploadBytes, getDownloadURL, deleteObject
     } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-storage.js";
     import {
-      getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged
+      getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, onAuthStateChanged
     } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-auth.js";
 
     const firebaseConfig = {
@@ -3747,6 +4520,7 @@
     const MESSAGES_COLLECTION = 'mensajes';
     const APPOINTMENTS_COLLECTION = 'citas';
     const ORDERS_COLLECTION = 'pedidos';
+    const USERS_COLLECTION = 'usuarios';
 
     // ---- Catálogo de armazones (fotos) ----
     async function fetchCatalog() {
@@ -3815,6 +4589,19 @@
       });
     }
 
+    async function updateProduct(id, data, imgUrls) {
+      const imgs = (Array.isArray(imgUrls) ? imgUrls : (imgUrls ? [imgUrls] : [])).map(u => String(u).trim()).filter(Boolean);
+      await updateDoc(doc(db, PRODUCTS_COLLECTION, id), {
+        modelo: data.modelo,
+        color: data.color,
+        unidades: (data.unidades === null || data.unidades === undefined || isNaN(data.unidades)) ? null : data.unidades,
+        precio: (data.precio === null || data.precio === undefined || isNaN(data.precio)) ? null : data.precio,
+        categoria: data.categoria,
+        imgs,
+        img: imgs[0] || null
+      });
+    }
+
     async function updateProductVisibility(id, oculto) {
       await updateDoc(doc(db, PRODUCTS_COLLECTION, id), { oculto: !!oculto });
     }
@@ -3852,6 +4639,7 @@ async function deleteProduct(id, storagePaths) {
 
     async function addMessage(data) {
       await addDoc(collection(db, MESSAGES_COLLECTION), {
+        tipo: data.tipo || 'formulario', // 'formulario' | 'llamada' | 'info'
         audiencia: data.audiencia || 'person',
         name: String(data.name || '').slice(0, 120),
         company: String(data.company || '').slice(0, 120),
@@ -3860,6 +4648,7 @@ async function deleteProduct(id, storagePaths) {
         phone: String(data.phone || '').slice(0, 40),
         email: String(data.email || '').slice(0, 120),
         message: String(data.message || '').slice(0, 1000),
+        horario: String(data.horario || '').slice(0, 100),
         leido: false,
         createdAt: serverTimestamp()
       });
@@ -3912,17 +4701,27 @@ async function deleteProduct(id, storagePaths) {
       await addDoc(collection(db, ORDERS_COLLECTION), {
         cliente: String(data.cliente || '').slice(0, 120),
         telefono: String(data.telefono || '').slice(0, 40),
+        email: String(data.email || '').slice(0, 120),
+        tipoPedido: data.tipoPedido || 'manual', // 'armazon' | 'receta' | 'manual'
+        receta: String(data.receta || '').slice(0, 1000),
         producto: String(data.producto || '').slice(0, 200),
         cantidad: data.cantidad || 1,
         precio: (data.precio === null || data.precio === undefined || isNaN(data.precio)) ? null : data.precio,
-        estado: data.estado || 'pendiente',
+        items: Array.isArray(data.items) ? data.items.slice(0, 50) : [],
+        estadoPago: data.estadoPago || 'pendiente',       // pendiente | pagado | proceso
+        estadoEnvio: data.estadoEnvio || 'preparando',    // preparando | camino | entregado
         notas: String(data.notas || '').slice(0, 500),
+        uid: data.uid || null,
         createdAt: serverTimestamp()
       });
     }
 
-    async function updateOrderStatus(id, estado) {
-      await updateDoc(doc(db, ORDERS_COLLECTION, id), { estado });
+    async function updateOrderPago(id, estadoPago) {
+      await updateDoc(doc(db, ORDERS_COLLECTION, id), { estadoPago });
+    }
+
+    async function updateOrderEnvio(id, estadoEnvio) {
+      await updateDoc(doc(db, ORDERS_COLLECTION, id), { estadoEnvio });
     }
 
     async function deleteOrder(id) {
@@ -3930,6 +4729,8 @@ async function deleteProduct(id, storagePaths) {
     }
 
     // ---- Autenticación del panel de administrador ----
+    const ADMIN_EMAIL = '0712220035@alumnos.univa.mx';
+
     function signInAdmin(email, password) {
       return signInWithEmailAndPassword(auth, email, password);
     }
@@ -3937,9 +4738,44 @@ async function deleteProduct(id, storagePaths) {
       return signOut(auth);
     }
     function isAdminLoggedIn() {
-      return !!auth.currentUser;
+      return !!(auth.currentUser && auth.currentUser.email && auth.currentUser.email.toLowerCase() === ADMIN_EMAIL);
     }
     function onAdminAuthChange(cb) {
+      return onAuthStateChanged(auth, cb);
+    }
+
+    // ---- Cuentas de clientes (opcional — el checkout también funciona sin cuenta) ----
+    async function customerRegister(email, password, nombre, telefono) {
+      const cred = await createUserWithEmailAndPassword(auth, email, password);
+      await setDoc(doc(db, USERS_COLLECTION, cred.user.uid), {
+        nombre: String(nombre || '').slice(0, 120),
+        telefono: String(telefono || '').slice(0, 40),
+        email: String(email || '').slice(0, 120),
+        createdAt: serverTimestamp()
+      });
+      return cred.user;
+    }
+
+    async function customerLogin(email, password) {
+      const cred = await signInWithEmailAndPassword(auth, email, password);
+      return cred.user;
+    }
+
+    async function customerLogout() {
+      await signOut(auth);
+    }
+
+    function getCurrentUser() {
+      return auth.currentUser;
+    }
+
+    async function getCurrentUserProfile() {
+      if (!auth.currentUser) return null;
+      const snap = await getDoc(doc(db, USERS_COLLECTION, auth.currentUser.uid));
+      return snap.exists() ? snap.data() : null;
+    }
+
+    function onCustomerAuthChange(cb) {
       return onAuthStateChanged(auth, cb);
     }
 
@@ -3960,6 +4796,7 @@ async function deleteProduct(id, storagePaths) {
       addCategory,
       fetchProducts,
       addProduct,
+      updateProduct,
       updateProductVisibility,
       deleteProduct,
       fetchMessages,
@@ -3972,8 +4809,15 @@ async function deleteProduct(id, storagePaths) {
       deleteAppointment,
       fetchOrders,
       addOrder,
-      updateOrderStatus,
-      deleteOrder
+      updateOrderPago,
+      updateOrderEnvio,
+      deleteOrder,
+      customerRegister,
+      customerLogin,
+      customerLogout,
+      getCurrentUser,
+      getCurrentUserProfile,
+      onCustomerAuthChange
     });
   </script>
 </body>
