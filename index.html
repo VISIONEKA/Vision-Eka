@@ -1599,8 +1599,8 @@
       <div class="bg-brand-navy border border-slate-900/10 rounded-3xl p-6 mb-8">
         <h3 class="font-display font-bold text-sm text-brand-ink mb-3">📋 Cómo funciona este panel</h3>
         <ol class="text-xs text-slate-600 space-y-2 list-decimal list-inside leading-relaxed">
-          <li><strong class="text-brand-ink">Catálogo de Lentes:</strong> registre cada lente con su modelo, color, unidades y precio, y asígnelo a una categoría (elija una existente o cree una nueva, por ejemplo "Armazones Ligeros"). Desde la lista puede ocultarlo temporalmente (deja de mostrarse al público sin perder el registro) o eliminarlo por completo si se agotó.</li>
-          <li><strong class="text-brand-ink">Filtros del Probador Virtual:</strong> suba, aparte, la imagen recortada (PNG con fondo transparente recomendado) de cada armazón junto con el modelo al que corresponde. Esa imagen es la que se superpone sobre la cara en la cámara del probador en vivo.</li>
+          <li><strong class="text-brand-ink">Catálogo de Lentes:</strong> registre cada lente con su modelo, color, unidades y precio, y asígnelo a una categoría (elija una existente o cree una nueva, por ejemplo "Armazones Ligeros"). Para las fotos, primero súbalas a un servicio como Google Fotos, Imgur o Cloudinary, copie el enlace directo de la imagen y péguelo en el campo correspondiente. Desde la lista puede ocultarlo temporalmente (deja de mostrarse al público sin perder el registro) o eliminarlo por completo si se agotó.</li>
+          <li><strong class="text-brand-ink">Filtros del Probador Virtual:</strong> pegue, aparte, el enlace de la imagen recortada (PNG con fondo transparente recomendado) de cada armazón junto con el modelo al que corresponde. Esa imagen es la que se superpone sobre la cara en la cámara del probador en vivo.</li>
           <li>Todo se guarda en Firebase y aparece de inmediato en el sitio — no hay que tocar GitHub ni ningún archivo.</li>
         </ol>
       </div>
@@ -1638,14 +1638,9 @@
         </div>
 
           <div class="mb-4">
-          <label class="block text-[9px] uppercase tracking-widest text-slate-500 font-extrabold mb-2">Fotos del lente <span class="normal-case text-slate-600/70 font-medium">(opcional — puedes subir varias: modelo puesto, solo el armazón, distintos ángulos, etc.)</span></label>
-          <div id="adminProductDropzone" class="relative border-2 border-dashed border-slate-900/15 hover:border-brand-sky/50 rounded-2xl p-6 text-center transition-all cursor-pointer bg-brand-dark/40">
-            <input type="file" id="adminProductFileInput" accept="image/png,image/webp,image/jpeg" multiple class="absolute inset-0 w-full h-full opacity-0 cursor-pointer">
-            <div id="adminProductDropzoneIdle">
-              <span class="text-2xl block mb-2">🖼️</span>
-              <p class="text-xs text-slate-500">Arrastre una o varias fotos aquí, o haga clic para elegirlas</p>
-            </div>
-          </div>
+          <label class="block text-[9px] uppercase tracking-widest text-slate-500 font-extrabold mb-2">Fotos del lente <span class="normal-case text-slate-600/70 font-medium">(opcional — pegue el enlace de cada foto ya subida, una por línea)</span></label>
+          <textarea id="adminProductUrlsInput" rows="3" placeholder="https://ejemplo.com/foto1.jpg&#10;https://ejemplo.com/foto2.jpg" class="w-full p-3.5 bg-brand-dark border border-slate-900/10 rounded-xl text-sm text-brand-ink focus:border-brand-sky focus:outline-none"></textarea>
+          <p class="text-[10px] text-slate-600/70 mt-1.5">Suba la foto a Google Fotos, Imgur, Cloudinary, Facebook, etc., copie el enlace directo de la imagen y péguelo aquí (una URL por línea, puede pegar varias).</p>
           <div id="adminProductDropzonePreviewGrid" class="hidden grid grid-cols-4 sm:grid-cols-6 gap-3 mt-4"></div>
         </div>
         <button onclick="adminAddProduct()" id="adminAddProductBtn" class="bg-brand-sky/10 border border-brand-sky/30 text-brand-sky font-bold text-xs uppercase tracking-wider py-3 px-6 rounded-full hover:bg-brand-sky/20 transition-all">
@@ -1670,16 +1665,11 @@
           <input type="text" id="adminLensName" placeholder="Aviador Dorado" class="w-full p-3.5 bg-brand-dark border border-slate-900/10 rounded-xl text-sm text-brand-ink focus:border-brand-sky focus:outline-none">
         </div>
 
-        <div id="adminDropzone" class="relative border-2 border-dashed border-slate-900/15 hover:border-brand-sky/50 rounded-2xl p-8 text-center mb-4 transition-all cursor-pointer bg-brand-dark/40">
-          <input type="file" id="adminLensFileInput" accept="image/png,image/webp,image/jpeg" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer">
-          <div id="adminDropzoneIdle">
-            <span class="text-2xl block mb-2">🖼️</span>
-            <p class="text-xs text-slate-500">Arrastre la foto aquí o haga clic para elegirla</p>
-            <p class="text-[10px] text-slate-600/70 mt-1">PNG con fondo transparente recomendado</p>
-          </div>
-          <div id="adminDropzonePreviewWrap" class="hidden flex-col items-center gap-2">
+        <div class="mb-4">
+          <label class="block text-[9px] uppercase tracking-widest text-slate-500 font-extrabold mb-2">Enlace de la imagen <span class="normal-case text-slate-600/70 font-medium">(ya subida a Google Fotos, Imgur, Cloudinary, etc. — PNG con fondo transparente recomendado)</span></label>
+          <input type="text" id="adminLensUrlInput" placeholder="https://ejemplo.com/aviador-dorado.png" class="w-full p-3.5 bg-brand-dark border border-slate-900/10 rounded-xl text-sm text-brand-ink focus:border-brand-sky focus:outline-none">
+          <div id="adminDropzonePreviewWrap" class="hidden flex-col items-center gap-2 mt-4">
             <img id="adminDropzonePreview" class="max-h-28 object-contain" alt="Vista previa">
-            <span id="adminDropzoneFileName" class="text-[10px] text-slate-500"></span>
           </div>
         </div>
 
@@ -2447,8 +2437,6 @@
     // require request.auth != null for writes to catalogo_lentes.
     // =========================================================
 
-    let adminSelectedFile = null; // File object picked/dropped in the dropzone
-
     function checkAdminUrlHash() {
       if (window.location.hash === '#admin') {
         document.getElementById('adminOverlay').classList.remove('hidden');
@@ -2516,36 +2504,21 @@
       document.getElementById('adminOverlay').classList.add('hidden');
     }
 
-    // ---- Dropzone (drag & drop + click-to-choose) for the frame image ----
-    const adminDropzone = document.getElementById('adminDropzone');
-    const adminLensFileInput = document.getElementById('adminLensFileInput');
-    const adminDropzoneIdle = document.getElementById('adminDropzoneIdle');
+    // ---- Vista previa del enlace de imagen para el filtro del probador ----
+    const adminLensUrlInput = document.getElementById('adminLensUrlInput');
     const adminDropzonePreviewWrap = document.getElementById('adminDropzonePreviewWrap');
     const adminDropzonePreview = document.getElementById('adminDropzonePreview');
-    const adminDropzoneFileName = document.getElementById('adminDropzoneFileName');
 
-    function adminHandleFile(file) {
-      if (!file || !file.type.startsWith('image/')) return;
-      adminSelectedFile = file;
-      const url = URL.createObjectURL(file);
+    adminLensUrlInput?.addEventListener('input', () => {
+      const url = adminLensUrlInput.value.trim();
+      if (!url) {
+        adminDropzonePreviewWrap.classList.add('hidden');
+        adminDropzonePreviewWrap.classList.remove('flex');
+        return;
+      }
       adminDropzonePreview.src = url;
-      adminDropzoneFileName.textContent = file.name;
-      adminDropzoneIdle.classList.add('hidden');
       adminDropzonePreviewWrap.classList.remove('hidden');
       adminDropzonePreviewWrap.classList.add('flex');
-    }
-
-    adminLensFileInput?.addEventListener('change', (e) => adminHandleFile(e.target.files[0]));
-    ['dragover', 'dragenter'].forEach(evt => {
-      adminDropzone?.addEventListener(evt, (e) => { e.preventDefault(); adminDropzone.classList.add('border-brand-sky/60'); });
-    });
-    ['dragleave', 'drop'].forEach(evt => {
-      adminDropzone?.addEventListener(evt, (e) => { e.preventDefault(); adminDropzone.classList.remove('border-brand-sky/60'); });
-    });
-    adminDropzone?.addEventListener('drop', (e) => {
-      e.preventDefault();
-      const file = e.dataTransfer.files[0];
-      if (file) adminHandleFile(file);
     });
 
     async function adminAddLens() {
@@ -2553,29 +2526,28 @@
       const status = document.getElementById('adminAddLensStatus');
       const btn = document.getElementById('adminAddLensBtn');
       const name = nameInput.value.trim();
+      const imgUrl = adminLensUrlInput.value.trim();
 
-      if (!name || !adminSelectedFile) {
-        status.textContent = 'Escriba un nombre y arrastre o elija una foto antes de publicar.';
+      if (!name || !imgUrl) {
+        status.textContent = 'Escriba un nombre y pegue el enlace de la foto antes de publicar.';
         status.className = 'text-[11px] text-red-400 mt-3';
         return;
       }
 
       btn.disabled = true;
-      status.textContent = 'Subiendo imagen y publicando...';
+      status.textContent = 'Publicando...';
       status.className = 'text-[11px] text-slate-500 mt-3';
 
       try {
         const fb = await window.firebaseReady;
-        await fb.addCatalogItem(name, adminSelectedFile);
+        await fb.addCatalogItem(name, imgUrl);
 
         status.textContent = '✓ Armazón publicado. Ya aparece en el catálogo del sitio.';
         status.className = 'text-[11px] text-brand-teal mt-3 font-semibold';
 
         // Reset form
         nameInput.value = '';
-        adminSelectedFile = null;
-        adminLensFileInput.value = '';
-        adminDropzoneIdle.classList.remove('hidden');
+        adminLensUrlInput.value = '';
         adminDropzonePreviewWrap.classList.add('hidden');
         adminDropzonePreviewWrap.classList.remove('flex');
 
@@ -2583,7 +2555,7 @@
         loadPublishedCatalog(); // refresh the public try-on catalog too
       } catch (err) {
         console.error('Error al publicar armazón:', err);
-        status.textContent = 'No se pudo subir la imagen. Verifique su conexión y que su cuenta tenga permiso de escritura.';
+        status.textContent = 'No se pudo publicar. Verifique su conexión y que su cuenta tenga permiso de escritura.';
         status.className = 'text-[11px] text-red-400 mt-3';
       } finally {
         btn.disabled = false;
@@ -2665,50 +2637,33 @@
       }
     });
 
-    // ---- Dropzone (drag & drop + click-to-choose) para la foto del lente ----
-  let adminProductSelectedFiles = []; // ahora es un arreglo de File
-    const adminProductDropzone = document.getElementById('adminProductDropzone');
-    const adminProductFileInput = document.getElementById('adminProductFileInput');
-    const adminProductDropzoneIdle = document.getElementById('adminProductDropzoneIdle');
+    // ---- Vista previa de las URLs de fotos del lente (una por línea) ----
+    const adminProductUrlsInput = document.getElementById('adminProductUrlsInput');
     const adminProductDropzonePreviewGrid = document.getElementById('adminProductDropzonePreviewGrid');
 
+    function adminGetProductUrls() {
+      return (adminProductUrlsInput?.value || '')
+        .split('\n')
+        .map(u => u.trim())
+        .filter(Boolean);
+    }
+
     function adminRenderProductPreviews() {
-      if (adminProductSelectedFiles.length === 0) {
+      const urls = adminGetProductUrls();
+      if (urls.length === 0) {
         adminProductDropzonePreviewGrid.classList.add('hidden');
         adminProductDropzonePreviewGrid.innerHTML = '';
         return;
       }
       adminProductDropzonePreviewGrid.classList.remove('hidden');
-      adminProductDropzonePreviewGrid.innerHTML = adminProductSelectedFiles.map((file, idx) => `
+      adminProductDropzonePreviewGrid.innerHTML = urls.map(url => `
         <div class="relative group">
-          <img src="${URL.createObjectURL(file)}" class="w-full aspect-square object-cover rounded-xl border border-slate-900/10" alt="${file.name}">
-          <button type="button" onclick="adminRemoveProductPreview(${idx})" class="absolute -top-2 -right-2 w-6 h-6 rounded-full bg-red-500 text-white text-xs font-bold flex items-center justify-center shadow-lg">✕</button>
+          <img src="${url}" class="w-full aspect-square object-cover rounded-xl border border-slate-900/10" alt="Vista previa" onerror="this.style.opacity=0.25">
         </div>
       `).join('');
     }
 
-    function adminRemoveProductPreview(idx) {
-      adminProductSelectedFiles.splice(idx, 1);
-      adminRenderProductPreviews();
-    }
-
-    function adminHandleProductFiles(fileList) {
-      const files = Array.from(fileList || []).filter(f => f.type.startsWith('image/'));
-      adminProductSelectedFiles = adminProductSelectedFiles.concat(files);
-      adminRenderProductPreviews();
-    }
-
-    adminProductFileInput?.addEventListener('change', (e) => { adminHandleProductFiles(e.target.files); adminProductFileInput.value = ''; });
-    ['dragover', 'dragenter'].forEach(evt => {
-      adminProductDropzone?.addEventListener(evt, (e) => { e.preventDefault(); adminProductDropzone.classList.add('border-brand-sky/60'); });
-    });
-    ['dragleave', 'drop'].forEach(evt => {
-      adminProductDropzone?.addEventListener(evt, (e) => { e.preventDefault(); adminProductDropzone.classList.remove('border-brand-sky/60'); });
-    });
-    adminProductDropzone?.addEventListener('drop', (e) => {
-      e.preventDefault();
-      adminHandleProductFiles(e.dataTransfer.files);
-    });
+    adminProductUrlsInput?.addEventListener('input', adminRenderProductPreviews);
 
     async function adminAddProduct() {
       const modelInput = document.getElementById('adminProductModel');
@@ -2751,7 +2706,7 @@
           unidades: unidadesRaw ? parseInt(unidadesRaw, 10) : null,
           precio: precioRaw ? parseFloat(precioRaw) : null,
           categoria
-        }, adminProductSelectedFiles);
+        }, adminGetProductUrls());
 
         status.textContent = '✓ Lente publicado en el catálogo.';
         status.className = 'text-[11px] text-brand-teal mt-3 font-semibold';
@@ -2764,8 +2719,7 @@
         catSelect.value = '';
         newCatInput.value = '';
         newCatInput.classList.add('hidden');
-       adminProductSelectedFiles = [];
-        adminProductFileInput.value = '';
+        adminProductUrlsInput.value = '';
         adminRenderProductPreviews();
         adminLoadCategories();
         adminLoadProductList();
@@ -3801,16 +3755,11 @@
       return snap.docs.map(d => ({ id: d.id, ...d.data() }));
     }
 
-    async function addCatalogItem(name, file) {
-      const storagePath = `lentes/${Date.now()}_${file.name}`;
-      const fileRef = ref(storage, storagePath);
-      await uploadBytes(fileRef, file);
-      const imgUrl = await getDownloadURL(fileRef);
-
+    async function addCatalogItem(name, imgUrl) {
       await addDoc(collection(db, CATALOG_COLLECTION), {
         name,
         img: imgUrl,
-        storagePath,
+        storagePath: null,
         createdAt: serverTimestamp()
       });
     }
@@ -3848,19 +3797,8 @@
       return snap.docs.map(d => ({ id: d.id, ...d.data() }));
     }
 
-  async function addProduct(data, files) {
-      const fileArray = Array.isArray(files) ? files : (files ? [files] : []);
-      const imgs = [];
-      const storagePaths = [];
-
-      for (const file of fileArray) {
-        const storagePath = `lentes_productos/${Date.now()}_${Math.random().toString(36).slice(2)}_${file.name}`;
-        const fileRef = ref(storage, storagePath);
-        await uploadBytes(fileRef, file);
-        const url = await getDownloadURL(fileRef);
-        imgs.push(url);
-        storagePaths.push(storagePath);
-      }
+  async function addProduct(data, imgUrls) {
+      const imgs = (Array.isArray(imgUrls) ? imgUrls : (imgUrls ? [imgUrls] : [])).map(u => String(u).trim()).filter(Boolean);
 
       await addDoc(collection(db, PRODUCTS_COLLECTION), {
         modelo: data.modelo,
@@ -3869,9 +3807,9 @@
         precio: (data.precio === null || data.precio === undefined || isNaN(data.precio)) ? null : data.precio,
         categoria: data.categoria,
         imgs,
-        storagePaths,
+        storagePaths: [],
         img: imgs[0] || null,           // compatibilidad con código viejo
-        storagePath: storagePaths[0] || null,
+        storagePath: null,
         oculto: false,
         createdAt: serverTimestamp()
       });
