@@ -221,7 +221,7 @@
   <!-- ========== FLOATING HEADER & PILL NAVIGATION ========== -->
   <header id="navbar" class="fixed top-0 left-0 w-full z-50 transition-all duration-500 py-3 sm:py-6">
     <div class="max-w-7xl mx-auto px-3 sm:px-6">
-      <div class="flex items-center justify-between bg-brand-dark/30 backdrop-blur-xl border border-slate-900/5 px-3 sm:px-6 lg:px-8 py-2.5 sm:py-4 rounded-full shadow-2xl transition-all duration-500" id="navContainer">
+      <div class="flex items-center justify-between bg-brand-dark/30 backdrop-blur-xl border border-slate-900/5 pl-4 pr-5 sm:px-6 lg:px-8 py-2.5 sm:py-4 rounded-[28px] sm:rounded-full shadow-2xl transition-all duration-500" id="navContainer">
         
         <!-- Logo -->
         <a href="#" class="flex items-center gap-2 sm:gap-3 group focus:outline-none min-w-0">
@@ -256,7 +256,7 @@
             <span id="navAccountLabel">Mi Cuenta</span>
           </button>
 
-          <button onclick="openCartDrawer()" class="relative p-1.5 sm:p-2 text-slate-500 hover:text-brand-ink" title="Carrito">
+          <button onclick="openCartDrawer()" class="relative p-1 sm:p-2 text-slate-500 hover:text-brand-ink" title="Carrito">
             <svg class="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
             <span id="cartBadge" class="hidden absolute -top-0.5 -right-0.5 sm:-top-1 sm:-right-1 bg-brand-coral text-white text-[8px] sm:text-[9px] font-extrabold w-[16px] h-[16px] sm:w-[18px] sm:h-[18px] rounded-full items-center justify-center">0</span>
           </button>
@@ -266,7 +266,7 @@
             Cotizar Campaña
           </a>
           
-          <button id="menuToggle" class="lg:hidden p-1.5 sm:p-2.5 rounded-full text-slate-600 hover:text-brand-ink hover:bg-slate-900/5 transition-all" aria-label="Abrir menú">
+          <button id="menuToggle" class="lg:hidden p-1 sm:p-2.5 rounded-full text-slate-600 hover:text-brand-ink hover:bg-slate-900/5 transition-all" aria-label="Abrir menú">
             <svg class="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16m-7 6h7"/>
             </svg>
@@ -1685,10 +1685,38 @@
           <input type="text" id="adminProductNewCategoryInput" placeholder="Ej. Armazones Ligeros" class="hidden w-full p-3.5 bg-brand-dark border border-slate-900/10 rounded-xl text-sm text-brand-ink focus:border-brand-sky focus:outline-none">
         </div>
 
-        <label class="flex items-center gap-2.5 mb-4 cursor-pointer select-none">
-          <input type="checkbox" id="adminProductEsKids" class="w-4 h-4 rounded accent-brand-coral">
-          <span class="text-xs text-slate-600">🧒 Mostrar también en <strong class="text-brand-ink">Visión EKA Kids</strong></span>
-        </label>
+        <div class="mb-4">
+          <label class="block text-[9px] uppercase tracking-widest text-slate-500 font-extrabold mb-2">¿En qué catálogo aparece?</label>
+          <div class="grid grid-cols-2 gap-3">
+            <button type="button" onclick="adminSetProductCatalogo('principal')" id="adminProductCatalogoPrincipalBtn" class="admin-catalogo-btn text-left p-3 rounded-xl border-2 border-brand-sky text-brand-sky text-xs font-bold transition-all">🕶️ Catálogo Principal<br><span class="font-normal normal-case text-[10px] text-slate-500">Aparece en la página normal</span></button>
+            <button type="button" onclick="adminSetProductCatalogo('kids')" id="adminProductCatalogoKidsBtn" class="admin-catalogo-btn text-left p-3 rounded-xl border-2 border-slate-900/10 text-slate-500 text-xs font-bold transition-all">🧒 Catálogo Kids<br><span class="font-normal normal-case text-[10px] text-slate-500">Aparece solo en Visión EKA Kids</span></button>
+          </div>
+        </div>
+
+        <div class="mb-4">
+          <label class="block text-[9px] uppercase tracking-widest text-slate-500 font-extrabold mb-2">Tratamientos del lente <span class="normal-case text-slate-600/70 font-medium">(opcional, puede marcar varios)</span></label>
+          <div class="grid grid-cols-2 sm:grid-cols-3 gap-2 mb-2">
+            <label class="flex items-center gap-2 p-2.5 bg-brand-dark border border-slate-900/10 rounded-xl cursor-pointer text-xs text-slate-600 has-[:checked]:border-brand-sky has-[:checked]:text-brand-sky">
+              <input type="checkbox" class="admin-product-tratamiento w-3.5 h-3.5 rounded accent-brand-sky" value="Filtro Luz Azul (Blue Ray)"> Blue Ray
+            </label>
+            <label class="flex items-center gap-2 p-2.5 bg-brand-dark border border-slate-900/10 rounded-xl cursor-pointer text-xs text-slate-600 has-[:checked]:border-brand-sky has-[:checked]:text-brand-sky">
+              <input type="checkbox" class="admin-product-tratamiento w-3.5 h-3.5 rounded accent-brand-sky" value="Antirreflejante"> Antirreflejante
+            </label>
+            <label class="flex items-center gap-2 p-2.5 bg-brand-dark border border-slate-900/10 rounded-xl cursor-pointer text-xs text-slate-600 has-[:checked]:border-brand-sky has-[:checked]:text-brand-sky">
+              <input type="checkbox" class="admin-product-tratamiento w-3.5 h-3.5 rounded accent-brand-sky" value="Fotocromático"> Fotocromático
+            </label>
+            <label class="flex items-center gap-2 p-2.5 bg-brand-dark border border-slate-900/10 rounded-xl cursor-pointer text-xs text-slate-600 has-[:checked]:border-brand-sky has-[:checked]:text-brand-sky">
+              <input type="checkbox" class="admin-product-tratamiento w-3.5 h-3.5 rounded accent-brand-sky" value="Antirrayones"> Antirrayones
+            </label>
+            <label class="flex items-center gap-2 p-2.5 bg-brand-dark border border-slate-900/10 rounded-xl cursor-pointer text-xs text-slate-600 has-[:checked]:border-brand-sky has-[:checked]:text-brand-sky">
+              <input type="checkbox" class="admin-product-tratamiento w-3.5 h-3.5 rounded accent-brand-sky" value="Protección UV400"> UV400
+            </label>
+            <label class="flex items-center gap-2 p-2.5 bg-brand-dark border border-slate-900/10 rounded-xl cursor-pointer text-xs text-slate-600 has-[:checked]:border-brand-sky has-[:checked]:text-brand-sky">
+              <input type="checkbox" class="admin-product-tratamiento w-3.5 h-3.5 rounded accent-brand-sky" value="Polarizado"> Polarizado
+            </label>
+          </div>
+          <input type="text" id="adminProductTratamientoOtro" placeholder="Otro tratamiento (opcional)" class="w-full p-3 bg-brand-dark border border-slate-900/10 rounded-xl text-sm text-brand-ink focus:border-brand-sky focus:outline-none">
+        </div>
 
           <div class="mb-4">
           <label class="block text-[9px] uppercase tracking-widest text-slate-500 font-extrabold mb-2">Fotos del lente <span class="normal-case text-slate-600/70 font-medium">(opcional — pegue el enlace de cada foto ya subida, una por línea)</span></label>
@@ -1896,19 +1924,64 @@
         <!-- Horarios disponibles para examen a domicilio -->
         <div class="bg-brand-navy border border-slate-900/10 rounded-3xl p-6 mb-8">
           <h3 class="font-display font-bold text-sm text-brand-ink mb-3">🩺 Horarios disponibles para examen a domicilio</h3>
-          <p class="text-xs text-slate-600 leading-relaxed mb-4">Agregue aquí las fechas y horarios que tiene libres cada semana. Los clientes que pidan "Necesito examen" en el sitio solo podrán elegir entre estos horarios; en cuanto alguien agenda uno, desaparece para los demás automáticamente.</p>
-          <div class="grid sm:grid-cols-2 gap-4 mb-4">
-            <div>
-              <label class="block text-[9px] uppercase tracking-widest text-slate-500 font-extrabold mb-2">Fecha</label>
-              <input type="date" id="adminSlotFecha" class="w-full p-3.5 bg-brand-dark border border-slate-900/10 rounded-xl text-sm text-brand-ink focus:border-brand-sky focus:outline-none">
+          <p class="text-xs text-slate-600 leading-relaxed mb-4">Ponga la hora y elija si aplica a un solo día o a varios días de una vez. Los clientes que pidan "Necesito examen" en el sitio solo podrán elegir entre estos horarios; en cuanto alguien agenda uno, desaparece para los demás automáticamente.</p>
+
+          <div class="mb-4">
+            <label class="block text-[9px] uppercase tracking-widest text-slate-500 font-extrabold mb-2">Hora</label>
+            <input type="time" id="adminSlotHora" class="w-full sm:w-48 p-3.5 bg-brand-dark border border-slate-900/10 rounded-xl text-sm text-brand-ink focus:border-brand-sky focus:outline-none">
+          </div>
+
+          <div class="flex gap-2 mb-4 p-1 bg-brand-dark rounded-full w-fit">
+            <button type="button" onclick="adminSetSlotMode('single')" id="adminSlotModeSingleBtn" class="px-5 py-2 rounded-full text-[11px] font-bold uppercase tracking-wider bg-brand-sky text-brand-ink transition-all">Un solo día</button>
+            <button type="button" onclick="adminSetSlotMode('multi')" id="adminSlotModeMultiBtn" class="px-5 py-2 rounded-full text-[11px] font-bold uppercase tracking-wider text-slate-500 transition-all">Varios días</button>
+          </div>
+
+          <!-- Modo: un solo día -->
+          <div id="adminSlotSingleWrap">
+            <label class="block text-[9px] uppercase tracking-widest text-slate-500 font-extrabold mb-2">Fecha</label>
+            <input type="date" id="adminSlotFecha" class="w-full sm:w-64 p-3.5 bg-brand-dark border border-slate-900/10 rounded-xl text-sm text-brand-ink focus:border-brand-sky focus:outline-none mb-4">
+          </div>
+
+          <!-- Modo: varios días -->
+          <div id="adminSlotMultiWrap" class="hidden">
+            <div class="grid sm:grid-cols-2 gap-4 mb-4">
+              <div>
+                <label class="block text-[9px] uppercase tracking-widest text-slate-500 font-extrabold mb-2">Desde</label>
+                <input type="date" id="adminSlotFechaInicio" class="w-full p-3.5 bg-brand-dark border border-slate-900/10 rounded-xl text-sm text-brand-ink focus:border-brand-sky focus:outline-none">
+              </div>
+              <div>
+                <label class="block text-[9px] uppercase tracking-widest text-slate-500 font-extrabold mb-2">Hasta</label>
+                <input type="date" id="adminSlotFechaFin" class="w-full p-3.5 bg-brand-dark border border-slate-900/10 rounded-xl text-sm text-brand-ink focus:border-brand-sky focus:outline-none">
+              </div>
             </div>
-            <div>
-              <label class="block text-[9px] uppercase tracking-widest text-slate-500 font-extrabold mb-2">Hora</label>
-              <input type="time" id="adminSlotHora" class="w-full p-3.5 bg-brand-dark border border-slate-900/10 rounded-xl text-sm text-brand-ink focus:border-brand-sky focus:outline-none">
+            <label class="block text-[9px] uppercase tracking-widest text-slate-500 font-extrabold mb-2">¿Qué días de la semana?</label>
+            <div class="grid grid-cols-4 sm:grid-cols-7 gap-2 mb-4">
+              <label class="flex items-center justify-center gap-1.5 p-2.5 bg-brand-dark border border-slate-900/10 rounded-xl cursor-pointer text-xs text-slate-500 has-[:checked]:border-brand-sky has-[:checked]:text-brand-sky">
+                <input type="checkbox" class="admin-slot-weekday hidden" value="1"> Lu
+              </label>
+              <label class="flex items-center justify-center gap-1.5 p-2.5 bg-brand-dark border border-slate-900/10 rounded-xl cursor-pointer text-xs text-slate-500 has-[:checked]:border-brand-sky has-[:checked]:text-brand-sky">
+                <input type="checkbox" class="admin-slot-weekday hidden" value="2"> Ma
+              </label>
+              <label class="flex items-center justify-center gap-1.5 p-2.5 bg-brand-dark border border-slate-900/10 rounded-xl cursor-pointer text-xs text-slate-500 has-[:checked]:border-brand-sky has-[:checked]:text-brand-sky">
+                <input type="checkbox" class="admin-slot-weekday hidden" value="3"> Mi
+              </label>
+              <label class="flex items-center justify-center gap-1.5 p-2.5 bg-brand-dark border border-slate-900/10 rounded-xl cursor-pointer text-xs text-slate-500 has-[:checked]:border-brand-sky has-[:checked]:text-brand-sky">
+                <input type="checkbox" class="admin-slot-weekday hidden" value="4"> Ju
+              </label>
+              <label class="flex items-center justify-center gap-1.5 p-2.5 bg-brand-dark border border-slate-900/10 rounded-xl cursor-pointer text-xs text-slate-500 has-[:checked]:border-brand-sky has-[:checked]:text-brand-sky">
+                <input type="checkbox" class="admin-slot-weekday hidden" value="5"> Vi
+              </label>
+              <label class="flex items-center justify-center gap-1.5 p-2.5 bg-brand-dark border border-slate-900/10 rounded-xl cursor-pointer text-xs text-slate-500 has-[:checked]:border-brand-sky has-[:checked]:text-brand-sky">
+                <input type="checkbox" class="admin-slot-weekday hidden" value="6"> Sá
+              </label>
+              <label class="flex items-center justify-center gap-1.5 p-2.5 bg-brand-dark border border-slate-900/10 rounded-xl cursor-pointer text-xs text-slate-500 has-[:checked]:border-brand-sky has-[:checked]:text-brand-sky">
+                <input type="checkbox" class="admin-slot-weekday hidden" value="0"> Do
+              </label>
             </div>
           </div>
+
           <button onclick="adminAddExamSlot()" id="adminAddSlotBtn" class="bg-brand-sky/10 border border-brand-sky/30 text-brand-sky font-bold text-xs uppercase tracking-wider py-3 px-6 rounded-full hover:bg-brand-sky/20 transition-all">
-            Agregar horario
+            Agregar horario(s)
           </button>
           <p id="adminAddSlotStatus" class="text-[11px] text-slate-500 mt-3 mb-4"></p>
 
@@ -2662,7 +2735,7 @@
 
       try {
         const fb = await window.firebaseReady;
-        const items = (await fb.fetchProducts()).filter(p => !p.oculto);
+        const items = (await fb.fetchProducts()).filter(p => !p.oculto && !p.esKids);
 
         loading.classList.add('hidden');
 
@@ -2717,7 +2790,8 @@
               <div class="p-6 flex flex-col flex-grow">
                 <span class="text-[9px] font-extrabold text-brand-sky uppercase tracking-widest mb-1.5">${escapeHtml(p.categoria)}</span>
                 <h4 class="font-display font-bold text-base text-brand-ink mb-1">${escapeHtml(p.modelo)}</h4>
-                <p class="text-xs text-slate-500 mb-3">Color: ${escapeHtml(p.color)}</p>
+                <p class="text-xs text-slate-500 mb-2">Color: ${escapeHtml(p.color)}</p>
+                ${(p.tratamientos && p.tratamientos.length) ? `<div class="flex flex-wrap gap-1 mb-3">${p.tratamientos.map(t => `<span class="text-[8px] font-bold uppercase tracking-wide text-brand-teal bg-brand-teal/10 px-2 py-0.5 rounded-full">${escapeHtml(t)}</span>`).join('')}</div>` : '<div class="mb-1"></div>'}
                 <div class="flex items-center justify-between mt-auto mb-4">
                   <span class="text-sm font-display font-bold text-brand-ink">${precioText || 'Consultar precio'}</span>
                   ${stockBadge}
@@ -3071,6 +3145,32 @@
     let adminAllProducts = [];
     let adminEditingProductId = null;
 
+    let adminProductCatalogo = 'principal';
+
+    function adminSetProductCatalogo(destino) {
+      adminProductCatalogo = destino;
+      const principalBtn = document.getElementById('adminProductCatalogoPrincipalBtn');
+      const kidsBtn = document.getElementById('adminProductCatalogoKidsBtn');
+      if (destino === 'kids') {
+        kidsBtn.classList.add('border-brand-sky', 'text-brand-sky');
+        kidsBtn.classList.remove('border-slate-900/10', 'text-slate-500');
+        principalBtn.classList.remove('border-brand-sky', 'text-brand-sky');
+        principalBtn.classList.add('border-slate-900/10', 'text-slate-500');
+      } else {
+        principalBtn.classList.add('border-brand-sky', 'text-brand-sky');
+        principalBtn.classList.remove('border-slate-900/10', 'text-slate-500');
+        kidsBtn.classList.remove('border-brand-sky', 'text-brand-sky');
+        kidsBtn.classList.add('border-slate-900/10', 'text-slate-500');
+      }
+    }
+
+    function adminGetProductTratamientos() {
+      const marcados = [...document.querySelectorAll('.admin-product-tratamiento:checked')].map(el => el.value);
+      const otro = document.getElementById('adminProductTratamientoOtro').value.trim();
+      if (otro) marcados.push(otro);
+      return marcados;
+    }
+
     async function adminAddProduct() {
       const modelInput = document.getElementById('adminProductModel');
       const colorInput = document.getElementById('adminProductColor');
@@ -3113,7 +3213,8 @@
           unidades: unidadesRaw ? parseInt(unidadesRaw, 10) : null,
           precio: precioRaw ? parseFloat(precioRaw) : null,
           categoria,
-          esKids: document.getElementById('adminProductEsKids').checked
+          esKids: adminProductCatalogo === 'kids',
+          tratamientos: adminGetProductTratamientos()
         };
 
         if (isEditing) {
@@ -3153,7 +3254,15 @@
         catSelect.value = p.categoria;
       }
       document.getElementById('adminProductNewCategoryInput').classList.add('hidden');
-      document.getElementById('adminProductEsKids').checked = !!p.esKids;
+      adminSetProductCatalogo(p.esKids ? 'kids' : 'principal');
+
+      const tratamientosGuardados = Array.isArray(p.tratamientos) ? p.tratamientos : [];
+      const opcionesEstandar = [...document.querySelectorAll('.admin-product-tratamiento')].map(el => el.value);
+      document.querySelectorAll('.admin-product-tratamiento').forEach(el => {
+        el.checked = tratamientosGuardados.includes(el.value);
+      });
+      const extras = tratamientosGuardados.filter(t => !opcionesEstandar.includes(t));
+      document.getElementById('adminProductTratamientoOtro').value = extras.join(', ');
 
       const imgsArr = (p.imgs && p.imgs.length) ? p.imgs : (p.img ? [p.img] : []);
       adminProductUrlsInput.value = imgsArr.join('\n');
@@ -3176,7 +3285,9 @@
       document.getElementById('adminProductCategorySelect').value = '';
       document.getElementById('adminProductNewCategoryInput').value = '';
       document.getElementById('adminProductNewCategoryInput').classList.add('hidden');
-      document.getElementById('adminProductEsKids').checked = false;
+      adminSetProductCatalogo('principal');
+      document.querySelectorAll('.admin-product-tratamiento').forEach(el => { el.checked = false; });
+      document.getElementById('adminProductTratamientoOtro').value = '';
       adminProductUrlsInput.value = '';
       adminRenderProductPreviews();
 
@@ -3221,7 +3332,7 @@
                 ${thumb}
                 <div class="min-w-0">
                   <span class="block text-brand-ink text-xs font-semibold truncate">${p.modelo} · ${p.color}</span>
-                  <span class="block text-[10px] text-slate-500 truncate">${p.categoria} · ${precioText} · ${unidadesText}</span>
+                  <span class="block text-[10px] text-slate-500 truncate">${p.categoria} · ${precioText} · ${unidadesText}${(p.tratamientos && p.tratamientos.length) ? ` · ${p.tratamientos.join(', ')}` : ''}</span>
                 </div>
               </div>
               <div class="flex items-center gap-3 flex-shrink-0">
@@ -4281,32 +4392,124 @@
       }
     }
 
+    let adminSlotMode = 'single';
+
+    function adminSetSlotMode(mode) {
+      adminSlotMode = mode;
+      const singleBtn = document.getElementById('adminSlotModeSingleBtn');
+      const multiBtn = document.getElementById('adminSlotModeMultiBtn');
+      const singleWrap = document.getElementById('adminSlotSingleWrap');
+      const multiWrap = document.getElementById('adminSlotMultiWrap');
+
+      if (mode === 'multi') {
+        multiBtn.classList.add('bg-brand-sky', 'text-brand-ink');
+        multiBtn.classList.remove('text-slate-500');
+        singleBtn.classList.remove('bg-brand-sky', 'text-brand-ink');
+        singleBtn.classList.add('text-slate-500');
+        multiWrap.classList.remove('hidden');
+        singleWrap.classList.add('hidden');
+      } else {
+        singleBtn.classList.add('bg-brand-sky', 'text-brand-ink');
+        singleBtn.classList.remove('text-slate-500');
+        multiBtn.classList.remove('bg-brand-sky', 'text-brand-ink');
+        multiBtn.classList.add('text-slate-500');
+        singleWrap.classList.remove('hidden');
+        multiWrap.classList.add('hidden');
+      }
+    }
+
+    function toDateKeyLocal(d) {
+      const y = d.getFullYear();
+      const m = String(d.getMonth() + 1).padStart(2, '0');
+      const day = String(d.getDate()).padStart(2, '0');
+      return `${y}-${m}-${day}`;
+    }
+
     async function adminAddExamSlot() {
-      const fecha = document.getElementById('adminSlotFecha').value;
       const hora = document.getElementById('adminSlotHora').value;
       const status = document.getElementById('adminAddSlotStatus');
       const btn = document.getElementById('adminAddSlotBtn');
 
-      if (!fecha || !hora) {
-        status.textContent = 'Elija fecha y hora.';
+      if (!hora) {
+        status.textContent = 'Elija la hora.';
         status.className = 'text-[11px] text-red-400 mt-3 mb-4';
         return;
       }
 
+      let fechas = [];
+
+      if (adminSlotMode === 'single') {
+        const fecha = document.getElementById('adminSlotFecha').value;
+        if (!fecha) {
+          status.textContent = 'Elija la fecha.';
+          status.className = 'text-[11px] text-red-400 mt-3 mb-4';
+          return;
+        }
+        fechas = [fecha];
+      } else {
+        const inicioStr = document.getElementById('adminSlotFechaInicio').value;
+        const finStr = document.getElementById('adminSlotFechaFin').value;
+        const diasSeleccionados = [...document.querySelectorAll('.admin-slot-weekday:checked')].map(el => parseInt(el.value, 10));
+
+        if (!inicioStr || !finStr) {
+          status.textContent = 'Elija la fecha de inicio y de fin.';
+          status.className = 'text-[11px] text-red-400 mt-3 mb-4';
+          return;
+        }
+        if (diasSeleccionados.length === 0) {
+          status.textContent = 'Marque al menos un día de la semana.';
+          status.className = 'text-[11px] text-red-400 mt-3 mb-4';
+          return;
+        }
+
+        const [iy, im, id] = inicioStr.split('-').map(Number);
+        const [fy, fm, fd] = finStr.split('-').map(Number);
+        const inicio = new Date(iy, im - 1, id);
+        const fin = new Date(fy, fm - 1, fd);
+
+        if (fin < inicio) {
+          status.textContent = 'La fecha "Hasta" debe ser igual o posterior a "Desde".';
+          status.className = 'text-[11px] text-red-400 mt-3 mb-4';
+          return;
+        }
+
+        const cursor = new Date(inicio);
+        let dias = 0;
+        while (cursor <= fin && dias < 180) { // límite de seguridad
+          if (diasSeleccionados.includes(cursor.getDay())) {
+            fechas.push(toDateKeyLocal(cursor));
+          }
+          cursor.setDate(cursor.getDate() + 1);
+          dias++;
+        }
+
+        if (fechas.length === 0) {
+          status.textContent = 'No hay ningún día de esos que caiga en el rango de fechas elegido.';
+          status.className = 'text-[11px] text-red-400 mt-3 mb-4';
+          return;
+        }
+      }
+
       btn.disabled = true;
-      status.textContent = 'Guardando...';
+      status.textContent = `Guardando ${fechas.length} horario${fechas.length > 1 ? 's' : ''}...`;
       status.className = 'text-[11px] text-slate-500 mt-3 mb-4';
       try {
         const fb = await window.firebaseReady;
-        await fb.addExamSlot(fecha, hora);
+        for (const fecha of fechas) {
+          await fb.addExamSlot(fecha, hora);
+        }
         document.getElementById('adminSlotFecha').value = '';
         document.getElementById('adminSlotHora').value = '';
-        status.textContent = '✓ Horario agregado.';
+        document.getElementById('adminSlotFechaInicio').value = '';
+        document.getElementById('adminSlotFechaFin').value = '';
+        document.querySelectorAll('.admin-slot-weekday:checked').forEach(el => el.checked = false);
+
+        status.textContent = `✓ ${fechas.length} horario${fechas.length > 1 ? 's agregados' : ' agregado'} correctamente.`;
         status.className = 'text-[11px] text-emerald-500 mt-3 mb-4';
         adminLoadExamSlots();
       } catch (e) {
-        console.error('Error al agregar horario:', e);
-        status.textContent = 'No se pudo guardar el horario.';
+        console.error('Error al agregar horario(s):', e);
+        status.textContent = 'No se pudo guardar. Verifique su conexión e intente de nuevo.';
         status.className = 'text-[11px] text-red-400 mt-3 mb-4';
       } finally {
         btn.disabled = false;
@@ -4570,6 +4773,7 @@
           color: p.color,
           precio: (p.precio === null || p.precio === undefined) ? null : p.precio,
           img: imgsArr[0] || null,
+          tratamientos: Array.isArray(p.tratamientos) ? p.tratamientos : [],
           cantidad: 1
         });
       }
@@ -4629,6 +4833,7 @@
           <div class="flex-1 min-w-0">
             <p class="text-sm font-semibold text-brand-ink truncate">${it.modelo}</p>
             <p class="text-[11px] text-slate-500 truncate">${it.color} · ${precioText}</p>
+            ${(it.tratamientos && it.tratamientos.length) ? `<p class="text-[10px] text-brand-teal truncate">${it.tratamientos.join(' · ')}</p>` : ''}
             <div class="flex items-center gap-2 mt-1">
               <button onclick="cartChangeQty('${it.id}', -1)" class="w-6 h-6 rounded-full bg-brand-navy border border-slate-900/10 text-brand-ink text-xs font-bold flex items-center justify-center">−</button>
               <span class="text-xs font-bold text-brand-ink w-4 text-center">${it.cantidad}</span>
@@ -4884,7 +5089,7 @@
       status.className = 'text-[11px] text-slate-500 mt-2 text-center';
       status.textContent = 'Enviando pedido...';
 
-      const items = cart.map(it => ({ modelo: it.modelo, color: it.color, precio: it.precio, cantidad: it.cantidad }));
+      const items = cart.map(it => ({ modelo: it.modelo, color: it.color, precio: it.precio, cantidad: it.cantidad, tratamientos: it.tratamientos || [] }));
       const lentesTotal = cartTotal();
       const examen = checkoutTipo === 'examen' ? checkoutExamCost() : null;
       const total = lentesTotal + (examen ? examen.total : 0);
@@ -4932,7 +5137,7 @@
         });
 
         // Mensaje de WhatsApp con el resumen del pedido
-        const itemsText = items.map(it => `• ${it.modelo} (${it.color})${it.cantidad > 1 ? ` x${it.cantidad}` : ''}${it.precio ? ` — $${Number(it.precio).toFixed(2)}` : ''}`).join('%0A');
+        const itemsText = items.map(it => `• ${it.modelo} (${it.color})${it.cantidad > 1 ? ` x${it.cantidad}` : ''}${it.precio ? ` — $${Number(it.precio).toFixed(2)}` : ''}${(it.tratamientos && it.tratamientos.length) ? ` [${it.tratamientos.join(', ')}]` : ''}`).join('%0A');
         const tipoText = checkoutTipo === 'receta' ? 'Pedido CON RECETA' : 'Pedido con EXAMEN A DOMICILIO';
         let msg = `Hola, quiero confirmar mi pedido en Visión EKA:%0A%0A${tipoText}%0A${itemsText}`;
         if (checkoutTipo === 'receta') msg += `%0AReceta: ${receta}`;
@@ -5125,6 +5330,8 @@
         document.getElementById('registerEmail').value = '';
         document.getElementById('registerPassword').value = '';
         await refreshAccountView();
+        closeAccountModal();
+        openSuccessModal(`¡Bienvenido/a, ${nombre}! Su cuenta fue creada correctamente. Le enviamos un correo de confirmación a ${email}.`);
       } catch (err) {
         console.error('Error al crear la cuenta:', err);
         status.textContent = err.code === 'auth/email-already-in-use'
@@ -5237,7 +5444,7 @@
       getStorage, ref, uploadBytes, getDownloadURL, deleteObject
     } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-storage.js";
     import {
-      getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, onAuthStateChanged
+      getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, onAuthStateChanged, sendEmailVerification
     } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-auth.js";
 
     const firebaseConfig = {
@@ -5318,6 +5525,7 @@
 
   async function addProduct(data, imgUrls) {
       const imgs = (Array.isArray(imgUrls) ? imgUrls : (imgUrls ? [imgUrls] : [])).map(u => String(u).trim()).filter(Boolean);
+      const tratamientos = (Array.isArray(data.tratamientos) ? data.tratamientos : []).map(t => String(t).trim()).filter(Boolean);
 
       await addDoc(collection(db, PRODUCTS_COLLECTION), {
         modelo: data.modelo,
@@ -5326,6 +5534,7 @@
         precio: (data.precio === null || data.precio === undefined || isNaN(data.precio)) ? null : data.precio,
         categoria: data.categoria,
         esKids: !!data.esKids,
+        tratamientos,
         imgs,
         storagePaths: [],
         img: imgs[0] || null,           // compatibilidad con código viejo
@@ -5337,6 +5546,7 @@
 
     async function updateProduct(id, data, imgUrls) {
       const imgs = (Array.isArray(imgUrls) ? imgUrls : (imgUrls ? [imgUrls] : [])).map(u => String(u).trim()).filter(Boolean);
+      const tratamientos = (Array.isArray(data.tratamientos) ? data.tratamientos : []).map(t => String(t).trim()).filter(Boolean);
       await updateDoc(doc(db, PRODUCTS_COLLECTION, id), {
         modelo: data.modelo,
         color: data.color,
@@ -5344,6 +5554,7 @@
         precio: (data.precio === null || data.precio === undefined || isNaN(data.precio)) ? null : data.precio,
         categoria: data.categoria,
         esKids: !!data.esKids,
+        tratamientos,
         imgs,
         img: imgs[0] || null
       });
@@ -5447,9 +5658,15 @@ async function deleteProduct(id, storagePaths) {
     // Pedidos del cliente que ha iniciado sesión (para "Mis Pedidos" en Mi Cuenta)
     async function fetchMyOrders() {
       if (!auth.currentUser) return [];
-      const q = query(collection(db, ORDERS_COLLECTION), where('uid', '==', auth.currentUser.uid), orderBy('createdAt', 'desc'));
+      const q = query(collection(db, ORDERS_COLLECTION), where('uid', '==', auth.currentUser.uid));
       const snap = await getDocs(q);
-      return snap.docs.map(d => ({ id: d.id, ...d.data() }));
+      const orders = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+      orders.sort((a, b) => {
+        const aTime = a.createdAt?.toMillis ? a.createdAt.toMillis() : 0;
+        const bTime = b.createdAt?.toMillis ? b.createdAt.toMillis() : 0;
+        return bTime - aTime;
+      });
+      return orders;
     }
 
     async function addOrder(data) {
@@ -5497,9 +5714,11 @@ async function deleteProduct(id, storagePaths) {
 
     // ---- Horarios disponibles para el examen de la vista a domicilio ----
     async function fetchExamSlots() {
-      const q = query(collection(db, EXAM_SLOTS_COLLECTION), orderBy('fecha', 'asc'), orderBy('hora', 'asc'));
+      const q = query(collection(db, EXAM_SLOTS_COLLECTION), orderBy('fecha', 'asc'));
       const snap = await getDocs(q);
-      return snap.docs.map(d => ({ id: d.id, ...d.data() }));
+      const slots = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+      slots.sort((a, b) => (a.fecha + (a.hora || '')).localeCompare(b.fecha + (b.hora || '')));
+      return slots;
     }
 
     async function fetchAvailableExamSlots() {
@@ -5563,6 +5782,8 @@ async function deleteProduct(id, storagePaths) {
         email: String(email || '').slice(0, 120),
         createdAt: serverTimestamp()
       });
+      // Envía un correo de bienvenida / verificación automáticamente (gratis, vía Firebase)
+      try { await sendEmailVerification(cred.user); } catch (e) { console.warn('No se pudo enviar el correo de bienvenida:', e); }
       return cred.user;
     }
 
