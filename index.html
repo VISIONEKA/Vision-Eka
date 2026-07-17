@@ -1817,13 +1817,37 @@
         </div>
 
         <!-- Appointment list -->
-        <div class="bg-brand-navy border border-slate-900/10 rounded-3xl p-6">
+        <div class="bg-brand-navy border border-slate-900/10 rounded-3xl p-6 mb-8">
           <div class="flex items-center justify-between mb-4">
             <h3 id="adminCitaListTitle" class="font-display font-bold text-sm text-brand-ink">🗓️ Próximas citas</h3>
             <button onclick="adminCalendarSelectDay(null)" id="adminCitaShowAllBtn" class="hidden text-[10px] uppercase tracking-widest font-bold text-brand-sky hover:text-brand-teal">Ver todas</button>
           </div>
           <div id="adminCitaList" class="space-y-3">
             <p id="adminCitaListEmpty" class="text-xs text-slate-600/80 italic">Aún no hay citas agendadas.</p>
+          </div>
+        </div>
+
+        <!-- Horarios disponibles para examen a domicilio -->
+        <div class="bg-brand-navy border border-slate-900/10 rounded-3xl p-6 mb-8">
+          <h3 class="font-display font-bold text-sm text-brand-ink mb-3">🩺 Horarios disponibles para examen a domicilio</h3>
+          <p class="text-xs text-slate-600 leading-relaxed mb-4">Agregue aquí las fechas y horarios que tiene libres cada semana. Los clientes que pidan "Necesito examen" en el sitio solo podrán elegir entre estos horarios; en cuanto alguien agenda uno, desaparece para los demás automáticamente.</p>
+          <div class="grid sm:grid-cols-2 gap-4 mb-4">
+            <div>
+              <label class="block text-[9px] uppercase tracking-widest text-slate-500 font-extrabold mb-2">Fecha</label>
+              <input type="date" id="adminSlotFecha" class="w-full p-3.5 bg-brand-dark border border-slate-900/10 rounded-xl text-sm text-brand-ink focus:border-brand-sky focus:outline-none">
+            </div>
+            <div>
+              <label class="block text-[9px] uppercase tracking-widest text-slate-500 font-extrabold mb-2">Hora</label>
+              <input type="time" id="adminSlotHora" class="w-full p-3.5 bg-brand-dark border border-slate-900/10 rounded-xl text-sm text-brand-ink focus:border-brand-sky focus:outline-none">
+            </div>
+          </div>
+          <button onclick="adminAddExamSlot()" id="adminAddSlotBtn" class="bg-brand-sky/10 border border-brand-sky/30 text-brand-sky font-bold text-xs uppercase tracking-wider py-3 px-6 rounded-full hover:bg-brand-sky/20 transition-all">
+            Agregar horario
+          </button>
+          <p id="adminAddSlotStatus" class="text-[11px] text-slate-500 mt-3 mb-4"></p>
+
+          <div id="adminSlotList" class="space-y-2 pt-2 border-t border-slate-900/10">
+            <p id="adminSlotListEmpty" class="text-xs text-slate-600/80 italic pt-3">Aún no ha agregado horarios.</p>
           </div>
         </div>
 
@@ -1989,9 +2013,18 @@
           <option value="0">Menos de 1.5 km (gratis)</option>
           <option value="150">1.5 – 5 km</option>
           <option value="250">5 – 10 km</option>
-          <option value="350">Más de 10 km</option>
+          <option value="220">Más de 10 km</option>
         </select>
         <p id="checkoutGeoStatus" class="text-[10px] text-slate-500 mb-3"></p>
+
+        <label class="block text-[9px] uppercase tracking-widest text-slate-500 font-extrabold mb-2">Dirección para el examen</label>
+        <textarea id="checkoutExamenDireccion" rows="2" placeholder="Calle, número, colonia, referencias..." class="w-full p-3.5 mb-4 bg-brand-dark border border-slate-900/10 rounded-xl text-sm text-brand-ink focus:border-brand-sky focus:outline-none"></textarea>
+
+        <label class="block text-[9px] uppercase tracking-widest text-slate-500 font-extrabold mb-2">Fecha y horario disponible</label>
+        <select id="checkoutExamenSlot" class="w-full p-3.5 mb-1 bg-brand-dark border border-slate-900/10 rounded-xl text-sm text-brand-ink focus:border-brand-sky focus:outline-none">
+          <option value="">Cargando horarios disponibles...</option>
+        </select>
+        <p id="checkoutSlotStatus" class="text-[10px] text-slate-500 mb-3"></p>
 
         <div id="checkoutExamenCostBox" class="text-xs text-slate-600 space-y-1 pt-3 border-t border-slate-900/10">
           <div class="flex justify-between"><span>Examen (<span id="checkoutExamenPersonasText">1</span> persona × $300)</span><span id="checkoutExamenSubtotal">$300.00</span></div>
@@ -2698,6 +2731,7 @@
             adminLoadLensList();
             adminLoadMessages();
             adminLoadCitas();
+            adminLoadExamSlots();
             adminLoadPedidos();
           } else {
             document.getElementById('adminLogin').classList.remove('hidden');
@@ -2745,6 +2779,7 @@
         adminLoadLensList();
         adminLoadMessages();
         adminLoadCitas();
+        adminLoadExamSlots();
         adminLoadPedidos();
       } catch (err) {
         console.error('Admin login error:', err);
@@ -3884,6 +3919,99 @@
     }
 
     // =========================================================
+    // ---- ADMIN PANEL: HORARIOS DE EXAMEN A DOMICILIO ----
+    // =========================================================
+    async function adminLoadExamSlots() {
+      const list = document.getElementById('adminSlotList');
+      const empty = document.getElementById('adminSlotListEmpty');
+      if (!list) return;
+      try {
+        const fb = await window.firebaseReady;
+        const slots = await fb.fetchExamSlots();
+
+        if (!slots.length) {
+          list.innerHTML = '';
+          list.appendChild(empty);
+          return;
+        }
+
+        list.innerHTML = slots.map(s => {
+          const [y, m, d] = (s.fecha || '').split('-');
+          const fechaLabel = (y && m && d) ? `${d}/${m}/${y}` : s.fecha;
+          const disponible = s.disponible !== false;
+          return `
+          <div class="flex flex-wrap items-center justify-between gap-3 bg-brand-dark border border-slate-900/5 rounded-xl p-3.5">
+            <div class="min-w-0">
+              <span class="block text-brand-ink text-xs font-semibold">${fechaLabel} · ${s.hora}</span>
+              ${disponible
+                ? '<span class="text-[9px] font-bold uppercase tracking-wide text-brand-teal">Disponible</span>'
+                : `<span class="text-[9px] font-bold uppercase tracking-wide text-amber-500">Reservado${s.reservadoPor?.nombre ? ` — ${s.reservadoPor.nombre} (${s.reservadoPor.telefono || 's/tel'})` : ''}</span>`}
+            </div>
+            <div class="flex items-center gap-3 flex-shrink-0">
+              ${!disponible ? `<button onclick="adminReleaseSlot('${s.id}')" class="text-brand-sky hover:text-brand-teal text-xs font-bold uppercase tracking-wide">Liberar</button>` : ''}
+              <button onclick="adminRemoveSlot('${s.id}')" class="text-red-400 hover:text-red-300 text-xs font-bold uppercase tracking-wide">Eliminar</button>
+            </div>
+          </div>
+        `; }).join('');
+      } catch (e) {
+        console.error('Error al cargar horarios de examen:', e);
+      }
+    }
+
+    async function adminAddExamSlot() {
+      const fecha = document.getElementById('adminSlotFecha').value;
+      const hora = document.getElementById('adminSlotHora').value;
+      const status = document.getElementById('adminAddSlotStatus');
+      const btn = document.getElementById('adminAddSlotBtn');
+
+      if (!fecha || !hora) {
+        status.textContent = 'Elija fecha y hora.';
+        status.className = 'text-[11px] text-red-400 mt-3 mb-4';
+        return;
+      }
+
+      btn.disabled = true;
+      status.textContent = 'Guardando...';
+      status.className = 'text-[11px] text-slate-500 mt-3 mb-4';
+      try {
+        const fb = await window.firebaseReady;
+        await fb.addExamSlot(fecha, hora);
+        document.getElementById('adminSlotFecha').value = '';
+        document.getElementById('adminSlotHora').value = '';
+        status.textContent = '✓ Horario agregado.';
+        status.className = 'text-[11px] text-emerald-500 mt-3 mb-4';
+        adminLoadExamSlots();
+      } catch (e) {
+        console.error('Error al agregar horario:', e);
+        status.textContent = 'No se pudo guardar el horario.';
+        status.className = 'text-[11px] text-red-400 mt-3 mb-4';
+      } finally {
+        btn.disabled = false;
+      }
+    }
+
+    async function adminReleaseSlot(id) {
+      try {
+        const fb = await window.firebaseReady;
+        await fb.releaseExamSlot(id);
+        adminLoadExamSlots();
+      } catch (e) {
+        console.error('Error al liberar horario:', e);
+      }
+    }
+
+    async function adminRemoveSlot(id) {
+      if (!confirm('¿Eliminar este horario?')) return;
+      try {
+        const fb = await window.firebaseReady;
+        await fb.deleteExamSlot(id);
+        adminLoadExamSlots();
+      } catch (e) {
+        console.error('Error al eliminar horario:', e);
+      }
+    }
+
+    // =========================================================
     // ---- ADMIN PANEL: PEDIDOS ----
     // =========================================================
     function estadoPagoBadge(estado) {
@@ -3945,6 +4073,8 @@
               ${p.email ? `<p><strong class="text-brand-ink">Correo:</strong> ${p.email}</p>` : ''}
               ${p.receta ? `<p><strong class="text-brand-ink">Receta:</strong> ${p.receta}</p>` : ''}
               ${p.examen ? `<p><strong class="text-brand-ink">Examen a domicilio:</strong> ${p.examen.personas} persona${p.examen.personas > 1 ? 's' : ''} — Subtotal $${Number(p.examen.subtotal).toFixed(2)} + Traslado $${Number(p.examen.traslado).toFixed(2)}${p.examen.bono > 0 ? ` − Bonificación $${Number(p.examen.bono).toFixed(2)}` : ''} = <strong>$${Number(p.examen.total).toFixed(2)}</strong></p>` : ''}
+              ${p.examen?.fecha ? `<p><strong class="text-brand-ink">Fecha y hora:</strong> ${p.examen.fecha} ${p.examen.hora || ''}</p>` : ''}
+              ${p.examen?.direccion ? `<p><strong class="text-brand-ink">Dirección:</strong> ${p.examen.direccion}</p>` : ''}
               ${p.notas ? `<p><strong class="text-brand-ink">Notas:</strong> ${p.notas}</p>` : ''}
             </div>
             <div class="flex flex-wrap items-center gap-3">
@@ -4208,7 +4338,7 @@
     const EXAM_TRAVEL_TIERS = [           // Costo de traslado según distancia (más allá del radio gratuito)
       { maxKm: 5, price: 150 },
       { maxKm: 10, price: 250 },
-      { maxKm: Infinity, price: 350 }
+      { maxKm: Infinity, price: 220 }
     ];
     const EXAM_BONUS_PERCENT = 0.5; // 50% de bonificación del examen si también piden lentes
     const CLINIC_LAT = 20.505998;   // Plaza El Manantial, Corregidora, Qro.
@@ -4288,6 +4418,36 @@
     }
     document.getElementById('checkoutExamenPersonas')?.addEventListener('input', updateExamenCostDisplay);
 
+    let checkoutSlotsCache = [];
+
+    function formatSlotLabel(slot) {
+      const [y, m, d] = slot.fecha.split('-').map(Number);
+      const dateObj = new Date(y, m - 1, d);
+      const diaTexto = dateObj.toLocaleDateString('es-MX', { weekday: 'long', day: 'numeric', month: 'short' });
+      return `${diaTexto.charAt(0).toUpperCase() + diaTexto.slice(1)} — ${slot.hora}`;
+    }
+
+    async function loadCheckoutExamSlots() {
+      const select = document.getElementById('checkoutExamenSlot');
+      const status = document.getElementById('checkoutSlotStatus');
+      select.innerHTML = '<option value="">Cargando horarios disponibles...</option>';
+      status.textContent = '';
+      try {
+        const fb = await window.firebaseReady;
+        checkoutSlotsCache = await fb.fetchAvailableExamSlots();
+        if (checkoutSlotsCache.length === 0) {
+          select.innerHTML = '<option value="">No hay horarios disponibles por ahora</option>';
+          status.textContent = 'Contáctenos por WhatsApp para coordinar una fecha especial.';
+          return;
+        }
+        select.innerHTML = '<option value="">Seleccione fecha y horario...</option>' +
+          checkoutSlotsCache.map(s => `<option value="${s.id}">${formatSlotLabel(s)}</option>`).join('');
+      } catch (e) {
+        console.error('Error al cargar horarios disponibles:', e);
+        select.innerHTML = '<option value="">No se pudieron cargar los horarios</option>';
+      }
+    }
+
     function setCheckoutTipo(tipo) {
       checkoutTipo = tipo;
       const examenBtn = document.getElementById('checkoutTipoExamenBtn');
@@ -4303,6 +4463,7 @@
         examenWrap.classList.remove('hidden');
         recetaWrap.classList.add('hidden');
         updateExamenCostDisplay();
+        loadCheckoutExamSlots();
       } else {
         recetaBtn.classList.add('border-brand-sky', 'text-brand-sky');
         recetaBtn.classList.remove('border-slate-900/10', 'text-slate-500');
@@ -4332,7 +4493,9 @@
       document.getElementById('checkoutReceta').value = '';
       document.getElementById('checkoutExamenPersonas').value = '1';
       document.getElementById('checkoutExamenDistancia').value = '0';
+      document.getElementById('checkoutExamenDireccion').value = '';
       document.getElementById('checkoutGeoStatus').textContent = '';
+      document.getElementById('checkoutSlotStatus').textContent = '';
       document.getElementById('checkoutStatus').textContent = '';
       openModal('checkoutModal');
     }
@@ -4346,6 +4509,8 @@
       const telefono = document.getElementById('checkoutTelefono').value.trim();
       const email = document.getElementById('checkoutEmail').value.trim();
       const receta = document.getElementById('checkoutReceta').value.trim();
+      const direccion = document.getElementById('checkoutExamenDireccion').value.trim();
+      const slotId = document.getElementById('checkoutExamenSlot').value;
       const status = document.getElementById('checkoutStatus');
       const btn = document.getElementById('checkoutSubmitBtn');
 
@@ -4357,6 +4522,16 @@
         status.textContent = 'Escriba su graduación o pegue el enlace de su receta.';
         return;
       }
+      if (checkoutTipo === 'examen') {
+        if (!direccion) {
+          status.textContent = 'Escriba la dirección donde se realizará el examen.';
+          return;
+        }
+        if (!slotId) {
+          status.textContent = 'Elija una fecha y horario disponible.';
+          return;
+        }
+      }
 
       btn.disabled = true;
       status.textContent = '';
@@ -4367,9 +4542,25 @@
       const lentesTotal = cartTotal();
       const examen = checkoutTipo === 'examen' ? checkoutExamCost() : null;
       const total = lentesTotal + (examen ? examen.total : 0);
+      const chosenSlot = checkoutSlotsCache.find(s => s.id === slotId);
 
       try {
         const fb = await window.firebaseReady;
+
+        // Reserva el horario primero: si alguien más ya lo tomó, avisamos y no se guarda el pedido.
+        if (checkoutTipo === 'examen') {
+          try {
+            await fb.bookExamSlot(slotId, { nombre, telefono });
+          } catch (slotErr) {
+            console.error('Error al reservar horario:', slotErr);
+            status.textContent = 'Ese horario ya fue tomado por alguien más. Elija otro.';
+            status.className = 'text-[11px] text-red-400 mt-2 text-center';
+            btn.disabled = false;
+            loadCheckoutExamSlots();
+            return;
+          }
+        }
+
         const user = fb.getCurrentUser();
         await fb.addOrder({
           cliente: nombre,
@@ -4383,7 +4574,10 @@
             subtotal: examen.subtotal,
             traslado: examen.traslado,
             bono: examen.bono,
-            total: examen.total
+            total: examen.total,
+            direccion,
+            fecha: chosenSlot ? chosenSlot.fecha : null,
+            hora: chosenSlot ? chosenSlot.hora : null
           } : null,
           precio: total,
           estadoPago: 'pendiente',
@@ -4400,6 +4594,8 @@
           msg += `%0A%0AExamen a domicilio (${examen.personas} persona${examen.personas > 1 ? 's' : ''}): $${examen.subtotal.toFixed(2)}%0ATraslado: $${examen.traslado.toFixed(2)}`;
           if (examen.bono > 0) msg += `%0ABonificación 50%25 por pedir lentes: -$${examen.bono.toFixed(2)}`;
           msg += `%0ATotal examen: $${examen.total.toFixed(2)}`;
+          if (chosenSlot) msg += `%0AFecha y hora: ${chosenSlot.fecha} ${chosenSlot.hora}`;
+          msg += `%0ADirección: ${direccion}`;
         }
         msg += `%0A%0ATotal general estimado: $${total.toFixed(2)} MXN%0A%0ANombre: ${nombre}%0ATeléfono: ${telefono}`;
 
@@ -4635,7 +4831,7 @@
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-app.js";
     import { getAnalytics, isSupported as analyticsIsSupported } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-analytics.js";
     import {
-      getFirestore, collection, addDoc, getDocs, deleteDoc, doc, updateDoc, setDoc, getDoc,
+      getFirestore, collection, addDoc, getDocs, deleteDoc, doc, updateDoc, setDoc, getDoc, runTransaction,
       query, orderBy, limit, serverTimestamp
     } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-firestore.js";
     import {
@@ -4670,6 +4866,7 @@
     const APPOINTMENTS_COLLECTION = 'citas';
     const ORDERS_COLLECTION = 'pedidos';
     const USERS_COLLECTION = 'usuarios';
+    const EXAM_SLOTS_COLLECTION = 'horarios_examen';
 
     // ---- Catálogo de armazones (fotos) ----
     async function fetchCatalog() {
@@ -4852,7 +5049,10 @@ async function deleteProduct(id, storagePaths) {
         subtotal: Number(data.examen.subtotal) || 0,
         traslado: Number(data.examen.traslado) || 0,
         bono: Number(data.examen.bono) || 0,
-        total: Number(data.examen.total) || 0
+        total: Number(data.examen.total) || 0,
+        direccion: String(data.examen.direccion || '').slice(0, 300),
+        fecha: data.examen.fecha || null,
+        hora: data.examen.hora || null
       } : null;
 
       await addDoc(collection(db, ORDERS_COLLECTION), {
@@ -4884,6 +5084,49 @@ async function deleteProduct(id, storagePaths) {
 
     async function deleteOrder(id) {
       await deleteDoc(doc(db, ORDERS_COLLECTION, id));
+    }
+
+    // ---- Horarios disponibles para el examen de la vista a domicilio ----
+    async function fetchExamSlots() {
+      const q = query(collection(db, EXAM_SLOTS_COLLECTION), orderBy('fecha', 'asc'), orderBy('hora', 'asc'));
+      const snap = await getDocs(q);
+      return snap.docs.map(d => ({ id: d.id, ...d.data() }));
+    }
+
+    async function fetchAvailableExamSlots() {
+      const all = await fetchExamSlots();
+      const todayKey = new Date().toISOString().slice(0, 10);
+      return all.filter(s => s.disponible !== false && s.fecha >= todayKey);
+    }
+
+    async function addExamSlot(fecha, hora) {
+      await addDoc(collection(db, EXAM_SLOTS_COLLECTION), {
+        fecha, hora,
+        disponible: true,
+        reservadoPor: null,
+        createdAt: serverTimestamp()
+      });
+    }
+
+    async function deleteExamSlot(id) {
+      await deleteDoc(doc(db, EXAM_SLOTS_COLLECTION, id));
+    }
+
+    // Reserva el horario de forma segura (transacción): si dos personas intentan
+    // agendar el mismo horario casi al mismo tiempo, solo la primera lo consigue.
+    async function bookExamSlot(id, reservadoPor) {
+      const slotRef = doc(db, EXAM_SLOTS_COLLECTION, id);
+      await runTransaction(db, async (tx) => {
+        const snap = await tx.get(slotRef);
+        if (!snap.exists()) throw new Error('slot-not-found');
+        const data = snap.data();
+        if (data.disponible === false) throw new Error('slot-taken');
+        tx.update(slotRef, { disponible: false, reservadoPor });
+      });
+    }
+
+    async function releaseExamSlot(id) {
+      await updateDoc(doc(db, EXAM_SLOTS_COLLECTION, id), { disponible: true, reservadoPor: null });
     }
 
     // ---- Autenticación del panel de administrador ----
@@ -4975,7 +5218,13 @@ async function deleteProduct(id, storagePaths) {
       customerLogout,
       getCurrentUser,
       getCurrentUserProfile,
-      onCustomerAuthChange
+      onCustomerAuthChange,
+      fetchExamSlots,
+      fetchAvailableExamSlots,
+      addExamSlot,
+      deleteExamSlot,
+      bookExamSlot,
+      releaseExamSlot
     });
   </script>
 </body>
