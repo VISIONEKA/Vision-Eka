@@ -1685,6 +1685,11 @@
           <input type="text" id="adminProductNewCategoryInput" placeholder="Ej. Armazones Ligeros" class="hidden w-full p-3.5 bg-brand-dark border border-slate-900/10 rounded-xl text-sm text-brand-ink focus:border-brand-sky focus:outline-none">
         </div>
 
+        <label class="flex items-center gap-2.5 mb-4 cursor-pointer select-none">
+          <input type="checkbox" id="adminProductEsKids" class="w-4 h-4 rounded accent-brand-coral">
+          <span class="text-xs text-slate-600">🧒 Mostrar también en <strong class="text-brand-ink">Visión EKA Kids</strong></span>
+        </label>
+
           <div class="mb-4">
           <label class="block text-[9px] uppercase tracking-widest text-slate-500 font-extrabold mb-2">Fotos del lente <span class="normal-case text-slate-600/70 font-medium">(opcional — pegue el enlace de cada foto ya subida, una por línea)</span></label>
           <textarea id="adminProductUrlsInput" rows="3" placeholder="https://ejemplo.com/foto1.jpg&#10;https://ejemplo.com/foto2.jpg" class="w-full p-3.5 bg-brand-dark border border-slate-900/10 rounded-xl text-sm text-brand-ink focus:border-brand-sky focus:outline-none"></textarea>
@@ -3107,7 +3112,8 @@
           color,
           unidades: unidadesRaw ? parseInt(unidadesRaw, 10) : null,
           precio: precioRaw ? parseFloat(precioRaw) : null,
-          categoria
+          categoria,
+          esKids: document.getElementById('adminProductEsKids').checked
         };
 
         if (isEditing) {
@@ -3147,6 +3153,7 @@
         catSelect.value = p.categoria;
       }
       document.getElementById('adminProductNewCategoryInput').classList.add('hidden');
+      document.getElementById('adminProductEsKids').checked = !!p.esKids;
 
       const imgsArr = (p.imgs && p.imgs.length) ? p.imgs : (p.img ? [p.img] : []);
       adminProductUrlsInput.value = imgsArr.join('\n');
@@ -3169,6 +3176,7 @@
       document.getElementById('adminProductCategorySelect').value = '';
       document.getElementById('adminProductNewCategoryInput').value = '';
       document.getElementById('adminProductNewCategoryInput').classList.add('hidden');
+      document.getElementById('adminProductEsKids').checked = false;
       adminProductUrlsInput.value = '';
       adminRenderProductPreviews();
 
@@ -3199,6 +3207,9 @@
           const ocultoBadge = p.oculto
             ? '<span class="text-[9px] font-bold uppercase tracking-wide text-amber-500 bg-amber-500/10 px-2 py-0.5 rounded-full whitespace-nowrap">Oculto</span>'
             : '<span class="text-[9px] font-bold uppercase tracking-wide text-brand-teal bg-brand-teal/10 px-2 py-0.5 rounded-full whitespace-nowrap">Visible</span>';
+          const kidsBadge = p.esKids
+            ? '<span class="text-[9px] font-bold uppercase tracking-wide text-brand-coral bg-brand-coral/10 px-2 py-0.5 rounded-full whitespace-nowrap">🧒 Kids</span>'
+            : '';
          const imgsArr = (p.imgs && p.imgs.length) ? p.imgs : (p.img ? [p.img] : []);
           const thumb = imgsArr.length
             ? `<div class="relative flex-shrink-0"><img src="${imgsArr[0]}" alt="${p.modelo}" class="w-10 h-10 object-cover rounded-lg bg-brand-navy border border-slate-900/5">${imgsArr.length > 1 ? `<span class="absolute -bottom-1 -right-1 bg-brand-sky text-brand-ink text-[8px] font-bold rounded-full w-4 h-4 flex items-center justify-center">${imgsArr.length}</span>` : ''}</div>`
@@ -3215,6 +3226,7 @@
               </div>
               <div class="flex items-center gap-3 flex-shrink-0">
                 ${ocultoBadge}
+                ${kidsBadge}
                 <button onclick="adminEditProduct('${p.id}')" class="text-brand-teal hover:text-brand-sky text-xs font-bold uppercase tracking-wide">Editar</button>
                 <button onclick="adminToggleProductVisibility('${p.id}', ${p.oculto ? 'false' : 'true'})" class="text-brand-sky hover:text-brand-teal text-xs font-bold uppercase tracking-wide">${p.oculto ? 'Mostrar' : 'Ocultar'}</button>
                 <button onclick='adminRemoveProduct("${p.id}", ${JSON.stringify(p.storagePaths || (p.storagePath ? [p.storagePath] : []))})' class="text-red-400 hover:text-red-300 text-xs font-bold uppercase tracking-wide">Eliminar</button>
@@ -5313,6 +5325,7 @@
         unidades: (data.unidades === null || data.unidades === undefined || isNaN(data.unidades)) ? null : data.unidades,
         precio: (data.precio === null || data.precio === undefined || isNaN(data.precio)) ? null : data.precio,
         categoria: data.categoria,
+        esKids: !!data.esKids,
         imgs,
         storagePaths: [],
         img: imgs[0] || null,           // compatibilidad con código viejo
@@ -5330,6 +5343,7 @@
         unidades: (data.unidades === null || data.unidades === undefined || isNaN(data.unidades)) ? null : data.unidades,
         precio: (data.precio === null || data.precio === undefined || isNaN(data.precio)) ? null : data.precio,
         categoria: data.categoria,
+        esKids: !!data.esKids,
         imgs,
         img: imgs[0] || null
       });
