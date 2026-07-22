@@ -794,6 +794,30 @@
               <p class="text-[11px] text-slate-500 leading-relaxed">Muy pronto tendremos armazones para que te pruebes. ¡Vuelve a visitarnos!</p>
             </div>
 
+            <!-- Panel de ajuste fino — solo visible para el administrador con sesión iniciada -->
+            <div id="tryonCalibPanel" class="hidden mb-5 p-4 bg-brand-dark border border-brand-sky/30 rounded-2xl">
+              <p class="text-[10px] uppercase tracking-widest font-extrabold text-brand-sky mb-3">🛠️ Ajuste fino (solo admin) — <span id="tryonCalibLensName">–</span></p>
+
+              <label class="block text-[9px] text-slate-500 mb-1">Tamaño</label>
+              <input type="range" id="tryonCalibEscala" min="0.7" max="1.4" step="0.02" value="1" class="w-full mb-3 accent-brand-sky">
+
+              <label class="block text-[9px] text-slate-500 mb-1">Arriba / Abajo</label>
+              <input type="range" id="tryonCalibOffsetY" min="-0.4" max="0.4" step="0.02" value="0" class="w-full mb-3 accent-brand-sky">
+
+              <label class="block text-[9px] text-slate-500 mb-1">Izquierda / Derecha</label>
+              <input type="range" id="tryonCalibOffsetX" min="-0.3" max="0.3" step="0.02" value="0" class="w-full mb-4 accent-brand-sky">
+
+              <div class="flex gap-2">
+                <button onclick="saveTryonCalib()" id="tryonCalibSaveBtn" class="flex-1 bg-brand-sky/10 border border-brand-sky/30 text-brand-sky font-bold text-[10px] uppercase tracking-wider py-2.5 rounded-full hover:bg-brand-sky/20 transition-all">
+                  💾 Guardar ajuste
+                </button>
+                <button onclick="resetTryonCalib()" class="text-[10px] uppercase tracking-wider font-bold text-slate-500 hover:text-brand-ink px-3">
+                  Reiniciar
+                </button>
+              </div>
+              <p id="tryonCalibStatus" class="text-[10px] text-slate-500 mt-2"></p>
+            </div>
+
             <button onclick="captureTryOnPhoto()" id="tryonCaptureBtn" class="hidden flex items-center justify-center gap-2 bg-slate-900/5 border border-slate-900/10 hover:border-brand-sky/40 hover:text-brand-sky text-slate-700 font-bold text-[11px] uppercase tracking-wider py-3 rounded-xl transition-all duration-300 mb-5">
               📸 Capturar mi foto
             </button>
@@ -1392,6 +1416,9 @@
           </div>
 
           <div class="flex flex-wrap gap-3 mb-8">
+            <button onclick="startCheckout(true)" class="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-brand-ink bg-gradient-to-r from-brand-sky to-brand-teal rounded-full py-3 px-5 transition-all hover:shadow-lg hover:shadow-brand-sky/30">
+              🏠 Agendar examen a domicilio
+            </button>
             <button onclick="openQuickCallModal()" class="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-brand-sky border border-brand-sky/30 hover:bg-brand-sky/10 rounded-full py-3 px-5 transition-all">
               📞 Agendar una llamada
             </button>
@@ -1648,7 +1675,7 @@
         <h3 class="font-display font-bold text-sm text-brand-ink mb-3">📋 Cómo funciona este panel</h3>
         <ol class="text-xs text-slate-600 space-y-2 list-decimal list-inside leading-relaxed">
           <li><strong class="text-brand-ink">Catálogo de Lentes:</strong> registre cada lente con su modelo, color, unidades y precio, y asígnelo a una categoría (elija una existente o cree una nueva, por ejemplo "Armazones Ligeros"). Para las fotos, primero súbalas a un servicio como Google Fotos, Imgur o Cloudinary, copie el enlace directo de la imagen y péguelo en el campo correspondiente. Desde la lista puede ocultarlo temporalmente (deja de mostrarse al público sin perder el registro) o eliminarlo por completo si se agotó.</li>
-          <li><strong class="text-brand-ink">Filtros del Probador Virtual:</strong> pegue, aparte, el enlace de la imagen recortada (PNG con fondo transparente recomendado) de cada armazón junto con el modelo al que corresponde. Esa imagen es la que se superpone sobre la cara en la cámara del probador en vivo.</li>
+          <li><strong class="text-brand-ink">Filtros del Probador Virtual:</strong> pegue, aparte, el enlace de la imagen recortada (PNG con fondo transparente recomendado) de cada armazón junto con el modelo al que corresponde. Esa imagen es la que se superpone sobre la cara en la cámara del probador en vivo. <strong class="text-brand-ink">Si un filtro se ve muy grande, chico o desalineado</strong>, vaya a la sección "Pruébatelos" del sitio (estando logueado), seleccione ese filtro y ajústelo con los controles de tamaño y posición que solo usted puede ver — el ajuste se guarda para siempre.</li>
           <li>Todo se guarda en Firebase y aparece de inmediato en el sitio — no hay que tocar GitHub ni ningún archivo.</li>
         </ol>
       </div>
@@ -1656,6 +1683,7 @@
       <!-- Add new lens/product form (modelo, color, unidades, precio, categoría) -->
       <div class="bg-brand-navy border border-slate-900/10 rounded-3xl p-6 mb-8">
         <h3 id="adminProductFormTitle" class="font-display font-bold text-sm text-brand-ink mb-4">🕶️ Agregar Lente al Catálogo</h3>
+        <p class="text-[11px] text-slate-500 bg-brand-dark border border-slate-900/10 rounded-xl p-3 mb-4 leading-relaxed">💡 <strong class="text-brand-ink">Tip:</strong> si el mismo modelo viene en varios colores o estampados, agréguelo varias veces usando <strong class="text-brand-ink">exactamente el mismo nombre de Modelo</strong> y cambiando solo el Color. En el catálogo del sitio se agruparán automáticamente en una sola tarjeta con muestras de color para elegir.</p>
 
         <div class="grid sm:grid-cols-2 gap-4 mb-4">
           <div>
@@ -2168,6 +2196,12 @@
         </select>
         <p id="checkoutSlotStatus" class="text-[10px] text-slate-500 mb-3"></p>
 
+        <label class="block text-[9px] uppercase tracking-widest text-slate-500 font-extrabold mb-2">Elija de 3 a 5 armazones para probarse el día de la visita <span id="checkoutArmazonesCount" class="text-brand-sky normal-case">(0 elegidos)</span></label>
+        <p class="text-[10px] text-slate-500 mb-2">Se los llevaremos ese día para que elija en persona el que más le guste — no es una compra todavía.</p>
+        <div id="checkoutArmazonesLoading" class="text-center text-[11px] text-slate-500 py-4">Cargando armazones...</div>
+        <div id="checkoutArmazonesGrid" class="hidden grid grid-cols-3 sm:grid-cols-4 gap-2 mb-1 max-h-64 overflow-y-auto p-1"></div>
+        <p id="checkoutArmazonesStatus" class="text-[10px] text-slate-500 mb-3"></p>
+
         <div id="checkoutExamenCostBox" class="text-xs text-slate-600 space-y-1 pt-3 border-t border-slate-900/10">
           <div class="flex justify-between"><span>Examen (<span id="checkoutExamenPersonasText">1</span> persona × $300)</span><span id="checkoutExamenSubtotal">$300.00</span></div>
           <div class="flex justify-between"><span>Traslado</span><span id="checkoutExamenTraslado">$0.00</span></div>
@@ -2483,6 +2517,7 @@
     let lensCatalogData = []; // populated from catalogo.json on load (or demo fallback)
 
     let tryonActiveLensImg = null; // currently selected Image() object to draw
+    let tryonActiveLensCalib = { id: null, escala: 1, offsetX: 0, offsetY: 0 }; // per-filter fine-tuning
     let tryonModelsLoaded = false;
     let tryonStream = null;
     let tryonRafId = null;
@@ -2530,24 +2565,32 @@
           <img src="${lens.img}" alt="${lens.name}" class="w-full h-auto object-contain">
           <span class="absolute inset-x-0 bottom-0 bg-brand-navy/90 text-[8px] text-slate-700 font-bold uppercase tracking-wide py-1 text-center">${lens.name}</span>
         `;
-        btn.addEventListener('click', () => selectLens(lens.img, btn));
+        btn.addEventListener('click', () => selectLens(lens, btn));
         wrap.appendChild(btn);
       });
 
       // Auto-select the first frame so the widget feels alive immediately
       const firstBtn = wrap.querySelector('.lens-thumb-btn');
-      if (firstBtn) selectLens(lensCatalogData[0].img, firstBtn);
+      if (firstBtn) selectLens(lensCatalogData[0], firstBtn);
     }
 
-    function selectLens(imgUrl, btnEl) {
+    function selectLens(lens, btnEl) {
       document.querySelectorAll('.lens-thumb-btn').forEach(b => b.classList.remove('border-brand-sky', 'ring-2', 'ring-brand-sky/40'));
       if (btnEl) btnEl.classList.add('border-brand-sky', 'ring-2', 'ring-brand-sky/40');
+
+      tryonActiveLensCalib = {
+        id: lens.id || null,
+        escala: (typeof lens.escala === 'number') ? lens.escala : 1,
+        offsetX: (typeof lens.offsetX === 'number') ? lens.offsetX : 0,
+        offsetY: (typeof lens.offsetY === 'number') ? lens.offsetY : 0
+      };
+      syncCalibSlidersToActiveLens();
 
       const img = new Image();
       img.crossOrigin = 'anonymous';
       img.onload = () => { tryonActiveLensImg = img; };
       img.onerror = () => { tryonActiveLensImg = null; };
-      img.src = imgUrl;
+      img.src = lens.img;
     }
 
     // Called from the product catalog cards ("Pruébatelo en vivo") to jump straight
@@ -2558,7 +2601,7 @@
 
       setTimeout(() => {
         const btn = document.querySelector(`.lens-thumb-btn[data-lens-id="${lensId}"]`);
-        if (lens) selectLens(lens.img, btn);
+        if (lens) selectLens(lens, btn);
         if (!document.getElementById('tryonVideo').srcObject) {
           startTryOn();
         }
@@ -2606,6 +2649,7 @@
         });
 
         tryonVideo.srcObject = tryonStream;
+        tryonStream.getVideoTracks().forEach(track => { track.onended = stopTryOn; });
         await new Promise(resolve => { tryonVideo.onloadedmetadata = resolve; });
         await tryonVideo.play();
 
@@ -2697,16 +2741,95 @@
       const midX = (box.lx + box.rx) / 2;
       const midY = (box.ly + box.ry) / 2;
 
-      // Frame width scales with inter-eye distance; ratio tuned for typical frame proportions
-      const frameWidth = eyeDistance * 2.35;
+      // Frame width scales with inter-eye distance; ratio tuned for typical frame
+      // proportions, then fine-tuned per filter with the calibration controls
+      // (escala/offsetX/offsetY), since every uploaded photo is framed slightly
+      // differently.
+      const escala = tryonActiveLensCalib.escala || 1;
+      const offsetX = (tryonActiveLensCalib.offsetX || 0) * eyeDistance;
+      const offsetY = (tryonActiveLensCalib.offsetY || 0) * eyeDistance;
+
+      const frameWidth = eyeDistance * 2.35 * escala;
       const frameHeight = frameWidth * (tryonActiveLensImg.height / tryonActiveLensImg.width);
 
       tryonCtx.save();
-      tryonCtx.translate(midX, midY);
+      tryonCtx.translate(midX + offsetX, midY + offsetY);
       tryonCtx.rotate(angle);
       tryonCtx.drawImage(tryonActiveLensImg, -frameWidth / 2, -frameHeight / 2.1, frameWidth, frameHeight);
       tryonCtx.restore();
     }
+
+    function syncCalibSlidersToActiveLens() {
+      document.getElementById('tryonCalibEscala').value = tryonActiveLensCalib.escala;
+      document.getElementById('tryonCalibOffsetY').value = tryonActiveLensCalib.offsetY;
+      document.getElementById('tryonCalibOffsetX').value = tryonActiveLensCalib.offsetX;
+      const lens = lensCatalogData.find(l => l.id === tryonActiveLensCalib.id);
+      document.getElementById('tryonCalibLensName').textContent = lens ? lens.name : '–';
+      document.getElementById('tryonCalibStatus').textContent = '';
+    }
+
+    document.getElementById('tryonCalibEscala')?.addEventListener('input', (e) => {
+      tryonActiveLensCalib.escala = parseFloat(e.target.value);
+    });
+    document.getElementById('tryonCalibOffsetY')?.addEventListener('input', (e) => {
+      tryonActiveLensCalib.offsetY = parseFloat(e.target.value);
+    });
+    document.getElementById('tryonCalibOffsetX')?.addEventListener('input', (e) => {
+      tryonActiveLensCalib.offsetX = parseFloat(e.target.value);
+    });
+
+    function resetTryonCalib() {
+      tryonActiveLensCalib.escala = 1;
+      tryonActiveLensCalib.offsetY = 0;
+      tryonActiveLensCalib.offsetX = 0;
+      syncCalibSlidersToActiveLens();
+    }
+
+    async function saveTryonCalib() {
+      if (!tryonActiveLensCalib.id) return;
+      const status = document.getElementById('tryonCalibStatus');
+      const btn = document.getElementById('tryonCalibSaveBtn');
+      btn.disabled = true;
+      status.textContent = 'Guardando...';
+      try {
+        const fb = await window.firebaseReady;
+        await fb.updateCatalogItemCalib(tryonActiveLensCalib.id, {
+          escala: tryonActiveLensCalib.escala,
+          offsetX: tryonActiveLensCalib.offsetX,
+          offsetY: tryonActiveLensCalib.offsetY
+        });
+        // Update the local cache too so it stays correct without a reload
+        const lens = lensCatalogData.find(l => l.id === tryonActiveLensCalib.id);
+        if (lens) {
+          lens.escala = tryonActiveLensCalib.escala;
+          lens.offsetX = tryonActiveLensCalib.offsetX;
+          lens.offsetY = tryonActiveLensCalib.offsetY;
+        }
+        status.textContent = '✓ Ajuste guardado. Así se verá para todos los visitantes.';
+      } catch (e) {
+        console.error('Error al guardar el ajuste del filtro:', e);
+        status.textContent = 'No se pudo guardar. Intente de nuevo.';
+      } finally {
+        btn.disabled = false;
+      }
+    }
+
+    // Muestra el panel de ajuste solo si quien visita la página está logueado como admin
+    async function refreshTryonCalibPanelVisibility() {
+      try {
+        const fb = await window.firebaseReady;
+        const panel = document.getElementById('tryonCalibPanel');
+        if (fb.isAdminLoggedIn()) {
+          panel.classList.remove('hidden');
+        } else {
+          panel.classList.add('hidden');
+        }
+      } catch (e) { /* not critical */ }
+    }
+    window.firebaseReady.then(fb => {
+      refreshTryonCalibPanelVisibility();
+      fb.onAdminAuthChange(() => refreshTryonCalibPanelVisibility());
+    });
 
     // =========================================================
     // ---- PUBLIC PRODUCT GALLERY (sección "Portafolio Óptico") ----
@@ -2751,64 +2874,19 @@
         filterRow.innerHTML = '<button class="filter-btn active px-6 py-3 rounded-full border border-slate-900/5 bg-brand-dark hover:border-brand-sky/30 text-xs font-bold uppercase tracking-wider transition-all" data-filter="all">Todos</button>' +
           categorias.map(cat => `<button class="filter-btn px-6 py-3 rounded-full border border-slate-900/5 bg-brand-dark hover:border-brand-sky/30 text-xs font-bold uppercase tracking-wider transition-all" data-filter="${slugifyCategory(cat)}">${escapeHtml(cat)}</button>`).join('');
 
-        // ---- Tarjetas de producto ----
+        // ---- Tarjetas de producto (agrupadas por modelo: mismos modelos con distinto color/estampado se muestran como variantes en una sola tarjeta) ----
         window.__publicProductsCache = {};
-        grid.innerHTML = items.map(p => {
-          window.__publicProductsCache[p.id] = p;
-          const precioText = (p.precio !== null && p.precio !== undefined)
-            ? `$${Number(p.precio).toLocaleString('es-MX', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} MXN`
-            : null;
-          let stockBadge = '';
-          let agotado = false;
-          if (p.unidades !== null && p.unidades !== undefined) {
-            agotado = p.unidades <= 0;
-            stockBadge = !agotado
-              ? `<span class="text-[9px] font-bold text-brand-teal">${p.unidades} disponibles</span>`
-              : `<span class="text-[9px] font-bold text-red-400">Agotado</span>`;
-          }
-          const imgsArr = (p.imgs && p.imgs.length) ? p.imgs : (p.img ? [p.img] : []);
-          window.__galleryImgs = window.__galleryImgs || {};
-          window.__galleryImgs[p.id] = imgsArr;
-          const imgTag = imgsArr.length
-            ? `<img id="galImg-${p.id}" src="${imgsArr[0]}" alt="${escapeHtml(p.modelo)}" class="w-full h-full object-cover">`
-            : `<div class="w-full h-full flex items-center justify-center text-4xl">🕶️</div>`;
-          const navArrows = imgsArr.length > 1 ? `
-            <button onclick="event.preventDefault(); galleryNav('${p.id}', -1)" class="absolute left-2 top-1/2 -translate-y-1/2 w-7 h-7 rounded-full bg-brand-navy/80 text-brand-ink text-xs flex items-center justify-center">‹</button>
-            <button onclick="event.preventDefault(); galleryNav('${p.id}', 1)" class="absolute right-2 top-1/2 -translate-y-1/2 w-7 h-7 rounded-full bg-brand-navy/80 text-brand-ink text-xs flex items-center justify-center">›</button>
-            <span class="absolute bottom-2 right-2 bg-brand-navy/80 text-brand-ink text-[9px] font-bold px-2 py-0.5 rounded-full">1/${imgsArr.length}</span>
-          ` : '';
+        items.forEach(p => { window.__publicProductsCache[p.id] = p; });
 
-          return `
-            <div class="gallery-item rounded-3xl overflow-hidden border border-slate-900/5 bg-brand-dark flex flex-col hover:border-brand-sky/30 hover:-translate-y-2 transition-all duration-300" data-category="${slugifyCategory(p.categoria)}" data-search="${escapeHtml((p.modelo + ' ' + p.color).toLowerCase())}">
-             <div class="h-56 relative overflow-hidden bg-slate-900 flex items-center justify-center" id="galWrap-${p.id}">
-                ${imgTag}
-                ${navArrows}
-                <button onclick="event.preventDefault(); shareProductWhatsapp('${p.id}')" title="Compartir por WhatsApp" class="absolute top-2 right-2 w-8 h-8 rounded-full bg-brand-navy/80 hover:bg-emerald-500 text-brand-ink flex items-center justify-center text-sm transition-colors">
-                  <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M17.5 14.4c-.3-.1-1.7-.8-1.9-.9-.3-.1-.4-.1-.6.1-.2.3-.7.9-.8 1-.2.2-.3.2-.5.1-.3-.1-1.1-.4-2.1-1.3-.8-.7-1.3-1.6-1.4-1.9-.2-.3 0-.4.1-.6l.4-.5c.1-.1.2-.3.2-.4.1-.2 0-.3 0-.4-.1-.1-.6-1.4-.8-1.9-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.4.1-.6.3-.2.3-.8.8-.8 1.9s.8 2.2.9 2.4c.1.2 1.6 2.4 3.8 3.4.5.2 1 .4 1.3.5.5.2 1 .1 1.4.1.4-.1 1.3-.5 1.5-1 .2-.5.2-.9.1-1l-.1-.1zM12 2a10 10 0 00-8.5 15.2L2 22l4.9-1.3A10 10 0 1012 2z"/></svg>
-                </button>
-              </div>
-              <div class="p-6 flex flex-col flex-grow">
-                <span class="text-[9px] font-extrabold text-brand-sky uppercase tracking-widest mb-1.5">${escapeHtml(p.categoria)}</span>
-                <h4 class="font-display font-bold text-base text-brand-ink mb-1">${escapeHtml(p.modelo)}</h4>
-                <p class="text-xs text-slate-500 mb-2">Color: ${escapeHtml(p.color)}</p>
-                ${(p.tratamientos && p.tratamientos.length) ? `<div class="flex flex-wrap gap-1 mb-3">${p.tratamientos.map(t => `<span class="text-[8px] font-bold uppercase tracking-wide text-brand-teal bg-brand-teal/10 px-2 py-0.5 rounded-full">${escapeHtml(t)}</span>`).join('')}</div>` : '<div class="mb-1"></div>'}
-                <div class="flex items-center justify-between mt-auto mb-4">
-                  <span class="text-sm font-display font-bold text-brand-ink">${precioText || 'Consultar precio'}</span>
-                  ${stockBadge}
-                </div>
-                <div class="flex flex-col gap-2">
-                  ${agotado ? '' : `<button onclick="addToCart('${p.id}')" class="flex items-center justify-center gap-2 text-[10px] font-bold uppercase tracking-widest text-brand-ink bg-gradient-to-r from-brand-sky to-brand-teal rounded-full py-2.5 transition-all duration-300 hover:shadow-lg hover:shadow-brand-sky/30">
-                    🛒 Agregar al carrito
-                  </button>`}
-                  <a href="#simulator" class="flex items-center justify-center gap-2 text-[10px] font-bold uppercase tracking-widest text-brand-sky border border-brand-sky/30 hover:bg-brand-sky/10 rounded-full py-2.5 transition-all duration-300">
-                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
-                    Pruébatelo en vivo
-                  </a>
-                </div>
-              </div>
-            </div>
-          `;
-        }).join('');
+        const grupos = {};
+        items.forEach(p => {
+          const key = slugifyCategory(p.categoria) + '::' + p.modelo.trim().toLowerCase();
+          if (!grupos[key]) grupos[key] = [];
+          grupos[key].push(p);
+        });
+        window.__galleryGroups = grupos;
+
+        grid.innerHTML = Object.entries(grupos).map(([key, variantes]) => renderGalleryCard(key, variantes, 0)).join('');
 
         bindGalleryFilters();
       } catch (err) {
@@ -2817,6 +2895,115 @@
         empty.classList.remove('hidden');
         empty.textContent = 'No se pudo cargar el catálogo en este momento.';
       }
+    }
+
+    function renderGalleryCard(key, variantes, selectedIdx) {
+      const p = variantes[selectedIdx];
+      const precioText = (p.precio !== null && p.precio !== undefined)
+        ? `$${Number(p.precio).toLocaleString('es-MX', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} MXN`
+        : 'Consultar precio';
+      let stockBadge = '';
+      let agotado = false;
+      if (p.unidades !== null && p.unidades !== undefined) {
+        agotado = p.unidades <= 0;
+        stockBadge = !agotado
+          ? `<span class="text-[9px] font-bold text-brand-teal">${p.unidades} disponibles</span>`
+          : `<span class="text-[9px] font-bold text-red-400">Agotado</span>`;
+      }
+      const imgsArr = (p.imgs && p.imgs.length) ? p.imgs : (p.img ? [p.img] : []);
+      const imgTag = imgsArr.length
+        ? `<img id="galImg-${key}" src="${imgsArr[0]}" alt="${escapeHtml(p.modelo)}" class="w-full h-full object-cover">`
+        : `<div id="galImg-${key}" class="w-full h-full flex items-center justify-center text-4xl">🕶️</div>`;
+
+      const searchText = variantes.map(v => `${v.modelo} ${v.color}`).join(' ').toLowerCase();
+
+      const swatches = variantes.length > 1 ? `
+        <div class="flex flex-wrap gap-1.5 mb-2">
+          ${variantes.map((v, idx) => {
+            const vImgs = (v.imgs && v.imgs.length) ? v.imgs : (v.img ? [v.img] : []);
+            const swatchImg = vImgs[0];
+            const active = idx === selectedIdx;
+            return `<button type="button" onclick="event.preventDefault(); selectGalleryVariant('${key}', ${idx})" title="${escapeHtml(v.color)}" class="gal-swatch-${key} w-7 h-7 rounded-full border-2 ${active ? 'border-brand-sky' : 'border-slate-900/10'} bg-brand-navy bg-cover bg-center overflow-hidden flex-shrink-0" style="${swatchImg ? `background-image:url('${swatchImg}')` : ''}"></button>`;
+          }).join('')}
+        </div>
+      ` : '';
+
+      return `
+        <div class="gallery-item rounded-3xl overflow-hidden border border-slate-900/5 bg-brand-dark flex flex-col hover:border-brand-sky/30 hover:-translate-y-2 transition-all duration-300" data-category="${slugifyCategory(p.categoria)}" data-search="${escapeHtml(searchText)}">
+         <div class="h-56 relative overflow-hidden bg-slate-900 flex items-center justify-center" id="galWrap-${key}">
+            ${imgTag}
+            <button onclick="event.preventDefault(); shareProductWhatsapp('${p.id}')" title="Compartir por WhatsApp" class="absolute top-2 right-2 w-8 h-8 rounded-full bg-brand-navy/80 hover:bg-emerald-500 text-brand-ink flex items-center justify-center text-sm transition-colors">
+              <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M17.5 14.4c-.3-.1-1.7-.8-1.9-.9-.3-.1-.4-.1-.6.1-.2.3-.7.9-.8 1-.2.2-.3.2-.5.1-.3-.1-1.1-.4-2.1-1.3-.8-.7-1.3-1.6-1.4-1.9-.2-.3 0-.4.1-.6l.4-.5c.1-.1.2-.3.2-.4.1-.2 0-.3 0-.4-.1-.1-.6-1.4-.8-1.9-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.4.1-.6.3-.2.3-.8.8-.8 1.9s.8 2.2.9 2.4c.1.2 1.6 2.4 3.8 3.4.5.2 1 .4 1.3.5.5.2 1 .1 1.4.1.4-.1 1.3-.5 1.5-1 .2-.5.2-.9.1-1l-.1-.1zM12 2a10 10 0 00-8.5 15.2L2 22l4.9-1.3A10 10 0 1012 2z"/></svg>
+            </button>
+          </div>
+          <div class="p-6 flex flex-col flex-grow">
+            <span class="text-[9px] font-extrabold text-brand-sky uppercase tracking-widest mb-1.5">${escapeHtml(p.categoria)}</span>
+            <h4 class="font-display font-bold text-base text-brand-ink mb-1">${escapeHtml(p.modelo)}</h4>
+            ${swatches}
+            <p id="galColor-${key}" class="text-xs text-slate-500 mb-2">Color: ${escapeHtml(p.color)}</p>
+            <div id="galTratamientos-${key}">${(p.tratamientos && p.tratamientos.length) ? `<div class="flex flex-wrap gap-1 mb-3">${p.tratamientos.map(t => `<span class="text-[8px] font-bold uppercase tracking-wide text-brand-teal bg-brand-teal/10 px-2 py-0.5 rounded-full">${escapeHtml(t)}</span>`).join('')}</div>` : '<div class="mb-1"></div>'}</div>
+            <div class="flex items-center justify-between mt-auto mb-4">
+              <span id="galPrice-${key}" class="text-sm font-display font-bold text-brand-ink">${precioText}</span>
+              <span id="galStock-${key}">${stockBadge}</span>
+            </div>
+            <div id="galCartWrap-${key}" class="flex flex-col gap-2">
+              ${agotado ? '' : `<button onclick="addToCart('${p.id}')" id="galAddBtn-${key}" class="flex items-center justify-center gap-2 text-[10px] font-bold uppercase tracking-widest text-brand-ink bg-gradient-to-r from-brand-sky to-brand-teal rounded-full py-2.5 transition-all duration-300 hover:shadow-lg hover:shadow-brand-sky/30">
+                🛒 Agregar al carrito
+              </button>`}
+              <a href="#simulator" class="flex items-center justify-center gap-2 text-[10px] font-bold uppercase tracking-widest text-brand-sky border border-brand-sky/30 hover:bg-brand-sky/10 rounded-full py-2.5 transition-all duration-300">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                Pruébatelo en vivo
+              </a>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    function selectGalleryVariant(key, idx) {
+      const variantes = window.__galleryGroups[key];
+      if (!variantes || !variantes[idx]) return;
+      const p = variantes[idx];
+
+      const imgsArr = (p.imgs && p.imgs.length) ? p.imgs : (p.img ? [p.img] : []);
+      const imgEl = document.getElementById(`galImg-${key}`);
+      if (imgEl && imgEl.tagName === 'IMG') imgEl.src = imgsArr[0] || '';
+
+      document.getElementById(`galColor-${key}`).textContent = `Color: ${p.color}`;
+
+      const precioText = (p.precio !== null && p.precio !== undefined)
+        ? `$${Number(p.precio).toLocaleString('es-MX', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} MXN`
+        : 'Consultar precio';
+      document.getElementById(`galPrice-${key}`).textContent = precioText;
+
+      let stockBadge = '';
+      let agotado = false;
+      if (p.unidades !== null && p.unidades !== undefined) {
+        agotado = p.unidades <= 0;
+        stockBadge = !agotado
+          ? `<span class="text-[9px] font-bold text-brand-teal">${p.unidades} disponibles</span>`
+          : `<span class="text-[9px] font-bold text-red-400">Agotado</span>`;
+      }
+      document.getElementById(`galStock-${key}`).innerHTML = stockBadge;
+
+      document.getElementById(`galTratamientos-${key}`).innerHTML = (p.tratamientos && p.tratamientos.length)
+        ? `<div class="flex flex-wrap gap-1 mb-3">${p.tratamientos.map(t => `<span class="text-[8px] font-bold uppercase tracking-wide text-brand-teal bg-brand-teal/10 px-2 py-0.5 rounded-full">${escapeHtml(t)}</span>`).join('')}</div>`
+        : '<div class="mb-1"></div>';
+
+      const cartWrap = document.getElementById(`galCartWrap-${key}`);
+      const addBtn = document.getElementById(`galAddBtn-${key}`);
+      if (agotado) {
+        if (addBtn) addBtn.remove();
+      } else if (addBtn) {
+        addBtn.setAttribute('onclick', `addToCart('${p.id}')`);
+      } else {
+        cartWrap.insertAdjacentHTML('afterbegin', `<button onclick="addToCart('${p.id}')" id="galAddBtn-${key}" class="flex items-center justify-center gap-2 text-[10px] font-bold uppercase tracking-widest text-brand-ink bg-gradient-to-r from-brand-sky to-brand-teal rounded-full py-2.5 transition-all duration-300 hover:shadow-lg hover:shadow-brand-sky/30">🛒 Agregar al carrito</button>`);
+      }
+
+      document.querySelectorAll(`.gal-swatch-${key}`).forEach((el, i) => {
+        el.classList.toggle('border-brand-sky', i === idx);
+        el.classList.toggle('border-slate-900/10', i !== idx);
+      });
     }
 
     let galleryActiveCategory = 'all';
@@ -3485,19 +3672,33 @@
 
     loadComments();
 
-    // Stop camera if user navigates away from the section to save battery/privacy
-    document.addEventListener('visibilitychange', () => {
-      if (document.hidden && tryonStream) {
-        tryonStream.getTracks().forEach(t => t.stop());
-        tryonStream = null;
-        tryonVideo.srcObject = null;
-        document.getElementById('tryonCaptureBtn').classList.add('hidden');
-        document.getElementById('tryonCaptureBtn').classList.remove('flex');
-        if (tryonRafId) {
-          cancelAnimationFrame(tryonRafId);
-          tryonRafId = null;
-        }
+    // Detiene la cámara y regresa la pantalla de "Activar Cámara", ya sea porque el
+    // usuario cambió de pestaña/apagó la pantalla, o porque el sistema operativo
+    // cortó la cámara por su cuenta (algo común en celulares tras estar inactivos).
+    function stopTryOn() {
+      if (!tryonStream) return;
+      tryonStream.getTracks().forEach(t => t.stop());
+      tryonStream = null;
+      tryonVideo.srcObject = null;
+      tryonVideo.classList.add('hidden');
+      tryonCanvas.classList.add('hidden');
+      document.getElementById('tryonLiveBadge').classList.add('hidden');
+      document.getElementById('tryonLiveBadge').classList.remove('flex');
+      document.getElementById('tryonNoFaceHint').classList.add('hidden');
+      document.getElementById('tryonCaptureBtn').classList.add('hidden');
+      document.getElementById('tryonCaptureBtn').classList.remove('flex');
+      document.getElementById('tryonIdle').classList.remove('hidden');
+      if (tryonRafId) {
+        cancelAnimationFrame(tryonRafId);
+        tryonRafId = null;
       }
+    }
+
+    // Stop camera if user navigates away from the section to save battery/privacy,
+    // and restore the "Activar Cámara" idle screen so the user isn't stuck looking
+    // at a frozen/black video when they come back — they just tap the button again.
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) stopTryOn();
     });
 
     // Take a snapshot combining the live video frame + the drawn lens overlay,
@@ -4601,6 +4802,7 @@
               ${p.examen ? `<p><strong class="text-brand-ink">Examen a domicilio:</strong> ${p.examen.personas} persona${p.examen.personas > 1 ? 's' : ''} — Subtotal $${Number(p.examen.subtotal).toFixed(2)} + Traslado $${Number(p.examen.traslado).toFixed(2)}${p.examen.bono > 0 ? ` − Bonificación $${Number(p.examen.bono).toFixed(2)}` : ''} = <strong>$${Number(p.examen.total).toFixed(2)}</strong></p>` : ''}
               ${p.examen?.fecha ? `<p><strong class="text-brand-ink">Fecha y hora:</strong> ${p.examen.fecha} ${p.examen.hora || ''}</p>` : ''}
               ${p.examen?.direccion ? `<p><strong class="text-brand-ink">Dirección:</strong> ${p.examen.direccion}</p>` : ''}
+              ${(p.examen?.armazonesElegidos && p.examen.armazonesElegidos.length) ? `<p><strong class="text-brand-ink">Armazones para probarse:</strong> ${p.examen.armazonesElegidos.map(a => `${a.modelo} (${a.color})`).join(', ')}</p>` : ''}
               ${p.notas ? `<p><strong class="text-brand-ink">Notas:</strong> ${p.notas}</p>` : ''}
             </div>
             <div class="flex flex-wrap items-center gap-3">
@@ -4977,6 +5179,79 @@
       return `${diaTexto.charAt(0).toUpperCase() + diaTexto.slice(1)} — ${slot.hora}`;
     }
 
+    let checkoutArmazonesCache = [];
+    let checkoutArmazonesSeleccionados = [];
+
+    async function loadCheckoutArmazonesPicker() {
+      const loading = document.getElementById('checkoutArmazonesLoading');
+      const grid = document.getElementById('checkoutArmazonesGrid');
+      loading.classList.remove('hidden');
+      grid.classList.add('hidden');
+      try {
+        const fb = await window.firebaseReady;
+        checkoutArmazonesCache = (await fb.fetchProducts()).filter(p => !p.oculto && !p.esKids);
+        loading.classList.add('hidden');
+        grid.classList.remove('hidden');
+
+        if (checkoutArmazonesCache.length === 0) {
+          grid.innerHTML = '<p class="col-span-full text-[11px] text-slate-500 italic">Aún no hay armazones publicados.</p>';
+          return;
+        }
+
+        grid.innerHTML = checkoutArmazonesCache.map(p => {
+          const imgsArr = (p.imgs && p.imgs.length) ? p.imgs : (p.img ? [p.img] : []);
+          const imgTag = imgsArr.length
+            ? `<img src="${imgsArr[0]}" class="w-full h-full object-cover">`
+            : `<div class="w-full h-full flex items-center justify-center text-xl">🕶️</div>`;
+          return `
+            <button type="button" onclick="toggleCheckoutArmazon('${p.id}')" id="checkoutArmazon-${p.id}" class="checkout-armazon-btn relative rounded-xl overflow-hidden border-2 border-slate-900/10 bg-brand-dark aspect-square">
+              ${imgTag}
+              <span class="checkout-armazon-check hidden absolute inset-0 bg-brand-sky/40 items-center justify-center text-lg">✓</span>
+              <span class="absolute bottom-0 inset-x-0 bg-brand-navy/85 text-[8px] text-brand-ink font-bold px-1 py-0.5 truncate">${escapeHtml(p.modelo)}</span>
+            </button>
+          `;
+        }).join('');
+        updateCheckoutArmazonesCount();
+      } catch (e) {
+        console.error('Error al cargar armazones para elegir:', e);
+        loading.textContent = 'No se pudieron cargar los armazones.';
+      }
+    }
+
+    function toggleCheckoutArmazon(id) {
+      const btn = document.getElementById(`checkoutArmazon-${id}`);
+      const check = btn.querySelector('.checkout-armazon-check');
+      const idx = checkoutArmazonesSeleccionados.indexOf(id);
+
+      if (idx >= 0) {
+        checkoutArmazonesSeleccionados.splice(idx, 1);
+        btn.classList.remove('border-brand-sky');
+        btn.classList.add('border-slate-900/10');
+        check.classList.add('hidden');
+        check.classList.remove('flex');
+      } else {
+        if (checkoutArmazonesSeleccionados.length >= 5) {
+          document.getElementById('checkoutArmazonesStatus').textContent = 'Máximo 5 armazones. Quite alguno para elegir otro.';
+          return;
+        }
+        checkoutArmazonesSeleccionados.push(id);
+        btn.classList.add('border-brand-sky');
+        btn.classList.remove('border-slate-900/10');
+        check.classList.remove('hidden');
+        check.classList.add('flex');
+      }
+      updateCheckoutArmazonesCount();
+    }
+
+    function updateCheckoutArmazonesCount() {
+      const n = checkoutArmazonesSeleccionados.length;
+      document.getElementById('checkoutArmazonesCount').textContent = `(${n} elegido${n === 1 ? '' : 's'})`;
+      const status = document.getElementById('checkoutArmazonesStatus');
+      if (status.textContent.includes('Máximo')) return;
+      status.textContent = n < 3 ? `Elija al menos ${3 - n} más (mínimo 3).` : '';
+      status.className = n < 3 ? 'text-[10px] text-amber-500 mb-3' : 'text-[10px] text-brand-teal mb-3';
+    }
+
     async function loadCheckoutExamSlots() {
       const select = document.getElementById('checkoutExamenSlot');
       const status = document.getElementById('checkoutSlotStatus');
@@ -5014,6 +5289,7 @@
         recetaWrap.classList.add('hidden');
         updateExamenCostDisplay();
         loadCheckoutExamSlots();
+        loadCheckoutArmazonesPicker();
       } else {
         recetaBtn.classList.add('border-brand-sky', 'text-brand-sky');
         recetaBtn.classList.remove('border-slate-900/10', 'text-slate-500');
@@ -5024,8 +5300,8 @@
       }
     }
 
-    async function startCheckout() {
-      if (cart.length === 0) return;
+    async function startCheckout(forceExamen) {
+      if (cart.length === 0 && !forceExamen) return;
       closeCartDrawer();
 
       // Prefill contact fields if the customer is logged in
@@ -5039,7 +5315,7 @@
         }
       } catch (e) { /* guest checkout, no problem */ }
 
-      setCheckoutTipo('receta');
+      setCheckoutTipo(forceExamen ? 'examen' : 'receta');
       setCheckoutMetodo('whatsapp');
       document.getElementById('checkoutReceta').value = '';
       document.getElementById('checkoutExamenPersonas').value = '1';
@@ -5048,6 +5324,8 @@
       document.getElementById('checkoutGeoStatus').textContent = '';
       document.getElementById('checkoutSlotStatus').textContent = '';
       document.getElementById('checkoutStatus').textContent = '';
+      checkoutArmazonesSeleccionados = [];
+      document.getElementById('checkoutArmazonesStatus').textContent = '';
       openModal('checkoutModal');
     }
 
@@ -5082,6 +5360,10 @@
           status.textContent = 'Elija una fecha y horario disponible.';
           return;
         }
+        if (checkoutArmazonesSeleccionados.length < 3 || checkoutArmazonesSeleccionados.length > 5) {
+          status.textContent = 'Elija entre 3 y 5 armazones para probarse el día de la visita.';
+          return;
+        }
       }
 
       btn.disabled = true;
@@ -5113,6 +5395,13 @@
         }
 
         const user = fb.getCurrentUser();
+        const armazonesElegidos = checkoutTipo === 'examen'
+          ? checkoutArmazonesSeleccionados.map(id => {
+              const p = checkoutArmazonesCache.find(item => item.id === id);
+              return p ? { modelo: p.modelo, color: p.color, img: (p.imgs && p.imgs[0]) || p.img || null } : null;
+            }).filter(Boolean)
+          : [];
+
         await fb.addOrder({
           cliente: nombre,
           telefono,
@@ -5128,7 +5417,8 @@
             total: examen.total,
             direccion,
             fecha: chosenSlot ? chosenSlot.fecha : null,
-            hora: chosenSlot ? chosenSlot.hora : null
+            hora: chosenSlot ? chosenSlot.hora : null,
+            armazonesElegidos
           } : null,
           precio: total,
           estadoPago: 'pendiente',
@@ -5147,6 +5437,7 @@
           msg += `%0ATotal examen: $${examen.total.toFixed(2)}`;
           if (chosenSlot) msg += `%0AFecha y hora: ${chosenSlot.fecha} ${chosenSlot.hora}`;
           msg += `%0ADirección: ${direccion}`;
+          if (armazonesElegidos.length) msg += `%0AArmazones para probarse ese día: ${armazonesElegidos.map(a => `${a.modelo} (${a.color})`).join(', ')}`;
         }
         msg += `%0A%0ATotal general estimado: $${total.toFixed(2)} MXN%0A%0ANombre: ${nombre}%0ATeléfono: ${telefono}`;
 
@@ -5486,8 +5777,15 @@
         name,
         img: imgUrl,
         storagePath: null,
+        escala: 1,
+        offsetX: 0,
+        offsetY: 0,
         createdAt: serverTimestamp()
       });
+    }
+
+    async function updateCatalogItemCalib(id, { escala, offsetX, offsetY }) {
+      await updateDoc(doc(db, CATALOG_COLLECTION, id), { escala, offsetX, offsetY });
     }
 
     async function deleteCatalogItem(id, storagePath) {
@@ -5670,6 +5968,14 @@ async function deleteProduct(id, storagePaths) {
     }
 
     async function addOrder(data) {
+      const armazonesElegidos = Array.isArray(data.examen?.armazonesElegidos)
+        ? data.examen.armazonesElegidos.slice(0, 5).map(a => ({
+            modelo: String(a.modelo || '').slice(0, 120),
+            color: String(a.color || '').slice(0, 80),
+            img: a.img || null
+          }))
+        : [];
+
       const examen = data.examen ? {
         personas: Number(data.examen.personas) || 1,
         subtotal: Number(data.examen.subtotal) || 0,
@@ -5678,7 +5984,8 @@ async function deleteProduct(id, storagePaths) {
         total: Number(data.examen.total) || 0,
         direccion: String(data.examen.direccion || '').slice(0, 300),
         fecha: data.examen.fecha || null,
-        hora: data.examen.hora || null
+        hora: data.examen.hora || null,
+        armazonesElegidos
       } : null;
 
       await addDoc(collection(db, ORDERS_COLLECTION), {
@@ -5816,6 +6123,7 @@ async function deleteProduct(id, storagePaths) {
     window.__resolveFirebaseReady({
       fetchCatalog,
       addCatalogItem,
+      updateCatalogItemCalib,
       deleteCatalogItem,
       fetchComments,
       addComment,
