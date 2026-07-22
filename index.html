@@ -224,7 +224,7 @@
       <div class="flex items-center justify-between bg-brand-dark/30 backdrop-blur-xl border border-slate-900/5 pl-4 pr-5 sm:px-6 lg:px-8 py-2.5 sm:py-4 rounded-[28px] sm:rounded-full shadow-2xl transition-all duration-500" id="navContainer">
         
         <!-- Logo -->
-        <a href="#" class="flex items-center gap-2 sm:gap-3 group focus:outline-none min-w-0">
+        <a href="#" class="flex items-center gap-2 sm:gap-3 group focus:outline-none flex-shrink-0">
           <div class="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-tr from-brand-sky to-brand-teal rounded-xl flex items-center justify-center shadow-lg shadow-brand-sky/20 group-hover:scale-105 transition-all duration-300 flex-shrink-0">
             <svg class="w-4 h-4 sm:w-5 sm:h-5 text-brand-ink" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
@@ -238,7 +238,7 @@
         </a>
 
         <!-- Desktop Navigation Pill links -->
-        <nav class="hidden lg:flex items-center gap-8">
+        <nav class="hidden xl:flex items-center gap-6 flex-shrink-0">
           <a href="#about" class="text-xs font-semibold text-slate-600 hover:text-brand-sky transition-colors tracking-wider uppercase">Nosotros</a>
           <a href="#test" class="text-xs font-semibold text-slate-600 hover:text-brand-sky transition-colors tracking-wider uppercase">Autodiagnóstico</a>
           <a href="#simulator" class="text-xs font-semibold text-slate-600 hover:text-brand-sky transition-colors tracking-wider uppercase">Pruébatelos</a>
@@ -250,23 +250,24 @@
         </nav>
 
         <!-- CTA & Hamburger -->
-        <div class="flex items-center gap-1 sm:gap-4 flex-shrink-0">
-          <button onclick="openAccountModal()" id="navAccountBtn" class="hidden lg:flex items-center gap-1.5 text-slate-500 hover:text-brand-ink text-xs font-bold" title="Mi cuenta">
+        <div class="flex items-center gap-1 sm:gap-4 min-w-0">
+          <button onclick="openAccountModal()" id="navAccountBtn" class="hidden xl:flex items-center gap-1.5 text-slate-500 hover:text-brand-ink text-xs font-bold flex-shrink-0" title="Mi cuenta">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
             <span id="navAccountLabel">Mi Cuenta</span>
           </button>
 
-          <button onclick="openCartDrawer()" class="relative p-1 sm:p-2 text-slate-500 hover:text-brand-ink" title="Carrito">
+          <button onclick="openCartDrawer()" class="relative p-1 sm:p-2 text-slate-500 hover:text-brand-ink flex-shrink-0" title="Carrito">
             <svg class="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
             <span id="cartBadge" class="hidden absolute -top-0.5 -right-0.5 sm:-top-1 sm:-right-1 bg-brand-coral text-white text-[8px] sm:text-[9px] font-extrabold w-[16px] h-[16px] sm:w-[18px] sm:h-[18px] rounded-full items-center justify-center">0</span>
           </button>
 
-          <a href="#contact" class="hidden sm:inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest bg-gradient-to-r from-brand-sky to-brand-teal hover:from-brand-sky/90 hover:to-brand-teal/90 text-brand-ink py-3 px-6 rounded-full transition-all hover:shadow-lg hover:shadow-brand-sky/35 transform hover:-translate-y-0.5">
-            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
-            Cotizar Campaña
+          <a href="#contact" class="hidden sm:inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest bg-gradient-to-r from-brand-sky to-brand-teal hover:from-brand-sky/90 hover:to-brand-teal/90 text-brand-ink py-3 px-4 lg:px-6 rounded-full transition-all hover:shadow-lg hover:shadow-brand-sky/35 transform hover:-translate-y-0.5 whitespace-nowrap min-w-0">
+            <svg class="w-3.5 h-3.5 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+            <span class="hidden lg:inline">Cotizar Campaña</span>
+            <span class="lg:hidden">Cotizar</span>
           </a>
           
-          <button id="menuToggle" class="lg:hidden p-1 sm:p-2.5 rounded-full text-slate-600 hover:text-brand-ink hover:bg-slate-900/5 transition-all" aria-label="Abrir menú">
+          <button id="menuToggle" class="xl:hidden p-1 sm:p-2.5 rounded-full text-slate-600 hover:text-brand-ink hover:bg-slate-900/5 transition-all flex-shrink-0" aria-label="Abrir menú">
             <svg class="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16m-7 6h7"/>
             </svg>
@@ -368,28 +369,10 @@
           </a>
         </div>
 
-        <!-- Mini social proof strip -->
-        <div class="flex flex-wrap items-center justify-center gap-x-10 gap-y-4" data-aos="fade-up" data-aos-delay="400">
-          <div class="flex items-center gap-3">
-            <span class="font-display font-extrabold text-2xl text-brand-ink"><span class="counter" data-target="100">0</span><span class="text-brand-sky">+</span></span>
-            <span class="text-[11px] text-slate-500 font-semibold uppercase tracking-wide leading-tight text-left">Empresas<br>aliadas</span>
-          </div>
-          <div class="w-px h-8 bg-slate-900/8 hidden sm:block"></div>
-          <div class="flex items-center gap-3">
-            <span class="font-display font-extrabold text-2xl text-brand-ink"><span class="counter" data-target="10000">0</span><span class="text-brand-sky">+</span></span>
-            <span class="text-[11px] text-slate-500 font-semibold uppercase tracking-wide leading-tight text-left">Diagnósticos<br>en sitio</span>
-          </div>
-          <div class="w-px h-8 bg-slate-900/8 hidden sm:block"></div>
-          <div class="flex items-center gap-3">
-            <span class="font-display font-extrabold text-2xl text-brand-ink"><span class="counter" data-target="98">0</span><span class="text-brand-sky">%</span></span>
-            <span class="text-[11px] text-slate-500 font-semibold uppercase tracking-wide leading-tight text-left">Satisfacción<br>total</span>
-          </div>
-        </div>
-
+        <!-- Downward scroll mouse element (moved up to sit right after the CTA buttons) -->
       </div>
     </div>
 
-    <!-- Downward scroll mouse element -->
     <a href="#about" class="absolute bottom-4 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-[9px] uppercase font-bold tracking-widest text-slate-500 hover:text-brand-ink transition-colors">
       <span class="w-5 h-8 border-2 border-slate-900/15 rounded-full flex justify-center pt-1.5">
         <span class="w-1 h-1.5 bg-brand-sky rounded-full animate-bounce"></span>
@@ -635,42 +618,50 @@
       <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
         
         <!-- Large Card (2/3 width) -->
-        <div class="md:col-span-2 bg-gradient-to-br from-brand-mid to-brand-navy bento-card p-8 lg:p-12 rounded-3xl flex flex-col justify-between overflow-hidden relative group min-h-[400px]" data-aos="fade-up">
-          <div class="absolute inset-0 bg-cover bg-center opacity-10 group-hover:scale-105 transition-transform duration-700" style="background-image: url('https://raw.githubusercontent.com/VISIONEKA/Vision-Eka/main/ChatGPT%20Image%2021%20jul%202026%2C%2021_59_14.png')"></div>
-          
-          <div class="relative z-10">
-            <div class="w-12 h-12 rounded-2xl bg-brand-sky/10 border border-brand-sky/20 flex items-center justify-center text-brand-sky text-2xl mb-8">
-              <svg class="w-6 h-6 text-brand-sky" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 17a2 2 0 11-4 0 2 2 0 014 0zm10 0a2 2 0 11-4 0 2 2 0 014 0zm-2 1v-4h3m-10 4h3m-9 0h1M1 4h12v10H1V4zm12 5h8v5h-8V9z"/></svg>
-            </div>
-            <h3 class="font-display font-bold text-2xl text-brand-ink mb-4">Clínica Móvil</h3>
-            <p class="text-slate-500 text-sm max-w-xl leading-relaxed">
-              No somos una óptica tradicional. Convertimos cualquier sala o espacio asignado de su empresa en una clínica diagnóstica oftálmica avanzada con equipo de optometría preciso.
-            </p>
+        <div class="md:col-span-2 bg-gradient-to-br from-brand-mid to-brand-navy bento-card rounded-3xl flex flex-col overflow-hidden group" data-aos="fade-up">
+          <div class="h-48 sm:h-56 overflow-hidden relative flex-shrink-0">
+            <img src="https://raw.githubusercontent.com/VISIONEKA/Vision-Eka/main/ChatGPT%20Image%2021%20jul%202026%2C%2021_59_14.png" alt="Clínica óptica móvil en planta" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
           </div>
 
-          <div class="relative z-10 pt-8 mt-auto border-t border-slate-900/5 flex flex-wrap gap-2">
-            <span class="text-[9px] font-extrabold tracking-widest uppercase bg-brand-light/50 px-3.5 py-1.5 rounded-full text-slate-600">Equipo de Diagnóstico</span>
-            <span class="text-[9px] font-extrabold tracking-widest uppercase bg-brand-light/50 px-3.5 py-1.5 rounded-full text-slate-600">Retinoscopio</span>
-            <span class="text-[9px] font-extrabold tracking-widest uppercase bg-brand-light/50 px-3.5 py-1.5 rounded-full text-slate-600">Caja de Prueba</span>
-            <span class="text-[9px] font-extrabold tracking-widest uppercase bg-brand-light/50 px-3.5 py-1.5 rounded-full text-slate-600">Montaje Exprés</span>
+          <div class="p-8 lg:p-10 flex flex-col flex-grow justify-between">
+            <div>
+              <div class="w-12 h-12 rounded-2xl bg-brand-sky/10 border border-brand-sky/20 flex items-center justify-center text-brand-sky text-2xl mb-6">
+                <svg class="w-6 h-6 text-brand-sky" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 17a2 2 0 11-4 0 2 2 0 014 0zm10 0a2 2 0 11-4 0 2 2 0 014 0zm-2 1v-4h3m-10 4h3m-9 0h1M1 4h12v10H1V4zm12 5h8v5h-8V9z"/></svg>
+              </div>
+              <h3 class="font-display font-bold text-2xl text-brand-ink mb-4">Clínica Móvil</h3>
+              <p class="text-slate-500 text-sm max-w-xl leading-relaxed">
+                No somos una óptica tradicional. Convertimos cualquier sala o espacio asignado de su empresa en una clínica diagnóstica oftálmica avanzada con equipo de optometría preciso.
+              </p>
+            </div>
+
+            <div class="pt-8 mt-8 border-t border-slate-900/5 flex flex-wrap gap-2">
+              <span class="text-[9px] font-extrabold tracking-widest uppercase bg-brand-light/50 px-3.5 py-1.5 rounded-full text-slate-600">Equipo de Diagnóstico</span>
+              <span class="text-[9px] font-extrabold tracking-widest uppercase bg-brand-light/50 px-3.5 py-1.5 rounded-full text-slate-600">Retinoscopio</span>
+              <span class="text-[9px] font-extrabold tracking-widest uppercase bg-brand-light/50 px-3.5 py-1.5 rounded-full text-slate-600">Caja de Prueba</span>
+              <span class="text-[9px] font-extrabold tracking-widest uppercase bg-brand-light/50 px-3.5 py-1.5 rounded-full text-slate-600">Montaje Exprés</span>
+            </div>
           </div>
         </div>
 
         <!-- Square Card (1/3 width) -->
-        <div class="bg-gradient-to-br from-brand-mid to-brand-navy bento-card p-8 rounded-3xl flex flex-col justify-between min-h-[400px] relative overflow-hidden group" data-aos="fade-up" data-aos-delay="100">
-          <div class="absolute inset-0 bg-cover bg-center opacity-10 group-hover:scale-105 transition-transform duration-700" style="background-image: url('https://raw.githubusercontent.com/VISIONEKA/Vision-Eka/main/ChatGPT%20Image%2021%20jul%202026%2C%2022_31_25.png')"></div>
-          <div class="relative z-10">
-            <div class="w-12 h-12 rounded-2xl bg-brand-teal/10 border border-brand-teal/20 flex items-center justify-center text-brand-teal text-2xl mb-8">
-              <svg class="w-6 h-6 text-brand-teal" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138z"/></svg>
-            </div>
-            <h3 class="font-display font-bold text-xl text-brand-ink mb-4">Normas STPS & ANSI</h3>
-            <p class="text-slate-500 text-xs leading-relaxed">
-              Suministramos armazones industriales certificados de alto impacto bajo la normativa NOM-017-STPS y el estándar internacional ANSI Z87.1, garantizando protección real.
-            </p>
+        <div class="bg-gradient-to-br from-brand-mid to-brand-navy bento-card rounded-3xl flex flex-col overflow-hidden group" data-aos="fade-up" data-aos-delay="100">
+          <div class="h-40 overflow-hidden relative flex-shrink-0">
+            <img src="https://raw.githubusercontent.com/VISIONEKA/Vision-Eka/main/ChatGPT%20Image%2021%20jul%202026%2C%2022_31_25.png" alt="Normas STPS y ANSI para protección industrial" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
           </div>
-          <div class="relative z-10 pt-6 border-t border-slate-900/5">
-            <span class="text-[9px] font-extrabold tracking-widest uppercase text-brand-teal block mb-1">Cero Fricciones</span>
-            <p class="text-[10px] text-slate-600/80">Reportes de aptitud visual individual para el expediente médico de cada operario.</p>
+          <div class="p-8 flex flex-col flex-grow justify-between">
+            <div>
+              <div class="w-12 h-12 rounded-2xl bg-brand-teal/10 border border-brand-teal/20 flex items-center justify-center text-brand-teal text-2xl mb-6">
+                <svg class="w-6 h-6 text-brand-teal" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138z"/></svg>
+              </div>
+              <h3 class="font-display font-bold text-xl text-brand-ink mb-4">Normas STPS & ANSI</h3>
+              <p class="text-slate-500 text-xs leading-relaxed">
+                Suministramos armazones industriales certificados de alto impacto bajo la normativa NOM-017-STPS y el estándar internacional ANSI Z87.1, garantizando protección real.
+              </p>
+            </div>
+            <div class="pt-6 mt-6 border-t border-slate-900/5">
+              <span class="text-[9px] font-extrabold tracking-widest uppercase text-brand-teal block mb-1">Cero Fricciones</span>
+              <p class="text-[10px] text-slate-600/80">Reportes de aptitud visual individual para el expediente médico de cada operario.</p>
+            </div>
           </div>
         </div>
 
@@ -848,7 +839,7 @@
 
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8 text-center px-4">
           <div class="p-5 rounded-2xl bg-brand-dark/40 border border-slate-900/5">
-            <span class="block text-brand-sky font-extrabold text-xs uppercase tracking-widest mb-2">Protección Blue-Free</span>
+            <span class="block text-brand-sky font-extrabold text-xs uppercase tracking-widest mb-2">Protección Blu Ray</span>
             <p class="text-xs text-slate-500">Bloquea la luz ultravioleta y de alta energía emitida por computadoras y pantallas.</p>
           </div>
           <div class="p-5 rounded-2xl bg-brand-dark/40 border border-slate-900/5">
@@ -969,7 +960,7 @@
           <!-- Service Card 2 -->
           <div class="rounded-3xl border border-slate-900/5 bg-brand-navy/60 overflow-hidden flex flex-col group hover:border-brand-teal/20 transition-all duration-500" data-aos="fade-up" data-aos-delay="100">
             <div class="h-64 overflow-hidden relative">
-              <img src="https://images.unsplash.com/photo-1504439904031-93ded9f93e4e?w=800&q=80" alt="Lentes de seguridad graduados" class="w-full h-full object-cover group-hover:scale-105 transition-all duration-700">
+              <img src="https://raw.githubusercontent.com/VISIONEKA/Vision-Eka/main/ChatGPT%20Image%2021%20jul%202026%2C%2022_50_47.png" alt="Lentes de seguridad graduados" class="w-full h-full object-cover group-hover:scale-105 transition-all duration-700">
               <div class="absolute inset-0 bg-gradient-to-t from-brand-navy via-transparent to-transparent"></div>
               <span class="absolute top-4 left-4 bg-brand-teal text-brand-ink text-[9px] font-extrabold tracking-widest uppercase py-1 px-3.5 rounded-full">CERTIFICADO</span>
             </div>
@@ -1052,7 +1043,7 @@
             </div>
             <div class="flex items-start gap-4">
               <div class="w-6 h-6 rounded-full bg-brand-teal/10 flex items-center justify-center text-brand-teal text-xs mt-1">✔</div>
-              <p class="text-xs text-slate-500 leading-relaxed"><strong class="text-brand-ink block">Equipamiento Avanzado</strong> Llevamos auto-refractómetro digital, caja de pruebas clínicas y un stock completo de armazones.</p>
+              <p class="text-xs text-slate-500 leading-relaxed"><strong class="text-brand-ink block">Equipo Completo</strong> Llevamos instrumental profesional de diagnóstico, caja de pruebas clínicas y un stock completo de armazones.</p>
             </div>
           </div>
         </div>
@@ -1128,7 +1119,7 @@
             ★★★★★
           </div>
           <p class="text-xs text-slate-600 italic leading-relaxed mb-8">
-            "La campaña móvil en nuestras instalaciones superó todas las expectativas de Seguridad Industrial. Evaluaron a más de 180 operadores de planta y entregaron lentes graduados certificados de forma óptima. Cumplimos con la STPS sin detener la producción."
+            "La campaña que hicieron en la planta nos dejó muy contentos. Revisaron a más de 180 operadores y les entregaron sus lentes graduados certificados sin ningún contratiempo. Y lo mejor: no paramos la línea de producción ni un minuto."
           </p>
           <div class="mt-auto flex items-center gap-4 pt-6 border-t border-slate-900/5">
             <div class="w-10 h-10 rounded-full bg-brand-sky/20 flex items-center justify-center font-bold text-brand-sky text-xs">
@@ -1147,7 +1138,7 @@
             ★★★★★
           </div>
           <p class="text-xs text-slate-600 italic leading-relaxed mb-8">
-            "Visión EKA es nuestra aliada estratégica en bienestar laboral. Llevamos 3 años coordinando campañas anuales para personal administrativo y de logística. La formalidad médica de la Lic. Erika y su capacidad organizativa son extraordinarias."
+            "Ya llevamos tres años trabajando con Visión EKA en las campañas anuales de nuestro personal administrativo y de logística. Se nota que la Lic. Erika y su equipo saben lo que hacen: siempre puntuales, organizados y muy profesionales."
           </p>
           <div class="mt-auto flex items-center gap-4 pt-6 border-t border-slate-900/5">
             <div class="w-10 h-10 rounded-full bg-brand-teal/20 flex items-center justify-center font-bold text-brand-teal text-xs">
@@ -1166,7 +1157,7 @@
             ★★★★★
           </div>
           <p class="text-xs text-slate-600 italic leading-relaxed mb-8">
-            "Excelente servicio médico y de atención al paciente. Explicación minuciosa de cada padecimiento, lentes listos en tiempo récord con tratamientos premium. Llevé a toda mi familia con ellos."
+            "Me atendieron increíble, me explicaron todo con calma y sin prisas. Mis lentes estuvieron listos rapidísimo y con muy buena calidad. Llevé a toda mi familia con ellos y todos salimos contentos."
           </p>
           <div class="mt-auto flex items-center gap-4 pt-6 border-t border-slate-900/5">
             <div class="w-10 h-10 rounded-full bg-brand-sky/20 flex items-center justify-center font-bold text-brand-sky text-xs">
@@ -1300,7 +1291,7 @@
           <span class="text-brand-sky font-bold text-xs tracking-widest uppercase mb-3 block">Agende su Visita</span>
           <h2 class="font-display font-bold text-3xl sm:text-4xl tracking-tight text-brand-ink mb-6">Para empresas y para uso diario</h2>
           <p class="text-slate-600 text-sm leading-relaxed mb-8">
-            Ya sea que busque una campaña de salud visual para su equipo o simplemente quiera agendar su propio examen, cuéntenos qué necesita y la Lic. Erika Quijada le contactará personalmente.
+            Ya sea que busque una campaña de salud visual para su equipo o simplemente quiera agendar su propio examen, cuéntenos qué necesita y nuestro equipo se pondrá en contacto con usted.
           </p>
 
           <div class="flex flex-col gap-6 mb-8">
@@ -1310,14 +1301,6 @@
               <div>
                 <span class="block text-[9px] uppercase tracking-widest text-slate-500 font-extrabold mb-0.5">Teléfono Directo</span>
                 <span class="block text-slate-700 text-sm font-semibold">442 129 5277</span>
-              </div>
-            </div>
-
-            <div class="flex items-start gap-4">
-              <div class="w-10 h-10 rounded-xl bg-brand-dark border border-slate-900/5 flex items-center justify-center text-brand-sky">📍</div>
-              <div>
-                <span class="block text-[9px] uppercase tracking-widest text-slate-500 font-extrabold mb-0.5">Ubicación</span>
-                <span class="block text-slate-700 text-sm font-semibold">Plaza El Manantial, Local 10, Blvd. Metropolitano, Corregidora, Qro.</span>
               </div>
             </div>
 
@@ -1335,23 +1318,8 @@
             </button>
           </div>
 
-          <!-- Maps Concept Card -->
-          <div class="rounded-3xl overflow-hidden border border-slate-900/5 bg-brand-dark p-5 flex flex-col gap-3">
-            <span class="text-[9px] uppercase font-extrabold tracking-widest text-slate-500">Ubicación y Cobertura</span>
-            <span class="text-xs text-brand-sky font-semibold">✓ Servicio en todo Querétaro y Parques Industriales</span>
-            <div class="text-center">
-              <span class="text-[10px] text-slate-500 block leading-relaxed mb-3">Plaza El Manantial, Local 10, Blvd. Metropolitano, Corregidora, Qro.</span>
-            </div>
-            <div class="w-full h-48 sm:h-56 rounded-2xl overflow-hidden border border-slate-900/5">
-              <iframe
-                src="https://www.google.com/maps?q=20.505998,-100.401669&z=15&output=embed"
-                class="w-full h-full border-0"
-                loading="lazy"
-                referrerpolicy="no-referrer-when-downgrade"
-                title="Ubicación de Visión EKA en Plaza El Manantial, Corregidora">
-              </iframe>
-            </div>
-            <a href="https://www.google.com/maps?q=20.505998,-100.401669" target="_blank" class="text-[10px] text-brand-sky font-bold text-center hover:text-brand-teal">Abrir en Google Maps →</a>
+          <div class="flex items-center gap-2 text-xs text-brand-sky font-semibold">
+            <span>✓</span> Servicio en todo Querétaro y Parques Industriales
           </div>
 
         </div>
@@ -2103,6 +2071,10 @@
               <input type="number" min="0" step="0.01" id="adminPedidoPrecio" placeholder="Ej. 1780.00" class="w-full p-3.5 bg-brand-dark border border-slate-900/10 rounded-xl text-sm text-brand-ink focus:border-brand-sky focus:outline-none">
             </div>
             <div>
+              <label class="block text-[9px] uppercase tracking-widest text-slate-500 font-extrabold mb-2">Anticipo recibido <span class="normal-case text-slate-600/70 font-medium">(opcional)</span></label>
+              <input type="number" min="0" step="0.01" id="adminPedidoAnticipo" placeholder="Ej. 500.00" class="w-full p-3.5 bg-brand-dark border border-slate-900/10 rounded-xl text-sm text-brand-ink focus:border-brand-sky focus:outline-none">
+            </div>
+            <div>
               <label class="block text-[9px] uppercase tracking-widest text-slate-500 font-extrabold mb-2">Estatus de pago</label>
               <select id="adminPedidoEstadoPago" class="w-full p-3.5 bg-brand-dark border border-slate-900/10 rounded-xl text-sm text-brand-ink focus:border-brand-sky focus:outline-none">
                 <option value="pendiente" selected>Pendiente</option>
@@ -2374,22 +2346,38 @@
       offset: 40
     });
 
-    // ---- Sticky Pill Navigation Transition ----
+    // ---- Sticky Pill Navigation: fades toward transparent the further you scroll ----
     const navbar = document.getElementById('navbar');
     const navContainer = document.getElementById('navContainer');
-    window.addEventListener('scroll', () => {
-      if (window.scrollY > 50) {
+    navContainer.classList.remove('bg-brand-dark/30');
+
+    function updateNavOnScroll() {
+      const y = window.scrollY;
+
+      // Compact padding once you start scrolling
+      if (y > 50) {
         navbar.classList.remove('py-6');
         navbar.classList.add('py-4');
-        navContainer.classList.remove('bg-brand-dark/30');
-        navContainer.classList.add('bg-brand-dark/95', 'border-slate-900/10', 'shadow-2xl');
       } else {
         navbar.classList.remove('py-4');
         navbar.classList.add('py-6');
-        navContainer.classList.add('bg-brand-dark/30');
-        navContainer.classList.remove('bg-brand-dark/95', 'border-slate-900/10', 'shadow-2xl');
       }
-    });
+
+      // Smoothly fade the pill background from solid (top) to nearly transparent,
+      // capping out around 320px of scroll so it doesn't disappear completely.
+      const fadeRange = 320;
+      const minOpacity = 0.08;
+      const maxOpacity = 0.92;
+      const progress = Math.min(1, y / fadeRange);
+      const opacity = maxOpacity - (maxOpacity - minOpacity) * progress;
+
+      navContainer.style.backgroundColor = `rgba(247, 250, 252, ${opacity.toFixed(2)})`;
+      navContainer.style.boxShadow = progress > 0.15 ? '' : 'none';
+      navContainer.classList.toggle('shadow-2xl', progress <= 0.6);
+    }
+
+    window.addEventListener('scroll', updateNavOnScroll, { passive: true });
+    updateNavOnScroll(); // set initial state on load
 
     // ---- Drawer Menu Mobile Toggle ----
     const menuToggle = document.getElementById('menuToggle');
@@ -2864,7 +2852,43 @@
       }
     }
 
+    window.__galleryState = window.__galleryState || {};
+
+    function buildGalWrapHtml(key, p) {
+      const imgsArr = (p.imgs && p.imgs.length) ? p.imgs : (p.img ? [p.img] : []);
+      const imgTag = imgsArr.length
+        ? `<img id="galImg-${key}" src="${imgsArr[0]}" alt="${escapeHtml(p.modelo)}" class="w-full h-full object-cover">`
+        : `<div id="galImg-${key}" class="w-full h-full flex items-center justify-center text-4xl">🕶️</div>`;
+      const navArrows = imgsArr.length > 1 ? `
+        <button onclick="event.preventDefault(); galleryPhotoNav('${key}', -1)" class="absolute left-2 top-1/2 -translate-y-1/2 w-7 h-7 rounded-full bg-brand-navy/80 text-brand-ink text-xs flex items-center justify-center">‹</button>
+        <button onclick="event.preventDefault(); galleryPhotoNav('${key}', 1)" class="absolute right-2 top-1/2 -translate-y-1/2 w-7 h-7 rounded-full bg-brand-navy/80 text-brand-ink text-xs flex items-center justify-center">›</button>
+        <span id="galPhotoCount-${key}" class="absolute bottom-2 right-2 bg-brand-navy/80 text-brand-ink text-[9px] font-bold px-2 py-0.5 rounded-full">1/${imgsArr.length}</span>
+      ` : '';
+      return `
+        ${imgTag}
+        ${navArrows}
+        <button onclick="event.preventDefault(); shareProductWhatsapp('${p.id}')" title="Compartir por WhatsApp" class="absolute top-2 right-2 w-8 h-8 rounded-full bg-brand-navy/80 hover:bg-emerald-500 text-brand-ink flex items-center justify-center text-sm transition-colors">
+          <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 448 512"><path d="M380.9 97.1C339 55.1 283.2 32 223.9 32c-122.4 0-222 99.6-222 222 0 39.1 10.2 77.3 29.6 111L0 480l117.7-30.9c32.4 17.7 68.9 27 106.1 27h.1c122.3 0 224.1-99.6 224.1-222 0-59.3-25.2-115-67.1-157zM223.9 431.9c-33.1 0-65.6-8.9-93.9-25.7l-6.7-4-69.8 18.3L72 351.5l-4.4-7c-18.5-29.4-28.2-63.3-28.2-98.2 0-101.7 82.8-184.5 184.6-184.5 49.3 0 95.6 19.2 130.4 54.1 34.8 34.9 56.2 81.2 56.1 130.5 0 101.8-84.9 184.5-186.6 184.5zm101.2-138.2c-5.5-2.8-32.8-16.2-37.9-18-5.1-1.9-8.8-2.8-12.5 2.8-3.7 5.6-14.3 18-17.6 21.8-3.2 3.7-6.5 4.2-12 1.4-32.6-16.3-54-29.1-75.5-66-5.7-9.8 5.7-9.1 16.3-30.3 1.8-3.7.9-6.9-.5-9.7-1.4-2.8-12.5-30.1-17.1-41.2-4.5-10.8-9.1-9.3-12.5-9.5-3.2-.2-6.9-.2-10.6-.2-3.7 0-9.7 1.4-14.8 6.9-5.1 5.6-19.4 19-19.4 46.3 0 27.3 19.9 53.7 22.6 57.4 2.8 3.7 39.1 59.7 94.8 83.8 35.2 15.2 49 16.5 66.6 13.9 10.7-1.6 32.8-13.4 37.4-26.4 4.6-13 4.6-24.1 3.2-26.4-1.3-2.5-5-3.9-10.5-6.6z"/></svg>
+        </button>
+      `;
+    }
+
+    function galleryPhotoNav(key, dir) {
+      const state = window.__galleryState[key];
+      const variantes = window.__galleryGroups[key];
+      if (!state || !variantes) return;
+      const p = variantes[state.selectedIdx];
+      const imgsArr = (p.imgs && p.imgs.length) ? p.imgs : (p.img ? [p.img] : []);
+      if (imgsArr.length <= 1) return;
+      state.photoIdx = (state.photoIdx + dir + imgsArr.length) % imgsArr.length;
+      const imgEl = document.getElementById(`galImg-${key}`);
+      if (imgEl && imgEl.tagName === 'IMG') imgEl.src = imgsArr[state.photoIdx];
+      const counter = document.getElementById(`galPhotoCount-${key}`);
+      if (counter) counter.textContent = `${state.photoIdx + 1}/${imgsArr.length}`;
+    }
+
     function renderGalleryCard(key, variantes, selectedIdx) {
+      window.__galleryState[key] = { selectedIdx, photoIdx: 0 };
       const p = variantes[selectedIdx];
       const precioText = (p.precio !== null && p.precio !== undefined)
         ? `$${Number(p.precio).toLocaleString('es-MX', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} MXN`
@@ -2877,10 +2901,6 @@
           ? `<span class="text-[9px] font-bold text-brand-teal">${p.unidades} disponibles</span>`
           : `<span class="text-[9px] font-bold text-red-400">Agotado</span>`;
       }
-      const imgsArr = (p.imgs && p.imgs.length) ? p.imgs : (p.img ? [p.img] : []);
-      const imgTag = imgsArr.length
-        ? `<img id="galImg-${key}" src="${imgsArr[0]}" alt="${escapeHtml(p.modelo)}" class="w-full h-full object-cover">`
-        : `<div id="galImg-${key}" class="w-full h-full flex items-center justify-center text-4xl">🕶️</div>`;
 
       const searchText = variantes.map(v => `${v.modelo} ${v.color}`).join(' ').toLowerCase();
 
@@ -2898,10 +2918,7 @@
       return `
         <div class="gallery-item rounded-3xl overflow-hidden border border-slate-900/5 bg-brand-dark flex flex-col hover:border-brand-sky/30 hover:-translate-y-2 transition-all duration-300" data-category="${slugifyCategory(p.categoria)}" data-search="${escapeHtml(searchText)}">
          <div class="h-56 relative overflow-hidden bg-slate-900 flex items-center justify-center" id="galWrap-${key}">
-            ${imgTag}
-            <button onclick="event.preventDefault(); shareProductWhatsapp('${p.id}')" title="Compartir por WhatsApp" class="absolute top-2 right-2 w-8 h-8 rounded-full bg-brand-navy/80 hover:bg-emerald-500 text-brand-ink flex items-center justify-center text-sm transition-colors">
-              <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M17.5 14.4c-.3-.1-1.7-.8-1.9-.9-.3-.1-.4-.1-.6.1-.2.3-.7.9-.8 1-.2.2-.3.2-.5.1-.3-.1-1.1-.4-2.1-1.3-.8-.7-1.3-1.6-1.4-1.9-.2-.3 0-.4.1-.6l.4-.5c.1-.1.2-.3.2-.4.1-.2 0-.3 0-.4-.1-.1-.6-1.4-.8-1.9-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.4.1-.6.3-.2.3-.8.8-.8 1.9s.8 2.2.9 2.4c.1.2 1.6 2.4 3.8 3.4.5.2 1 .4 1.3.5.5.2 1 .1 1.4.1.4-.1 1.3-.5 1.5-1 .2-.5.2-.9.1-1l-.1-.1zM12 2a10 10 0 00-8.5 15.2L2 22l4.9-1.3A10 10 0 1012 2z"/></svg>
-            </button>
+            ${buildGalWrapHtml(key, p)}
           </div>
           <div class="p-6 flex flex-col flex-grow">
             <span class="text-[9px] font-extrabold text-brand-sky uppercase tracking-widest mb-1.5">${escapeHtml(p.categoria)}</span>
@@ -2931,10 +2948,10 @@
       const variantes = window.__galleryGroups[key];
       if (!variantes || !variantes[idx]) return;
       const p = variantes[idx];
+      window.__galleryState[key] = { selectedIdx: idx, photoIdx: 0 };
 
-      const imgsArr = (p.imgs && p.imgs.length) ? p.imgs : (p.img ? [p.img] : []);
-      const imgEl = document.getElementById(`galImg-${key}`);
-      if (imgEl && imgEl.tagName === 'IMG') imgEl.src = imgsArr[0] || '';
+      const wrap = document.getElementById(`galWrap-${key}`);
+      if (wrap) wrap.innerHTML = buildGalWrapHtml(key, p);
 
       document.getElementById(`galColor-${key}`).textContent = `Color: ${p.color}`;
 
@@ -3599,6 +3616,45 @@
       }
     }
 
+    function adminAddColorVariant(id) {
+      const p = adminAllProducts.find(item => item.id === id);
+      if (!p) return;
+      adminEditingProductId = null; // this creates a NEW product doc, it does not edit the existing one
+
+      document.getElementById('adminProductModel').value = p.modelo || '';
+      document.getElementById('adminProductColor').value = '';
+      document.getElementById('adminProductUnits').value = '';
+      document.getElementById('adminProductPrice').value = (p.precio ?? '') === null ? '' : (p.precio ?? '');
+
+      const catSelect = document.getElementById('adminProductCategorySelect');
+      if ([...catSelect.options].some(o => o.value === p.categoria)) {
+        catSelect.value = p.categoria;
+      }
+      document.getElementById('adminProductNewCategoryInput').classList.add('hidden');
+      adminSetProductCatalogo(p.esKids ? 'kids' : 'principal');
+
+      const tratamientosGuardados = Array.isArray(p.tratamientos) ? p.tratamientos : [];
+      const opcionesEstandar = [...document.querySelectorAll('.admin-product-tratamiento')].map(el => el.value);
+      document.querySelectorAll('.admin-product-tratamiento').forEach(el => {
+        el.checked = tratamientosGuardados.includes(el.value);
+      });
+      const extras = tratamientosGuardados.filter(t => !opcionesEstandar.includes(t));
+      document.getElementById('adminProductTratamientoOtro').value = extras.join(', ');
+
+      // Fotos en blanco: aquí es donde se agregan las imágenes del nuevo color
+      adminProductUrlsInput.value = '';
+      adminRenderProductPreviews();
+
+      document.getElementById('adminProductFormTitle').textContent = `🎨 Nuevo color para: ${p.modelo}`;
+      document.getElementById('adminAddProductBtn').textContent = 'Agregar Color';
+      document.getElementById('adminCancelEditProductBtn').classList.remove('hidden');
+      document.getElementById('adminAddProductStatus').textContent = 'Modelo, categoría y precio ya se llenaron solos. Ponga el color y pegue las fotos de esta variante.';
+      document.getElementById('adminAddProductStatus').className = 'text-[11px] text-brand-sky mt-3';
+
+      document.getElementById('adminProductFormTitle').scrollIntoView({ behavior: 'smooth', block: 'center' });
+      document.getElementById('adminProductColor').focus();
+    }
+
     function adminEditProduct(id) {
       const p = adminAllProducts.find(item => item.id === id);
       if (!p) return;
@@ -3698,6 +3754,7 @@
               <div class="flex items-center gap-3 flex-shrink-0">
                 ${ocultoBadge}
                 ${kidsBadge}
+                <button onclick="adminAddColorVariant('${p.id}')" class="text-brand-coral hover:text-brand-sky text-xs font-bold uppercase tracking-wide">+ Color</button>
                 <button onclick="adminEditProduct('${p.id}')" class="text-brand-teal hover:text-brand-sky text-xs font-bold uppercase tracking-wide">Editar</button>
                 <button onclick="adminToggleProductVisibility('${p.id}', ${p.oculto ? 'false' : 'true'})" class="text-brand-sky hover:text-brand-teal text-xs font-bold uppercase tracking-wide">${p.oculto ? 'Mostrar' : 'Ocultar'}</button>
                 <button onclick='adminRemoveProduct("${p.id}", ${JSON.stringify(p.storagePaths || (p.storagePath ? [p.storagePath] : []))})' class="text-red-400 hover:text-red-300 text-xs font-bold uppercase tracking-wide">Eliminar</button>
@@ -5041,6 +5098,7 @@
             <div class="text-xs text-slate-600 space-y-1 mb-3">
               ${itemsHtml}
               ${totalPrecio ? `<p><strong class="text-brand-ink">Total:</strong> $${Number(totalPrecio).toLocaleString('es-MX', {minimumFractionDigits:2, maximumFractionDigits:2})}</p>` : ''}
+              ${(totalPrecio && p.anticipo > 0) ? `<p><strong class="text-brand-ink">Anticipo recibido:</strong> $${Number(p.anticipo).toLocaleString('es-MX', {minimumFractionDigits:2, maximumFractionDigits:2})} — <strong class="text-brand-ink">Falta por pagar:</strong> $${Math.max(0, Number(totalPrecio) - Number(p.anticipo)).toLocaleString('es-MX', {minimumFractionDigits:2, maximumFractionDigits:2})}</p>` : ''}
               ${p.telefono ? `<p><strong class="text-brand-ink">Tel:</strong> ${p.telefono}</p>` : ''}
               ${p.email ? `<p><strong class="text-brand-ink">Correo:</strong> ${p.email}</p>` : ''}
               ${p.receta ? `<p><strong class="text-brand-ink">Receta:</strong> ${p.receta}</p>` : ''}
@@ -5048,6 +5106,13 @@
               ${p.examen?.fecha ? `<p><strong class="text-brand-ink">Fecha y hora:</strong> ${p.examen.fecha} ${p.examen.hora || ''}</p>` : ''}
               ${(p.examen?.armazonesElegidos && p.examen.armazonesElegidos.length) ? `<p><strong class="text-brand-ink">Armazones para probarse:</strong> ${p.examen.armazonesElegidos.map(a => `${a.modelo} (${a.color})`).join(', ')}</p>` : ''}
               ${p.notas ? `<p><strong class="text-brand-ink">Notas:</strong> ${p.notas}</p>` : ''}
+            </div>
+            <div class="flex flex-wrap items-center gap-3 mb-3">
+              <label class="text-[9px] uppercase tracking-widest text-slate-500 font-extrabold">Anticipo recibido:</label>
+              <div class="flex items-center gap-1.5">
+                <span class="text-[11px] text-slate-500">$</span>
+                <input type="number" min="0" step="0.01" value="${p.anticipo || 0}" onchange="adminSetPedidoAnticipo('${p.id}', this.value)" class="w-24 text-[11px] p-2 bg-brand-navy border border-slate-900/10 rounded-lg text-brand-ink focus:border-brand-sky focus:outline-none">
+              </div>
             </div>
             <div class="flex flex-wrap items-center gap-3">
               <div class="flex items-center gap-1.5">
@@ -5082,6 +5147,7 @@
       const producto = document.getElementById('adminPedidoProducto').value.trim();
       const cantidad = document.getElementById('adminPedidoCantidad').value;
       const precio = document.getElementById('adminPedidoPrecio').value;
+      const anticipo = document.getElementById('adminPedidoAnticipo').value;
       const estadoPago = document.getElementById('adminPedidoEstadoPago').value;
       const estadoEnvio = document.getElementById('adminPedidoEstadoEnvio').value;
       const notas = document.getElementById('adminPedidoNotas').value.trim();
@@ -5103,6 +5169,7 @@
           cliente, telefono, producto,
           cantidad: cantidad ? parseInt(cantidad) : 1,
           precio: precio ? parseFloat(precio) : null,
+          anticipo: anticipo ? parseFloat(anticipo) : 0,
           tipoPedido: 'manual',
           estadoPago, estadoEnvio, notas
         });
@@ -5112,6 +5179,7 @@
         document.getElementById('adminPedidoProducto').value = '';
         document.getElementById('adminPedidoCantidad').value = '1';
         document.getElementById('adminPedidoPrecio').value = '';
+        document.getElementById('adminPedidoAnticipo').value = '';
         document.getElementById('adminPedidoEstadoPago').value = 'pendiente';
         document.getElementById('adminPedidoEstadoEnvio').value = 'preparando';
         document.getElementById('adminPedidoNotas').value = '';
@@ -5145,6 +5213,16 @@
         adminLoadPedidos();
       } catch (e) {
         console.error('Error al actualizar el envío del pedido:', e);
+      }
+    }
+
+    async function adminSetPedidoAnticipo(id, monto) {
+      try {
+        const fb = await window.firebaseReady;
+        await fb.updateOrderAnticipo(id, monto);
+        adminLoadPedidos();
+      } catch (e) {
+        console.error('Error al actualizar el anticipo del pedido:', e);
       }
     }
 
@@ -5783,6 +5861,7 @@
           const itemsText = items.length
             ? items.map(it => `${it.modelo}${it.cantidad > 1 ? ` x${it.cantidad}` : ''}`).join(', ')
             : (o.producto || '');
+          const restante = (o.precio && o.anticipo > 0) ? Math.max(0, Number(o.precio) - Number(o.anticipo)) : null;
           return `
           <div class="p-3.5 bg-brand-navy border border-slate-900/10 rounded-xl">
             <div class="flex items-center justify-between mb-1">
@@ -5790,6 +5869,7 @@
               ${o.precio ? `<span class="text-xs font-bold text-brand-ink">$${Number(o.precio).toLocaleString('es-MX', {minimumFractionDigits:2})}</span>` : ''}
             </div>
             <p class="text-xs text-slate-600 mb-2">${itemsText || 'Pedido registrado'}</p>
+            ${restante !== null ? `<p class="text-[11px] text-slate-500 mb-2">Anticipo: $${Number(o.anticipo).toLocaleString('es-MX', {minimumFractionDigits:2})} · Falta por pagar: <strong class="text-brand-ink">$${restante.toLocaleString('es-MX', {minimumFractionDigits:2})}</strong></p>` : ''}
             <div class="flex flex-wrap gap-2">
               ${estadoPagoBadge(o.estadoPago || 'pendiente')}
               ${estadoEnvioBadge(o.estadoEnvio || 'preparando')}
@@ -6233,6 +6313,7 @@ async function deleteProduct(id, storagePaths) {
         producto: String(data.producto || '').slice(0, 200),
         cantidad: data.cantidad || 1,
         precio: (data.precio === null || data.precio === undefined || isNaN(data.precio)) ? null : data.precio,
+        anticipo: (data.anticipo === null || data.anticipo === undefined || isNaN(data.anticipo)) ? 0 : Number(data.anticipo),
         items: Array.isArray(data.items) ? data.items.slice(0, 50) : [],
         estadoPago: data.estadoPago || 'pendiente',       // pendiente | pagado | proceso
         estadoEnvio: data.estadoEnvio || 'preparando',    // preparando | camino | entregado
@@ -6248,6 +6329,10 @@ async function deleteProduct(id, storagePaths) {
 
     async function updateOrderEnvio(id, estadoEnvio) {
       await updateDoc(doc(db, ORDERS_COLLECTION, id), { estadoEnvio });
+    }
+
+    async function updateOrderAnticipo(id, anticipo) {
+      await updateDoc(doc(db, ORDERS_COLLECTION, id), { anticipo: Number(anticipo) || 0 });
     }
 
     async function deleteOrder(id) {
@@ -6409,6 +6494,7 @@ async function deleteProduct(id, storagePaths) {
       addOrder,
       updateOrderPago,
       updateOrderEnvio,
+      updateOrderAnticipo,
       deleteOrder,
       customerRegister,
       customerLogin,
