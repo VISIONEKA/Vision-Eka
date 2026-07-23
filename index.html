@@ -219,21 +219,21 @@
 <body class="bg-brand-navy text-slate-700 font-sans antialiased overflow-x-hidden selection:bg-brand-sky selection:text-brand-ink">
 
   <!-- ========== FLOATING HEADER & PILL NAVIGATION ========== -->
-  <header id="navbar" class="fixed top-0 left-0 w-full z-50 transition-all duration-500 py-2 md:py-6">
-    <div class="max-w-7xl mx-auto px-9 md:px-6">
-      <div class="flex items-center justify-between bg-brand-dark/30 backdrop-blur-xl border border-slate-900/5 pl-3 pr-4 md:px-6 lg:px-8 py-2 md:py-4 rounded-[24px] md:rounded-full shadow-2xl transition-all duration-500" id="navContainer">
+  <header id="navbar" class="fixed top-0 left-0 w-full z-50 transition-all duration-500 py-2 lg:py-6">
+    <div class="max-w-7xl mx-auto px-12 lg:px-6">
+      <div class="flex items-center justify-between bg-brand-dark/30 backdrop-blur-xl border border-slate-900/5 pl-3 pr-4 lg:px-6 xl:px-8 py-2 lg:py-4 rounded-[24px] lg:rounded-full shadow-2xl transition-all duration-500" id="navContainer">
         
         <!-- Logo -->
-        <a href="#" class="flex items-center gap-1.5 md:gap-3 group focus:outline-none flex-shrink-0">
-          <div class="w-7 h-7 md:w-10 md:h-10 bg-gradient-to-tr from-brand-sky to-brand-teal rounded-xl flex items-center justify-center shadow-lg shadow-brand-sky/20 group-hover:scale-105 transition-all duration-300 flex-shrink-0">
-            <svg class="w-3.5 h-3.5 md:w-5 md:h-5 text-brand-ink" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+        <a href="#" class="flex items-center gap-1.5 lg:gap-3 group focus:outline-none flex-shrink-0">
+          <div class="w-7 h-7 lg:w-10 lg:h-10 bg-gradient-to-tr from-brand-sky to-brand-teal rounded-xl flex items-center justify-center shadow-lg shadow-brand-sky/20 group-hover:scale-105 transition-all duration-300 flex-shrink-0">
+            <svg class="w-3.5 h-3.5 lg:w-5 lg:h-5 text-brand-ink" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
               <path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
             </svg>
           </div>
           <div class="min-w-0">
-            <span class="font-display font-bold text-xs md:text-xl tracking-tight text-brand-ink block truncate">Visión <span class="text-brand-sky font-extrabold">EKA</span></span>
-            <span class="hidden md:block text-[7px] md:text-[8px] tracking-widest uppercase text-slate-500 font-extrabold -mt-1 truncate">Salud Ocupacional</span>
+            <span class="font-display font-bold text-xs lg:text-xl tracking-tight text-brand-ink block truncate">Visión <span class="text-brand-sky font-extrabold">EKA</span></span>
+            <span class="hidden lg:block text-[7px] lg:text-[8px] tracking-widest uppercase text-slate-500 font-extrabold -mt-1 truncate">Salud Ocupacional</span>
           </div>
         </a>
 
@@ -250,24 +250,24 @@
         </nav>
 
         <!-- CTA & Hamburger -->
-        <div class="flex items-center gap-1 md:gap-4 min-w-0">
+        <div class="flex items-center gap-1 lg:gap-4 min-w-0">
           <button onclick="openAccountModal()" id="navAccountBtn" class="hidden xl:flex items-center gap-1.5 text-slate-500 hover:text-brand-ink text-xs font-bold flex-shrink-0" title="Mi cuenta">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
             <span id="navAccountLabel">Mi Cuenta</span>
           </button>
 
-          <button onclick="openCartDrawer()" class="relative p-1 md:p-2 text-slate-500 hover:text-brand-ink flex-shrink-0" title="Carrito">
-            <svg class="w-4 h-4 md:w-5 md:h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
-            <span id="cartBadge" class="hidden absolute -top-0.5 -right-0.5 md:-top-1 md:-right-1 bg-brand-coral text-white text-[8px] md:text-[9px] font-extrabold w-[16px] h-[16px] md:w-[18px] md:h-[18px] rounded-full items-center justify-center">0</span>
+          <button onclick="openCartDrawer()" class="relative p-1 lg:p-2 text-slate-500 hover:text-brand-ink flex-shrink-0" title="Carrito">
+            <svg class="w-4 h-4 lg:w-5 lg:h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+            <span id="cartBadge" class="hidden absolute -top-0.5 -right-0.5 lg:-top-1 lg:-right-1 bg-brand-coral text-white text-[8px] lg:text-[9px] font-extrabold w-[16px] h-[16px] lg:w-[18px] lg:h-[18px] rounded-full items-center justify-center">0</span>
           </button>
 
-          <a href="#contact" class="hidden sm:inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest bg-gradient-to-r from-brand-sky to-brand-teal hover:from-brand-sky/90 hover:to-brand-teal/90 text-brand-ink py-2.5 md:py-3 px-4 md:px-5 rounded-full transition-all hover:shadow-lg hover:shadow-brand-sky/35 transform hover:-translate-y-0.5 whitespace-nowrap flex-shrink-0">
+          <a href="#contact" class="hidden sm:inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest bg-gradient-to-r from-brand-sky to-brand-teal hover:from-brand-sky/90 hover:to-brand-teal/90 text-brand-ink py-2.5 lg:py-3 px-4 lg:px-5 rounded-full transition-all hover:shadow-lg hover:shadow-brand-sky/35 transform hover:-translate-y-0.5 whitespace-nowrap flex-shrink-0">
             <svg class="w-3.5 h-3.5 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
             Cotizar
           </a>
           
-          <button id="menuToggle" class="xl:hidden -mr-1 md:mr-0 p-[3px] md:p-2.5 rounded-full text-slate-600 hover:text-brand-ink hover:bg-slate-900/5 transition-all flex-shrink-0" aria-label="Abrir menú">
-            <svg class="w-[13px] h-[13px] md:w-5 md:h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+          <button id="menuToggle" class="xl:hidden -mr-1 lg:mr-0 p-[3px] lg:p-2.5 rounded-full text-slate-600 hover:text-brand-ink hover:bg-slate-900/5 transition-all flex-shrink-0" aria-label="Abrir menú">
+            <svg class="w-[13px] h-[13px] lg:w-5 lg:h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16m-7 6h7"/>
             </svg>
           </button>
@@ -518,15 +518,17 @@
 
         <div class="p-8 sm:p-12">
 
-          <!-- Step indicator -->
-          <div id="quizStepLabel" class="flex items-center gap-2 mb-8">
-            <span class="text-[10px] uppercase tracking-widest font-extrabold text-brand-sky">Pregunta 1 de 4</span>
-          </div>
-
           <!-- Question 1: Digital fatigue -->
           <div id="quizQ1" class="quiz-step fade-in-step">
-            <div class="w-14 h-14 rounded-2xl bg-brand-sky/10 border border-brand-sky/20 flex items-center justify-center mb-6">
-              <svg class="w-7 h-7 text-brand-sky" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+            <div class="flex items-center gap-4 mb-8">
+              <div class="w-14 h-14 rounded-2xl bg-brand-sky/10 border border-brand-sky/20 flex items-center justify-center flex-shrink-0">
+                <svg class="w-7 h-7 text-brand-sky" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+              </div>
+              <div id="quizLabelSlot1" class="flex-1">
+                <div id="quizStepLabel" class="flex items-center">
+                  <span class="text-[10px] uppercase tracking-widest font-extrabold text-brand-sky ml-[30%]">Pregunta 1 de 4</span>
+                </div>
+              </div>
             </div>
             <h3 class="font-display font-bold text-xl sm:text-2xl text-brand-ink mb-8 leading-snug">¿Pasa más de 4 horas diarias frente a una pantalla o maquinaria de precisión?</h3>
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -537,8 +539,11 @@
 
           <!-- Question 2: Astigmatism clock -->
           <div id="quizQ2" class="quiz-step hidden">
-            <div class="w-14 h-14 rounded-2xl bg-brand-teal/10 border border-brand-teal/20 flex items-center justify-center mb-6">
-              <svg class="w-7 h-7 text-brand-teal" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+            <div class="flex items-center gap-4 mb-8">
+              <div class="w-14 h-14 rounded-2xl bg-brand-teal/10 border border-brand-teal/20 flex items-center justify-center flex-shrink-0">
+                <svg class="w-7 h-7 text-brand-teal" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+              </div>
+              <div id="quizLabelSlot2" class="flex-1"></div>
             </div>
             <h3 class="font-display font-bold text-xl sm:text-2xl text-brand-ink mb-2 leading-snug">Observe esta figura. ¿Alguna línea se ve más oscura, gruesa o nítida que las demás?</h3>
             <p class="text-xs text-slate-500 mb-6">Manténgase a una distancia normal de pantalla mientras observa.</p>
@@ -561,8 +566,11 @@
 
           <!-- Question 3: Near reading / presbyopia -->
           <div id="quizQ3" class="quiz-step hidden">
-            <div class="w-14 h-14 rounded-2xl bg-brand-gold/10 border border-brand-gold/20 flex items-center justify-center mb-6">
-              <svg class="w-7 h-7 text-brand-gold" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
+            <div class="flex items-center gap-4 mb-8">
+              <div class="w-14 h-14 rounded-2xl bg-brand-gold/10 border border-brand-gold/20 flex items-center justify-center flex-shrink-0">
+                <svg class="w-7 h-7 text-brand-gold" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
+              </div>
+              <div id="quizLabelSlot3" class="flex-1"></div>
             </div>
             <h3 class="font-display font-bold text-xl sm:text-2xl text-brand-ink mb-8 leading-snug">¿Necesita alejar documentos o su teléfono para poder leer con claridad?</h3>
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -573,8 +581,11 @@
 
           <!-- Question 4: Headaches / light sensitivity -->
           <div id="quizQ4" class="quiz-step hidden">
-            <div class="w-14 h-14 rounded-2xl bg-brand-sky/10 border border-brand-sky/20 flex items-center justify-center mb-6">
-              <svg class="w-7 h-7 text-brand-sky" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+            <div class="flex items-center gap-4 mb-8">
+              <div class="w-14 h-14 rounded-2xl bg-brand-sky/10 border border-brand-sky/20 flex items-center justify-center flex-shrink-0">
+                <svg class="w-7 h-7 text-brand-sky" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+              </div>
+              <div id="quizLabelSlot4" class="flex-1"></div>
             </div>
             <h3 class="font-display font-bold text-xl sm:text-2xl text-brand-ink mb-8 leading-snug">¿Termina su jornada con dolor de cabeza, ardor ocular o sensibilidad a la luz?</h3>
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -657,10 +668,12 @@
             <img src="https://raw.githubusercontent.com/VISIONEKA/Vision-Eka/main/ChatGPT%20Image%2021%20jul%202026%2C%2022_31_25.png" alt="Normas STPS y ANSI para protección industrial" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
           </div>
           <div class="p-6 flex flex-col flex-grow">
-            <div class="w-11 h-11 rounded-2xl bg-brand-teal/10 border border-brand-teal/20 flex items-center justify-center text-brand-teal text-2xl mb-4 -mt-9 relative z-10 bg-brand-dark shadow-lg">
-              <svg class="w-5 h-5 text-brand-teal" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138z"/></svg>
+            <div class="flex items-center gap-3 mb-4 -mt-9 relative z-10">
+              <div class="w-11 h-11 rounded-2xl bg-brand-teal/10 border border-brand-teal/20 flex items-center justify-center text-brand-teal text-2xl bg-brand-dark shadow-lg flex-shrink-0">
+                <svg class="w-5 h-5 text-brand-teal" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138z"/></svg>
+              </div>
+              <h3 class="font-display font-bold text-xl text-brand-ink">Normas STPS & ANSI</h3>
             </div>
-            <h3 class="font-display font-bold text-xl text-brand-ink mb-3">Normas STPS & ANSI</h3>
             <p class="text-slate-500 text-xs leading-relaxed mb-6">
               Suministramos armazones industriales certificados de alto impacto bajo la normativa NOM-017-STPS y el estándar internacional ANSI Z87.1, garantizando protección real.
             </p>
@@ -2120,7 +2133,7 @@
 
   <!-- ========== CUSTOM PREMIUM NOTIFICATION DIALOG (Zero Alerts) ========== -->
   <!-- ========== BOTÓN FLOTANTE: MÁS INFORMACIÓN ========== -->
-  <button onclick="openQuickInfoModal()" class="fixed bottom-5 right-5 sm:bottom-6 sm:right-6 z-40 w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-gradient-to-tr from-brand-sky to-brand-teal text-brand-ink shadow-2xl shadow-brand-sky/30 flex items-center justify-center text-lg sm:text-xl hover:scale-105 transition-all duration-300" title="Más información" aria-label="Más información">
+  <button onclick="openQuickInfoModal()" class="fixed bottom-8 right-8 z-40 w-11 h-11 sm:w-14 sm:h-14 rounded-full bg-gradient-to-tr from-brand-sky to-brand-teal text-brand-ink shadow-2xl shadow-brand-sky/30 flex items-center justify-center text-base sm:text-xl hover:scale-105 transition-all duration-300" title="Más información" aria-label="Más información">
     💬
   </button>
 
@@ -4038,6 +4051,14 @@
       const target = document.getElementById(stepKey);
       target.classList.remove('hidden');
       requestAnimationFrame(() => target.classList.add('fade-in-step'));
+
+      // Mueve el indicador "Pregunta X de 4" junto al ícono de la pregunta activa
+      const stepNum = stepKey.replace('quizQ', '');
+      const slot = document.getElementById(`quizLabelSlot${stepNum}`);
+      const label = document.getElementById('quizStepLabel');
+      if (slot && label && slot !== label.parentElement) {
+        slot.appendChild(label);
+      }
     }
 
     function quizUpdateProgress(step) {
@@ -4045,9 +4066,9 @@
       document.getElementById('quizProgressBar').style.width = pct + '%';
       const label = document.getElementById('quizStepLabel');
       if (step <= quizTotalSteps) {
-        label.innerHTML = `<span class="text-[10px] uppercase tracking-widest font-extrabold text-brand-sky">Pregunta ${step} de ${quizTotalSteps}</span>`;
+        label.innerHTML = `<span class="text-[10px] uppercase tracking-widest font-extrabold text-brand-sky ml-[30%]">Pregunta ${step} de ${quizTotalSteps}</span>`;
       } else {
-        label.innerHTML = `<span class="text-[10px] uppercase tracking-widest font-extrabold text-brand-teal">Evaluación completa</span>`;
+        label.innerHTML = `<span class="text-[10px] uppercase tracking-widest font-extrabold text-brand-teal ml-[30%]">Evaluación completa</span>`;
       }
     }
 
