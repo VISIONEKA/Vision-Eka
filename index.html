@@ -60,6 +60,14 @@
   </script>
 
   <style>
+    /* Bloquea el "rebote" elástico horizontal de Safari en iPhone (evita que se
+       vea un espacio en blanco al arrastrar la página hacia los lados) */
+    html, body {
+      overflow-x: hidden;
+      overscroll-behavior-x: none;
+      max-width: 100%;
+    }
+
     /* Custom Scrollbar */
     ::-webkit-scrollbar {
       width: 6px;
