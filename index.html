@@ -228,7 +228,7 @@
 
   <!-- ========== FLOATING HEADER & PILL NAVIGATION ========== -->
   <header id="navbar" class="fixed top-0 left-0 w-full z-50 transition-all duration-500 py-2 lg:py-6">
-    <div class="max-w-7xl mx-auto px-9 lg:px-6">
+    <div class="max-w-7xl mx-auto px-16 lg:px-6">
       <div class="flex items-center justify-between bg-brand-dark/30 backdrop-blur-xl border border-slate-900/5 pl-3 pr-4 lg:px-6 xl:px-8 py-2 lg:py-4 rounded-[24px] lg:rounded-full shadow-xl transition-all duration-500" id="navContainer">
         
         <!-- Logo -->
@@ -673,10 +673,10 @@
         <!-- Square Card (1/3 width) -->
         <div class="bg-gradient-to-br from-brand-mid to-brand-navy bento-card rounded-3xl flex flex-col overflow-hidden group self-start" data-aos="fade-up" data-aos-delay="100">
           <div class="w-full h-56 sm:h-64 overflow-hidden relative flex-shrink-0">
-            <img src="https://raw.githubusercontent.com/VISIONEKA/Vision-Eka/main/ChatGPT%20Image%2021%20jul%202026%2C%2022_31_25.png" alt="Normas STPS y ANSI para protección industrial" class="block w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
+            <img src="https://images.unsplash.com/photo-1584982751601-97dcc096659c?w=800&q=80" alt="Equipo de Visión EKA con uniforme clínico" class="block w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
           </div>
           <div class="p-6 flex flex-col flex-grow">
-            <div class="flex items-center gap-3 mb-4 -mt-9 relative z-10">
+            <div class="flex items-center gap-3 mb-4 -mt-8 relative z-10">
               <div class="w-11 h-11 rounded-2xl bg-brand-teal/10 border border-brand-teal/20 flex items-center justify-center text-brand-teal text-2xl bg-brand-dark shadow-lg flex-shrink-0">
                 <svg class="w-5 h-5 text-brand-teal" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138z"/></svg>
               </div>
@@ -1246,7 +1246,7 @@
         <!-- Team Image Wrap -->
         <div class="lg:col-span-5 relative" data-aos="fade-right">
           <div class="relative rounded-4xl overflow-hidden border border-slate-900/5 shadow-2xl">
-            <img src="https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=800&q=80" alt="Equipo de optometristas de Visión EKA" class="w-full aspect-[3/4] object-cover">
+            <img src="https://raw.githubusercontent.com/VISIONEKA/Vision-Eka/main/ChatGPT%20Image%2025%20jul%202026%2C%2009_09_38.png" alt="Equipo de optometristas de Visión EKA" class="w-full aspect-[3/4] object-cover">
             <div class="absolute inset-0 bg-gradient-to-t from-brand-navy via-transparent to-transparent"></div>
           </div>
 
@@ -1660,6 +1660,9 @@
         </button>
         <button class="admin-tab-btn flex-1 min-w-[120px] flex items-center justify-center gap-1.5 py-3 rounded-full text-[11px] font-bold uppercase tracking-wider transition-all duration-300 text-slate-600 hover:text-brand-ink" data-admin-tab="pedidos" onclick="setAdminTab('pedidos')">
           📦 Pedidos
+        </button>
+        <button class="admin-tab-btn flex-1 min-w-[120px] flex items-center justify-center gap-1.5 py-3 rounded-full text-[11px] font-bold uppercase tracking-wider transition-all duration-300 text-slate-600 hover:text-brand-ink" data-admin-tab="analitica" onclick="setAdminTab('analitica')">
+          📊 Analítica
         </button>
       </div>
 
@@ -2135,6 +2138,59 @@
 
       </div>
       <!-- ===== FIN TAB: PEDIDOS ===== -->
+
+      <!-- ===== TAB: ANALÍTICA ===== -->
+      <div id="adminTabAnalitica" class="admin-tab-content hidden">
+
+        <div class="bg-brand-navy border border-slate-900/10 rounded-3xl p-6 mb-8">
+          <h3 class="font-display font-bold text-sm text-brand-ink mb-3">📊 Analítica del sitio</h3>
+          <p class="text-xs text-slate-600 leading-relaxed">Visitas, clientes registrados y los lentes que más han elegido sus visitantes. Se actualiza en tiempo real conforme la gente navega el sitio.</p>
+        </div>
+
+        <!-- Visitas -->
+        <div class="bg-brand-navy border border-slate-900/10 rounded-3xl p-6 mb-8">
+          <div class="flex items-center justify-between mb-4">
+            <h3 class="font-display font-bold text-sm text-brand-ink">👀 Visitas al sitio</h3>
+            <button onclick="adminLoadAnalytics()" class="text-[10px] uppercase tracking-widest font-bold text-brand-sky hover:text-brand-teal">↻ Actualizar</button>
+          </div>
+          <div class="grid grid-cols-3 gap-4 text-center">
+            <div class="bg-brand-dark border border-slate-900/5 rounded-2xl p-4">
+              <span id="analyticsVisitasTotal" class="block font-display font-bold text-2xl text-brand-ink">–</span>
+              <span class="text-[9px] uppercase tracking-widest text-slate-500 font-extrabold">Total</span>
+            </div>
+            <div class="bg-brand-dark border border-slate-900/5 rounded-2xl p-4">
+              <span id="analyticsVisitasIndex" class="block font-display font-bold text-2xl text-brand-ink">–</span>
+              <span class="text-[9px] uppercase tracking-widest text-slate-500 font-extrabold">Sitio Principal</span>
+            </div>
+            <div class="bg-brand-dark border border-slate-900/5 rounded-2xl p-4">
+              <span id="analyticsVisitasKids" class="block font-display font-bold text-2xl text-brand-ink">–</span>
+              <span class="text-[9px] uppercase tracking-widest text-slate-500 font-extrabold">Kids</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Lentes más elegidos -->
+        <div class="bg-brand-navy border border-slate-900/10 rounded-3xl p-6 mb-8">
+          <h3 class="font-display font-bold text-sm text-brand-ink mb-4">🔥 Lentes más elegidos</h3>
+          <p class="text-[11px] text-slate-500 mb-4">Cada vez que alguien agrega un lente al carrito, cuenta aquí. Así sabes cuáles armazones llaman más la atención.</p>
+          <div id="adminTopProductsList" class="space-y-2">
+            <p id="adminTopProductsEmpty" class="text-xs text-slate-600/80 italic">Aún no hay suficientes datos.</p>
+          </div>
+        </div>
+
+        <!-- Clientes registrados -->
+        <div class="bg-brand-navy border border-slate-900/10 rounded-3xl p-6">
+          <div class="flex items-center justify-between mb-4">
+            <h3 class="font-display font-bold text-sm text-brand-ink">👤 Clientes registrados</h3>
+            <span id="adminUsersCount" class="text-[10px] uppercase tracking-widest font-bold text-brand-sky"></span>
+          </div>
+          <div id="adminUsersList" class="space-y-2">
+            <p id="adminUsersListEmpty" class="text-xs text-slate-600/80 italic">Aún no hay clientes con cuenta creada.</p>
+          </div>
+        </div>
+
+      </div>
+      <!-- ===== FIN TAB: ANALÍTICA ===== -->
 
     </div>
   </div>
@@ -3158,6 +3214,7 @@
             adminLoadPedidos();
             optiRefreshSummary();
             optiLoadTasks();
+            adminLoadAnalytics();
           } else {
             document.getElementById('adminLogin').classList.remove('hidden');
             document.getElementById('adminDashboard').classList.add('hidden');
@@ -3208,6 +3265,7 @@
         adminLoadPedidos();
         optiRefreshSummary();
         optiLoadTasks();
+        adminLoadAnalytics();
       } catch (err) {
         console.error('Admin login error:', err);
         errorMsg.textContent = 'Correo o contraseña incorrectos.';
@@ -4470,6 +4528,65 @@
     // =========================================================
     // ---- OPTI: asistente del panel (resumen + lista de pendientes) ----
     // =========================================================
+    // =========================================================
+    // ---- ADMIN PANEL: ANALÍTICA ----
+    // =========================================================
+    async function adminLoadAnalytics() {
+      try {
+        const fb = await window.firebaseReady;
+
+        // Visitas
+        const visitas = await fb.fetchVisitStats();
+        document.getElementById('analyticsVisitasTotal').textContent = (visitas.total || 0).toLocaleString('es-MX');
+        document.getElementById('analyticsVisitasIndex').textContent = (visitas.index || 0).toLocaleString('es-MX');
+        document.getElementById('analyticsVisitasKids').textContent = (visitas.kids || 0).toLocaleString('es-MX');
+
+        // Lentes más elegidos (ordenados por veces agregados al carrito)
+        const productos = await fb.fetchProducts();
+        const topList = document.getElementById('adminTopProductsList');
+        const topEmpty = document.getElementById('adminTopProductsEmpty');
+        const conInteres = productos.filter(p => p.interacciones > 0).sort((a, b) => (b.interacciones || 0) - (a.interacciones || 0)).slice(0, 10);
+
+        if (conInteres.length === 0) {
+          topList.innerHTML = '';
+          topList.appendChild(topEmpty);
+        } else {
+          topList.innerHTML = conInteres.map((p, idx) => `
+            <div class="flex items-center justify-between gap-3 bg-brand-dark border border-slate-900/5 rounded-xl px-4 py-2.5">
+              <div class="flex items-center gap-3 min-w-0">
+                <span class="text-brand-sky font-bold text-xs flex-shrink-0">#${idx + 1}</span>
+                <span class="text-xs text-brand-ink truncate">${escapeHtml(p.modelo)} <span class="text-slate-500">· ${escapeHtml(p.color)}</span></span>
+              </div>
+              <span class="text-[10px] font-bold uppercase tracking-wide text-brand-teal flex-shrink-0">${p.interacciones} agregado${p.interacciones > 1 ? 's' : ''}</span>
+            </div>
+          `).join('');
+        }
+
+        // Clientes registrados
+        const usuarios = await fb.fetchAllUsers();
+        const usersList = document.getElementById('adminUsersList');
+        const usersEmpty = document.getElementById('adminUsersListEmpty');
+        document.getElementById('adminUsersCount').textContent = usuarios.length ? `${usuarios.length} registrado${usuarios.length > 1 ? 's' : ''}` : '';
+
+        if (usuarios.length === 0) {
+          usersList.innerHTML = '';
+          usersList.appendChild(usersEmpty);
+        } else {
+          usersList.innerHTML = usuarios.map(u => `
+            <div class="flex items-center justify-between gap-3 bg-brand-dark border border-slate-900/5 rounded-xl px-4 py-2.5">
+              <div class="min-w-0">
+                <span class="block text-xs font-semibold text-brand-ink truncate">${escapeHtml(u.nombre || 'Sin nombre')}</span>
+                <span class="block text-[10px] text-slate-500 truncate">${escapeHtml(u.email || '')} ${u.telefono ? '· ' + escapeHtml(u.telefono) : ''}</span>
+              </div>
+              <span class="text-[9px] text-slate-500 flex-shrink-0">${formatFecha(u.createdAt)}</span>
+            </div>
+          `).join('');
+        }
+      } catch (e) {
+        console.error('Error al cargar la analítica:', e);
+      }
+    }
+
     async function optiRefreshSummary() {
       const box = document.getElementById('optiSummary');
       if (!box) return;
@@ -5422,6 +5539,7 @@
       }
       saveCart();
       openCartDrawer();
+      window.firebaseReady.then(fb => fb.logProductInterest(productId)).catch(() => {});
     }
 
     function cartChangeQty(id, delta) {
@@ -6085,6 +6203,9 @@
       fb.onCustomerAuthChange(() => refreshAccountView());
     });
 
+    // Registra esta visita al sitio (para la analítica del panel de administrador)
+    window.firebaseReady.then(fb => fb.logVisit('index')).catch(() => {});
+
     // =========================================================
     // ---- AGENDAR LLAMADA (rápido) ----
     // =========================================================
@@ -6164,7 +6285,7 @@
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-app.js";
     import { getAnalytics, isSupported as analyticsIsSupported } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-analytics.js";
     import {
-      getFirestore, collection, addDoc, getDocs, deleteDoc, doc, updateDoc, setDoc, getDoc, runTransaction, arrayUnion, arrayRemove,
+      getFirestore, collection, addDoc, getDocs, deleteDoc, doc, updateDoc, setDoc, getDoc, runTransaction, arrayUnion, arrayRemove, increment,
       query, orderBy, where, limit, serverTimestamp
     } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-firestore.js";
     import {
@@ -6199,6 +6320,7 @@
     const APPOINTMENTS_COLLECTION = 'citas';
     const ORDERS_COLLECTION = 'pedidos';
     const USERS_COLLECTION = 'usuarios';
+    const ANALYTICS_COLLECTION = 'estadisticas';
     const EXAM_SLOTS_COLLECTION = 'horarios_examen';
     const ADMIN_TASKS_COLLECTION = 'tareas_admin';
 
@@ -6521,6 +6643,37 @@ async function deleteProduct(id, storagePaths) {
     }
 
     // ---- Lista de pendientes de Opti (privada, solo para el administrador) ----
+    // ---- Analítica del sitio: visitas, clientes registrados y productos más elegidos ----
+    async function logVisit(pagina) {
+      try {
+        const ref = doc(db, ANALYTICS_COLLECTION, 'visitas');
+        const payload = { total: increment(1), createdAt: serverTimestamp() };
+        payload[pagina] = increment(1);
+        await setDoc(ref, payload, { merge: true });
+      } catch (e) {
+        console.warn('No se pudo registrar la visita:', e);
+      }
+    }
+
+    async function fetchVisitStats() {
+      const snap = await getDoc(doc(db, ANALYTICS_COLLECTION, 'visitas'));
+      return snap.exists() ? snap.data() : { total: 0, index: 0, kids: 0 };
+    }
+
+    async function fetchAllUsers() {
+      const q = query(collection(db, USERS_COLLECTION), orderBy('createdAt', 'desc'));
+      const snap = await getDocs(q);
+      return snap.docs.map(d => ({ id: d.id, ...d.data() }));
+    }
+
+    async function logProductInterest(productId) {
+      try {
+        await updateDoc(doc(db, PRODUCTS_COLLECTION, productId), { interacciones: increment(1) });
+      } catch (e) {
+        console.warn('No se pudo registrar el interés del producto:', e);
+      }
+    }
+
     async function fetchAdminTasks() {
       const q = query(collection(db, ADMIN_TASKS_COLLECTION), orderBy('createdAt', 'asc'));
       const snap = await getDocs(q);
@@ -6649,7 +6802,11 @@ async function deleteProduct(id, storagePaths) {
       fetchAdminTasks,
       addAdminTask,
       toggleAdminTask,
-      deleteAdminTask
+      deleteAdminTask,
+      logVisit,
+      fetchVisitStats,
+      fetchAllUsers,
+      logProductInterest
     });
   </script>
 </body>
