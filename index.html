@@ -70,6 +70,19 @@
     }
     .carousel-track::-webkit-scrollbar { display: none; }
 
+    /* Tarjetas dentro de "Más vendidos" / "Más vistos": en móvil se muestran
+       compactas (solo nombre + iconos) para que no se sientan tan apretadas. */
+    .gal-compact-show { display: none; }
+    @media (max-width: 640px) {
+      .carousel-card .gal-compact-hide { display: none !important; }
+      .carousel-card .gal-compact-show { display: inline-flex; }
+      .carousel-card .gal-compact-row { flex-direction: row; }
+      .carousel-card .gal-compact-mt { margin-top: 0.5rem; }
+      .carousel-card .gal-compact-icon-btn { flex: 1; padding-left: 0; padding-right: 0; }
+      .carousel-card .h-56 { height: 8.5rem; }
+      .carousel-card .p-6 { padding: 0.9rem; }
+    }
+
     /* Bloquea el "rebote" elástico horizontal de Safari en iPhone (evita que se
        vea un espacio en blanco al arrastrar la página hacia los lados) */
     html, body {
@@ -239,7 +252,7 @@
   <!-- ========== FLOATING HEADER & PILL NAVIGATION ========== -->
   <header id="navbar" class="fixed top-0 left-0 w-full z-50 transition-all duration-500 py-2 lg:py-6">
     <div class="max-w-7xl mx-auto px-16 lg:px-6">
-      <div class="flex items-center justify-between bg-brand-dark/30 backdrop-blur-xl border border-slate-900/5 pl-3 pr-4 lg:px-6 xl:px-8 py-2 lg:py-4 rounded-[24px] lg:rounded-full shadow-xl transition-all duration-500" id="navContainer">
+      <div class="flex items-center justify-between bg-brand-dark/30 backdrop-blur-xl border border-slate-900/5 pl-3 pr-4 lg:px-6 xl:px-8 py-3 lg:py-4 rounded-[24px] lg:rounded-full shadow-xl transition-all duration-500" id="navContainer">
         
         <!-- Logo -->
         <a href="#" class="flex items-center gap-1.5 lg:gap-3 group focus:outline-none flex-shrink-0">
@@ -272,6 +285,10 @@
             <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
             <span id="navAccountLabel">Mi Cuenta</span>
           </button>
+
+          <a href="#gallery" class="xl:hidden relative right-1 lg:right-0 p-1 lg:p-2 text-slate-500 hover:text-brand-ink flex-shrink-0" title="Catálogo">
+            <svg class="w-4 h-4 lg:w-5 lg:h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 10h16M4 14h16M4 18h16"/></svg>
+          </a>
 
           <button onclick="openCartDrawer()" class="relative right-1 lg:right-0 p-1 lg:p-2 text-slate-500 hover:text-brand-ink flex-shrink-0" title="Carrito">
             <svg class="w-4 h-4 lg:w-5 lg:h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
@@ -421,28 +438,28 @@
       <div class="grid grid-cols-2 lg:grid-cols-4 gap-y-10 gap-x-6 text-center">
         
         <div class="space-y-2 border-r border-slate-900/5 last:border-none" data-aos="fade-up">
-          <div class="text-3xl sm:text-4xl lg:text-5xl font-display font-extrabold text-brand-ink tracking-tight leading-none">
+          <div class="text-2xl sm:text-4xl lg:text-5xl font-display font-extrabold text-brand-ink tracking-tight leading-none">
             <span class="counter" data-target="20000">0</span><span class="text-brand-sky">+</span>
           </div>
           <span class="text-[10px] tracking-widest uppercase text-slate-500 font-extrabold block">Lentes Entregados</span>
         </div>
 
         <div class="space-y-2 lg:border-r border-slate-900/5" data-aos="fade-up" data-aos-delay="100">
-          <div class="text-3xl sm:text-4xl lg:text-5xl font-display font-extrabold text-brand-ink tracking-tight leading-none">
+          <div class="text-2xl sm:text-4xl lg:text-5xl font-display font-extrabold text-brand-ink tracking-tight leading-none">
             <span class="counter" data-target="50">0</span><span class="text-brand-teal">+</span>
           </div>
           <span class="text-[10px] tracking-widest uppercase text-slate-500 font-extrabold block">Empresas Aliadas</span>
         </div>
 
         <div class="space-y-2 border-r border-slate-900/5" data-aos="fade-up" data-aos-delay="200">
-          <div class="text-3xl sm:text-4xl lg:text-5xl font-display font-extrabold text-brand-ink tracking-tight leading-none">
+          <div class="text-2xl sm:text-4xl lg:text-5xl font-display font-extrabold text-brand-ink tracking-tight leading-none">
             <span class="counter" data-target="100000">0</span><span class="text-brand-sky">+</span>
           </div>
           <span class="text-[10px] tracking-widest uppercase text-slate-500 font-extrabold block">Diagnósticos Realizados</span>
         </div>
 
         <div class="space-y-2" data-aos="fade-up" data-aos-delay="300">
-          <div class="text-3xl sm:text-4xl lg:text-5xl font-display font-extrabold text-brand-ink tracking-tight leading-none">
+          <div class="text-2xl sm:text-4xl lg:text-5xl font-display font-extrabold text-brand-ink tracking-tight leading-none">
             <span class="counter" data-target="98">0</span><span class="text-brand-teal">%</span>
           </div>
           <span class="text-[10px] tracking-widest uppercase text-slate-500 font-extrabold block">Satisfacción Total</span>
@@ -454,12 +471,12 @@
 
   <!-- ========== GALLERY & PRODUCTS ========== -->
 
-  <section id="gallery" class="py-16 sm:py-24 bg-brand-navy">
+  <section id="gallery" class="py-10 sm:py-24 bg-brand-navy">
     <div class="max-w-7xl mx-auto px-6">
       
-      <div class="text-center max-w-3xl mx-auto mb-16" data-aos="fade-up">
+      <div class="text-center max-w-3xl mx-auto mb-10" data-aos="fade-up">
         <span class="text-brand-sky font-bold text-xs tracking-widest uppercase mb-3 block">Productos e Innovación</span>
-        <h2 class="font-display font-bold text-3xl sm:text-4xl tracking-tight text-brand-ink mb-4">Portafolio Óptico Seleccionado</h2>
+        <h2 class="font-display font-bold text-2xl sm:text-4xl tracking-tight text-brand-ink mb-4">Portafolio Óptico Seleccionado</h2>
         <p class="text-slate-500 text-sm mb-4">Contamos con marcas líderes y armazones industriales certificados para responder a los estándares más exigentes.</p>
         <a href="#success" id="galleryRatingSummary" class="hidden inline-flex items-center gap-2 text-xs font-semibold text-slate-500 hover:text-brand-ink transition-colors">
           <span id="galleryRatingStars" class="text-amber-500"></span>
@@ -499,11 +516,11 @@
       </div>
 
       <!-- Los más vendidos: se calcula según las veces que un modelo se agrega al carrito -->
-      <div id="bestSellersWrap" class="hidden mb-10 sm:mb-14" data-aos="fade-up">
+      <div id="bestSellersWrap" class="hidden mb-10 sm:mb-10" data-aos="fade-up">
         <h3 class="font-display font-bold text-sm sm:text-base text-brand-ink mb-4 flex items-center gap-2">🔥 Los más vendidos</h3>
         <div class="relative">
           <div id="bestSellersViewport" class="carousel-track overflow-x-auto">
-            <div id="bestSellersRow" class="flex gap-3 sm:gap-8"></div>
+            <div id="bestSellersRow" class="flex gap-4 sm:gap-8"></div>
           </div>
           <button onclick="carouselStep('bestSellersViewport', -1)" aria-label="Ver anteriores" class="hidden sm:flex absolute -left-4 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-brand-dark border border-slate-900/10 shadow-lg items-center justify-center text-brand-ink hover:bg-brand-sky/10 hover:border-brand-sky/40 transition-all z-10">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
@@ -515,11 +532,11 @@
       </div>
 
       <!-- Los más vistos: se calcula según las veces que la gente abre la foto ampliada de un modelo -->
-      <div id="mostViewedWrap" class="hidden mb-10 sm:mb-14" data-aos="fade-up">
+      <div id="mostViewedWrap" class="hidden mb-10 sm:mb-10" data-aos="fade-up">
         <h3 class="font-display font-bold text-sm sm:text-base text-brand-ink mb-4 flex items-center gap-2">👀 Los más vistos</h3>
         <div class="relative">
           <div id="mostViewedViewport" class="carousel-track overflow-x-auto">
-            <div id="mostViewedRow" class="flex gap-3 sm:gap-8"></div>
+            <div id="mostViewedRow" class="flex gap-4 sm:gap-8"></div>
           </div>
           <button onclick="carouselStep('mostViewedViewport', -1)" aria-label="Ver anteriores" class="hidden sm:flex absolute -left-4 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-brand-dark border border-slate-900/10 shadow-lg items-center justify-center text-brand-ink hover:bg-brand-sky/10 hover:border-brand-sky/40 transition-all z-10">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
@@ -556,29 +573,20 @@
 
   <!-- ========== AUTODIAGNOSTIC TEST (4 QUESTIONS, ELEGANT FLOW) ========== -->
 
-  <section id="test" class="py-16 sm:py-24 lg:py-32 bg-brand-dark border-y border-slate-900/5 relative overflow-hidden">
+  <section id="test" class="py-10 sm:py-24 lg:py-32 bg-brand-dark border-y border-slate-900/5 relative overflow-hidden">
     <div class="glow-sphere float-glow absolute top-[10%] left-[-10%] w-[450px] h-[450px] bg-brand-teal/5 rounded-full pointer-events-none"></div>
     <div class="glow-sphere float-glow absolute bottom-[5%] right-[-10%] w-[400px] h-[400px] bg-brand-sky/5 rounded-full pointer-events-none" style="animation-delay: 3s;"></div>
 
     <div class="max-w-3xl mx-auto px-6 relative z-10">
 
-      <div class="text-center mb-14" data-aos="fade-up">
-        <span class="text-brand-sky font-bold text-xs tracking-widest uppercase mb-3 block">Autodiagnóstico Clínico</span>
-        <h2 class="font-display font-bold text-3xl sm:text-4xl lg:text-5xl tracking-tight text-brand-ink mb-5">4 preguntas. Un panorama real de su visión.</h2>
-        <p class="text-slate-500 text-sm sm:text-base max-w-xl mx-auto leading-relaxed">
-          Un cuestionario breve diseñado por nuestra especialista para identificar señales tempranas de fatiga visual, astigmatismo y dificultad refractiva.
-        </p>
-      </div>
-
-      <!-- Estado inicial: el cuestionario permanece oculto hasta que la persona decide hacerlo -->
-      <div id="testIntroCard" class="bg-brand-navy border border-slate-900/10 rounded-4xl shadow-2xl p-10 sm:p-14 text-center" data-aos="zoom-in">
-        <div class="w-16 h-16 mx-auto mb-6 rounded-2xl bg-brand-sky/10 border border-brand-sky/20 flex items-center justify-center">
-          <svg class="w-8 h-8 text-brand-sky" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+      <!-- Estado inicial: pregunta corta y directa, sin ocupar tanto espacio -->
+      <div id="testIntroCard" class="max-w-xl mx-auto bg-brand-navy border border-slate-900/10 rounded-3xl shadow-xl p-6 sm:p-8 flex flex-col sm:flex-row items-center gap-4 text-center sm:text-left" data-aos="zoom-in">
+        <div class="w-12 h-12 flex-shrink-0 rounded-2xl bg-brand-sky/10 border border-brand-sky/20 flex items-center justify-center">
+          <svg class="w-6 h-6 text-brand-sky" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
         </div>
-        <h3 class="font-display font-bold text-xl sm:text-2xl text-brand-ink mb-3">¿Quiere conocer un panorama real de su visión?</h3>
-        <p class="text-slate-500 text-sm mb-8 max-w-md mx-auto">Toma menos de un minuto. Al final le mostramos una recomendación personalizada.</p>
-        <button onclick="startVisualTest()" class="shine-cta inline-flex items-center gap-2 bg-gradient-to-r from-brand-sky to-brand-teal text-brand-ink py-4 px-8 rounded-full font-bold transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-brand-sky/25">
-          Sí, quiero hacer el diagnóstico
+        <p class="flex-1 text-sm text-slate-600">¿Aún no sabes si necesitas lentes? Tenemos un autodiagnóstico rápido que te puede ayudar.</p>
+        <button onclick="startVisualTest()" class="shine-cta flex-shrink-0 inline-flex items-center gap-2 bg-gradient-to-r from-brand-sky to-brand-teal text-brand-ink py-3 px-6 rounded-full font-bold text-sm transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-brand-sky/25">
+          Hacerlo
         </button>
       </div>
 
@@ -692,17 +700,17 @@
   </section>
 
   <!-- ========== INTERACTIVE LENS SIMULATOR (THE SPECTACULAR HOVER WIDGET) ========== -->
-  <section id="simulator" class="py-16 sm:py-24 lg:py-32 bg-brand-dark border-y border-slate-900/5 relative overflow-hidden">
+  <section id="simulator" class="py-10 sm:py-24 lg:py-32 bg-brand-dark border-y border-slate-900/5 relative overflow-hidden">
     <div class="glow-sphere float-glow absolute top-[15%] right-[-12%] w-[450px] h-[450px] bg-brand-sky/5 rounded-full pointer-events-none"></div>
     <div class="glow-sphere float-glow absolute bottom-[10%] left-[-12%] w-[400px] h-[400px] bg-brand-teal/5 rounded-full pointer-events-none" style="animation-delay: 5s;"></div>
 
     <div class="max-w-7xl mx-auto px-6 relative z-10">
 
-      <div class="text-center max-w-3xl mx-auto mb-16" data-aos="fade-up">
+      <div class="text-center max-w-3xl mx-auto mb-10" data-aos="fade-up">
         <span class="text-brand-sky font-bold text-xs tracking-widest uppercase mb-3 block">Prueba Virtual en Vivo</span>
-        <h2 class="font-display font-bold text-3xl sm:text-4xl lg:text-5xl tracking-tight text-brand-ink mb-5">¿Cómo te ves con tus nuevos lentes? 👀</h2>
+        <h2 class="font-display font-bold text-2xl sm:text-4xl lg:text-5xl tracking-tight text-brand-ink mb-5">¿Cómo te ves con tus nuevos lentes? 👀</h2>
         <p class="text-slate-500 text-sm sm:text-base leading-relaxed">
-          Activa tu cámara, elige un armazón de nuestro catálogo y juega a probártelos en tiempo real — directo desde tu navegador, sin instalar nada y sin compromiso. Perfecto para empresas que cotizan en volumen... y para quien solo quiere ver qué le queda mejor.
+          Activa tu cámara y pruébate tus armazones favoritos en tiempo real.
         </p>
       </div>
 
@@ -788,14 +796,14 @@
       </div>
 
       <p class="text-center text-[11px] text-slate-600/80 max-w-lg mx-auto mb-20">
-        El ajuste mostrado es una simulación visual de referencia. La graduación, el ancho de armazón y el calce final se confirman siempre con un examen optométrico presencial.
+        Simulación de referencia. El calce final se confirma en un examen presencial.
       </p>
     </div>
   </section>
 
 
   <!-- ========== AGENDE SU CITA ========== -->
-  <section id="contact" class="py-16 sm:py-24 lg:py-32 bg-brand-navy relative">
+  <section id="contact" class="py-10 sm:py-24 lg:py-32 bg-brand-navy relative">
     <div class="absolute inset-0 bg-gradient-to-b from-transparent to-brand-dark pointer-events-none"></div>
 
     <div class="max-w-7xl mx-auto px-6 relative z-10">
@@ -804,7 +812,7 @@
         <!-- Form Left Block -->
         <div class="lg:col-span-5" data-aos="fade-right">
           <span class="text-brand-sky font-bold text-xs tracking-widest uppercase mb-3 block">Agende su Visita</span>
-          <h2 class="font-display font-bold text-3xl sm:text-4xl tracking-tight text-brand-ink mb-6">Agende su cita</h2>
+          <h2 class="font-display font-bold text-2xl sm:text-4xl tracking-tight text-brand-ink mb-6">Agende su cita</h2>
           <p class="text-slate-600 text-sm leading-relaxed mb-8">
             Cuéntenos qué necesita y nuestro equipo se pondrá en contacto con usted para confirmar fecha y horario.
           </p>
@@ -905,13 +913,13 @@
   </section>
 
   <!-- ========== SERVICES PORTFOLIO ========== -->
-  <section id="services" class="py-16 sm:py-24 bg-brand-dark/40 border-y border-slate-900/5">
+  <section id="services" class="py-10 sm:py-24 bg-brand-dark/40 border-y border-slate-900/5">
     <div class="max-w-7xl mx-auto px-6">
       
-      <div class="flex flex-col md:flex-row md:items-end justify-between gap-8 mb-16" data-aos="fade-up">
+      <div class="flex flex-col md:flex-row md:items-end justify-between gap-8 mb-10" data-aos="fade-up">
         <div>
           <span class="text-brand-sky font-bold text-xs tracking-widest uppercase mb-3 block">Nuestra Atención</span>
-          <h2 class="font-display font-bold text-3xl sm:text-4xl tracking-tight text-brand-ink mb-2">Portafolio de Salud Visual</h2>
+          <h2 class="font-display font-bold text-2xl sm:text-4xl tracking-tight text-brand-ink mb-2">Portafolio de Salud Visual</h2>
           <p class="text-slate-500 text-sm">Seleccione la modalidad que mejor responda a las necesidades actuales de su organización.</p>
         </div>
 
@@ -1015,12 +1023,12 @@
 
   <!-- ========== SUCCESS CLIENT TESTIMONIALS ========== -->
 
-  <section id="success" class="py-16 sm:py-24 bg-brand-dark/40 border-t border-slate-900/5">
+  <section id="success" class="py-10 sm:py-24 bg-brand-dark/40 border-t border-slate-900/5">
     <div class="max-w-7xl mx-auto px-6">
       
-      <div class="text-center max-w-3xl mx-auto mb-16" data-aos="fade-up">
+      <div class="text-center max-w-3xl mx-auto mb-10" data-aos="fade-up">
         <span class="text-brand-teal font-bold text-xs tracking-widest uppercase mb-3 block">Testimonios de Éxito</span>
-        <h2 class="font-display font-bold text-3xl sm:text-4xl tracking-tight text-brand-ink mb-4">Resultados de Alta Confianza</h2>
+        <h2 class="font-display font-bold text-2xl sm:text-4xl tracking-tight text-brand-ink mb-4">Resultados de Alta Confianza</h2>
         <p class="text-slate-500 text-sm">Empresas e industrias de Querétaro avalan nuestro profesionalismo, formalidad y el impacto positivo en su personal.</p>
       </div>
 
@@ -1123,12 +1131,12 @@
   </section>
 
   <!-- ========== FOOTER ========== -->
-  <section id="faq" class="py-16 sm:py-24 bg-brand-dark border-t border-slate-900/5">
+  <section id="faq" class="py-10 sm:py-24 bg-brand-dark border-t border-slate-900/5">
     <div class="max-w-4xl mx-auto px-6">
       
-      <div class="text-center max-w-2xl mx-auto mb-16" data-aos="fade-up">
+      <div class="text-center max-w-2xl mx-auto mb-10" data-aos="fade-up">
         <span class="text-brand-sky font-bold text-xs tracking-widest uppercase mb-3 block">Resolvemos sus Dudas</span>
-        <h2 class="font-display font-bold text-3xl sm:text-4xl tracking-tight text-brand-ink mb-4">Preguntas Frecuentes</h2>
+        <h2 class="font-display font-bold text-2xl sm:text-4xl tracking-tight text-brand-ink mb-4">Preguntas Frecuentes</h2>
         <p class="text-slate-500 text-sm">Todo lo que su departamento de compras o Recursos Humanos requiere saber sobre la logística.</p>
       </div>
 
@@ -2717,7 +2725,7 @@
         });
 
         if (masVendidos.length > 0) {
-          bestSellersRow.innerHTML = masVendidos.map(p => `<div class="flex-shrink-0 w-44 sm:w-80 snap-start">${renderGalleryCard(`bestseller-${p.id}`, [p], 0)}</div>`).join('');
+          bestSellersRow.innerHTML = masVendidos.map(p => `<div class="flex-shrink-0 carousel-card w-36 sm:w-80 snap-start">${renderGalleryCard(`bestseller-${p.id}`, [p], 0)}</div>`).join('');
           bestSellersWrap.classList.remove('hidden');
           initCarouselAutoplay('bestSellersViewport');
         } else {
@@ -2759,7 +2767,7 @@
         });
 
         if (masVistosFinal.length > 0) {
-          mostViewedRow.innerHTML = masVistosFinal.map(p => `<div class="flex-shrink-0 w-44 sm:w-80 snap-start">${renderGalleryCard(`mostviewed-${p.id}`, [p], 0)}</div>`).join('');
+          mostViewedRow.innerHTML = masVistosFinal.map(p => `<div class="flex-shrink-0 carousel-card w-36 sm:w-80 snap-start">${renderGalleryCard(`mostviewed-${p.id}`, [p], 0)}</div>`).join('');
           mostViewedWrap.classList.remove('hidden');
           initCarouselAutoplay('mostViewedViewport');
         } else {
@@ -2959,22 +2967,23 @@
             ${buildGalWrapHtml(key, p)}
           </div>
           <div class="p-6 flex flex-col flex-grow">
-            <span class="text-[9px] font-extrabold text-brand-sky uppercase tracking-widest mb-1.5">${escapeHtml(p.categoria)}</span>
+            <span class="gal-compact-hide text-[9px] font-extrabold text-brand-sky uppercase tracking-widest mb-1.5">${escapeHtml(p.categoria)}</span>
             <h4 class="font-display font-bold text-base text-brand-ink mb-1">${escapeHtml(p.modelo)}</h4>
-            ${swatches}
-            <p id="galColor-${key}" class="text-xs text-slate-500 mb-2">Color: ${escapeHtml(p.color)}</p>
-            <div id="galTratamientos-${key}">${(p.tratamientos && p.tratamientos.length) ? `<div class="flex flex-wrap gap-1 mb-3">${p.tratamientos.map(t => `<span class="text-[8px] font-bold uppercase tracking-wide text-brand-teal bg-brand-teal/10 px-2 py-0.5 rounded-full">${escapeHtml(t)}</span>`).join('')}</div>` : '<div class="mb-1"></div>'}</div>
-            <div class="flex items-center justify-between mt-auto mb-4">
+            <div class="gal-compact-hide">${swatches}</div>
+            <p id="galColor-${key}" class="gal-compact-hide text-xs text-slate-500 mb-2">Color: ${escapeHtml(p.color)}</p>
+            <div id="galTratamientos-${key}" class="gal-compact-hide">${(p.tratamientos && p.tratamientos.length) ? `<div class="flex flex-wrap gap-1 mb-3">${p.tratamientos.map(t => `<span class="text-[8px] font-bold uppercase tracking-wide text-brand-teal bg-brand-teal/10 px-2 py-0.5 rounded-full">${escapeHtml(t)}</span>`).join('')}</div>` : '<div class="mb-1"></div>'}</div>
+            <div class="gal-compact-hide flex items-center justify-between mt-auto mb-4">
               <span id="galPrice-${key}" class="text-sm font-display font-bold text-brand-ink">${precioText}</span>
               <span id="galStock-${key}">${stockBadge}</span>
             </div>
-            <div id="galCartWrap-${key}" class="flex flex-col gap-2">
-              ${agotado ? '' : `<button onclick="addToCart('${p.id}')" id="galAddBtn-${key}" class="flex items-center justify-center gap-2 text-[10px] font-bold uppercase tracking-widest text-brand-ink bg-gradient-to-r from-brand-sky to-brand-teal rounded-full py-2.5 transition-all duration-300 hover:shadow-lg hover:shadow-brand-sky/30">
-                🛒 Agregar al carrito
+            <div id="galCartWrap-${key}" class="flex gal-compact-row gap-2 mt-auto gal-compact-mt">
+              ${agotado ? '' : `<button onclick="addToCart('${p.id}')" id="galAddBtn-${key}" class="flex items-center justify-center gap-2 text-[10px] font-bold uppercase tracking-widest text-brand-ink bg-gradient-to-r from-brand-sky to-brand-teal rounded-full py-2.5 gal-compact-icon-btn transition-all duration-300 hover:shadow-lg hover:shadow-brand-sky/30">
+                <span class="gal-compact-hide">🛒 Agregar al carrito</span>
+                <span class="gal-compact-show relative">🛒<span class="absolute -top-1.5 -right-2 text-[11px] font-black">＋</span></span>
               </button>`}
-              <a href="#simulator" class="flex items-center justify-center gap-2 text-[10px] font-bold uppercase tracking-widest text-brand-sky border border-brand-sky/30 hover:bg-brand-sky/10 rounded-full py-2.5 transition-all duration-300">
-                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
-                Pruébatelo en vivo
+              <a href="#simulator" class="flex items-center justify-center gap-2 text-[10px] font-bold uppercase tracking-widest text-brand-sky border border-brand-sky/30 hover:bg-brand-sky/10 rounded-full py-2.5 gal-compact-icon-btn transition-all duration-300">
+                <svg class="w-3.5 h-3.5 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                <span class="gal-compact-hide">Pruébatelo en vivo</span>
               </a>
             </div>
           </div>
