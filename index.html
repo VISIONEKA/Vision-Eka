@@ -363,10 +363,10 @@
   <section id="hero" class="relative min-h-[62vh] sm:min-h-screen flex items-center justify-center overflow-hidden pt-24 lg:pt-20">
     <!-- Rotating photo carousel: varias fotos reales que se van alternando, protagonistas del hero -->
     <div class="absolute inset-0 z-0" id="heroCarousel">
-      <img src="https://images.unsplash.com/photo-1758691737646-79dbce8e25fb?w=1600&q=80" alt="Persona sonriendo con lentes en su oficina" class="hero-slide absolute inset-0 w-full h-full object-cover object-[center_15%] sm:object-center opacity-100 transition-opacity duration-[1500ms]">
+      <img src="https://images.unsplash.com/photo-1758691737646-79dbce8e25fb?w=1600&q=80" alt="Persona sonriendo con lentes en su oficina" class="hero-slide absolute inset-0 w-full h-full object-cover object-[26%_15%] sm:object-center opacity-100 transition-opacity duration-[1500ms]">
       <img src="https://images.unsplash.com/photo-1758876019338-c190822f6ca0?w=1600&q=80" alt="Colaboradora sonriendo con sus lentes en la oficina" class="hero-slide absolute inset-0 w-full h-full object-cover object-[center_15%] sm:object-center opacity-0 transition-opacity duration-[1500ms]">
-      <img src="https://images.unsplash.com/photo-1705579609022-a7a2266b6226?w=1600&q=80" alt="Trabajador con lentes de seguridad" class="hero-slide absolute inset-0 w-full h-full object-cover object-[center_15%] sm:object-center opacity-0 transition-opacity duration-[1500ms]">
-      <img src="https://images.unsplash.com/photo-1758691737605-69a0e78bd193?w=1600&q=80" alt="Colaboradora sonriendo con sus lentes junto a la ventana" class="hero-slide absolute inset-0 w-full h-full object-cover object-[center_15%] sm:object-center opacity-0 transition-opacity duration-[1500ms]">
+      <img src="https://images.unsplash.com/photo-1705579609022-a7a2266b6226?w=1600&q=80" alt="Trabajador con lentes de seguridad" class="hero-slide absolute inset-0 w-full h-full object-cover object-[35%_15%] sm:object-center opacity-0 transition-opacity duration-[1500ms]">
+      <img src="https://images.unsplash.com/photo-1758691737605-69a0e78bd193?w=1600&q=80" alt="Colaboradora sonriendo con sus lentes junto a la ventana" class="hero-slide absolute inset-0 w-full h-full object-cover object-[35%_15%] sm:object-center opacity-0 transition-opacity duration-[1500ms]">
       <!-- Degradado mínimo, solo abajo, para que las fotos se noten mucho más -->
       <div class="absolute inset-0 bg-gradient-to-t from-brand-navy/85 via-brand-navy/10 to-transparent"></div>
     </div>
@@ -377,7 +377,7 @@
     </div>
 
     <div class="max-w-7xl mx-auto px-6 w-full relative z-20 py-6 sm:py-12 flex flex-col justify-end min-h-[62vh] sm:min-h-screen">
-      <div class="flex flex-col items-center text-center max-w-3xl mx-auto pb-4 sm:pb-16">
+      <div class="flex flex-col items-center text-center max-w-3xl mx-auto pb-1 sm:pb-16">
 
         <!-- Main impact phrase: primero la frase, protagonismo total -->
         <h1 class="font-display font-bold text-xl sm:text-3xl lg:text-4xl tracking-tight text-brand-ink leading-[1.2] mb-4 sm:mb-6" data-aos="fade-up" data-aos-delay="100">
@@ -1892,9 +1892,15 @@
 
   <!-- ========== CUSTOM PREMIUM NOTIFICATION DIALOG (Zero Alerts) ========== -->
   <!-- ========== BOTÓN FLOTANTE: MÁS INFORMACIÓN ========== -->
-  <button onclick="openQuickInfoModal()" class="fixed bottom-8 left-8 z-40 w-11 h-11 sm:w-14 sm:h-14 rounded-full bg-gradient-to-tr from-brand-sky to-brand-teal text-brand-ink shadow-2xl shadow-brand-sky/30 flex items-center justify-center text-base sm:text-xl hover:scale-105 transition-all duration-300" title="Más información" aria-label="Más información">
-    💬
-  </button>
+  <div class="fixed bottom-8 left-8 z-40 flex items-end gap-2">
+    <button onclick="openQuickInfoModal()" id="floatInfoBtn" class="blink-attention w-11 h-11 sm:w-14 sm:h-14 rounded-full bg-gradient-to-tr from-brand-sky to-brand-teal text-brand-ink shadow-2xl shadow-brand-sky/30 flex items-center justify-center text-base sm:text-xl hover:scale-105 transition-all duration-300" title="Más información" aria-label="Más información">
+      💬
+    </button>
+    <div id="floatInfoBubble" class="hidden relative bg-brand-dark border border-brand-sky/30 shadow-2xl rounded-2xl rounded-bl-sm px-4 py-3 max-w-[180px] sm:max-w-[210px] text-[11px] sm:text-xs text-slate-600 font-semibold mb-1">
+      <button onclick="dismissFloatInfoBubble(event)" class="absolute -top-2 -right-2 w-5 h-5 rounded-full bg-slate-900/10 hover:bg-slate-900/20 text-slate-500 text-[10px] flex items-center justify-center" aria-label="Cerrar">✕</button>
+      ¿Tiene dudas? Escríbanos, con gusto le ayudamos 😊
+    </div>
+  </div>
 
   <div id="successModal" class="fixed inset-0 z-50 flex items-center justify-center p-6 bg-brand-navy/80 backdrop-blur-md hidden opacity-0 transition-opacity duration-300">
     <div class="bg-brand-dark border-2 border-brand-sky/40 p-8 rounded-3xl max-w-md w-full shadow-2xl text-center transform scale-95 transition-transform duration-300" id="successModalCard">
@@ -2156,6 +2162,30 @@
       duration: 800,
       offset: 40
     });
+
+    // ---- Botón flotante "Más información": llama la atención con un mensaje emergente ----
+    function dismissFloatInfoBubble(e) {
+      if (e) e.stopPropagation();
+      const bubble = document.getElementById('floatInfoBubble');
+      if (bubble) bubble.classList.add('hidden');
+      const btn = document.getElementById('floatInfoBtn');
+      if (btn) btn.classList.remove('blink-attention');
+      try { sessionStorage.setItem('floatInfoDismissed', '1'); } catch (e) {}
+    }
+
+    (function () {
+      let dismissed = false;
+      try { dismissed = sessionStorage.getItem('floatInfoDismissed') === '1'; } catch (e) {}
+      if (dismissed) {
+        const btn = document.getElementById('floatInfoBtn');
+        if (btn) btn.classList.remove('blink-attention');
+        return;
+      }
+      setTimeout(() => {
+        const bubble = document.getElementById('floatInfoBubble');
+        if (bubble) bubble.classList.remove('hidden');
+      }, 6000);
+    })();
 
     // ---- Carruseles "Más vendidos" / "Más vistos": autoplay + control manual ----
     const carouselTimers = {};
