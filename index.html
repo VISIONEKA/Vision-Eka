@@ -3146,7 +3146,11 @@
       let visibleCount = 0;
       items.forEach(item => {
         const matchesCategory = galleryActiveCategory ? item.getAttribute('data-category') === galleryActiveCategory : true;
-        const matchesGenero = galleryActiveGenero ? item.getAttribute('data-genero') === galleryActiveGenero : true;
+        const itemGenero = item.getAttribute('data-genero');
+        // Los modelos unisex se muestran también dentro de "Mujer" y "Hombre", además de "Para Tod@x"
+        const matchesGenero = galleryActiveGenero
+          ? (itemGenero === galleryActiveGenero || itemGenero === 'unisex')
+          : true;
         const matchesSearch = !searchTerm || (item.getAttribute('data-search') || '').includes(searchTerm);
         const show = matchesCategory && matchesGenero && matchesSearch;
         item.style.display = show ? 'flex' : 'none';
@@ -3861,6 +3865,8 @@
       try {
         const fb = await window.firebaseReady;
         const items = await fb.fetchProducts();
+        // Orden alfabético por nombre de modelo, para encontrarlos más fácil
+        items.sort((a, b) => (a.modelo || '').localeCompare((b.modelo || ''), 'es', { sensitivity: 'base' }));
         adminAllProducts = items || [];
 
         if (!items || items.length === 0) {
