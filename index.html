@@ -60,22 +60,15 @@
   </script>
 
   <style>
-    /* Carrusel de "Más vendidos": desliza las tarjetas continuamente hacia la derecha.
-       El contenido se duplica en JS para que el loop sea perfecto (sin salto visible),
-       y se pausa al pasar el mouse para poder hacer clic en los botones con calma. */
-    @keyframes slideRightLoop {
-      from { transform: translateX(-50%); }
-      to   { transform: translateX(0%); }
+    /* Carrusel de "Más vendidos" / "Más vistos": scroll horizontal con snap,
+       controlado por JS (autoplay + flechas), permite ir hacia atrás o adelante
+       manualmente en cualquier momento sin tener que esperar el loop. */
+    .carousel-track {
+      scroll-behavior: smooth;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
     }
-    .best-sellers-track {
-      animation: slideRightLoop 40s linear infinite;
-    }
-    .best-sellers-track:hover {
-      animation-play-state: paused;
-    }
-    @media (max-width: 640px) {
-      .best-sellers-track { animation-duration: 26s; }
-    }
+    .carousel-track::-webkit-scrollbar { display: none; }
 
     /* Bloquea el "rebote" elástico horizontal de Safari en iPhone (evita que se
        vea un espacio en blanco al arrastrar la página hacia los lados) */
@@ -290,8 +283,8 @@
             Cotizar
           </a>
           
-          <button id="menuToggle" class="xl:hidden relative right-[3px] lg:right-0 -mr-1 lg:mr-0 p-1.5 lg:p-2.5 rounded-full text-slate-600 hover:text-brand-ink hover:bg-slate-900/5 transition-all flex-shrink-0" aria-label="Abrir menú">
-            <svg class="w-6 h-6 lg:w-5 lg:h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+          <button id="menuToggle" class="xl:hidden relative right-[3px] lg:right-0 -mr-1 lg:mr-0 p-1 lg:p-2.5 rounded-full text-slate-600 hover:text-brand-ink hover:bg-slate-900/5 transition-all flex-shrink-0" aria-label="Abrir menú">
+            <svg class="w-[14px] h-[14px] lg:w-5 lg:h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16m-7 6h7"/>
             </svg>
           </button>
@@ -341,13 +334,13 @@
   </div>
 
   <!-- ========== CINEMATIC HERO SECTION (ROTATING PHOTO CAROUSEL AS PROTAGONIST) ========== -->
-  <section id="hero" class="relative min-h-[80vh] sm:min-h-screen flex items-center justify-center overflow-hidden pt-24 lg:pt-20">
+  <section id="hero" class="relative min-h-[62vh] sm:min-h-screen flex items-center justify-center overflow-hidden pt-24 lg:pt-20">
     <!-- Rotating photo carousel: varias fotos reales que se van alternando, protagonistas del hero -->
     <div class="absolute inset-0 z-0" id="heroCarousel">
-      <img src="https://images.unsplash.com/photo-1758691737646-79dbce8e25fb?w=1600&q=80" alt="Persona sonriendo con lentes en su oficina" class="hero-slide absolute inset-0 w-full h-full object-cover object-[center_20%] sm:object-center opacity-100 transition-opacity duration-[1500ms]">
-      <img src="https://images.unsplash.com/photo-1758876019338-c190822f6ca0?w=1600&q=80" alt="Colaboradora sonriendo con sus lentes en la oficina" class="hero-slide absolute inset-0 w-full h-full object-cover object-[center_20%] sm:object-center opacity-0 transition-opacity duration-[1500ms]">
-      <img src="https://images.unsplash.com/photo-1705579609022-a7a2266b6226?w=1600&q=80" alt="Trabajador con lentes de seguridad" class="hero-slide absolute inset-0 w-full h-full object-cover object-[center_20%] sm:object-center opacity-0 transition-opacity duration-[1500ms]">
-      <img src="https://images.unsplash.com/photo-1758691737605-69a0e78bd193?w=1600&q=80" alt="Colaboradora sonriendo con sus lentes junto a la ventana" class="hero-slide absolute inset-0 w-full h-full object-cover object-[center_20%] sm:object-center opacity-0 transition-opacity duration-[1500ms]">
+      <img src="https://images.unsplash.com/photo-1758691737646-79dbce8e25fb?w=1600&q=80" alt="Persona sonriendo con lentes en su oficina" class="hero-slide absolute inset-0 w-full h-full object-cover object-[center_15%] sm:object-center opacity-100 transition-opacity duration-[1500ms]">
+      <img src="https://images.unsplash.com/photo-1758876019338-c190822f6ca0?w=1600&q=80" alt="Colaboradora sonriendo con sus lentes en la oficina" class="hero-slide absolute inset-0 w-full h-full object-cover object-[center_15%] sm:object-center opacity-0 transition-opacity duration-[1500ms]">
+      <img src="https://images.unsplash.com/photo-1705579609022-a7a2266b6226?w=1600&q=80" alt="Trabajador con lentes de seguridad" class="hero-slide absolute inset-0 w-full h-full object-cover object-[center_15%] sm:object-center opacity-0 transition-opacity duration-[1500ms]">
+      <img src="https://images.unsplash.com/photo-1758691737605-69a0e78bd193?w=1600&q=80" alt="Colaboradora sonriendo con sus lentes junto a la ventana" class="hero-slide absolute inset-0 w-full h-full object-cover object-[center_15%] sm:object-center opacity-0 transition-opacity duration-[1500ms]">
       <!-- Degradado mínimo, solo abajo, para que las fotos se noten mucho más -->
       <div class="absolute inset-0 bg-gradient-to-t from-brand-navy/85 via-brand-navy/10 to-transparent"></div>
     </div>
@@ -357,18 +350,18 @@
       <div class="laser-line absolute left-0 right-0 h-[1.5px] bg-gradient-to-r from-transparent via-brand-sky to-transparent shadow-[0_0_15px_rgba(6,182,212,0.6)]"></div>
     </div>
 
-    <div class="max-w-7xl mx-auto px-6 w-full relative z-20 py-12 flex flex-col justify-end min-h-[80vh] sm:min-h-screen">
-      <div class="flex flex-col items-center text-center max-w-3xl mx-auto pb-16">
+    <div class="max-w-7xl mx-auto px-6 w-full relative z-20 py-6 sm:py-12 flex flex-col justify-end min-h-[62vh] sm:min-h-screen">
+      <div class="flex flex-col items-center text-center max-w-3xl mx-auto pb-10 sm:pb-16">
 
         <!-- Main impact phrase: primero la frase, protagonismo total -->
-        <h1 class="font-display font-bold text-2xl sm:text-3xl lg:text-4xl tracking-tight text-brand-ink leading-[1.2] mb-6" data-aos="fade-up" data-aos-delay="100">
+        <h1 class="font-display font-bold text-xl sm:text-3xl lg:text-4xl tracking-tight text-brand-ink leading-[1.2] mb-4 sm:mb-6" data-aos="fade-up" data-aos-delay="100">
           Protegemos la visión de quienes<br class="hidden sm:block">
           <span class="bg-clip-text text-transparent bg-gradient-to-r from-brand-sky via-brand-teal to-cyan-600">construyen el futuro.</span>
         </h1>
 
         <!-- El recuadro va debajo de la frase -->
-        <div class="inline-flex items-center gap-2 px-4 py-2 bg-brand-mid/90 border border-brand-sky/30 rounded-full text-brand-sky text-xs font-bold uppercase mb-8 backdrop-blur-md shadow-inner breathe-tag" data-aos="fade-up">
-          <span class="w-2 h-2 rounded-full bg-brand-teal animate-pulse"></span>
+        <div class="inline-flex items-center gap-1.5 sm:gap-2 px-3 py-1.5 sm:px-4 sm:py-2 bg-brand-mid/90 border border-brand-sky/30 rounded-full text-brand-sky text-[10px] sm:text-xs font-bold uppercase mb-6 sm:mb-8 backdrop-blur-md shadow-inner breathe-tag" data-aos="fade-up">
+          <span class="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-brand-teal animate-pulse"></span>
           Salud Visual Móvil • Empresas, Oficinas y Familias
         </div>
 
@@ -508,16 +501,32 @@
       <!-- Los más vendidos: se calcula según las veces que un modelo se agrega al carrito -->
       <div id="bestSellersWrap" class="hidden mb-10 sm:mb-14" data-aos="fade-up">
         <h3 class="font-display font-bold text-sm sm:text-base text-brand-ink mb-4 flex items-center gap-2">🔥 Los más vendidos</h3>
-        <div id="bestSellersViewport" class="overflow-hidden">
-          <div id="bestSellersRow" class="best-sellers-track flex gap-5 sm:gap-8 w-max"></div>
+        <div class="relative">
+          <div id="bestSellersViewport" class="carousel-track overflow-x-auto">
+            <div id="bestSellersRow" class="flex gap-3 sm:gap-8"></div>
+          </div>
+          <button onclick="carouselStep('bestSellersViewport', -1)" aria-label="Ver anteriores" class="hidden sm:flex absolute -left-4 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-brand-dark border border-slate-900/10 shadow-lg items-center justify-center text-brand-ink hover:bg-brand-sky/10 hover:border-brand-sky/40 transition-all z-10">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
+          </button>
+          <button onclick="carouselStep('bestSellersViewport', 1)" aria-label="Ver siguientes" class="hidden sm:flex absolute -right-4 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-brand-dark border border-slate-900/10 shadow-lg items-center justify-center text-brand-ink hover:bg-brand-sky/10 hover:border-brand-sky/40 transition-all z-10">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
+          </button>
         </div>
       </div>
 
       <!-- Los más vistos: se calcula según las veces que la gente abre la foto ampliada de un modelo -->
       <div id="mostViewedWrap" class="hidden mb-10 sm:mb-14" data-aos="fade-up">
         <h3 class="font-display font-bold text-sm sm:text-base text-brand-ink mb-4 flex items-center gap-2">👀 Los más vistos</h3>
-        <div id="mostViewedViewport" class="overflow-hidden">
-          <div id="mostViewedRow" class="flex gap-5 sm:gap-8 w-max"></div>
+        <div class="relative">
+          <div id="mostViewedViewport" class="carousel-track overflow-x-auto">
+            <div id="mostViewedRow" class="flex gap-3 sm:gap-8"></div>
+          </div>
+          <button onclick="carouselStep('mostViewedViewport', -1)" aria-label="Ver anteriores" class="hidden sm:flex absolute -left-4 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-brand-dark border border-slate-900/10 shadow-lg items-center justify-center text-brand-ink hover:bg-brand-sky/10 hover:border-brand-sky/40 transition-all z-10">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
+          </button>
+          <button onclick="carouselStep('mostViewedViewport', 1)" aria-label="Ver siguientes" class="hidden sm:flex absolute -right-4 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-brand-dark border border-slate-900/10 shadow-lg items-center justify-center text-brand-ink hover:bg-brand-sky/10 hover:border-brand-sky/40 transition-all z-10">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
+          </button>
         </div>
       </div>
 
@@ -2131,6 +2140,44 @@
       offset: 40
     });
 
+    // ---- Carruseles "Más vendidos" / "Más vistos": autoplay + control manual ----
+    const carouselTimers = {};
+
+    function carouselStep(viewportId, dir) {
+      const viewport = document.getElementById(viewportId);
+      if (!viewport) return;
+      const card = viewport.querySelector(':scope > div > div');
+      const step = card ? card.parentElement.offsetWidth + 16 : viewport.clientWidth * 0.8;
+      const maxScroll = viewport.scrollWidth - viewport.clientWidth;
+
+      if (dir > 0 && viewport.scrollLeft >= maxScroll - 5) {
+        viewport.scrollTo({ left: 0, behavior: 'smooth' });
+      } else if (dir < 0 && viewport.scrollLeft <= 5) {
+        viewport.scrollTo({ left: maxScroll, behavior: 'smooth' });
+      } else {
+        viewport.scrollBy({ left: step * dir, behavior: 'smooth' });
+      }
+      restartCarouselAutoplay(viewportId);
+    }
+
+    function restartCarouselAutoplay(viewportId) {
+      if (carouselTimers[viewportId]) clearInterval(carouselTimers[viewportId]);
+      carouselTimers[viewportId] = setInterval(() => carouselStep(viewportId, 1), 4500);
+    }
+
+    function initCarouselAutoplay(viewportId) {
+      const viewport = document.getElementById(viewportId);
+      if (!viewport) return;
+      // Pausa el autoplay mientras la persona interactúa manualmente (scroll táctil, etc.)
+      let pauseTimeout = null;
+      viewport.addEventListener('scroll', () => {
+        if (carouselTimers[viewportId]) clearInterval(carouselTimers[viewportId]);
+        if (pauseTimeout) clearTimeout(pauseTimeout);
+        pauseTimeout = setTimeout(() => restartCarouselAutoplay(viewportId), 3000);
+      }, { passive: true });
+      restartCarouselAutoplay(viewportId);
+    }
+
     // ---- Hero Carousel: alterna varias fotos reales cada pocos segundos ----
     (function () {
       const slides = document.querySelectorAll('#heroCarousel .hero-slide');
@@ -2667,15 +2714,12 @@
         const masVendidos = items.filter(p => (p.interacciones || 0) > 0).sort((a, b) => (b.interacciones || 0) - (a.interacciones || 0)).slice(0, 6);
         masVendidos.forEach(p => {
           grupos[`bestseller-${p.id}`] = [p];
-          grupos[`bestseller2-${p.id}`] = [p]; // copia para el loop del carrusel
         });
 
         if (masVendidos.length > 0) {
-          const buildCard = (prefix) => masVendidos.map(p => `<div class="flex-shrink-0 w-72 sm:w-80">${renderGalleryCard(`${prefix}-${p.id}`, [p], 0)}</div>`).join('');
-          // Duplicado (con claves distintas) para que la animación de deslizamiento sea un loop continuo sin salto visible
-          bestSellersRow.innerHTML = masVendidos.length > 1 ? buildCard('bestseller') + buildCard('bestseller2') : buildCard('bestseller');
-          bestSellersRow.classList.toggle('best-sellers-track', masVendidos.length > 1);
+          bestSellersRow.innerHTML = masVendidos.map(p => `<div class="flex-shrink-0 w-44 sm:w-80 snap-start">${renderGalleryCard(`bestseller-${p.id}`, [p], 0)}</div>`).join('');
           bestSellersWrap.classList.remove('hidden');
+          initCarouselAutoplay('bestSellersViewport');
         } else {
           bestSellersWrap.classList.add('hidden');
         }
@@ -2712,14 +2756,12 @@
         const masVistosFinal = masVistos.slice(0, 6);
         masVistosFinal.forEach(p => {
           grupos[`mostviewed-${p.id}`] = [p];
-          grupos[`mostviewed2-${p.id}`] = [p]; // copia para el loop del carrusel
         });
 
         if (masVistosFinal.length > 0) {
-          const buildViewedCard = (prefix) => masVistosFinal.map(p => `<div class="flex-shrink-0 w-72 sm:w-80">${renderGalleryCard(`${prefix}-${p.id}`, [p], 0)}</div>`).join('');
-          mostViewedRow.innerHTML = masVistosFinal.length > 1 ? buildViewedCard('mostviewed') + buildViewedCard('mostviewed2') : buildViewedCard('mostviewed');
-          mostViewedRow.classList.toggle('best-sellers-track', masVistosFinal.length > 1);
+          mostViewedRow.innerHTML = masVistosFinal.map(p => `<div class="flex-shrink-0 w-44 sm:w-80 snap-start">${renderGalleryCard(`mostviewed-${p.id}`, [p], 0)}</div>`).join('');
           mostViewedWrap.classList.remove('hidden');
+          initCarouselAutoplay('mostViewedViewport');
         } else {
           mostViewedWrap.classList.add('hidden');
         }
