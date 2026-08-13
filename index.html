@@ -363,10 +363,10 @@
   <section id="hero" class="relative min-h-[62vh] sm:min-h-screen flex items-center justify-center overflow-hidden pt-24 lg:pt-20">
     <!-- Rotating photo carousel: varias fotos reales que se van alternando, protagonistas del hero -->
     <div class="absolute inset-0 z-0" id="heroCarousel">
-      <img src="https://images.unsplash.com/photo-1758691737646-79dbce8e25fb?w=1600&q=80" alt="Persona sonriendo con lentes en su oficina" class="hero-slide absolute inset-0 w-full h-full object-cover object-[65%_15%] sm:object-center opacity-100 transition-opacity duration-[1500ms]">
-      <img src="https://images.unsplash.com/photo-1758876019338-c190822f6ca0?w=1600&q=80" alt="Colaboradora sonriendo con sus lentes en la oficina" class="hero-slide absolute inset-0 w-full h-full object-cover object-[center_20%] sm:object-center opacity-0 transition-opacity duration-[1500ms]">
-      <img src="https://images.unsplash.com/photo-1705579609022-a7a2266b6226?w=1600&q=80" alt="Trabajador con lentes de seguridad" class="hero-slide absolute inset-0 w-full h-full object-cover object-[65%_15%] sm:object-center opacity-0 transition-opacity duration-[1500ms]">
-      <img src="https://images.unsplash.com/photo-1758691737605-69a0e78bd193?w=1600&q=80" alt="Colaboradora sonriendo con sus lentes junto a la ventana" class="hero-slide absolute inset-0 w-full h-full object-cover object-[65%_15%] sm:object-center opacity-0 transition-opacity duration-[1500ms]">
+      <img src="https://images.unsplash.com/photo-1758691737646-79dbce8e25fb?w=1600&q=80" alt="Persona sonriendo con lentes en su oficina" data-default-src="https://images.unsplash.com/photo-1758691737646-79dbce8e25fb?w=1600&q=80" data-pos-desktop="50 50" data-pos-mobile="65 15" class="hero-slide absolute inset-0 w-full h-full object-cover object-[65%_15%] sm:object-center opacity-100 transition-opacity duration-[1500ms]">
+      <img src="https://images.unsplash.com/photo-1758876019338-c190822f6ca0?w=1600&q=80" alt="Colaboradora sonriendo con sus lentes en la oficina" data-default-src="https://images.unsplash.com/photo-1758876019338-c190822f6ca0?w=1600&q=80" data-pos-desktop="50 50" data-pos-mobile="50 20" class="hero-slide absolute inset-0 w-full h-full object-cover object-[center_20%] sm:object-center opacity-0 transition-opacity duration-[1500ms]">
+      <img src="https://images.unsplash.com/photo-1705579609022-a7a2266b6226?w=1600&q=80" alt="Trabajador con lentes de seguridad" data-default-src="https://images.unsplash.com/photo-1705579609022-a7a2266b6226?w=1600&q=80" data-pos-desktop="50 50" data-pos-mobile="65 15" class="hero-slide absolute inset-0 w-full h-full object-cover object-[65%_15%] sm:object-center opacity-0 transition-opacity duration-[1500ms]">
+      <img src="https://images.unsplash.com/photo-1758691737605-69a0e78bd193?w=1600&q=80" alt="Colaboradora sonriendo con sus lentes junto a la ventana" data-default-src="https://images.unsplash.com/photo-1758691737605-69a0e78bd193?w=1600&q=80" data-pos-desktop="50 50" data-pos-mobile="65 15" class="hero-slide absolute inset-0 w-full h-full object-cover object-[65%_15%] sm:object-center opacity-0 transition-opacity duration-[1500ms]">
       <!-- Degradado mínimo, solo abajo, para que las fotos se noten mucho más -->
       <div class="absolute inset-0 bg-gradient-to-t from-brand-navy/85 via-brand-navy/10 to-transparent"></div>
     </div>
@@ -1349,6 +1349,9 @@
         <button class="admin-tab-btn flex-1 min-w-[120px] flex items-center justify-center gap-1.5 py-3 rounded-full text-[11px] font-bold uppercase tracking-wider transition-all duration-300 text-slate-600 hover:text-brand-ink" data-admin-tab="analitica" onclick="setAdminTab('analitica')">
           📊 Analítica
         </button>
+        <button class="admin-tab-btn flex-1 min-w-[120px] flex items-center justify-center gap-1.5 py-3 rounded-full text-[11px] font-bold uppercase tracking-wider transition-all duration-300 text-slate-600 hover:text-brand-ink" data-admin-tab="inicio" onclick="setAdminTab('inicio')">
+          🖼️ Inicio
+        </button>
       </div>
 
       <!-- ===== TAB: CATÁLOGO ===== -->
@@ -1399,12 +1402,13 @@
 
         <div class="mb-4">
           <label class="block text-[9px] uppercase tracking-widest text-slate-500 font-extrabold mb-2">¿Para quién es este modelo?</label>
-          <select id="adminProductGeneroSelect" class="w-full p-3.5 bg-brand-dark border border-slate-900/10 rounded-xl text-sm text-brand-ink focus:border-brand-sky focus:outline-none">
+          <select id="adminProductGeneroSelect" class="w-full p-3.5 bg-brand-dark border border-slate-900/10 rounded-xl text-sm text-brand-ink focus:border-brand-sky focus:outline-none" onchange="adminSyncGeneroWithCatalogo(this.value)">
             <option value="unisex">Unisex</option>
             <option value="mujer">Mujer</option>
             <option value="hombre">Hombre</option>
+            <option value="ninos">Niños</option>
           </select>
-          <p class="text-[10px] text-slate-600/70 mt-1.5">Se usa para mostrarlo en las secciones "Mujer", "Hombre" o "Unisex" del catálogo. Para niños use el catálogo Kids, abajo.</p>
+          <p class="text-[10px] text-slate-600/70 mt-1.5">Se usa para mostrarlo en las secciones "Mujer", "Hombre", "Unisex" o "Niños" del catálogo. Al elegir "Niños" el modelo se guarda automáticamente en el catálogo Kids.</p>
         </div>
 
         <div class="mb-4">
@@ -1887,6 +1891,24 @@
       </div>
       <!-- ===== FIN TAB: ANALÍTICA ===== -->
 
+      <!-- ===== TAB: INICIO (fotos del Hero) ===== -->
+      <div id="adminTabInicio" class="admin-tab-content hidden">
+
+        <div class="bg-brand-navy border border-slate-900/10 rounded-3xl p-6 mb-8">
+          <h3 class="font-display font-bold text-sm text-brand-ink mb-3">🖼️ Fotos del Inicio (Hero)</h3>
+          <p class="text-xs text-slate-600 leading-relaxed">Cambia las 4 fotos que van rotando en la portada y ajusta cómo se recortan, tanto en computadora como en teléfono. La vista previa de abajo se actualiza al instante.</p>
+        </div>
+
+        <div id="adminHeroSlidesWrap" class="space-y-6"></div>
+
+        <button onclick="adminSaveHeroConfig()" class="w-full mt-2 flex items-center justify-center gap-2 bg-gradient-to-r from-brand-sky to-brand-teal text-brand-ink py-4 rounded-full font-bold transition-all hover:shadow-lg hover:shadow-brand-sky/30">
+          💾 Guardar cambios de las fotos del Inicio
+        </button>
+        <p id="adminHeroSavedMsg" class="hidden text-center text-xs text-brand-teal font-semibold mt-3">✓ Guardado. Los cambios ya se ven en la página de inicio.</p>
+
+      </div>
+      <!-- ===== FIN TAB: INICIO ===== -->
+
     </div>
   </div>
 
@@ -2231,6 +2253,43 @@
       const dots = document.querySelectorAll('#heroCarouselDots .hero-dot');
       let heroIdx = 0;
       let heroTimer = null;
+
+      // Aplica la posición de recorte (X/Y) guardada para cada foto, según sea
+      // pantalla de teléfono o de computadora. Se puede editar desde el admin.
+      function applyHeroPositions() {
+        const isMobile = window.matchMedia('(max-width: 640px)').matches;
+        slides.forEach(img => {
+          const pos = isMobile
+            ? (img.dataset.posMobile || '50 50')
+            : (img.dataset.posDesktop || '50 50');
+          const [x, y] = pos.split(' ');
+          img.style.objectPosition = `${x}% ${y}%`;
+        });
+      }
+      window.applyHeroPositions = applyHeroPositions;
+      window.addEventListener('resize', applyHeroPositions);
+      applyHeroPositions();
+
+      // Si hay una configuración guardada en Firestore (editada desde el admin),
+      // se sobreescriben las fotos/posiciones por defecto.
+      (async function loadHeroConfigFromFirestore() {
+        try {
+          const fb = await window.firebaseReady;
+          const config = await fb.fetchHeroConfig();
+          if (config && Array.isArray(config.slides) && config.slides.length) {
+            config.slides.forEach((s, i) => {
+              const img = slides[i];
+              if (!img) return;
+              if (s.src) img.src = s.src;
+              if (s.posDesktop) img.dataset.posDesktop = s.posDesktop;
+              if (s.posMobile) img.dataset.posMobile = s.posMobile;
+            });
+            applyHeroPositions();
+          }
+        } catch (err) {
+          console.error('No se pudo cargar la configuración del hero:', err);
+        }
+      })();
 
       function showHeroSlide(idx) {
         slides.forEach((img, i) => img.classList.toggle('opacity-100', i === idx));
@@ -3664,6 +3723,12 @@
 
     let adminProductCatalogo = 'principal';
 
+    function adminSyncGeneroWithCatalogo(genero) {
+      // Al elegir "Niños" en el selector de género, se marca automáticamente
+      // el catálogo destino como "Kids" (y viceversa si eligen otra opción).
+      adminSetProductCatalogo(genero === 'ninos' ? 'kids' : 'principal');
+    }
+
     function adminSetProductCatalogo(destino) {
       adminProductCatalogo = destino;
       const principalBtn = document.getElementById('adminProductCatalogoPrincipalBtn');
@@ -4454,6 +4519,8 @@
       document.querySelectorAll('.admin-tab-content').forEach(el => el.classList.add('hidden'));
       document.getElementById('adminTab' + tabName.charAt(0).toUpperCase() + tabName.slice(1)).classList.remove('hidden');
 
+      if (tabName === 'inicio') adminInitHeroEditor();
+
       document.querySelectorAll('.admin-tab-btn').forEach(btn => {
         if (btn.getAttribute('data-admin-tab') === tabName) {
           btn.classList.add('bg-gradient-to-r', 'from-brand-sky', 'to-brand-teal', 'text-brand-ink');
@@ -4463,6 +4530,107 @@
           btn.classList.add('text-slate-600');
         }
       });
+    }
+
+    // =========================================================
+    // ---- ADMIN PANEL: FOTOS DEL INICIO (HERO) ----
+    // =========================================================
+    let adminHeroSlidesData = [];
+
+    function adminInitHeroEditor() {
+      const domSlides = document.querySelectorAll('#heroCarousel .hero-slide');
+      adminHeroSlidesData = Array.from(domSlides).map(img => {
+        const [dx, dy] = (img.dataset.posDesktop || '50 50').split(' ').map(Number);
+        const [mx, my] = (img.dataset.posMobile || '50 50').split(' ').map(Number);
+        return { src: img.src, desktopX: dx, desktopY: dy, mobileX: mx, mobileY: my };
+      });
+      adminRenderHeroSlidesEditor();
+    }
+
+    function adminRenderHeroSlidesEditor() {
+      const wrap = document.getElementById('adminHeroSlidesWrap');
+      if (!wrap) return;
+      wrap.innerHTML = adminHeroSlidesData.map((s, i) => `
+        <div class="bg-brand-navy border border-slate-900/10 rounded-3xl p-5">
+          <span class="text-[10px] font-extrabold uppercase tracking-widest text-brand-sky mb-3 block">Foto ${i + 1}</span>
+
+          <label class="block text-[10px] uppercase tracking-widest text-slate-500 font-extrabold mb-1.5">URL de la imagen</label>
+          <input type="text" value="${escapeHtml(s.src)}" oninput="adminUpdateHeroSlide(${i}, 'src', this.value)" class="w-full p-3 mb-4 bg-brand-dark border border-slate-900/10 rounded-xl text-xs text-brand-ink focus:border-brand-sky focus:outline-none">
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+
+            <div>
+              <div class="flex items-center justify-between mb-2">
+                <span class="text-[10px] uppercase tracking-widest text-slate-500 font-extrabold">💻 Computadora</span>
+              </div>
+              <div class="relative w-full aspect-video rounded-xl overflow-hidden border border-slate-900/10 mb-2" style="background-image:url('${escapeHtml(s.src)}'); background-size:cover; background-position:${s.desktopX}% ${s.desktopY}%;" id="adminHeroPreviewDesktop-${i}"></div>
+              <label class="text-[9px] text-slate-500">Horizontal (izquierda ↔ derecha)</label>
+              <input type="range" min="0" max="100" value="${s.desktopX}" oninput="adminUpdateHeroSlide(${i}, 'desktopX', this.value)" class="w-full accent-brand-sky">
+              <label class="text-[9px] text-slate-500">Vertical (arriba ↔ abajo)</label>
+              <input type="range" min="0" max="100" value="${s.desktopY}" oninput="adminUpdateHeroSlide(${i}, 'desktopY', this.value)" class="w-full accent-brand-sky">
+            </div>
+
+            <div>
+              <div class="flex items-center justify-between mb-2">
+                <span class="text-[10px] uppercase tracking-widest text-slate-500 font-extrabold">📱 Teléfono</span>
+              </div>
+              <div class="relative w-24 mx-auto aspect-[9/16] rounded-xl overflow-hidden border border-slate-900/10 mb-2" style="background-image:url('${escapeHtml(s.src)}'); background-size:cover; background-position:${s.mobileX}% ${s.mobileY}%;" id="adminHeroPreviewMobile-${i}"></div>
+              <label class="text-[9px] text-slate-500">Horizontal (izquierda ↔ derecha)</label>
+              <input type="range" min="0" max="100" value="${s.mobileX}" oninput="adminUpdateHeroSlide(${i}, 'mobileX', this.value)" class="w-full accent-brand-coral">
+              <label class="text-[9px] text-slate-500">Vertical (arriba ↔ abajo)</label>
+              <input type="range" min="0" max="100" value="${s.mobileY}" oninput="adminUpdateHeroSlide(${i}, 'mobileY', this.value)" class="w-full accent-brand-coral">
+            </div>
+
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function adminUpdateHeroSlide(i, field, value) {
+      adminHeroSlidesData[i][field] = (field === 'src') ? value : Number(value);
+      const s = adminHeroSlidesData[i];
+      const previewD = document.getElementById(`adminHeroPreviewDesktop-${i}`);
+      const previewM = document.getElementById(`adminHeroPreviewMobile-${i}`);
+      if (previewD) {
+        previewD.style.backgroundImage = `url('${s.src}')`;
+        previewD.style.backgroundPosition = `${s.desktopX}% ${s.desktopY}%`;
+      }
+      if (previewM) {
+        previewM.style.backgroundImage = `url('${s.src}')`;
+        previewM.style.backgroundPosition = `${s.mobileX}% ${s.mobileY}%`;
+      }
+    }
+
+    async function adminSaveHeroConfig() {
+      try {
+        const fb = await window.firebaseReady;
+        const slides = adminHeroSlidesData.map(s => ({
+          src: s.src,
+          posDesktop: `${s.desktopX} ${s.desktopY}`,
+          posMobile: `${s.mobileX} ${s.mobileY}`
+        }));
+        await fb.saveHeroConfig(slides);
+
+        // Actualiza también la portada en vivo, sin recargar la página
+        const domSlides = document.querySelectorAll('#heroCarousel .hero-slide');
+        slides.forEach((s, i) => {
+          const img = domSlides[i];
+          if (!img) return;
+          img.src = s.src;
+          img.dataset.posDesktop = s.posDesktop;
+          img.dataset.posMobile = s.posMobile;
+        });
+        if (window.applyHeroPositions) window.applyHeroPositions();
+
+        const msg = document.getElementById('adminHeroSavedMsg');
+        if (msg) {
+          msg.classList.remove('hidden');
+          setTimeout(() => msg.classList.add('hidden'), 3500);
+        }
+      } catch (err) {
+        console.error('Error al guardar la configuración del hero:', err);
+        alert('Hubo un error al guardar. Intenta de nuevo.');
+      }
     }
 
     function formatFecha(ts) {
@@ -6410,6 +6578,21 @@
       return snap.docs.map(d => ({ id: d.id, ...d.data() }));
     }
 
+    // ---- Configuración del carrusel de fotos del Hero (posición de recorte editable desde el admin) ----
+    const HERO_CONFIG_DOC = 'config/heroCarousel';
+    async function fetchHeroConfig() {
+      try {
+        const snap = await getDoc(doc(db, 'config', 'heroCarousel'));
+        return snap.exists() ? snap.data() : null;
+      } catch (err) {
+        console.error('Error al leer configuración del hero:', err);
+        return null;
+      }
+    }
+    async function saveHeroConfig(slides) {
+      await setDoc(doc(db, 'config', 'heroCarousel'), { slides, updatedAt: serverTimestamp() });
+    }
+
   async function addProduct(data, imgUrls) {
       const imgs = (Array.isArray(imgUrls) ? imgUrls : (imgUrls ? [imgUrls] : [])).map(u => String(u).trim()).filter(Boolean);
       const tratamientos = (Array.isArray(data.tratamientos) ? data.tratamientos : []).map(t => String(t).trim()).filter(Boolean);
@@ -6808,6 +6991,8 @@ async function deleteProduct(id, storagePaths) {
       fetchCategories,
       addCategory,
       fetchProducts,
+      fetchHeroConfig,
+      saveHeroConfig,
       addProduct,
       updateProduct,
       updateProductVisibility,
