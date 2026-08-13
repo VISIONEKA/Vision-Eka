@@ -4634,7 +4634,7 @@
     }
 
     function adminUpdateHeroSlide(i, field, value) {
-      adminHeroSlidesData[i][field] = (field === 'src') ? value : Number(value);
+      adminHeroSlidesData[i][field] = (field === 'src') ? normalizeImageUrl(String(value || '').trim()) : Number(value);
       const s = adminHeroSlidesData[i];
       const previewD = document.getElementById(`adminHeroPreviewDesktop-${i}`);
       const previewM = document.getElementById(`adminHeroPreviewMobile-${i}`);
@@ -4763,6 +4763,7 @@
     }
 
     function adminUpdateExtraImgSrc(id, url) {
+      url = normalizeImageUrl(String(url || '').trim());
       if (!adminExtraImgsData[id]) adminExtraImgsData[id] = { desktopX: 50, desktopY: 50, mobileX: 50, mobileY: 50 };
       adminExtraImgsData[id].src = url;
       const img = document.getElementById(id);
