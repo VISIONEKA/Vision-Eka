@@ -4700,7 +4700,7 @@
         if (!img) return;
         const [dx, dy] = (img.dataset.posDesktop || '50 50').split(' ').map(Number);
         const [mx, my] = (img.dataset.posMobile || '50 50').split(' ').map(Number);
-        adminExtraImgsData[id] = { desktopX: dx, desktopY: dy, mobileX: mx, mobileY: my };
+        adminExtraImgsData[id] = { src: img.src, desktopX: dx, desktopY: dy, mobileX: mx, mobileY: my };
       });
       adminRenderExtraImgsEditor();
     }
@@ -4715,11 +4715,8 @@
         <div class="bg-brand-navy border border-slate-900/10 rounded-3xl p-5">
           <span class="text-[10px] font-extrabold uppercase tracking-widest text-brand-sky mb-3 block">${escapeHtml(EXTRA_IMG_LABELS[id])}</span>
           <div class="mb-3">
-            <label class="inline-flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-brand-ink bg-brand-dark border border-slate-900/10 rounded-xl px-3 py-2 cursor-pointer hover:border-brand-sky transition-all">
-              📤 Cambiar foto
-              <input type="file" accept="image/*" class="hidden" onchange="adminUploadExtraImg('${id}', this)">
-            </label>
-            <span id="${id}-uploadStatus" class="text-[10px] text-slate-500 ml-2"></span>
+            <label class="block text-[10px] uppercase tracking-widest text-slate-500 font-extrabold mb-1.5">URL de la imagen</label>
+            <input type="text" value="${escapeHtml(s.src || (document.getElementById(id) ? document.getElementById(id).src : '') || '')}" oninput="adminUpdateExtraImgSrc('${id}', this.value)" placeholder="https://ejemplo.com/foto.jpg" class="w-full p-3 bg-brand-dark border border-slate-900/10 rounded-xl text-xs text-brand-ink focus:border-brand-sky focus:outline-none">
           </div>
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
             <div>
@@ -4765,29 +4762,17 @@
       if (previewMobile) previewMobile.style.backgroundPosition = `${s.mobileX}% ${s.mobileY}%`;
     }
 
-    async function adminUploadExtraImg(id, inputEl) {
-      const file = inputEl.files && inputEl.files[0];
-      if (!file) return;
-      const statusEl = document.getElementById(`${id}-uploadStatus`);
-      if (statusEl) statusEl.textContent = 'Subiendo...';
-      try {
-        const fb = await window.firebaseReady;
-        const url = await fb.uploadExtraImgFile(id, file);
-        if (!adminExtraImgsData[id]) adminExtraImgsData[id] = { desktopX: 50, desktopY: 50, mobileX: 50, mobileY: 50 };
-        adminExtraImgsData[id].src = url;
-        const img = document.getElementById(id);
-        if (img) img.src = url;
-        const wrap = document.getElementById('adminExtraImgsWrap');
-        if (wrap) {
-          const prevD = wrap.querySelector(`[data-preview-for="${id}-desktop"]`);
-          const prevM = wrap.querySelector(`[data-preview-for="${id}-mobile"]`);
-          if (prevD) prevD.style.backgroundImage = `url("${url}")`;
-          if (prevM) prevM.style.backgroundImage = `url("${url}")`;
-        }
-        if (statusEl) statusEl.textContent = '✅ Foto lista. Recuerda dar clic en "Guardar posición de estas fotos".';
-      } catch (err) {
-        console.error('Error al subir foto extra:', err);
-        if (statusEl) statusEl.textContent = '❌ Error al subir la foto.';
+    function adminUpdateExtraImgSrc(id, url) {
+      if (!adminExtraImgsData[id]) adminExtraImgsData[id] = { desktopX: 50, desktopY: 50, mobileX: 50, mobileY: 50 };
+      adminExtraImgsData[id].src = url;
+      const img = document.getElementById(id);
+      if (img && url) img.src = url;
+      const wrap = document.getElementById('adminExtraImgsWrap');
+      if (wrap) {
+        const prevD = wrap.querySelector(`[data-preview-for="${id}-desktop"]`);
+        const prevM = wrap.querySelector(`[data-preview-for="${id}-mobile"]`);
+        if (prevD) prevD.style.backgroundImage = `url("${url}")`;
+        if (prevM) prevM.style.backgroundImage = `url("${url}")`;
       }
     }
 
@@ -6789,13 +6774,6 @@
     async function saveExtraImgConfig(configObj) {
       await setDoc(doc(db, 'config', 'extraImages'), { ...configObj, updatedAt: serverTimestamp() });
     }
-    async function uploadExtraImgFile(id, file) {
-      const ext = (file.name && file.name.includes('.')) ? file.name.split('.').pop() : 'jpg';
-      const storagePath = `extraImages/${id}_${Date.now()}.${ext}`;
-      const storageRef = ref(storage, storagePath);
-      await uploadBytes(storageRef, file);
-      return await getDownloadURL(storageRef);
-    }
 
   async function addProduct(data, imgUrls) {
       const imgs = (Array.isArray(imgUrls) ? imgUrls : (imgUrls ? [imgUrls] : [])).map(u => String(u).trim()).filter(Boolean);
@@ -7199,7 +7177,6 @@ async function deleteProduct(id, storagePaths) {
       saveHeroConfig,
       fetchExtraImgConfig,
       saveExtraImgConfig,
-      uploadExtraImgFile,
       addProduct,
       updateProduct,
       updateProductVisibility,
