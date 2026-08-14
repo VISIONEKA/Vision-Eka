@@ -1492,6 +1492,11 @@
           </div>
         </div>
 
+        <div class="mb-4">
+          <label class="block text-[9px] uppercase tracking-widest text-slate-500 font-extrabold mb-2">Enlace de la imagen <span class="normal-case text-slate-600/70 font-medium">(opcional — ya subida a Google Fotos, Imgur, Cloudinary, etc.)</span></label>
+          <input type="text" id="adminSegImageUrl" placeholder="https://ejemplo.com/lente-seguridad.jpg" class="w-full p-3.5 bg-brand-dark border border-slate-900/10 rounded-xl text-sm text-brand-ink focus:border-brand-sky focus:outline-none">
+        </div>
+
         <button onclick="adminAddSeguridadProduct()" id="adminAddSegBtn" class="w-full bg-gradient-to-r from-brand-sky to-brand-teal text-brand-ink font-bold text-xs uppercase tracking-widest py-3.5 rounded-full transition-all hover:shadow-lg hover:shadow-brand-sky/30 disabled:opacity-50">🦺 Publicar en Empresas</button>
         <p id="adminAddSegStatus" class="text-[11px] mt-3"></p>
 
@@ -4131,12 +4136,14 @@
       const modelInput = document.getElementById('adminSegModel');
       const colorInput = document.getElementById('adminSegColor');
       const priceInput = document.getElementById('adminSegPrice');
+      const imageInput = document.getElementById('adminSegImageUrl');
       const status = document.getElementById('adminAddSegStatus');
       const btn = document.getElementById('adminAddSegBtn');
 
       const modelo = modelInput.value.trim();
       const color = colorInput.value.trim();
       const precioRaw = priceInput.value.trim();
+      const imageUrl = imageInput.value.trim();
 
       if (!modelo || !color) {
         status.textContent = 'Escriba al menos el modelo y el color antes de publicar.';
@@ -4161,13 +4168,14 @@
           esSeguridad: true,
           tratamientos: []
         };
-        await fb.addProduct(productData, []);
+        await fb.addProduct(productData, imageUrl ? [imageUrl] : []);
         status.textContent = '✓ Lente de seguridad publicado. Visible solo en el catálogo de Empresas.';
         status.className = 'text-[11px] text-brand-teal mt-3 font-semibold';
 
         modelInput.value = '';
         colorInput.value = '';
         priceInput.value = '';
+        imageInput.value = '';
         adminLoadSeguridadProductList();
       } catch (err) {
         console.error('Error al guardar el lente de seguridad:', err);
@@ -4199,15 +4207,23 @@
           const ocultoBadge = p.oculto
             ? '<span class="text-[9px] font-bold uppercase tracking-wide text-amber-500 bg-amber-500/10 px-2 py-0.5 rounded-full whitespace-nowrap">Oculto</span>'
             : '<span class="text-[9px] font-bold uppercase tracking-wide text-brand-teal bg-brand-teal/10 px-2 py-0.5 rounded-full whitespace-nowrap">Visible</span>';
+          const imgUrl = (p.imgs && p.imgs.length) ? p.imgs[0] : (p.img || '');
+          const thumb = imgUrl
+            ? `<img src="${imgUrl}" alt="${p.modelo}" class="w-10 h-10 object-cover rounded-lg bg-brand-navy border border-slate-900/5 flex-shrink-0">`
+            : '<div class="w-10 h-10 rounded-lg bg-brand-navy border border-slate-900/5 flex-shrink-0"></div>';
 
           return `
             <div class="flex flex-wrap items-center justify-between gap-3 bg-brand-dark border border-slate-900/5 rounded-xl p-3.5">
-              <div class="min-w-0">
-                <span class="block text-brand-ink text-xs font-semibold truncate">${p.modelo} · ${p.color}</span>
-                <span class="block text-[10px] text-slate-500 truncate">${precioText}</span>
+              <div class="flex items-center gap-3 min-w-0">
+                ${thumb}
+                <div class="min-w-0">
+                  <span class="block text-brand-ink text-xs font-semibold truncate">${p.modelo} · ${p.color}</span>
+                  <span class="block text-[10px] text-slate-500 truncate">${precioText}</span>
+                </div>
               </div>
               <div class="flex items-center gap-3 flex-shrink-0">
                 ${ocultoBadge}
+                <button onclick="adminEditSeguridadImage('${p.id}', ${JSON.stringify(imgUrl)})" class="text-brand-coral hover:text-brand-sky text-xs font-bold uppercase tracking-wide">Imagen</button>
                 <button onclick="adminToggleSeguridadVisibility('${p.id}', ${p.oculto ? 'false' : 'true'})" class="text-brand-sky hover:text-brand-teal text-xs font-bold uppercase tracking-wide">${p.oculto ? 'Mostrar' : 'Ocultar'}</button>
                 <button onclick="adminRemoveSeguridadProduct('${p.id}')" class="text-red-400 hover:text-red-300 text-xs font-bold uppercase tracking-wide">Eliminar</button>
               </div>
@@ -4228,6 +4244,31 @@
       } catch (err) {
         console.error('Error al actualizar visibilidad del lente de seguridad:', err);
         alert('No se pudo actualizar el lente. Intente de nuevo.');
+      }
+    }
+
+    async function adminEditSeguridadImage(id, currentUrl) {
+      const newUrl = prompt('Enlace de la imagen (deje vacío para quitarla):', currentUrl || '');
+      if (newUrl === null) return; // cancelado
+      const p = (await (await window.firebaseReady).fetchProducts()).find(item => item.id === id);
+      if (!p) return;
+      try {
+        const fb = await window.firebaseReady;
+        await fb.updateProduct(id, {
+          modelo: p.modelo,
+          color: p.color,
+          unidades: p.unidades ?? null,
+          precio: p.precio ?? null,
+          categoria: p.categoria || 'Seguridad',
+          genero: p.genero || 'seguridad',
+          esKids: false,
+          esSeguridad: true,
+          tratamientos: p.tratamientos || []
+        }, newUrl.trim() ? [newUrl.trim()] : []);
+        adminLoadSeguridadProductList();
+      } catch (err) {
+        console.error('Error al actualizar la imagen del lente de seguridad:', err);
+        alert('No se pudo actualizar la imagen. Intente de nuevo.');
       }
     }
 
