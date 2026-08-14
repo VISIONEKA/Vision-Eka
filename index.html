@@ -1852,7 +1852,7 @@
             <h3 class="font-display font-bold text-sm text-brand-ink">👀 Visitas al sitio</h3>
             <button onclick="adminLoadAnalytics()" class="text-[10px] uppercase tracking-widest font-bold text-brand-sky hover:text-brand-teal">↻ Actualizar</button>
           </div>
-          <div class="grid grid-cols-3 gap-4 text-center">
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 text-center">
             <div class="bg-brand-dark border border-slate-900/5 rounded-2xl p-4">
               <span id="analyticsVisitasTotal" class="block font-display font-bold text-2xl text-brand-ink">–</span>
               <span class="text-[9px] uppercase tracking-widest text-slate-500 font-extrabold">Total</span>
@@ -1865,13 +1865,26 @@
               <span id="analyticsVisitasKids" class="block font-display font-bold text-2xl text-brand-ink">–</span>
               <span class="text-[9px] uppercase tracking-widest text-slate-500 font-extrabold">Kids</span>
             </div>
+            <div class="bg-brand-dark border border-slate-900/5 rounded-2xl p-4">
+              <span id="analyticsVisitasEmpresas" class="block font-display font-bold text-2xl text-brand-ink">–</span>
+              <span class="text-[9px] uppercase tracking-widest text-slate-500 font-extrabold">Empresas</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Últimas visitas: a qué hora entraron y en qué sección -->
+        <div class="bg-brand-navy border border-slate-900/10 rounded-3xl p-6 mb-8">
+          <h3 class="font-display font-bold text-sm text-brand-ink mb-4">🕒 Últimas visitas (hora y sección)</h3>
+          <p class="text-[11px] text-slate-500 mb-4">Cada vez que alguien entra al sitio queda un registro con la hora exacta y la sección: 🕶️ Principal, 🧒 Kids o 🏢 Empresas.</p>
+          <div id="adminRecentVisitsList" class="space-y-2 max-h-96 overflow-y-auto pr-1">
+            <p id="adminRecentVisitsEmpty" class="text-xs text-slate-600/80 italic">Aún no hay visitas registradas.</p>
           </div>
         </div>
 
         <!-- Lentes más elegidos -->
         <div class="bg-brand-navy border border-slate-900/10 rounded-3xl p-6 mb-8">
           <h3 class="font-display font-bold text-sm text-brand-ink mb-4">🔥 Lentes más elegidos</h3>
-          <p class="text-[11px] text-slate-500 mb-4">Cada vez que alguien agrega un lente al carrito, cuenta aquí. Así sabes cuáles armazones llaman más la atención.</p>
+          <p class="text-[11px] text-slate-500 mb-4">Se van reacomodando solos según lo que los clientes van viendo y agregando al carrito ahora mismo — no importa si son 2 o 5 personas, el orden cambia con cada vista o cada "agregar al carrito".</p>
           <div id="adminTopProductsList" class="space-y-2">
             <p id="adminTopProductsEmpty" class="text-xs text-slate-600/80 italic">Aún no hay suficientes datos.</p>
           </div>
@@ -4907,12 +4920,48 @@
         document.getElementById('analyticsVisitasTotal').textContent = (visitas.total || 0).toLocaleString('es-MX');
         document.getElementById('analyticsVisitasIndex').textContent = (visitas.index || 0).toLocaleString('es-MX');
         document.getElementById('analyticsVisitasKids').textContent = (visitas.kids || 0).toLocaleString('es-MX');
+        document.getElementById('analyticsVisitasEmpresas').textContent = (visitas.empresas || 0).toLocaleString('es-MX');
 
-        // Lentes más elegidos (ordenados por veces agregados al carrito)
+        // Últimas visitas: hora exacta + sección (Principal / Kids / Empresas)
+        const recentVisitsList = document.getElementById('adminRecentVisitsList');
+        const recentVisitsEmpty = document.getElementById('adminRecentVisitsEmpty');
+        const paginaInfo = {
+          index:    { label: 'Sitio Principal', icon: '🕶️' },
+          kids:     { label: 'Kids',            icon: '🧒' },
+          empresas: { label: 'Empresas',        icon: '🏢' }
+        };
+        try {
+          const recientes = await fb.fetchRecentVisits(30);
+          if (!recientes || recientes.length === 0) {
+            recentVisitsList.innerHTML = '';
+            recentVisitsList.appendChild(recentVisitsEmpty);
+          } else {
+            recentVisitsList.innerHTML = recientes.map(v => {
+              const info = paginaInfo[v.pagina] || { label: v.pagina || 'Sitio', icon: '🌐' };
+              return `
+                <div class="flex items-center justify-between gap-3 bg-brand-dark border border-slate-900/5 rounded-xl px-4 py-2.5">
+                  <span class="text-xs text-brand-ink">${info.icon} ${escapeHtml(info.label)}</span>
+                  <span class="text-[10px] font-bold text-slate-500 flex-shrink-0">${formatFecha(v.createdAt)}</span>
+                </div>
+              `;
+            }).join('');
+          }
+        } catch (e) {
+          console.warn('No se pudieron cargar las últimas visitas:', e);
+        }
+
+        // Lentes más elegidos: se reordena solo según lo que los clientes van viendo
+        // (campo "vistas") y agregando al carrito (campo "interacciones"). El agregar
+        // al carrito pesa más que solo ver, pero ambos mueven el ranking en tiempo real,
+        // sin importar si son pocas o muchas personas.
         const productos = await fb.fetchProducts();
         const topList = document.getElementById('adminTopProductsList');
         const topEmpty = document.getElementById('adminTopProductsEmpty');
-        const conInteres = productos.filter(p => p.interacciones > 0).sort((a, b) => (b.interacciones || 0) - (a.interacciones || 0)).slice(0, 10);
+        const conInteres = productos
+          .map(p => ({ ...p, _score: (p.vistas || 0) + (p.interacciones || 0) * 3 }))
+          .filter(p => p._score > 0)
+          .sort((a, b) => b._score - a._score)
+          .slice(0, 10);
 
         if (conInteres.length === 0) {
           topList.innerHTML = '';
@@ -4924,7 +4973,7 @@
                 <span class="text-brand-sky font-bold text-xs flex-shrink-0">#${idx + 1}</span>
                 <span class="text-xs text-brand-ink truncate">${escapeHtml(p.modelo)} <span class="text-slate-500">· ${escapeHtml(p.color)}</span></span>
               </div>
-              <span class="text-[10px] font-bold uppercase tracking-wide text-brand-teal flex-shrink-0">${p.interacciones} agregado${p.interacciones > 1 ? 's' : ''}</span>
+              <span class="text-[10px] font-bold uppercase tracking-wide text-brand-teal flex-shrink-0">${p.vistas || 0} vistas · ${p.interacciones || 0} agregado${p.interacciones === 1 ? '' : 's'}</span>
             </div>
           `).join('');
         }
@@ -7048,6 +7097,12 @@ async function deleteProduct(id, storagePaths) {
         const payload = { total: increment(1), createdAt: serverTimestamp() };
         payload[pagina] = increment(1);
         await setDoc(ref, payload, { merge: true });
+        // Registro individual con hora exacta de esta visita, para que el panel
+        // pueda mostrar "a qué hora entraron" y en qué sección (Kids, Empresas, Principal).
+        await addDoc(collection(db, ANALYTICS_COLLECTION, 'visitas', 'registros'), {
+          pagina,
+          createdAt: serverTimestamp()
+        });
       } catch (e) {
         console.warn('No se pudo registrar la visita:', e);
       }
@@ -7055,7 +7110,18 @@ async function deleteProduct(id, storagePaths) {
 
     async function fetchVisitStats() {
       const snap = await getDoc(doc(db, ANALYTICS_COLLECTION, 'visitas'));
-      return snap.exists() ? snap.data() : { total: 0, index: 0, kids: 0 };
+      return snap.exists() ? snap.data() : { total: 0, index: 0, kids: 0, empresas: 0 };
+    }
+
+    // Últimas visitas registradas (hora exacta + sección), más recientes primero.
+    async function fetchRecentVisits(max = 30) {
+      const q = query(
+        collection(db, ANALYTICS_COLLECTION, 'visitas', 'registros'),
+        orderBy('createdAt', 'desc'),
+        limit(max)
+      );
+      const snap = await getDocs(q);
+      return snap.docs.map(d => ({ id: d.id, ...d.data() }));
     }
 
     async function fetchAllUsers() {
@@ -7217,6 +7283,7 @@ async function deleteProduct(id, storagePaths) {
       deleteAdminTask,
       logVisit,
       fetchVisitStats,
+      fetchRecentVisits,
       fetchAllUsers,
       logProductInterest,
       logProductView
