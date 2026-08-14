@@ -1846,6 +1846,17 @@
           <p class="text-xs text-slate-600 leading-relaxed">Visitas, clientes registrados y los lentes que más han elegido sus visitantes. Se actualiza en tiempo real conforme la gente navega el sitio.</p>
         </div>
 
+        <!-- Excluir mis propias visitas -->
+        <div class="bg-brand-navy border border-slate-900/10 rounded-3xl p-6 mb-8 flex items-center justify-between gap-4 flex-wrap">
+          <div class="min-w-[200px]">
+            <h3 class="font-display font-bold text-sm text-brand-ink mb-1">🙈 Excluir mis visitas</h3>
+            <p class="text-[11px] text-slate-500 leading-relaxed">Actívalo para que, cuando tú entres al sitio desde este mismo navegador, no se cuente en las estadísticas. Es por dispositivo/navegador, no por cuenta.</p>
+          </div>
+          <button onclick="adminToggleOwnVisitsTracking()" id="adminSkipVisitsBtn" class="flex-shrink-0 text-xs font-bold uppercase tracking-wider py-3 px-5 rounded-full transition-all bg-brand-sky/10 border border-brand-sky/30 text-brand-sky hover:bg-brand-sky/20">
+            Activar
+          </button>
+        </div>
+
         <!-- Visitas -->
         <div class="bg-brand-navy border border-slate-900/10 rounded-3xl p-6 mb-8">
           <div class="flex items-center justify-between mb-4">
@@ -1869,6 +1880,22 @@
               <span id="analyticsVisitasEmpresas" class="block font-display font-bold text-2xl text-brand-ink">–</span>
               <span class="text-[9px] uppercase tracking-widest text-slate-500 font-extrabold">Empresas</span>
             </div>
+          </div>
+        </div>
+
+        <!-- Visitas por período: día / semana / mes -->
+        <div class="bg-brand-navy border border-slate-900/10 rounded-3xl p-6 mb-8">
+          <div class="flex items-center justify-between mb-4 flex-wrap gap-2">
+            <h3 class="font-display font-bold text-sm text-brand-ink">📅 Visitas por período</h3>
+            <div class="flex gap-1.5">
+              <button onclick="adminSetVisitsBreakdownMode('dia')" id="adminVisitsModeDiaBtn" class="text-[10px] font-bold uppercase tracking-wider py-2 px-3.5 rounded-full transition-all bg-brand-sky text-brand-ink">Día</button>
+              <button onclick="adminSetVisitsBreakdownMode('semana')" id="adminVisitsModeSemanaBtn" class="text-[10px] font-bold uppercase tracking-wider py-2 px-3.5 rounded-full transition-all text-slate-600">Semana</button>
+              <button onclick="adminSetVisitsBreakdownMode('mes')" id="adminVisitsModeMesBtn" class="text-[10px] font-bold uppercase tracking-wider py-2 px-3.5 rounded-full transition-all text-slate-600">Mes</button>
+            </div>
+          </div>
+          <p class="text-[11px] text-slate-500 mb-4">Los días se acumulan solos en semanas, y las semanas en meses, conforme va pasando el tiempo.</p>
+          <div id="adminVisitsBreakdownList" class="space-y-2">
+            <p id="adminVisitsBreakdownEmpty" class="text-xs text-slate-600/80 italic">Aún no hay suficientes datos.</p>
           </div>
         </div>
 
@@ -4911,9 +4938,124 @@
     // =========================================================
     // ---- ADMIN PANEL: ANALÍTICA ----
     // =========================================================
+
+    // Activa/desactiva "no contar mis visitas" en este navegador (localStorage).
+    // Usa la misma clave que revisa fb.logVisit antes de registrar una visita.
+    function adminToggleOwnVisitsTracking() {
+      const activo = localStorage.getItem('eka_skip_analytics') === '1';
+      if (activo) {
+        localStorage.removeItem('eka_skip_analytics');
+      } else {
+        localStorage.setItem('eka_skip_analytics', '1');
+      }
+      adminRefreshSkipVisitsBtn();
+    }
+
+    function adminRefreshSkipVisitsBtn() {
+      const btn = document.getElementById('adminSkipVisitsBtn');
+      if (!btn) return;
+      const activo = localStorage.getItem('eka_skip_analytics') === '1';
+      btn.textContent = activo ? '✓ Activado — no te contamos' : 'Activar';
+      btn.classList.toggle('bg-brand-sky', activo);
+      btn.classList.toggle('text-brand-ink', activo);
+      btn.classList.toggle('bg-brand-sky/10', !activo);
+      btn.classList.toggle('border-brand-sky/30', !activo);
+      btn.classList.toggle('text-brand-sky', !activo);
+    }
+
+    // Cache de conteos diarios (para no re-pedir a Firestore al cambiar de Día/Semana/Mes)
+    let _adminDailyVisitsCache = [];
+    let _adminVisitsMode = 'dia';
+
+    // Dado 'YYYY-MM-DD', regresa la fecha del lunes de esa semana (también 'YYYY-MM-DD'),
+    // que sirve como llave para agrupar varios días en una misma semana.
+    function adminGetWeekKey(fechaStr) {
+      const d = new Date(fechaStr + 'T00:00:00');
+      const diaSemana = d.getDay() || 7; // domingo=0 -> 7
+      d.setDate(d.getDate() - diaSemana + 1);
+      const y = d.getFullYear();
+      const m = String(d.getMonth() + 1).padStart(2, '0');
+      const dd = String(d.getDate()).padStart(2, '0');
+      return `${y}-${m}-${dd}`;
+    }
+
+    function adminSetVisitsBreakdownMode(mode) {
+      _adminVisitsMode = mode;
+      ['Dia', 'Semana', 'Mes'].forEach(m => {
+        const btn = document.getElementById(`adminVisitsMode${m}Btn`);
+        if (!btn) return;
+        const activo = m.toLowerCase() === mode;
+        btn.classList.toggle('bg-brand-sky', activo);
+        btn.classList.toggle('text-brand-ink', activo);
+        btn.classList.toggle('text-slate-600', !activo);
+      });
+      adminRenderVisitsBreakdown();
+    }
+
+    function adminRenderVisitsBreakdown() {
+      const list = document.getElementById('adminVisitsBreakdownList');
+      const empty = document.getElementById('adminVisitsBreakdownEmpty');
+      if (!list) return;
+      const datos = _adminDailyVisitsCache || [];
+
+      if (datos.length === 0) {
+        list.innerHTML = '';
+        list.appendChild(empty);
+        return;
+      }
+
+      let filas = [];
+      if (_adminVisitsMode === 'dia') {
+        filas = datos.slice(0, 14).map(d => ({
+          label: new Date(d.fecha + 'T00:00:00').toLocaleDateString('es-MX', { weekday: 'short', day: '2-digit', month: 'short' }),
+          total: d.total || 0
+        }));
+      } else if (_adminVisitsMode === 'semana') {
+        const agrupado = {};
+        datos.forEach(d => {
+          const wk = adminGetWeekKey(d.fecha);
+          agrupado[wk] = (agrupado[wk] || 0) + (d.total || 0);
+        });
+        filas = Object.entries(agrupado)
+          .sort((a, b) => b[0].localeCompare(a[0]))
+          .slice(0, 8)
+          .map(([wk, total]) => ({
+            label: 'Semana del ' + new Date(wk + 'T00:00:00').toLocaleDateString('es-MX', { day: '2-digit', month: 'short' }),
+            total
+          }));
+      } else {
+        const agrupado = {};
+        datos.forEach(d => {
+          const mk = d.fecha.slice(0, 7);
+          agrupado[mk] = (agrupado[mk] || 0) + (d.total || 0);
+        });
+        filas = Object.entries(agrupado)
+          .sort((a, b) => b[0].localeCompare(a[0]))
+          .map(([mk, total]) => ({
+            label: new Date(mk + '-01T00:00:00').toLocaleDateString('es-MX', { month: 'long', year: 'numeric' }),
+            total
+          }));
+      }
+
+      if (filas.length === 0) {
+        list.innerHTML = '';
+        list.appendChild(empty);
+        return;
+      }
+
+      list.innerHTML = filas.map(f => `
+        <div class="flex items-center justify-between gap-3 bg-brand-dark border border-slate-900/5 rounded-xl px-4 py-2.5">
+          <span class="text-xs text-brand-ink capitalize">${escapeHtml(f.label)}</span>
+          <span class="text-[10px] font-bold uppercase tracking-wide text-brand-teal flex-shrink-0">${f.total.toLocaleString('es-MX')} visita${f.total === 1 ? '' : 's'}</span>
+        </div>
+      `).join('');
+    }
+
     async function adminLoadAnalytics() {
       try {
         const fb = await window.firebaseReady;
+
+        adminRefreshSkipVisitsBtn();
 
         // Visitas
         const visitas = await fb.fetchVisitStats();
@@ -4921,6 +5063,14 @@
         document.getElementById('analyticsVisitasIndex').textContent = (visitas.index || 0).toLocaleString('es-MX');
         document.getElementById('analyticsVisitasKids').textContent = (visitas.kids || 0).toLocaleString('es-MX');
         document.getElementById('analyticsVisitasEmpresas').textContent = (visitas.empresas || 0).toLocaleString('es-MX');
+
+        // Visitas por período (día / semana / mes)
+        try {
+          _adminDailyVisitsCache = await fb.fetchDailyVisits(120);
+          adminRenderVisitsBreakdown();
+        } catch (e) {
+          console.warn('No se pudieron cargar las visitas por período:', e);
+        }
 
         // Últimas visitas: hora exacta + sección (Principal / Kids / Empresas)
         const recentVisitsList = document.getElementById('adminRecentVisitsList');
@@ -6737,6 +6887,8 @@
     const ORDERS_COLLECTION = 'pedidos';
     const USERS_COLLECTION = 'usuarios';
     const ANALYTICS_COLLECTION = 'estadisticas';
+    const DAILY_VISITS_COLLECTION = 'visitas_diarias';
+    const SKIP_ANALYTICS_KEY = 'eka_skip_analytics';
     const EXAM_SLOTS_COLLECTION = 'horarios_examen';
     const ADMIN_TASKS_COLLECTION = 'tareas_admin';
 
@@ -7091,18 +7243,37 @@ async function deleteProduct(id, storagePaths) {
 
     // ---- Lista de pendientes de Opti (privada, solo para el administrador) ----
     // ---- Analítica del sitio: visitas, clientes registrados y productos más elegidos ----
+    // Fecha local (no UTC) en formato YYYY-MM-DD, para agrupar visitas por día/semana/mes.
+    function getLocalDateKey(d = new Date()) {
+      const y = d.getFullYear();
+      const m = String(d.getMonth() + 1).padStart(2, '0');
+      const day = String(d.getDate()).padStart(2, '0');
+      return `${y}-${m}-${day}`;
+    }
+
     async function logVisit(pagina) {
       try {
+        // Si el propio administrador activó "no contar mis visitas" en este navegador, se ignora.
+        if (typeof localStorage !== 'undefined' && localStorage.getItem(SKIP_ANALYTICS_KEY) === '1') return;
+
         const ref = doc(db, ANALYTICS_COLLECTION, 'visitas');
         const payload = { total: increment(1), createdAt: serverTimestamp() };
         payload[pagina] = increment(1);
         await setDoc(ref, payload, { merge: true });
+
         // Registro individual con hora exacta de esta visita, para que el panel
         // pueda mostrar "a qué hora entraron" y en qué sección (Kids, Empresas, Principal).
         await addDoc(collection(db, ANALYTICS_COLLECTION, 'visitas', 'registros'), {
           pagina,
           createdAt: serverTimestamp()
         });
+
+        // Conteo agrupado por día, para armar los reportes de día / semana / mes.
+        const diaKey = getLocalDateKey();
+        const diaRef = doc(db, DAILY_VISITS_COLLECTION, diaKey);
+        const diaPayload = { fecha: diaKey, total: increment(1), updatedAt: serverTimestamp() };
+        diaPayload[pagina] = increment(1);
+        await setDoc(diaRef, diaPayload, { merge: true });
       } catch (e) {
         console.warn('No se pudo registrar la visita:', e);
       }
@@ -7119,6 +7290,18 @@ async function deleteProduct(id, storagePaths) {
         collection(db, ANALYTICS_COLLECTION, 'visitas', 'registros'),
         orderBy('createdAt', 'desc'),
         limit(max)
+      );
+      const snap = await getDocs(q);
+      return snap.docs.map(d => ({ id: d.id, ...d.data() }));
+    }
+
+    // Conteos por día (últimos "maxDays" días con registros), para armar
+    // las vistas de día / semana / mes en el panel de administrador.
+    async function fetchDailyVisits(maxDays = 120) {
+      const q = query(
+        collection(db, DAILY_VISITS_COLLECTION),
+        orderBy('fecha', 'desc'),
+        limit(maxDays)
       );
       const snap = await getDocs(q);
       return snap.docs.map(d => ({ id: d.id, ...d.data() }));
@@ -7284,6 +7467,7 @@ async function deleteProduct(id, storagePaths) {
       logVisit,
       fetchVisitStats,
       fetchRecentVisits,
+      fetchDailyVisits,
       fetchAllUsers,
       logProductInterest,
       logProductView
