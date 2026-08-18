@@ -2997,6 +2997,10 @@
         grid.innerHTML = Object.entries(grupos).filter(([key]) => !key.startsWith('bestseller') && !key.startsWith('mostviewed')).map(([key, variantes]) => renderGalleryCard(key, variantes, 0)).join('');
 
         initGalleryCategories();
+
+        // Precarga todas las fotos del catálogo (colores y fotos adicionales) en
+        // segundo plano para que cambiar de variante o de foto sea instantáneo.
+        preloadCatalogImages(grupos);
       } catch (err) {
         console.error('Error al cargar el catálogo público:', err);
         loading.classList.add('hidden');
@@ -3006,6 +3010,47 @@
     }
 
     window.__galleryState = window.__galleryState || {};
+
+    // ---- Precarga de fotos del catálogo ----
+    // Evita que al cambiar de color o de foto (‹ ›) la tarjeta "se quede pegada"
+    // en la imagen anterior mientras el navegador descarga la nueva. Precargamos
+    // en segundo plano (con baja prioridad si el navegador lo soporta) todas las
+    // fotos de cada producto, así ya están en caché cuando el usuario da clic.
+    window.__preloadedImgs = window.__preloadedImgs || new Set();
+
+    function preloadImage(url) {
+      if (!url || window.__preloadedImgs.has(url)) return;
+      window.__preloadedImgs.add(url);
+      const img = new Image();
+      if ('fetchPriority' in img) img.fetchPriority = 'low';
+      img.decoding = 'async';
+      img.src = url;
+    }
+
+    function preloadProductPhotos(p) {
+      const imgsArr = (p.imgs && p.imgs.length) ? p.imgs : (p.img ? [p.img] : []);
+      imgsArr.forEach(preloadImage);
+    }
+
+    // Precarga en tandas pequeñas (con requestIdleCallback si existe) para no
+    // saturar la conexión ni competir con lo que el usuario está viendo ahora.
+    function preloadCatalogImages(grupos) {
+      const allProducts = [];
+      Object.values(grupos).forEach(variantes => variantes.forEach(p => allProducts.push(p)));
+      let i = 0;
+      function step(deadline) {
+        while (i < allProducts.length && (!deadline || deadline.timeRemaining() > 0 || i % 10 === 0)) {
+          preloadProductPhotos(allProducts[i]);
+          i++;
+        }
+        if (i < allProducts.length) {
+          if (window.requestIdleCallback) requestIdleCallback(step);
+          else setTimeout(() => step(), 50);
+        }
+      }
+      if (window.requestIdleCallback) requestIdleCallback(step);
+      else setTimeout(() => step(), 50);
+    }
 
     function buildGalWrapHtml(key, p) {
       const imgsArr = (p.imgs && p.imgs.length) ? p.imgs : (p.img ? [p.img] : []);
@@ -3174,7 +3219,7 @@
             const vImgs = (v.imgs && v.imgs.length) ? v.imgs : (v.img ? [v.img] : []);
             const swatchImg = vImgs[0];
             const active = idx === selectedIdx;
-            return `<button type="button" onclick="event.preventDefault(); selectGalleryVariant('${key}', ${idx})" title="${escapeHtml(v.color)}" class="gal-swatch-${key} w-7 h-7 rounded-full border-2 ${active ? 'border-brand-sky' : 'border-slate-900/10'} bg-brand-navy bg-cover bg-center overflow-hidden flex-shrink-0" style="${swatchImg ? `background-image:url('${swatchImg}')` : ''}"></button>`;
+            return `<button type="button" onmouseenter="preloadProductPhotos(window.__galleryGroups['${key}'][${idx}])" onclick="event.preventDefault(); selectGalleryVariant('${key}', ${idx})" title="${escapeHtml(v.color)}" class="gal-swatch-${key} w-7 h-7 rounded-full border-2 ${active ? 'border-brand-sky' : 'border-slate-900/10'} bg-brand-navy bg-cover bg-center overflow-hidden flex-shrink-0" style="${swatchImg ? `background-image:url('${swatchImg}')` : ''}"></button>`;
           }).join('')}
         </div>
       ` : '';
@@ -3216,6 +3261,7 @@
       const variantes = window.__galleryGroups[key];
       if (!variantes || !variantes[idx]) return;
       const p = variantes[idx];
+      preloadProductPhotos(p);
       window.__galleryState[key] = { selectedIdx: idx, photoIdx: 0 };
 
       const wrap = document.getElementById(`galWrap-${key}`);
