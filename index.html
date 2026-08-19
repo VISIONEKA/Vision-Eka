@@ -1467,6 +1467,27 @@
       <!-- Products currently published, editable (ocultar/mostrar o eliminar) -->
       <div class="bg-brand-navy border border-slate-900/10 rounded-3xl p-6 mb-8">
         <h3 class="font-display font-bold text-sm text-brand-ink mb-4">📦 Lentes en Catálogo</h3>
+
+        <div class="flex flex-wrap gap-2.5 mb-4">
+          <input type="text" id="adminProductSearchInput" placeholder="Buscar por modelo o color..." class="flex-1 min-w-[180px] p-3 bg-brand-dark border border-slate-900/10 rounded-xl text-xs text-brand-ink focus:border-brand-sky focus:outline-none" oninput="adminRenderProductList()">
+          <select id="adminProductFilterCategoria" class="p-3 bg-brand-dark border border-slate-900/10 rounded-xl text-xs text-brand-ink focus:border-brand-sky focus:outline-none" onchange="adminRenderProductList()">
+            <option value="">Toda categoría</option>
+          </select>
+          <select id="adminProductFilterGenero" class="p-3 bg-brand-dark border border-slate-900/10 rounded-xl text-xs text-brand-ink focus:border-brand-sky focus:outline-none" onchange="adminRenderProductList()">
+            <option value="">Todo género</option>
+            <option value="mujer">Mujer</option>
+            <option value="hombre">Hombre</option>
+            <option value="unisex">Unisex</option>
+          </select>
+          <select id="adminProductFilterEstado" class="p-3 bg-brand-dark border border-slate-900/10 rounded-xl text-xs text-brand-ink focus:border-brand-sky focus:outline-none" onchange="adminRenderProductList()">
+            <option value="">Todo estado</option>
+            <option value="visible">Solo visibles</option>
+            <option value="oculto">Solo ocultos</option>
+            <option value="sinstock">Sin stock (0 u.)</option>
+          </select>
+          <button type="button" onclick="adminToggleAllProductGroups()" id="adminProductToggleAllBtn" class="p-3 text-xs font-bold text-brand-sky hover:text-brand-teal whitespace-nowrap">Expandir todo</button>
+        </div>
+
         <div id="adminProductList" class="space-y-3 mb-2">
           <p id="adminProductListEmpty" class="text-xs text-slate-600/80 italic">Aún no hay lentes registrados.</p>
         </div>
@@ -4091,6 +4112,11 @@
       document.getElementById('adminCancelEditProductBtn').classList.add('hidden');
     }
 
+    // Estado de qué tarjetas de modelo están expandidas (para recordar mientras
+    // el admin navega, filtra o recarga la lista sin perder lo que ya abrió).
+    window.__adminExpandedModels = window.__adminExpandedModels || new Set();
+    let adminAllProductsExpanded = false;
+
     async function adminLoadProductList() {
       const list = document.getElementById('adminProductList');
       if (!list) return;
@@ -4098,16 +4124,120 @@
       try {
         const fb = await window.firebaseReady;
         const items = await fb.fetchProducts();
-        // Orden alfabético por nombre de modelo, para encontrarlos más fácil
-        items.sort((a, b) => (a.modelo || '').localeCompare((b.modelo || ''), 'es', { sensitivity: 'base' }));
         adminAllProducts = items || [];
+        adminPopulateProductFilterOptions();
+        adminRenderProductList();
+      } catch (err) {
+        console.error('Error al cargar la lista de lentes:', err);
+        list.innerHTML = '<p class="text-xs text-red-400 italic">No se pudo cargar la lista.</p>';
+      }
+    }
 
-        if (!items || items.length === 0) {
-          list.innerHTML = '<p id="adminProductListEmpty" class="text-xs text-slate-600/80 italic">Aún no hay lentes registrados.</p>';
-          return;
-        }
+    // Llena el select de categorías del filtro con las categorías que
+    // realmente existen entre los lentes cargados (siempre sincronizado).
+    function adminPopulateProductFilterOptions() {
+      const catSelect = document.getElementById('adminProductFilterCategoria');
+      if (!catSelect) return;
+      const current = catSelect.value;
+      const categorias = [...new Set(adminAllProducts.map(p => p.categoria).filter(Boolean))]
+        .sort((a, b) => a.localeCompare(b, 'es', { sensitivity: 'base' }));
+      catSelect.innerHTML = '<option value="">Toda categoría</option>' +
+        categorias.map(c => `<option value="${c.replace(/"/g, '&quot;')}">${c}</option>`).join('');
+      if (categorias.includes(current)) catSelect.value = current;
+    }
 
-        list.innerHTML = items.map(p => {
+    function adminToggleModelGroup(modelo) {
+      if (window.__adminExpandedModels.has(modelo)) window.__adminExpandedModels.delete(modelo);
+      else window.__adminExpandedModels.add(modelo);
+      adminRenderProductList();
+    }
+
+    function adminToggleAllProductGroups() {
+      adminAllProductsExpanded = !adminAllProductsExpanded;
+      if (adminAllProductsExpanded) {
+        adminAllProducts.forEach(p => window.__adminExpandedModels.add(p.modelo || ''));
+      } else {
+        window.__adminExpandedModels.clear();
+      }
+      const btn = document.getElementById('adminProductToggleAllBtn');
+      if (btn) btn.textContent = adminAllProductsExpanded ? 'Colapsar todo' : 'Expandir todo';
+      adminRenderProductList();
+    }
+
+    // Filtra por búsqueda/categoría/género/estado, agrupa por modelo (un
+    // modelo = una tarjeta con todos sus colores adentro) y dibuja la lista.
+    function adminRenderProductList() {
+      const list = document.getElementById('adminProductList');
+      if (!list) return;
+
+      const searchRaw = (document.getElementById('adminProductSearchInput')?.value || '').trim().toLowerCase();
+      const filtroCategoria = document.getElementById('adminProductFilterCategoria')?.value || '';
+      const filtroGenero = document.getElementById('adminProductFilterGenero')?.value || '';
+      const filtroEstado = document.getElementById('adminProductFilterEstado')?.value || '';
+
+      const filtrados = adminAllProducts.filter(p => {
+        if (searchRaw && !`${p.modelo || ''} ${p.color || ''}`.toLowerCase().includes(searchRaw)) return false;
+        if (filtroCategoria && p.categoria !== filtroCategoria) return false;
+        if (filtroGenero && (p.genero || 'unisex') !== filtroGenero) return false;
+        if (filtroEstado === 'visible' && p.oculto) return false;
+        if (filtroEstado === 'oculto' && !p.oculto) return false;
+        if (filtroEstado === 'sinstock' && !((p.unidades ?? null) === 0)) return false;
+        return true;
+      });
+
+      if (!adminAllProducts.length) {
+        list.innerHTML = '<p id="adminProductListEmpty" class="text-xs text-slate-600/80 italic">Aún no hay lentes registrados.</p>';
+        return;
+      }
+      if (!filtrados.length) {
+        list.innerHTML = '<p class="text-xs text-slate-600/80 italic">Ningún lente coincide con la búsqueda/filtros.</p>';
+        return;
+      }
+
+      // Agrupar por modelo, conservando el orden alfabético dentro de cada grupo
+      const grupos = new Map();
+      filtrados.forEach(p => {
+        const key = p.modelo || '(Sin nombre)';
+        if (!grupos.has(key)) grupos.set(key, []);
+        grupos.get(key).push(p);
+      });
+      const modelosOrdenados = [...grupos.keys()].sort((a, b) => a.localeCompare(b, 'es', { sensitivity: 'base' }));
+
+      list.innerHTML = modelosOrdenados.map(modelo => {
+        const variantes = grupos.get(modelo).sort((a, b) => (a.color || '').localeCompare(b.color || '', 'es', { sensitivity: 'base' }));
+        const expanded = window.__adminExpandedModels.has(modelo);
+        const totalColores = variantes.length;
+        const totalUnidades = variantes.reduce((sum, p) => sum + (Number(p.unidades) || 0), 0);
+        const algunOculto = variantes.some(p => p.oculto);
+        const algunSinStock = variantes.some(p => (p.unidades ?? null) === 0);
+        const categoriasSet = [...new Set(variantes.map(p => p.categoria).filter(Boolean))];
+        const primerImg = (() => {
+          const withImg = variantes.find(p => (p.imgs && p.imgs.length) || p.img);
+          if (!withImg) return null;
+          return (withImg.imgs && withImg.imgs.length) ? withImg.imgs[0] : withImg.img;
+        })();
+
+        const thumbGroup = primerImg
+          ? `<img src="${primerImg}" alt="${modelo}" class="w-11 h-11 object-cover rounded-lg bg-brand-navy border border-slate-900/5 flex-shrink-0">`
+          : `<div class="w-11 h-11 rounded-lg bg-brand-navy border border-slate-900/5 flex-shrink-0"></div>`;
+
+        const header = `
+          <button type="button" onclick="adminToggleModelGroup('${modelo.replace(/'/g, "\\'")}')" class="w-full flex flex-wrap items-center justify-between gap-3 bg-brand-dark border border-slate-900/5 rounded-xl p-3.5 text-left hover:border-brand-sky/30 transition-all">
+            <div class="flex items-center gap-3 min-w-0">
+              ${thumbGroup}
+              <div class="min-w-0">
+                <span class="block text-brand-ink text-xs font-bold truncate">${modelo}</span>
+                <span class="block text-[10px] text-slate-500 truncate">${categoriasSet.join(', ') || 'Sin categoría'} · ${totalColores} color${totalColores === 1 ? '' : 'es'} · ${totalUnidades} u. en total</span>
+              </div>
+            </div>
+            <div class="flex items-center gap-2 flex-shrink-0">
+              ${algunSinStock ? '<span class="text-[9px] font-bold uppercase tracking-wide text-red-400 bg-red-400/10 px-2 py-0.5 rounded-full whitespace-nowrap">Sin stock</span>' : ''}
+              ${algunOculto ? '<span class="text-[9px] font-bold uppercase tracking-wide text-amber-500 bg-amber-500/10 px-2 py-0.5 rounded-full whitespace-nowrap">Con ocultos</span>' : ''}
+              <span class="text-brand-sky text-xs transition-transform ${expanded ? 'rotate-180' : ''}">▾</span>
+            </div>
+          </button>`;
+
+        const filasColor = variantes.map(p => {
           const precioText = (p.precio !== null && p.precio !== undefined)
             ? `$${Number(p.precio).toLocaleString('es-MX', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
             : 'Sin precio';
@@ -4115,25 +4245,29 @@
           const ocultoBadge = p.oculto
             ? '<span class="text-[9px] font-bold uppercase tracking-wide text-amber-500 bg-amber-500/10 px-2 py-0.5 rounded-full whitespace-nowrap">Oculto</span>'
             : '<span class="text-[9px] font-bold uppercase tracking-wide text-brand-teal bg-brand-teal/10 px-2 py-0.5 rounded-full whitespace-nowrap">Visible</span>';
+          const sinStockBadge = (p.unidades ?? null) === 0
+            ? '<span class="text-[9px] font-bold uppercase tracking-wide text-red-400 bg-red-400/10 px-2 py-0.5 rounded-full whitespace-nowrap">Sin stock</span>'
+            : '';
           const kidsBadge = p.esKids
             ? '<span class="text-[9px] font-bold uppercase tracking-wide text-brand-coral bg-brand-coral/10 px-2 py-0.5 rounded-full whitespace-nowrap">🧒 Kids</span>'
             : '';
-         const imgsArr = (p.imgs && p.imgs.length) ? p.imgs : (p.img ? [p.img] : []);
+          const imgsArr = (p.imgs && p.imgs.length) ? p.imgs : (p.img ? [p.img] : []);
           const thumb = imgsArr.length
             ? `<div class="relative flex-shrink-0"><img src="${imgsArr[0]}" alt="${p.modelo}" class="w-10 h-10 object-cover rounded-lg bg-brand-navy border border-slate-900/5">${imgsArr.length > 1 ? `<span class="absolute -bottom-1 -right-1 bg-brand-sky text-brand-ink text-[8px] font-bold rounded-full w-4 h-4 flex items-center justify-center">${imgsArr.length}</span>` : ''}</div>`
             : '<div class="w-10 h-10 rounded-lg bg-brand-navy border border-slate-900/5 flex-shrink-0"></div>';
 
           return `
-            <div class="flex flex-wrap items-center justify-between gap-3 bg-brand-dark border border-slate-900/5 rounded-xl p-3.5">
+            <div class="flex flex-wrap items-center justify-between gap-3 bg-brand-navy border border-slate-900/5 rounded-xl p-3 ml-2">
               <div class="flex items-center gap-3 min-w-0">
                 ${thumb}
                 <div class="min-w-0">
-                  <span class="block text-brand-ink text-xs font-semibold truncate">${p.modelo} · ${p.color}</span>
+                  <span class="block text-brand-ink text-xs font-semibold truncate">${p.color}</span>
                   <span class="block text-[10px] text-slate-500 truncate">${p.categoria} · ${precioText} · ${unidadesText}${(p.tratamientos && p.tratamientos.length) ? ` · ${p.tratamientos.join(', ')}` : ''}</span>
                 </div>
               </div>
               <div class="flex items-center gap-3 flex-shrink-0">
                 ${ocultoBadge}
+                ${sinStockBadge}
                 ${kidsBadge}
                 <button onclick="adminAddColorVariant('${p.id}')" class="text-brand-coral hover:text-brand-sky text-xs font-bold uppercase tracking-wide">+ Color</button>
                 <button onclick="adminEditProduct('${p.id}')" class="text-brand-teal hover:text-brand-sky text-xs font-bold uppercase tracking-wide">Editar</button>
@@ -4143,10 +4277,14 @@
             </div>
           `;
         }).join('');
-      } catch (err) {
-        console.error('Error al cargar la lista de lentes:', err);
-        list.innerHTML = '<p class="text-xs text-red-400 italic">No se pudo cargar la lista.</p>';
-      }
+
+        return `
+          <div class="admin-model-group">
+            ${header}
+            ${expanded ? `<div class="space-y-2 mt-2">${filasColor}</div>` : ''}
+          </div>
+        `;
+      }).join('');
     }
 
     async function adminToggleProductVisibility(id, newOculto) {
