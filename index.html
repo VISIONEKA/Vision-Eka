@@ -2048,7 +2048,10 @@
     <button onclick="closeImgLightbox()" class="absolute top-4 right-4 sm:top-6 sm:right-6 w-10 h-10 rounded-full bg-brand-dark/80 border border-slate-900/10 text-brand-ink flex items-center justify-center text-xl hover:bg-brand-sky/20 transition-colors z-10" aria-label="Cerrar">✕</button>
     <div id="imgLightboxCard" class="relative bg-brand-dark border-2 border-brand-sky/20 rounded-3xl max-w-4xl w-full max-h-[90vh] overflow-y-auto transform scale-95 transition-transform duration-300 flex flex-col sm:flex-row">
       <div class="relative sm:w-3/5 flex-shrink-0 bg-slate-900 flex items-center justify-center">
-        <img id="imgLightboxImg" src="" alt="" class="w-full h-full max-h-[45vh] sm:max-h-[90vh] object-contain mx-auto">
+        <img id="imgLightboxImg" src="" alt="" class="w-full h-full max-h-[45vh] sm:max-h-[90vh] object-contain mx-auto cursor-zoom-in" onclick="event.stopPropagation(); openImgZoom();">
+        <button onclick="event.stopPropagation(); openImgZoom();" class="absolute top-2 left-2 w-8 h-8 rounded-full bg-brand-navy/80 text-brand-ink flex items-center justify-center hover:bg-brand-sky/30 transition-colors" title="Ver en pantalla completa con zoom" aria-label="Ver en pantalla completa con zoom">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 8V5a1 1 0 011-1h3M20 8V5a1 1 0 00-1-1h-3M4 16v3a1 1 0 001 1h3m12-4v3a1 1 0 01-1 1h-3"/></svg>
+        </button>
         <button id="imgLightboxPrev" onclick="event.stopPropagation(); imgLightboxNav(-1)" class="hidden absolute left-2 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-brand-navy/80 text-brand-ink flex items-center justify-center text-lg hover:bg-brand-sky/30 transition-colors">‹</button>
         <button id="imgLightboxNext" onclick="event.stopPropagation(); imgLightboxNav(1)" class="hidden absolute right-2 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-brand-navy/80 text-brand-ink flex items-center justify-center text-lg hover:bg-brand-sky/30 transition-colors">›</button>
         <span id="imgLightboxCount" class="hidden absolute bottom-2 left-1/2 -translate-x-1/2 bg-brand-navy/80 text-brand-ink text-[10px] font-bold px-3 py-1 rounded-full"></span>
@@ -2077,6 +2080,26 @@
         </div>
       </div>
     </div>
+  </div>
+
+  <!-- ========== VISOR DE PANTALLA COMPLETA CON ZOOM ========== -->
+  <div id="imgZoomOverlay" class="fixed inset-0 z-[80] bg-black hidden opacity-0 transition-opacity duration-200 select-none" style="touch-action: none;">
+    <button onclick="closeImgZoom()" class="absolute top-4 right-4 w-10 h-10 rounded-full bg-white/10 text-white flex items-center justify-center text-xl hover:bg-white/20 transition-colors z-10" aria-label="Cerrar">✕</button>
+
+    <div class="absolute inset-0 flex items-center justify-center overflow-hidden">
+      <img id="imgZoomImg" src="" alt="" class="max-w-[92vw] max-h-[86vh] object-contain pointer-events-none" style="touch-action: none; transform-origin: center center;">
+    </div>
+
+    <button id="imgZoomPrev" onclick="event.stopPropagation(); imgZoomNav(-1)" class="hidden absolute left-3 top-1/2 -translate-y-1/2 w-11 h-11 rounded-full bg-white/10 text-white flex items-center justify-center text-2xl hover:bg-white/20 transition-colors">‹</button>
+    <button id="imgZoomNext" onclick="event.stopPropagation(); imgZoomNav(1)" class="hidden absolute right-3 top-1/2 -translate-y-1/2 w-11 h-11 rounded-full bg-white/10 text-white flex items-center justify-center text-2xl hover:bg-white/20 transition-colors">›</button>
+    <span id="imgZoomCount" class="hidden absolute top-4 left-1/2 -translate-x-1/2 bg-white/10 text-white text-[10px] font-bold px-3 py-1 rounded-full"></span>
+
+    <div class="absolute bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-2">
+      <button onclick="event.stopPropagation(); setImgZoomScale(imgZoomState.scale - 0.5)" class="w-9 h-9 rounded-full bg-white/10 text-white flex items-center justify-center text-lg font-bold hover:bg-white/20 transition-colors" aria-label="Alejar">−</button>
+      <button onclick="event.stopPropagation(); setImgZoomScale(imgZoomState.scale + 0.5)" class="w-9 h-9 rounded-full bg-white/10 text-white flex items-center justify-center text-lg font-bold hover:bg-white/20 transition-colors" aria-label="Acercar">+</button>
+    </div>
+
+    <p id="imgZoomHint" class="absolute bottom-16 left-1/2 -translate-x-1/2 text-white/70 text-[11px] text-center px-4 transition-opacity duration-500 pointer-events-none">Doble clic o pellizca para hacer zoom · arrastra para mover</p>
   </div>
 
   <!-- ========== CARRITO (drawer) ========== -->
@@ -2116,10 +2139,20 @@
         <button onclick="closeCheckoutModal()" class="text-slate-500 hover:text-brand-ink text-xl leading-none">✕</button>
       </div>
 
-      <label class="block text-[9px] uppercase tracking-widest text-slate-500 font-extrabold mb-2">Tipo de pedido</label>
-      <div class="grid grid-cols-2 gap-3 mb-4">
-        <button type="button" onclick="setCheckoutTipo('receta')" id="checkoutTipoRecetaBtn" class="checkout-tipo-btn text-left p-3 rounded-xl border-2 border-brand-sky text-brand-sky text-xs font-bold transition-all">📋 Ya tengo receta<br><span class="font-normal normal-case text-[10px] text-slate-500">Conozco mi graduación</span></button>
-        <button type="button" onclick="setCheckoutTipo('examen')" id="checkoutTipoExamenBtn" class="checkout-tipo-btn text-left p-3 rounded-xl border-2 border-slate-900/10 text-slate-500 text-xs font-bold transition-all">🏠 Necesito examen<br><span class="font-normal normal-case text-[10px] text-slate-500">Agendar a domicilio</span></button>
+      <div id="checkoutGraduacionWrap" class="mb-4">
+        <label class="block text-[9px] uppercase tracking-widest text-slate-500 font-extrabold mb-2">¿Sus lentes serán con o sin graduación?</label>
+        <div class="grid grid-cols-2 gap-3">
+          <button type="button" onclick="setCheckoutGraduacion('con')" id="checkoutGraduacionConBtn" class="checkout-graduacion-btn text-left p-3 rounded-xl border-2 border-brand-sky text-brand-sky text-xs font-bold transition-all">👓 Con graduación<br><span class="font-normal normal-case text-[10px] text-slate-500">Necesito receta o examen</span></button>
+          <button type="button" onclick="setCheckoutGraduacion('sin')" id="checkoutGraduacionSinBtn" class="checkout-graduacion-btn text-left p-3 rounded-xl border-2 border-slate-900/10 text-slate-500 text-xs font-bold transition-all">🕶️ Sin graduación<br><span class="font-normal normal-case text-[10px] text-slate-500">Solo protección, sin receta</span></button>
+        </div>
+      </div>
+
+      <div id="checkoutTipoWrap">
+        <label class="block text-[9px] uppercase tracking-widest text-slate-500 font-extrabold mb-2">Tipo de pedido</label>
+        <div class="grid grid-cols-2 gap-3 mb-4">
+          <button type="button" onclick="setCheckoutTipo('receta')" id="checkoutTipoRecetaBtn" class="checkout-tipo-btn text-left p-3 rounded-xl border-2 border-brand-sky text-brand-sky text-xs font-bold transition-all">📋 Ya tengo receta<br><span class="font-normal normal-case text-[10px] text-slate-500">Conozco mi graduación</span></button>
+          <button type="button" onclick="setCheckoutTipo('examen')" id="checkoutTipoExamenBtn" class="checkout-tipo-btn text-left p-3 rounded-xl border-2 border-slate-900/10 text-slate-500 text-xs font-bold transition-all">🏠 Necesito examen<br><span class="font-normal normal-case text-[10px] text-slate-500">Agendar a domicilio</span></button>
+        </div>
       </div>
 
       <div id="checkoutRecetaWrap" class="hidden mb-4">
@@ -3208,6 +3241,205 @@
       if (e.key === 'Escape') closeImgLightbox();
       if (e.key === 'ArrowLeft') imgLightboxNav(-1);
       if (e.key === 'ArrowRight') imgLightboxNav(1);
+    });
+
+    // ---- Visor de pantalla completa con zoom (rueda del mouse, pellizco, doble clic, arrastrar) ----
+    let imgZoomState = { scale: 1, x: 0, y: 0, imgs: [], idx: 0 };
+    const imgZoomPointers = new Map();
+    let imgZoomPinchStartDist = 0;
+    let imgZoomPinchStartScale = 1;
+    let imgZoomDragStart = null;
+    let imgZoomHintTimer = null;
+    let imgZoomLastTap = 0;
+
+    function openImgZoom() {
+      const { imgs, idx } = imgLightboxState;
+      if (!imgs || !imgs.length) return;
+      imgZoomState = { scale: 1, x: 0, y: 0, imgs, idx };
+
+      const overlay = document.getElementById('imgZoomOverlay');
+      const img = document.getElementById('imgZoomImg');
+      img.src = imgs[idx];
+      applyImgZoomTransform();
+      updateImgZoomNav();
+
+      overlay.classList.remove('hidden');
+      requestAnimationFrame(() => overlay.classList.add('opacity-100'));
+
+      const hint = document.getElementById('imgZoomHint');
+      if (hint) {
+        hint.classList.remove('opacity-0');
+        clearTimeout(imgZoomHintTimer);
+        imgZoomHintTimer = setTimeout(() => hint.classList.add('opacity-0'), 3200);
+      }
+    }
+
+    function closeImgZoom() {
+      const overlay = document.getElementById('imgZoomOverlay');
+      overlay.classList.remove('opacity-100');
+      setTimeout(() => overlay.classList.add('hidden'), 200);
+    }
+
+    function applyImgZoomTransform() {
+      const img = document.getElementById('imgZoomImg');
+      if (!img) return;
+      img.style.transform = `translate(${imgZoomState.x}px, ${imgZoomState.y}px) scale(${imgZoomState.scale})`;
+    }
+
+    function clampImgZoomPan() {
+      const overlay = document.getElementById('imgZoomOverlay');
+      if (!overlay) return;
+      const maxOffsetX = (overlay.clientWidth * (imgZoomState.scale - 1)) / 2 + 60;
+      const maxOffsetY = (overlay.clientHeight * (imgZoomState.scale - 1)) / 2 + 60;
+      imgZoomState.x = Math.max(-maxOffsetX, Math.min(maxOffsetX, imgZoomState.x));
+      imgZoomState.y = Math.max(-maxOffsetY, Math.min(maxOffsetY, imgZoomState.y));
+    }
+
+    function setImgZoomScale(newScale, centerX, centerY) {
+      const overlay = document.getElementById('imgZoomOverlay');
+      if (!overlay) return;
+      const rect = overlay.getBoundingClientRect();
+      const cx = (centerX !== undefined ? centerX : rect.left + rect.width / 2) - rect.left - rect.width / 2;
+      const cy = (centerY !== undefined ? centerY : rect.top + rect.height / 2) - rect.top - rect.height / 2;
+      const prevScale = imgZoomState.scale;
+      const clamped = Math.max(1, Math.min(4, newScale));
+      const ratio = clamped / prevScale;
+      imgZoomState.x = (imgZoomState.x - cx) * ratio + cx;
+      imgZoomState.y = (imgZoomState.y - cy) * ratio + cy;
+      imgZoomState.scale = clamped;
+      if (clamped <= 1) { imgZoomState.x = 0; imgZoomState.y = 0; }
+      clampImgZoomPan();
+      applyImgZoomTransform();
+    }
+
+    function imgZoomToggleDouble(clientX, clientY) {
+      if (imgZoomState.scale > 1.05) {
+        setImgZoomScale(1, clientX, clientY);
+      } else {
+        setImgZoomScale(2.5, clientX, clientY);
+      }
+    }
+
+    function updateImgZoomNav() {
+      const { imgs, idx } = imgZoomState;
+      const prevBtn = document.getElementById('imgZoomPrev');
+      const nextBtn = document.getElementById('imgZoomNext');
+      const count = document.getElementById('imgZoomCount');
+      if (!prevBtn || !nextBtn || !count) return;
+      if (imgs.length > 1) {
+        prevBtn.classList.remove('hidden');
+        nextBtn.classList.remove('hidden');
+        count.classList.remove('hidden');
+        count.textContent = `${idx + 1}/${imgs.length}`;
+      } else {
+        prevBtn.classList.add('hidden');
+        nextBtn.classList.add('hidden');
+        count.classList.add('hidden');
+      }
+    }
+
+    function imgZoomNav(dir) {
+      const { imgs } = imgZoomState;
+      if (!imgs || imgs.length <= 1) return;
+      imgZoomState.idx = (imgZoomState.idx + dir + imgs.length) % imgs.length;
+      imgZoomState.scale = 1;
+      imgZoomState.x = 0;
+      imgZoomState.y = 0;
+      document.getElementById('imgZoomImg').src = imgs[imgZoomState.idx];
+      applyImgZoomTransform();
+      updateImgZoomNav();
+
+      // Mantiene sincronizado el lightbox y la tarjeta de la galería que quedan detrás.
+      imgLightboxState.idx = imgZoomState.idx;
+      const variantes = window.__galleryGroups[imgLightboxState.key];
+      const state = window.__galleryState[imgLightboxState.key];
+      const p = variantes ? variantes[state.selectedIdx] : null;
+      updateImgLightbox(p);
+      if (state) state.photoIdx = imgZoomState.idx;
+      const cardImgEl = document.getElementById(`galImg-${imgLightboxState.key}`);
+      if (cardImgEl && cardImgEl.tagName === 'IMG') cardImgEl.src = imgs[imgZoomState.idx];
+      const cardCounter = document.getElementById(`galPhotoCount-${imgLightboxState.key}`);
+      if (cardCounter) cardCounter.textContent = `${imgZoomState.idx + 1}/${imgs.length}`;
+    }
+
+    (function initImgZoomEvents() {
+      const overlay = document.getElementById('imgZoomOverlay');
+      if (!overlay) return;
+
+      // Rueda del mouse / trackpad: hace zoom centrado en el cursor.
+      overlay.addEventListener('wheel', (e) => {
+        e.preventDefault();
+        const delta = -e.deltaY * 0.0025;
+        setImgZoomScale(imgZoomState.scale * (1 + delta), e.clientX, e.clientY);
+      }, { passive: false });
+
+      // Doble clic (escritorio): alterna entre zoom normal y ampliado.
+      overlay.addEventListener('dblclick', (e) => {
+        e.preventDefault();
+        imgZoomToggleDouble(e.clientX, e.clientY);
+      });
+
+      overlay.addEventListener('pointerdown', (e) => {
+        if (e.target.closest('button')) return;
+        imgZoomPointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
+
+        if (imgZoomPointers.size === 1) {
+          imgZoomDragStart = { x: e.clientX, y: e.clientY, ox: imgZoomState.x, oy: imgZoomState.y };
+          try { overlay.setPointerCapture(e.pointerId); } catch (err) {}
+
+          // Doble toque (móvil): alterna zoom, igual que el doble clic.
+          const now = Date.now();
+          if (now - imgZoomLastTap < 300) {
+            imgZoomToggleDouble(e.clientX, e.clientY);
+          }
+          imgZoomLastTap = now;
+        } else if (imgZoomPointers.size === 2) {
+          const pts = Array.from(imgZoomPointers.values());
+          imgZoomPinchStartDist = Math.hypot(pts[0].x - pts[1].x, pts[0].y - pts[1].y);
+          imgZoomPinchStartScale = imgZoomState.scale;
+        }
+      });
+
+      overlay.addEventListener('pointermove', (e) => {
+        if (!imgZoomPointers.has(e.pointerId)) return;
+        imgZoomPointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
+
+        if (imgZoomPointers.size === 2) {
+          // Pellizco con dos dedos: zoom centrado en el punto medio entre los dedos.
+          const pts = Array.from(imgZoomPointers.values());
+          const dist = Math.hypot(pts[0].x - pts[1].x, pts[0].y - pts[1].y);
+          const midX = (pts[0].x + pts[1].x) / 2;
+          const midY = (pts[0].y + pts[1].y) / 2;
+          if (imgZoomPinchStartDist > 0) {
+            setImgZoomScale(imgZoomPinchStartScale * (dist / imgZoomPinchStartDist), midX, midY);
+          }
+        } else if (imgZoomPointers.size === 1 && imgZoomDragStart && imgZoomState.scale > 1.02) {
+          // Un dedo o el mouse, ya con zoom aplicado: arrastra para mover la imagen.
+          imgZoomState.x = imgZoomDragStart.ox + (e.clientX - imgZoomDragStart.x);
+          imgZoomState.y = imgZoomDragStart.oy + (e.clientY - imgZoomDragStart.y);
+          clampImgZoomPan();
+          applyImgZoomTransform();
+        }
+      });
+
+      function endImgZoomPointer(e) {
+        imgZoomPointers.delete(e.pointerId);
+        if (imgZoomPointers.size < 2) imgZoomPinchStartDist = 0;
+        if (imgZoomPointers.size === 0) imgZoomDragStart = null;
+      }
+      overlay.addEventListener('pointerup', endImgZoomPointer);
+      overlay.addEventListener('pointercancel', endImgZoomPointer);
+      overlay.addEventListener('pointerleave', endImgZoomPointer);
+    })();
+
+    document.addEventListener('keydown', (e) => {
+      const overlay = document.getElementById('imgZoomOverlay');
+      if (!overlay || overlay.classList.contains('hidden')) return;
+      if (e.key === 'Escape') closeImgZoom();
+      if (e.key === 'ArrowLeft') imgZoomNav(-1);
+      if (e.key === 'ArrowRight') imgZoomNav(1);
+      if (e.key === '+' || e.key === '=') setImgZoomScale(imgZoomState.scale + 0.4);
+      if (e.key === '-') setImgZoomScale(imgZoomState.scale - 0.4);
     });
 
     function galleryPhotoNav(key, dir) {
@@ -6835,6 +7067,39 @@
       }
     }
 
+    let checkoutGraduacionGeneral = 'con'; // 'con' | 'sin' — se pregunta primero en el checkout
+
+    function setCheckoutGraduacion(tipo) {
+      checkoutGraduacionGeneral = tipo === 'sin' ? 'sin' : 'con';
+      const conBtn = document.getElementById('checkoutGraduacionConBtn');
+      const sinBtn = document.getElementById('checkoutGraduacionSinBtn');
+      const tipoWrap = document.getElementById('checkoutTipoWrap');
+      const recetaWrap = document.getElementById('checkoutRecetaWrap');
+      const examenWrap = document.getElementById('checkoutExamenWrap');
+
+      if (checkoutGraduacionGeneral === 'sin') {
+        sinBtn.classList.add('border-brand-sky', 'text-brand-sky');
+        sinBtn.classList.remove('border-slate-900/10', 'text-slate-500');
+        conBtn.classList.remove('border-brand-sky', 'text-brand-sky');
+        conBtn.classList.add('border-slate-900/10', 'text-slate-500');
+
+        // Sin graduación: no se pide receta ni se agenda examen, solo los datos de contacto.
+        tipoWrap.classList.add('hidden');
+        recetaWrap.classList.add('hidden');
+        examenWrap.classList.add('hidden');
+        checkoutTipo = 'sin_graduacion';
+      } else {
+        conBtn.classList.add('border-brand-sky', 'text-brand-sky');
+        conBtn.classList.remove('border-slate-900/10', 'text-slate-500');
+        sinBtn.classList.remove('border-brand-sky', 'text-brand-sky');
+        sinBtn.classList.add('border-slate-900/10', 'text-slate-500');
+
+        // Con graduación: se pide elegir entre subir receta o agendar examen.
+        tipoWrap.classList.remove('hidden');
+        setCheckoutTipo('receta');
+      }
+    }
+
     function setCheckoutTipo(tipo) {
       checkoutTipo = tipo;
       const examenBtn = document.getElementById('checkoutTipoExamenBtn');
@@ -6877,7 +7142,18 @@
         }
       } catch (e) { /* guest checkout, no problem */ }
 
-      setCheckoutTipo(forceExamen ? 'examen' : 'receta');
+      const graduacionWrap = document.getElementById('checkoutGraduacionWrap');
+      if (forceExamen) {
+        // Vino del botón directo "Agendar examen a domicilio": ya sabemos que es con graduación,
+        // así que ocultamos la pregunta y vamos directo a agendar el examen.
+        graduacionWrap.classList.add('hidden');
+        setCheckoutGraduacion('con');
+        setCheckoutTipo('examen');
+      } else {
+        graduacionWrap.classList.remove('hidden');
+        const anyConGraduacion = cart.some(it => it.graduacion === 'con');
+        setCheckoutGraduacion(anyConGraduacion ? 'con' : 'sin');
+      }
       setCheckoutMetodo('whatsapp');
       document.getElementById('checkoutReceta').value = '';
       document.getElementById('checkoutExamenPersonas').value = '1';
@@ -6907,11 +7183,11 @@
         status.textContent = 'Por favor complete su nombre y teléfono.';
         return;
       }
-      if (checkoutTipo === 'receta' && !receta) {
+      if (checkoutGraduacionGeneral === 'con' && checkoutTipo === 'receta' && !receta) {
         status.textContent = 'Escriba su graduación o pegue el enlace de su receta.';
         return;
       }
-      if (checkoutTipo === 'examen') {
+      if (checkoutGraduacionGeneral === 'con' && checkoutTipo === 'examen') {
         if (!slotId) {
           status.textContent = 'Elija una fecha y horario disponible.';
           return;
@@ -6983,7 +7259,7 @@
 
         // Mensaje de WhatsApp con el resumen del pedido
         const itemsText = items.map(it => `• ${it.modelo} (${it.color})${it.cantidad > 1 ? ` x${it.cantidad}` : ''}${it.precio ? ` — $${Number(it.precio).toFixed(2)}` : ''}${(it.tratamientos && it.tratamientos.length) ? ` [${it.tratamientos.join(', ')}]` : ''}${it.graduacion === 'con' ? ' [CON GRADUACIÓN — costo final según receta]' : ' [sin graduación]'}`).join('%0A');
-        const tipoText = checkoutTipo === 'receta' ? 'Pedido CON RECETA' : 'Pedido con EXAMEN A DOMICILIO';
+        const tipoText = checkoutTipo === 'receta' ? 'Pedido CON RECETA' : checkoutTipo === 'examen' ? 'Pedido con EXAMEN A DOMICILIO' : 'Pedido SIN GRADUACIÓN';
         let msg = `Hola, quiero confirmar mi pedido en Visión EKA:%0A%0A${tipoText}%0A${itemsText}`;
         if (checkoutTipo === 'receta') msg += `%0AReceta: ${receta}`;
         if (items.some(it => it.graduacion === 'con')) msg += `%0A%0ANota: algunos lentes son con graduación, el precio final de esos se confirma según la receta.`;
@@ -7589,7 +7865,7 @@ async function deleteProduct(id, storagePaths) {
         cliente: String(data.cliente || '').slice(0, 120),
         telefono: String(data.telefono || '').slice(0, 40),
         email: String(data.email || '').slice(0, 120),
-        tipoPedido: data.tipoPedido || 'manual', // 'examen' | 'receta' | 'manual'
+        tipoPedido: data.tipoPedido || 'manual', // 'examen' | 'receta' | 'sin_graduacion' | 'manual'
         receta: String(data.receta || '').slice(0, 1000),
         examen,
         producto: String(data.producto || '').slice(0, 200),
