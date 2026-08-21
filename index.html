@@ -2090,15 +2090,22 @@
         <p id="cartEmptyMsg" class="text-xs text-slate-600/80 italic text-center py-8">Tu carrito está vacío. Agrega algún lente desde el catálogo.</p>
       </div>
       <div class="p-6 border-t border-slate-900/10">
-        <div class="flex items-center justify-between mb-4">
+        <div class="flex items-center justify-between mb-1">
           <span class="text-xs uppercase tracking-widest font-extrabold text-slate-500">Total estimado</span>
           <span id="cartTotalText" class="font-display font-bold text-xl text-brand-ink">$0.00</span>
         </div>
+        <p id="cartGraduacionNote" class="hidden text-[10px] text-brand-teal mb-3 leading-snug">* Los lentes marcados "Con graduación" pueden tener un costo adicional según su receta; se lo confirmamos antes de cerrar su pedido.</p>
         <button onclick="startCheckout()" id="cartCheckoutBtn" class="w-full bg-gradient-to-r from-brand-sky to-brand-teal text-brand-ink font-bold py-3.5 rounded-xl transition-all hover:shadow-lg">
           Continuar con mi pedido
         </button>
       </div>
     </div>
+  </div>
+
+  <!-- Aviso flotante al agregar al carrito: recuerda que hay opción con/sin graduación -->
+  <div id="addToCartToast" class="fixed bottom-6 left-1/2 -translate-x-1/2 z-[70] max-w-sm w-[90%] sm:w-auto px-5 py-3.5 bg-brand-navydeep text-white text-xs sm:text-[13px] font-medium rounded-2xl shadow-2xl opacity-0 translate-y-4 pointer-events-none transition-all duration-300 flex items-start gap-2.5">
+    <span class="text-base leading-none flex-shrink-0">👓</span>
+    <span id="addToCartToastText" class="leading-snug"></span>
   </div>
 
   <!-- ========== CHECKOUT (finalizar pedido) ========== -->
@@ -6460,6 +6467,42 @@
       });
     }
 
+    // Frases variadas para el aviso de "con/sin graduación" al agregar al carrito.
+    // Se elige una al azar (evitando repetir la anterior) para que no se sienta como
+    // un mensaje robótico repetido cada vez.
+    const ADD_TO_CART_MESSAGES = [
+      'Este precio es sin graduación. Si prefiere sus lentes con graduación, el costo cambia según su receta — se lo confirmamos antes de cerrar su pedido.',
+      'Recuerde: sus lentes pueden ir con o sin graduación. Sin graduación es el precio que ve aquí; con graduación varía según su receta.',
+      '¿Con graduación o sin graduación? El precio mostrado es sin graduación. Si necesita graduación, el costo se ajusta según su receta.',
+      'Puede pedir este modelo con graduación o sin graduación. El precio que ve es para sin graduación; con graduación el costo depende de su receta.',
+      'Aviso: el precio que ve es sin graduación. Para lentes graduados, el precio final se calcula según su receta antes de confirmar el pedido.',
+      'Sus lentes se pueden armar con graduación o sin ella. Sin graduación conserva el precio mostrado; con graduación el costo sube según su receta.'
+    ];
+    let lastAddToCartMsgIndex = -1;
+    let addToCartToastTimer = null;
+
+    function showAddToCartToast() {
+      const toast = document.getElementById('addToCartToast');
+      const textEl = document.getElementById('addToCartToastText');
+      if (!toast || !textEl) return;
+
+      let idx;
+      do {
+        idx = Math.floor(Math.random() * ADD_TO_CART_MESSAGES.length);
+      } while (idx === lastAddToCartMsgIndex && ADD_TO_CART_MESSAGES.length > 1);
+      lastAddToCartMsgIndex = idx;
+
+      textEl.textContent = ADD_TO_CART_MESSAGES[idx];
+      toast.classList.remove('opacity-0', 'translate-y-4', 'pointer-events-none');
+      toast.classList.add('opacity-100', 'translate-y-0');
+
+      clearTimeout(addToCartToastTimer);
+      addToCartToastTimer = setTimeout(() => {
+        toast.classList.add('opacity-0', 'translate-y-4', 'pointer-events-none');
+        toast.classList.remove('opacity-100', 'translate-y-0');
+      }, 5000);
+    }
+
     function addToCart(productId) {
       const p = (window.__publicProductsCache || {})[productId];
       if (!p) return;
@@ -6475,12 +6518,22 @@
           precio: (p.precio === null || p.precio === undefined) ? null : p.precio,
           img: imgsArr[0] || null,
           tratamientos: Array.isArray(p.tratamientos) ? p.tratamientos : [],
+          graduacion: 'sin', // 'sin' = precio mostrado; 'con' = costo final según receta
           cantidad: 1
         });
       }
       saveCart();
       openCartDrawer();
+      showAddToCartToast();
       window.firebaseReady.then(fb => fb.logProductInterest(productId)).catch(() => {});
+    }
+
+    function cartSetGraduacion(id, tipo) {
+      const item = cart.find(it => it.id === id);
+      if (!item) return;
+      item.graduacion = tipo === 'con' ? 'con' : 'sin';
+      saveCart();
+      renderCartDrawer();
     }
 
     function cartChangeQty(id, delta) {
@@ -6523,6 +6576,7 @@
       checkoutBtn.classList.remove('opacity-50');
 
       list.innerHTML = cart.map(it => {
+        const graduacion = it.graduacion === 'con' ? 'con' : 'sin';
         const precioText = (it.precio !== null && it.precio !== undefined)
           ? `$${Number(it.precio).toLocaleString('es-MX', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
           : 'Consultar precio';
@@ -6530,13 +6584,17 @@
           ? `<img src="${it.img}" class="w-14 h-14 object-cover rounded-xl bg-brand-navy border border-slate-900/10 flex-shrink-0">`
           : `<div class="w-14 h-14 rounded-xl bg-brand-navy border border-slate-900/10 flex items-center justify-center text-xl flex-shrink-0">🕶️</div>`;
         return `
-        <div class="flex items-center gap-3">
+        <div class="flex items-start gap-3">
           ${thumb}
           <div class="flex-1 min-w-0">
             <p class="text-sm font-semibold text-brand-ink truncate">${it.modelo}</p>
-            <p class="text-[11px] text-slate-500 truncate">${it.color} · ${precioText}</p>
+            <p class="text-[11px] text-slate-500 truncate">${it.color} · ${precioText}${graduacion === 'con' ? ' <span class="text-brand-teal font-semibold">+ ajuste según receta</span>' : ''}</p>
             ${(it.tratamientos && it.tratamientos.length) ? `<p class="text-[10px] text-brand-teal truncate">${it.tratamientos.join(' · ')}</p>` : ''}
-            <div class="flex items-center gap-2 mt-1">
+            <div class="flex items-center gap-1.5 mt-1.5">
+              <button onclick="cartSetGraduacion('${it.id}', 'sin')" class="text-[9px] font-bold uppercase tracking-wide px-2 py-1 rounded-full border transition-all ${graduacion === 'sin' ? 'bg-brand-sky/20 border-brand-sky text-brand-ink' : 'border-slate-900/10 text-slate-500'}">Sin graduación</button>
+              <button onclick="cartSetGraduacion('${it.id}', 'con')" class="text-[9px] font-bold uppercase tracking-wide px-2 py-1 rounded-full border transition-all ${graduacion === 'con' ? 'bg-brand-sky/20 border-brand-sky text-brand-ink' : 'border-slate-900/10 text-slate-500'}">Con graduación</button>
+            </div>
+            <div class="flex items-center gap-2 mt-1.5">
               <button onclick="cartChangeQty('${it.id}', -1)" class="w-6 h-6 rounded-full bg-brand-navy border border-slate-900/10 text-brand-ink text-xs font-bold flex items-center justify-center">−</button>
               <span class="text-xs font-bold text-brand-ink w-4 text-center">${it.cantidad}</span>
               <button onclick="cartChangeQty('${it.id}', 1)" class="w-6 h-6 rounded-full bg-brand-navy border border-slate-900/10 text-brand-ink text-xs font-bold flex items-center justify-center">+</button>
@@ -6547,6 +6605,10 @@
       `; }).join('');
 
       totalText.textContent = `$${cartTotal().toLocaleString('es-MX', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+
+      const graduacionNote = document.getElementById('cartGraduacionNote');
+      const anyConGraduacion = cart.some(it => it.graduacion === 'con');
+      if (graduacionNote) graduacionNote.classList.toggle('hidden', !anyConGraduacion);
     }
 
     function openCartDrawer() {
@@ -6865,7 +6927,7 @@
       status.className = 'text-[11px] text-slate-500 mt-2 text-center';
       status.textContent = 'Enviando pedido...';
 
-      const items = cart.map(it => ({ modelo: it.modelo, color: it.color, precio: it.precio, cantidad: it.cantidad, tratamientos: it.tratamientos || [] }));
+      const items = cart.map(it => ({ modelo: it.modelo, color: it.color, precio: it.precio, cantidad: it.cantidad, tratamientos: it.tratamientos || [], graduacion: it.graduacion === 'con' ? 'con' : 'sin' }));
       const lentesTotal = cartTotal();
       const examen = checkoutTipo === 'examen' ? checkoutExamCost() : null;
       const total = lentesTotal + (examen ? examen.total : 0);
@@ -6920,10 +6982,11 @@
         });
 
         // Mensaje de WhatsApp con el resumen del pedido
-        const itemsText = items.map(it => `• ${it.modelo} (${it.color})${it.cantidad > 1 ? ` x${it.cantidad}` : ''}${it.precio ? ` — $${Number(it.precio).toFixed(2)}` : ''}${(it.tratamientos && it.tratamientos.length) ? ` [${it.tratamientos.join(', ')}]` : ''}`).join('%0A');
+        const itemsText = items.map(it => `• ${it.modelo} (${it.color})${it.cantidad > 1 ? ` x${it.cantidad}` : ''}${it.precio ? ` — $${Number(it.precio).toFixed(2)}` : ''}${(it.tratamientos && it.tratamientos.length) ? ` [${it.tratamientos.join(', ')}]` : ''}${it.graduacion === 'con' ? ' [CON GRADUACIÓN — costo final según receta]' : ' [sin graduación]'}`).join('%0A');
         const tipoText = checkoutTipo === 'receta' ? 'Pedido CON RECETA' : 'Pedido con EXAMEN A DOMICILIO';
         let msg = `Hola, quiero confirmar mi pedido en Visión EKA:%0A%0A${tipoText}%0A${itemsText}`;
         if (checkoutTipo === 'receta') msg += `%0AReceta: ${receta}`;
+        if (items.some(it => it.graduacion === 'con')) msg += `%0A%0ANota: algunos lentes son con graduación, el precio final de esos se confirma según la receta.`;
         if (examen) {
           msg += `%0A%0AExamen a domicilio (${examen.personas} persona${examen.personas > 1 ? 's' : ''}): $${examen.subtotal.toFixed(2)}%0ATraslado: $${examen.traslado.toFixed(2)}`;
           if (examen.bono > 0) msg += `%0ABonificación 50%25 por pedir lentes: -$${examen.bono.toFixed(2)}`;
