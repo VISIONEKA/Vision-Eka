@@ -254,7 +254,12 @@
     .animate-marquee:hover {
       animation-play-state: paused;
     }
-  </style>
+      /* Scrollbar hide para miniaturas y quick replies */
+    .scrollbar-hide::-webkit-scrollbar { display: none; }
+    .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+    @keyframes fadeInUp { from { opacity:0; transform:translateY(6px);} to { opacity:1; transform:translateY(0);} }
+    .animate-fade-in { animation: fadeInUp 0.3s ease-out; }
+</style>
 </head>
 <body class="bg-brand-navy text-slate-700 font-sans antialiased overflow-x-hidden selection:bg-brand-sky selection:text-brand-ink">
 
@@ -2015,13 +2020,42 @@
 
   <!-- ========== CUSTOM PREMIUM NOTIFICATION DIALOG (Zero Alerts) ========== -->
   <!-- ========== BOTÓN FLOTANTE: MÁS INFORMACIÓN ========== -->
+  <!-- ========== WIDGET DE IA DE VENTAS ========== -->
   <div class="fixed bottom-8 left-8 z-40 flex items-end gap-2">
-    <button onclick="openQuickInfoModal()" id="floatInfoBtn" class="blink-attention w-11 h-11 sm:w-14 sm:h-14 rounded-full bg-gradient-to-tr from-brand-sky to-brand-teal text-brand-ink shadow-2xl shadow-brand-sky/30 flex items-center justify-center text-base sm:text-xl hover:scale-105 transition-all duration-300" title="Más información" aria-label="Más información">
-      💬
+    <button onclick="toggleSalesAI()" id="salesAIBtn" class="w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-gradient-to-tr from-brand-sky to-brand-teal text-brand-ink shadow-2xl shadow-brand-sky/30 flex items-center justify-center text-xl sm:text-2xl hover:scale-105 transition-all duration-300 relative" title="Asesor virtual" aria-label="Asesor virtual">
+      🤖
+      <span id="salesAIUnread" class="hidden absolute -top-1 -right-1 w-5 h-5 bg-brand-coral text-white text-[10px] font-bold rounded-full flex items-center justify-center">1</span>
     </button>
-    <div id="floatInfoBubble" class="hidden relative bg-brand-dark border border-brand-sky/30 shadow-2xl rounded-2xl rounded-bl-sm px-4 py-3 max-w-[180px] sm:max-w-[210px] text-[11px] sm:text-xs text-slate-600 font-semibold mb-1">
-      <button onclick="dismissFloatInfoBubble(event)" class="absolute -top-2 -right-2 w-5 h-5 rounded-full bg-slate-900/10 hover:bg-slate-900/20 text-slate-500 text-[10px] flex items-center justify-center" aria-label="Cerrar">✕</button>
-      ¿Tiene dudas? Escríbanos, con gusto le ayudamos 😊
+  </div>
+
+  <!-- Chat de IA -->
+  <div id="salesAIChat" class="fixed bottom-24 left-4 sm:left-8 z-50 w-[calc(100vw-2rem)] sm:w-80 bg-brand-dark border border-brand-sky/30 rounded-3xl shadow-2xl transform scale-95 opacity-0 pointer-events-none transition-all duration-300 flex flex-col overflow-hidden max-h-[60vh] sm:max-h-[500px]">
+    <div class="flex items-center justify-between gap-3 p-4 border-b border-slate-900/10 bg-brand-navy/50 flex-shrink-0">
+      <div class="flex items-center gap-2.5">
+        <div class="w-8 h-8 rounded-full bg-gradient-to-tr from-brand-sky to-brand-teal flex items-center justify-center text-sm">🤖</div>
+        <div>
+          <h4 class="text-xs font-bold text-brand-ink">EKA Asistente</h4>
+          <p class="text-[9px] text-brand-teal flex items-center gap-1">
+            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+            En línea — responde al instante
+          </p>
+        </div>
+      </div>
+      <button onclick="toggleSalesAI()" class="text-slate-500 hover:text-brand-ink text-lg leading-none">✕</button>
+    </div>
+    <div id="salesAIMessages" class="flex-1 overflow-y-auto p-4 space-y-3 scrollbar-hide">
+    </div>
+    <div class="p-3 border-t border-slate-900/10 flex-shrink-0">
+      <div class="flex gap-2">
+        <input type="text" id="salesAIInput" placeholder="Escribe tu duda..." 
+          class="flex-1 bg-brand-navy/50 border border-slate-900/10 rounded-xl px-3 py-2 text-xs text-brand-ink placeholder-slate-600 focus:border-brand-sky focus:outline-none"
+          onkeydown="if(event.key==='Enter')sendSalesAIMessage()">
+        <button onclick="sendSalesAIMessage()" class="w-9 h-9 rounded-full bg-brand-sky text-brand-ink flex items-center justify-center hover:bg-brand-sky/80 transition-colors flex-shrink-0">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </button>
+      </div>
+      <div id="salesAIQuickReplies" class="flex gap-2 mt-2 overflow-x-auto scrollbar-hide snap-x">
+      </div>
     </div>
   </div>
 
@@ -2052,9 +2086,14 @@
         <button onclick="event.stopPropagation(); openImgZoom();" class="absolute top-2 left-2 w-8 h-8 rounded-full bg-brand-navy/80 text-brand-ink flex items-center justify-center hover:bg-brand-sky/30 transition-colors" title="Ver en pantalla completa con zoom" aria-label="Ver en pantalla completa con zoom">
           <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 8V5a1 1 0 011-1h3M20 8V5a1 1 0 00-1-1h-3M4 16v3a1 1 0 001 1h3m12-4v3a1 1 0 01-1 1h-3"/></svg>
         </button>
+        <button id="imgLightboxShareBtn" onclick="" title="Compartir por WhatsApp" aria-label="Compartir por WhatsApp" class="absolute top-2 right-2 w-8 h-8 rounded-full bg-brand-navy/80 hover:bg-emerald-500 text-brand-ink flex items-center justify-center text-sm transition-colors">
+          <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 448 512"><path d="M380.9 97.1C339 55.1 283.2 32 223.9 32c-122.4 0-222 99.6-222 222 0 39.1 10.2 77.3 29.6 111L0 480l117.7-30.9c32.4 17.7 68.9 27 106.1 27h.1c122.3 0 224.1-99.6 224.1-222 0-59.3-25.2-115-67.1-157zM223.9 431.9c-33.1 0-65.6-8.9-93.9-25.7l-6.7-4-69.8 18.3L72 351.5l-4.4-7c-18.5-29.4-28.2-63.3-28.2-98.2 0-101.7 82.8-184.5 184.6-184.5 49.3 0 95.6 19.2 130.4 54.1 34.8 34.9 56.2 81.2 56.1 130.5 0 101.8-84.9 184.5-186.6 184.5zm101.2-138.2c-5.5-2.8-32.8-16.2-37.9-18-5.1-1.9-8.8-2.8-12.5 2.8-3.7 5.6-14.3 18-17.6 21.8-3.2 3.7-6.5 4.2-12 1.4-32.6-16.3-54-29.1-75.5-66-5.7-9.8 5.7-9.1 16.3-30.3 1.8-3.7.9-6.9-.5-9.7-1.4-2.8-12.5-30.1-17.1-41.2-4.5-10.8-9.1-9.3-12.5-9.5-3.2-.2-6.9-.2-10.6-.2-3.7 0-9.7 1.4-14.8 6.9-5.1 5.6-19.4 19-19.4 46.3 0 27.3 19.9 53.7 22.6 57.4 2.8 3.7 39.1 59.7 94.8 83.8 35.2 15.2 49 16.5 66.6 13.9 10.7-1.6 32.8-13.4 37.4-26.4 4.6-13 4.6-24.1 3.2-26.4-1.3-2.5-5-3.9-10.5-6.6z"/></svg>
+        </button>
         <button id="imgLightboxPrev" onclick="event.stopPropagation(); imgLightboxNav(-1)" class="hidden absolute left-2 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-brand-navy/80 text-brand-ink flex items-center justify-center text-lg hover:bg-brand-sky/30 transition-colors">‹</button>
         <button id="imgLightboxNext" onclick="event.stopPropagation(); imgLightboxNav(1)" class="hidden absolute right-2 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-brand-navy/80 text-brand-ink flex items-center justify-center text-lg hover:bg-brand-sky/30 transition-colors">›</button>
         <span id="imgLightboxCount" class="hidden absolute bottom-2 left-1/2 -translate-x-1/2 bg-brand-navy/80 text-brand-ink text-[10px] font-bold px-3 py-1 rounded-full"></span>
+        <!-- Miniaturas: fila abajo en móvil, columna a la izquierda en escritorio -->
+        <div id="imgLightboxThumbs" class="hidden absolute z-10 flex overflow-auto scrollbar-hide bottom-0 inset-x-0 flex-row gap-2 p-3 snap-x snap-mandatory bg-gradient-to-t from-black/80 to-transparent sm:inset-y-0 sm:left-0 sm:right-auto sm:bottom-auto sm:top-0 sm:w-28 sm:p-3 sm:pt-14 sm:flex-col sm:snap-y sm:bg-gradient-to-r sm:from-black/70 sm:to-transparent"></div>
       </div>
       <div class="p-6 sm:w-2/5 flex flex-col">
         <span id="imgLightboxCategoria" class="text-[9px] font-extrabold text-brand-sky uppercase tracking-widest mb-1.5"></span>
@@ -2066,6 +2105,9 @@
           <span id="imgLightboxStock"></span>
         </div>
         <div id="imgLightboxCartWrap" class="flex flex-col gap-2 mt-auto">
+          <button id="imgLightboxBuyNowBtn" onclick="" class="flex items-center justify-center gap-2 text-[10px] font-bold uppercase tracking-widest text-white bg-brand-ink hover:opacity-90 rounded-full py-2.5 transition-all duration-300 hover:shadow-lg">
+            ⚡ Comprar ahora
+          </button>
           <button id="imgLightboxAddBtn" onclick="" class="flex items-center justify-center gap-2 text-[10px] font-bold uppercase tracking-widest text-brand-ink bg-gradient-to-r from-brand-sky to-brand-teal rounded-full py-2.5 transition-all duration-300 hover:shadow-lg hover:shadow-brand-sky/30">
             🛒 Agregar al carrito
           </button>
@@ -2073,10 +2115,6 @@
             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
             Pruébatelo en vivo
           </a>
-          <button id="imgLightboxShareBtn" onclick="" class="flex items-center justify-center gap-2 text-[10px] font-bold uppercase tracking-widest text-brand-ink bg-emerald-500/90 hover:bg-emerald-500 rounded-full py-2.5 transition-all duration-300">
-            <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 448 512"><path d="M380.9 97.1C339 55.1 283.2 32 223.9 32c-122.4 0-222 99.6-222 222 0 39.1 10.2 77.3 29.6 111L0 480l117.7-30.9c32.4 17.7 68.9 27 106.1 27h.1c122.3 0 224.1-99.6 224.1-222 0-59.3-25.2-115-67.1-157zM223.9 431.9c-33.1 0-65.6-8.9-93.9-25.7l-6.7-4-69.8 18.3L72 351.5l-4.4-7c-18.5-29.4-28.2-63.3-28.2-98.2 0-101.7 82.8-184.5 184.6-184.5 49.3 0 95.6 19.2 130.4 54.1 34.8 34.9 56.2 81.2 56.1 130.5 0 101.8-84.9 184.5-186.6 184.5zm101.2-138.2c-5.5-2.8-32.8-16.2-37.9-18-5.1-1.9-8.8-2.8-12.5 2.8-3.7 5.6-14.3 18-17.6 21.8-3.2 3.7-6.5 4.2-12 1.4-32.6-16.3-54-29.1-75.5-66-5.7-9.8 5.7-9.1 16.3-30.3 1.8-3.7.9-6.9-.5-9.7-1.4-2.8-12.5-30.1-17.1-41.2-4.5-10.8-9.1-9.3-12.5-9.5-3.2-.2-6.9-.2-10.6-.2-3.7 0-9.7 1.4-14.8 6.9-5.1 5.6-19.4 19-19.4 46.3 0 27.3 19.9 53.7 22.6 57.4 2.8 3.7 39.1 59.7 94.8 83.8 35.2 15.2 49 16.5 66.6 13.9 10.7-1.6 32.8-13.4 37.4-26.4 4.6-13 4.6-24.1 3.2-26.4-1.3-2.5-5-3.9-10.5-6.6z"/></svg>
-            Compartir por WhatsApp
-          </button>
         </div>
       </div>
     </div>
@@ -2084,17 +2122,20 @@
 
   <!-- ========== VISOR DE PANTALLA COMPLETA CON ZOOM ========== -->
   <div id="imgZoomOverlay" class="fixed inset-0 z-[80] bg-black hidden opacity-0 transition-opacity duration-200 select-none" style="touch-action: none;">
-    <button onclick="closeImgZoom()" class="absolute top-4 right-4 w-10 h-10 rounded-full bg-white/10 text-white flex items-center justify-center text-xl hover:bg-white/20 transition-colors z-10" aria-label="Cerrar">✕</button>
+    <button onclick="closeImgZoom()" class="absolute top-4 right-4 w-10 h-10 rounded-full bg-white/10 text-white flex items-center justify-center text-xl hover:bg-white/20 transition-colors z-20" aria-label="Cerrar">✕</button>
 
     <div class="absolute inset-0 flex items-center justify-center overflow-hidden">
       <img id="imgZoomImg" src="" alt="" class="max-w-[92vw] max-h-[86vh] object-contain pointer-events-none" style="touch-action: none; transform-origin: center center;">
     </div>
 
-    <button id="imgZoomPrev" onclick="event.stopPropagation(); imgZoomNav(-1)" class="hidden absolute left-3 top-1/2 -translate-y-1/2 w-11 h-11 rounded-full bg-white/10 text-white flex items-center justify-center text-2xl hover:bg-white/20 transition-colors">‹</button>
-    <button id="imgZoomNext" onclick="event.stopPropagation(); imgZoomNav(1)" class="hidden absolute right-3 top-1/2 -translate-y-1/2 w-11 h-11 rounded-full bg-white/10 text-white flex items-center justify-center text-2xl hover:bg-white/20 transition-colors">›</button>
-    <span id="imgZoomCount" class="hidden absolute top-4 left-1/2 -translate-x-1/2 bg-white/10 text-white text-[10px] font-bold px-3 py-1 rounded-full"></span>
+    <button id="imgZoomPrev" onclick="event.stopPropagation(); imgZoomNav(-1)" class="hidden absolute left-3 sm:left-24 top-1/2 -translate-y-1/2 w-11 h-11 rounded-full bg-white/10 text-white flex items-center justify-center text-2xl hover:bg-white/20 transition-colors z-20">‹</button>
+    <button id="imgZoomNext" onclick="event.stopPropagation(); imgZoomNav(1)" class="hidden absolute right-3 top-1/2 -translate-y-1/2 w-11 h-11 rounded-full bg-white/10 text-white flex items-center justify-center text-2xl hover:bg-white/20 transition-colors z-20">›</button>
+    <span id="imgZoomCount" class="hidden absolute top-4 left-1/2 -translate-x-1/2 bg-white/10 text-white text-[10px] font-bold px-3 py-1 rounded-full z-20"></span>
 
-    <div class="absolute bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-2">
+    <!-- Miniaturas: fila arriba de los controles en móvil, columna a la izquierda en escritorio -->
+    <div id="imgZoomThumbs" class="hidden absolute z-10 flex overflow-auto scrollbar-hide bottom-24 inset-x-0 flex-row gap-2 p-3 snap-x snap-mandatory sm:inset-y-0 sm:left-0 sm:right-auto sm:bottom-auto sm:top-0 sm:w-28 sm:p-3 sm:flex-col sm:snap-y"></div>
+
+    <div class="absolute bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-2 z-20">
       <button onclick="event.stopPropagation(); setImgZoomScale(imgZoomState.scale - 0.5)" class="w-9 h-9 rounded-full bg-white/10 text-white flex items-center justify-center text-lg font-bold hover:bg-white/20 transition-colors" aria-label="Alejar">−</button>
       <button onclick="event.stopPropagation(); setImgZoomScale(imgZoomState.scale + 0.5)" class="w-9 h-9 rounded-full bg-white/10 text-white flex items-center justify-center text-lg font-bold hover:bg-white/20 transition-colors" aria-label="Acercar">+</button>
     </div>
@@ -2155,6 +2196,43 @@
         </div>
       </div>
 
+      <!-- Configurador de mica: solo se muestra cuando el pedido es con graduación -->
+      <div id="checkoutMicaWrap" class="hidden mb-4 p-4 bg-brand-navy rounded-2xl border border-slate-900/10">
+        <p class="text-xs font-bold text-brand-ink mb-3">🔧 Configure su mica</p>
+
+        <label class="block text-[9px] uppercase tracking-widest text-slate-500 font-extrabold mb-2">Tipo de mica</label>
+        <div class="grid grid-cols-3 gap-2 mb-4">
+          <button type="button" onclick="setCheckoutMicaTipo('monofocal')" id="checkoutMicaTipoMonofocalBtn" class="checkout-mica-tipo-btn text-center p-2.5 rounded-xl border-2 border-brand-sky text-brand-sky text-[11px] font-bold transition-all">Monofocal<br><span class="font-normal normal-case text-[9px] text-slate-500">Visión sencilla</span></button>
+          <button type="button" onclick="setCheckoutMicaTipo('bifocal')" id="checkoutMicaTipoBifocalBtn" class="checkout-mica-tipo-btn text-center p-2.5 rounded-xl border-2 border-slate-900/10 text-slate-500 text-[11px] font-bold transition-all">Bifocal<br><span class="font-normal normal-case text-[9px] text-slate-500">Dos distancias</span></button>
+          <button type="button" onclick="setCheckoutMicaTipo('progresiva')" id="checkoutMicaTipoProgresivaBtn" class="checkout-mica-tipo-btn text-center p-2.5 rounded-xl border-2 border-slate-900/10 text-slate-500 text-[11px] font-bold transition-all">Progresiva<br><span class="font-normal normal-case text-[9px] text-slate-500">Multifocal</span></button>
+        </div>
+
+        <label class="block text-[9px] uppercase tracking-widest text-slate-500 font-extrabold mb-2">Grosor / índice de la mica</label>
+        <div class="grid grid-cols-3 gap-2 mb-1">
+          <button type="button" onclick="setCheckoutMicaIndice('estandar')" id="checkoutMicaIndiceEstandarBtn" class="checkout-mica-indice-btn text-center p-2.5 rounded-xl border-2 border-brand-sky text-brand-sky text-[11px] font-bold transition-all">Estándar<br><span class="font-normal normal-case text-[9px] text-slate-500">1.56</span></button>
+          <button type="button" onclick="setCheckoutMicaIndice('delgado')" id="checkoutMicaIndiceDelgadoBtn" class="checkout-mica-indice-btn text-center p-2.5 rounded-xl border-2 border-slate-900/10 text-slate-500 text-[11px] font-bold transition-all">Delgado<br><span class="font-normal normal-case text-[9px] text-slate-500">1.61</span></button>
+          <button type="button" onclick="setCheckoutMicaIndice('ultradelgado')" id="checkoutMicaIndiceUltradelgadoBtn" class="checkout-mica-indice-btn text-center p-2.5 rounded-xl border-2 border-slate-900/10 text-slate-500 text-[11px] font-bold transition-all">Ultra delgado<br><span class="font-normal normal-case text-[9px] text-slate-500">1.67+</span></button>
+        </div>
+        <p class="text-[10px] text-slate-500 mb-4">Entre más fuerte su graduación, más conviene un índice alto: la mica queda más delgada y ligera.</p>
+
+        <label class="block text-[9px] uppercase tracking-widest text-slate-500 font-extrabold mb-2">Tratamientos que desea <span class="normal-case text-slate-600/70 font-medium">(opcional)</span></label>
+        <div class="grid grid-cols-2 gap-2 mb-3">
+          <label class="flex items-center gap-2 text-[11px] text-slate-500 bg-brand-dark border border-slate-900/10 rounded-xl px-3 py-2.5 cursor-pointer">
+            <input type="checkbox" value="Antirreflejante" onchange="toggleCheckoutMicaTratamiento('Antirreflejante', this.checked)" class="accent-brand-sky"> Antirreflejante
+          </label>
+          <label class="flex items-center gap-2 text-[11px] text-slate-500 bg-brand-dark border border-slate-900/10 rounded-xl px-3 py-2.5 cursor-pointer">
+            <input type="checkbox" value="Antivaho" onchange="toggleCheckoutMicaTratamiento('Antivaho', this.checked)" class="accent-brand-sky"> Antivaho
+          </label>
+          <label class="flex items-center gap-2 text-[11px] text-slate-500 bg-brand-dark border border-slate-900/10 rounded-xl px-3 py-2.5 cursor-pointer">
+            <input type="checkbox" value="Fotocromático" onchange="toggleCheckoutMicaTratamiento('Fotocromático', this.checked)" class="accent-brand-sky"> Fotocromático <span class="text-slate-600">(oscurece con el sol)</span>
+          </label>
+          <label class="flex items-center gap-2 text-[11px] text-slate-500 bg-brand-dark border border-slate-900/10 rounded-xl px-3 py-2.5 cursor-pointer">
+            <input type="checkbox" value="Filtro de luz azul" onchange="toggleCheckoutMicaTratamiento('Filtro de luz azul', this.checked)" class="accent-brand-sky"> Filtro de luz azul
+          </label>
+        </div>
+        <p class="text-[10px] text-brand-teal leading-snug">* El costo final de la mica y los tratamientos se confirma junto con su receta, antes de armar su pedido.</p>
+      </div>
+
       <div id="checkoutRecetaWrap" class="hidden mb-4">
         <label class="block text-[9px] uppercase tracking-widest text-slate-500 font-extrabold mb-2">Su receta / graduación</label>
         <textarea id="checkoutReceta" rows="2" placeholder="Escriba su graduación (ej. OD -2.00 OI -1.50) o pegue el enlace de la foto de su receta" class="w-full p-3.5 bg-brand-navy border border-slate-900/10 rounded-xl text-sm text-brand-ink focus:border-brand-sky focus:outline-none"></textarea>
@@ -2202,11 +2280,11 @@
       <div class="grid sm:grid-cols-2 gap-4 mb-4">
         <div>
           <label class="block text-[9px] uppercase tracking-widest text-slate-500 font-extrabold mb-2">Nombre</label>
-          <input type="text" id="checkoutNombre" class="w-full p-3.5 bg-brand-navy border border-slate-900/10 rounded-xl text-sm text-brand-ink focus:border-brand-sky focus:outline-none">
+          <input type="text" id="checkoutNombre" required class="w-full p-3.5 bg-brand-navy border border-slate-900/10 rounded-xl text-sm text-brand-ink focus:border-brand-sky focus:outline-none">
         </div>
         <div>
           <label class="block text-[9px] uppercase tracking-widest text-slate-500 font-extrabold mb-2">Teléfono / WhatsApp</label>
-          <input type="tel" id="checkoutTelefono" class="w-full p-3.5 bg-brand-navy border border-slate-900/10 rounded-xl text-sm text-brand-ink focus:border-brand-sky focus:outline-none">
+          <input type="tel" id="checkoutTelefono" required class="w-full p-3.5 bg-brand-navy border border-slate-900/10 rounded-xl text-sm text-brand-ink focus:border-brand-sky focus:outline-none">
         </div>
       </div>
       <div class="mb-5">
@@ -2250,8 +2328,8 @@
         </div>
 
         <div id="accountRegisterForm" class="hidden">
-          <input type="text" id="registerNombre" placeholder="Nombre" class="w-full p-3.5 mb-3 bg-brand-navy border border-slate-900/10 rounded-xl text-sm text-brand-ink focus:border-brand-sky focus:outline-none">
-          <input type="tel" id="registerTelefono" placeholder="Teléfono" class="w-full p-3.5 mb-3 bg-brand-navy border border-slate-900/10 rounded-xl text-sm text-brand-ink focus:border-brand-sky focus:outline-none">
+          <input type="text" id="registerNombre" placeholder="Nombre" required class="w-full p-3.5 mb-3 bg-brand-navy border border-slate-900/10 rounded-xl text-sm text-brand-ink focus:border-brand-sky focus:outline-none">
+          <input type="tel" id="registerTelefono" placeholder="Teléfono" required class="w-full p-3.5 mb-3 bg-brand-navy border border-slate-900/10 rounded-xl text-sm text-brand-ink focus:border-brand-sky focus:outline-none">
           <input type="email" id="registerEmail" placeholder="Correo" autocomplete="username" class="w-full p-3.5 mb-3 bg-brand-navy border border-slate-900/10 rounded-xl text-sm text-brand-ink focus:border-brand-sky focus:outline-none">
           <input type="password" id="registerPassword" placeholder="Contraseña (mínimo 6 caracteres)" autocomplete="new-password" class="w-full p-3.5 mb-3 bg-brand-navy border border-slate-900/10 rounded-xl text-sm text-brand-ink focus:border-brand-sky focus:outline-none">
           <button onclick="submitCustomerRegister()" id="registerBtn" class="w-full bg-brand-sky text-brand-ink font-bold py-3 rounded-xl mb-2">Crear cuenta</button>
@@ -2288,8 +2366,8 @@
         <button onclick="closeQuickCallModal()" class="text-slate-500 hover:text-brand-ink text-xl leading-none">✕</button>
       </div>
       <p class="text-xs text-slate-500 mb-4">Le llamamos nosotros. Solo déjenos sus datos y el mejor horario para contactarle.</p>
-      <input type="text" id="quickCallNombre" placeholder="Nombre" class="w-full p-3.5 mb-3 bg-brand-navy border border-slate-900/10 rounded-xl text-sm text-brand-ink focus:border-brand-sky focus:outline-none">
-      <input type="tel" id="quickCallTelefono" placeholder="Teléfono" class="w-full p-3.5 mb-3 bg-brand-navy border border-slate-900/10 rounded-xl text-sm text-brand-ink focus:border-brand-sky focus:outline-none">
+      <input type="text" id="quickCallNombre" placeholder="Nombre" required class="w-full p-3.5 mb-3 bg-brand-navy border border-slate-900/10 rounded-xl text-sm text-brand-ink focus:border-brand-sky focus:outline-none">
+      <input type="tel" id="quickCallTelefono" placeholder="Teléfono" required class="w-full p-3.5 mb-3 bg-brand-navy border border-slate-900/10 rounded-xl text-sm text-brand-ink focus:border-brand-sky focus:outline-none">
       <select id="quickCallHorario" class="w-full p-3.5 mb-4 bg-brand-navy border border-slate-900/10 rounded-xl text-sm text-brand-ink focus:border-brand-sky focus:outline-none">
         <option value="">¿Mejor horario? (opcional)</option>
         <option value="Mañana (9am-12pm)">Mañana (9am-12pm)</option>
@@ -3135,6 +3213,40 @@
     // ---- Lightbox: ver imagen de producto ampliada ----
     let imgLightboxState = { imgs: [], idx: 0, key: null };
 
+    // Helper compartido: dibuja la fila/columna de miniaturas (lightbox y visor de pantalla completa)
+    function renderImgThumbs(containerId, imgs, activeIdx, jumpFnName) {
+      const container = document.getElementById(containerId);
+      if (!container) return;
+      if (!imgs || imgs.length <= 1) {
+        container.innerHTML = '';
+        container.classList.add('hidden');
+        return;
+      }
+      container.innerHTML = imgs.map((img, i) => `
+        <button onclick="event.stopPropagation(); ${jumpFnName}(${i})"
+          class="flex-shrink-0 w-12 h-12 sm:w-24 sm:h-24 rounded-xl border-2 overflow-hidden snap-start transition-all ${i === activeIdx ? 'border-brand-sky scale-105' : 'border-white/20 opacity-70'}">
+          <img src="${img}" class="w-full h-full object-cover" loading="lazy">
+        </button>
+      `).join('');
+      container.classList.remove('hidden');
+    }
+
+    function updateImgThumbsActive(containerId, activeIdx) {
+      const container = document.getElementById(containerId);
+      if (!container) return;
+      const buttons = container.querySelectorAll('button');
+      buttons.forEach((btn, i) => {
+        if (i === activeIdx) {
+          btn.classList.add('border-brand-sky', 'scale-105');
+          btn.classList.remove('border-white/20', 'opacity-70');
+          btn.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+        } else {
+          btn.classList.remove('border-brand-sky', 'scale-105');
+          btn.classList.add('border-white/20', 'opacity-70');
+        }
+      });
+    }
+
     function openImgLightbox(key) {
       const state = window.__galleryState[key];
       const variantes = window.__galleryGroups[key];
@@ -3173,6 +3285,7 @@
         nextBtn.classList.add('hidden');
         count.classList.add('hidden');
       }
+      renderImgThumbs('imgLightboxThumbs', imgs, idx, 'imgLightboxJump');
       if (!p) return;
 
       document.getElementById('imgLightboxCategoria').textContent = p.categoria || '';
@@ -3201,14 +3314,33 @@
       }
 
       const addBtn = document.getElementById('imgLightboxAddBtn');
+      const buyNowBtn = document.getElementById('imgLightboxBuyNowBtn');
       if (agotado) {
         addBtn.classList.add('hidden');
+        buyNowBtn.classList.add('hidden');
       } else {
         addBtn.classList.remove('hidden');
         addBtn.onclick = () => addToCart(p.id);
+        buyNowBtn.classList.remove('hidden');
+        buyNowBtn.onclick = () => buyNowProduct(p.id);
       }
 
       document.getElementById('imgLightboxShareBtn').onclick = () => shareProductWhatsapp(p.id);
+    }
+
+    function imgLightboxJump(idx) {
+      const { imgs, key } = imgLightboxState;
+      if (!imgs || !imgs.length) return;
+      imgLightboxState.idx = ((idx % imgs.length) + imgs.length) % imgs.length;
+      const variantes = window.__galleryGroups[key];
+      const state = window.__galleryState[key];
+      const p = variantes ? variantes[state.selectedIdx] : null;
+      updateImgLightbox(p);
+      if (state) state.photoIdx = imgLightboxState.idx;
+      const cardImgEl = document.getElementById(`galImg-${key}`);
+      if (cardImgEl && cardImgEl.tagName === 'IMG') cardImgEl.src = imgs[imgLightboxState.idx];
+      const cardCounter = document.getElementById(`galPhotoCount-${key}`);
+      if (cardCounter) cardCounter.textContent = `${imgLightboxState.idx + 1}/${imgs.length}`;
     }
 
     function imgLightboxNav(dir) {
@@ -3243,6 +3375,32 @@
       if (e.key === 'ArrowRight') imgLightboxNav(1);
     });
 
+    // ---- Deslizar con el dedo (swipe) para cambiar de imagen en el teléfono, sin necesidad de tocar las flechas ----
+    (function setupImgLightboxSwipe() {
+      const imgEl = document.getElementById('imgLightboxImg');
+      if (!imgEl) return;
+      let touchStartX = 0;
+      let touchStartY = 0;
+      let touching = false;
+      imgEl.addEventListener('touchstart', (e) => {
+        if (e.touches.length !== 1) return;
+        touching = true;
+        touchStartX = e.touches[0].clientX;
+        touchStartY = e.touches[0].clientY;
+      }, { passive: true });
+      imgEl.addEventListener('touchend', (e) => {
+        if (!touching) return;
+        touching = false;
+        const touch = e.changedTouches[0];
+        const dx = touch.clientX - touchStartX;
+        const dy = touch.clientY - touchStartY;
+        // Solo reacciona a deslizamientos horizontales claros, para no interferir con el scroll vertical
+        if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy) * 1.5) {
+          imgLightboxNav(dx < 0 ? 1 : -1);
+        }
+      }, { passive: true });
+    })();
+
     // ---- Visor de pantalla completa con zoom (rueda del mouse, pellizco, doble clic, arrastrar) ----
     let imgZoomState = { scale: 1, x: 0, y: 0, imgs: [], idx: 0 };
     const imgZoomPointers = new Map();
@@ -3262,6 +3420,7 @@
       img.src = imgs[idx];
       applyImgZoomTransform();
       updateImgZoomNav();
+      renderImgThumbs('imgZoomThumbs', imgs, idx, 'imgZoomJump');
 
       overlay.classList.remove('hidden');
       requestAnimationFrame(() => overlay.classList.add('opacity-100'));
@@ -3338,16 +3497,17 @@
       }
     }
 
-    function imgZoomNav(dir) {
+    function imgZoomGoTo(newIdx) {
       const { imgs } = imgZoomState;
-      if (!imgs || imgs.length <= 1) return;
-      imgZoomState.idx = (imgZoomState.idx + dir + imgs.length) % imgs.length;
+      if (!imgs || !imgs.length) return;
+      imgZoomState.idx = ((newIdx % imgs.length) + imgs.length) % imgs.length;
       imgZoomState.scale = 1;
       imgZoomState.x = 0;
       imgZoomState.y = 0;
       document.getElementById('imgZoomImg').src = imgs[imgZoomState.idx];
       applyImgZoomTransform();
       updateImgZoomNav();
+      renderImgThumbs('imgZoomThumbs', imgs, imgZoomState.idx, 'imgZoomJump');
 
       // Mantiene sincronizado el lightbox y la tarjeta de la galería que quedan detrás.
       imgLightboxState.idx = imgZoomState.idx;
@@ -3360,6 +3520,16 @@
       if (cardImgEl && cardImgEl.tagName === 'IMG') cardImgEl.src = imgs[imgZoomState.idx];
       const cardCounter = document.getElementById(`galPhotoCount-${imgLightboxState.key}`);
       if (cardCounter) cardCounter.textContent = `${imgZoomState.idx + 1}/${imgs.length}`;
+    }
+
+    function imgZoomNav(dir) {
+      const { imgs } = imgZoomState;
+      if (!imgs || imgs.length <= 1) return;
+      imgZoomGoTo(imgZoomState.idx + dir);
+    }
+
+    function imgZoomJump(idx) {
+      imgZoomGoTo(idx);
     }
 
     (function initImgZoomEvents() {
@@ -3511,6 +3681,11 @@
                 <svg class="w-3.5 h-3.5 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
                 <span class="gal-compact-hide">Pruébatelo en vivo</span>
               </a>
+              ${p.amazonUrl ? `
+              <a href="${escapeHtml(p.amazonUrl)}" target="_blank" rel="noopener" class="flex items-center justify-center gap-2 text-[10px] font-bold uppercase tracking-widest text-[#FF9900] border border-[#FF9900]/30 hover:bg-[#FF9900]/10 rounded-full py-2.5 gal-compact-icon-btn transition-all duration-300 group/amz">
+                <svg class="w-3.5 h-3.5 flex-shrink-0 group-hover/amz:scale-110 transition-transform" viewBox="0 0 24 24" fill="currentColor"><path d="M13.23 10.56V10c0-1.2.08-2.2-.54-2.96-.54-.72-1.4-1.04-2.3-1.04-1.48 0-2.48.88-2.48 2.4 0 .08.04.16.08.24.4.08.8.16 1.16.16.52 0 .68-.24.76-.72.08-.44.28-.68.68-.68.4 0 .64.24.64.68v.88c-1.36.2-2.8.44-2.8 2.04 0 1.2.76 1.8 1.72 1.8.76 0 1.4-.28 1.88-.8.12.56.52.8 1.04.8.28 0 .56-.08.84-.16v-.56c-.24.08-.44.12-.6.12-.28 0-.4-.12-.4-.44zm-1.2.88c-.32.32-.68.48-1.08.48-.52 0-.84-.28-.84-.84 0-.72.52-.96 1.16-1.08.32-.04.56-.12.76-.2v1.64zm4.28-3.64c0-.76-.28-1.32-1.08-1.32-.44 0-.84.2-1.08.52v-.44h-1.2v5.24c.4.08.8.12 1.2.12v-1.6c.28.32.64.48 1.08.48.8 0 1.08-.56 1.08-1.32v-1.24zm-1.2 1.48c0 .44-.16.68-.52.68-.32 0-.56-.2-.56-.68v-1.48c0-.44.24-.68.56-.68.36 0 .52.24.52.68v1.48z"/><path d="M18.5 14.5c-.15.15-.3.3-.45.45-.15.15-.3.25-.5.3-.2.05-.4.05-.6 0-.2-.05-.35-.15-.5-.3-.15-.15-.3-.3-.45-.45-.15-.15-.3-.3-.45-.45-.15-.15-.25-.3-.35-.45-.1-.15-.15-.3-.15-.45 0-.15.05-.3.15-.45.1-.15.2-.25.35-.35.15-.1.3-.15.45-.15.15 0 .3.05.45.15.15.1.25.2.35.35.1.15.2.3.3.45.1.15.25.3.4.45.15.15.3.3.45.45.15.15.3.25.5.3.2.05.4.05.6 0 .2-.05.35-.15.5-.3.15-.15.3-.3.45-.45.15-.15.3-.3.45-.45.15-.15.25-.3.35-.45.1-.15.15-.3.15-.45 0-.15-.05-.3-.15-.45-.1-.15-.2-.25.35-.35.15-.1.3-.15.45-.15.15 0 .3.05-.45.15-.15.1-.25.2-.35.35-.1.15-.2.3-.3.45-.1.15-.25.3-.4.45z"/><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z" opacity=".3"/><text x="12" y="16" text-anchor="middle" fill="currentColor" font-size="8" font-weight="bold">a</text></svg>
+                <span class="gal-compact-hide">Amazon</span>
+              </a>` : ''}
             </div>
           </div>
         </div>
@@ -6428,7 +6603,8 @@
     function tipoPedidoBadge(tipo) {
       const map = {
         examen: '<span class="text-[9px] font-bold uppercase tracking-wide text-brand-sky bg-brand-sky/10 px-2 py-0.5 rounded-full whitespace-nowrap">🏠 Examen a domicilio</span>',
-        receta: '<span class="text-[9px] font-bold uppercase tracking-wide text-brand-coral bg-brand-coral/10 px-2 py-0.5 rounded-full whitespace-nowrap">📋 Con receta</span>'
+        receta: '<span class="text-[9px] font-bold uppercase tracking-wide text-brand-coral bg-brand-coral/10 px-2 py-0.5 rounded-full whitespace-nowrap">📋 Con receta</span>',
+        sin_graduacion: '<span class="text-[9px] font-bold uppercase tracking-wide text-slate-400 bg-slate-400/10 px-2 py-0.5 rounded-full whitespace-nowrap">🕶️ Sin graduación</span>'
       };
       return map[tipo] || '';
     }
@@ -6473,6 +6649,7 @@
               ${p.telefono ? `<p><strong class="text-brand-ink">Tel:</strong> ${p.telefono}</p>` : ''}
               ${p.email ? `<p><strong class="text-brand-ink">Correo:</strong> ${p.email}</p>` : ''}
               ${p.receta ? `<p><strong class="text-brand-ink">Receta:</strong> ${p.receta}</p>` : ''}
+              ${p.micaConfig ? `<p><strong class="text-brand-ink">Mica:</strong> ${{ monofocal: 'Monofocal', bifocal: 'Bifocal', progresiva: 'Progresiva' }[p.micaConfig.tipo] || p.micaConfig.tipo} · Índice ${{ estandar: 'Estándar (1.56)', delgado: 'Delgado (1.61)', ultradelgado: 'Ultra delgado (1.67+)' }[p.micaConfig.indice] || p.micaConfig.indice}${(p.micaConfig.tratamientos && p.micaConfig.tratamientos.length) ? ` · ${p.micaConfig.tratamientos.join(', ')}` : ''}</p>` : ''}
               ${p.examen ? `<p><strong class="text-brand-ink">Examen a domicilio:</strong> ${p.examen.personas} persona${p.examen.personas > 1 ? 's' : ''} — Subtotal $${Number(p.examen.subtotal).toFixed(2)} + Traslado $${Number(p.examen.traslado).toFixed(2)}${p.examen.bono > 0 ? ` − Bonificación $${Number(p.examen.bono).toFixed(2)}` : ''} = <strong>$${Number(p.examen.total).toFixed(2)}</strong></p>` : ''}
               ${p.examen?.fecha ? `<p><strong class="text-brand-ink">Fecha y hora:</strong> ${p.examen.fecha} ${p.examen.hora || ''}</p>` : ''}
               ${(p.examen?.armazonesElegidos && p.examen.armazonesElegidos.length) ? `<p><strong class="text-brand-ink">Armazones para probarse:</strong> ${p.examen.armazonesElegidos.map(a => `${a.modelo} (${a.color})`).join(', ')}</p>` : ''}
@@ -6758,6 +6935,34 @@
       openCartDrawer();
       showAddToCartToast();
       window.firebaseReady.then(fb => fb.logProductInterest(productId)).catch(() => {});
+    }
+
+    // "Comprar ahora": agrega el producto al carrito y va directo al checkout, sin quedarse en el carrito.
+    function buyNowProduct(productId) {
+      const p = (window.__publicProductsCache || {})[productId];
+      if (!p) return;
+      const existing = cart.find(it => it.id === productId);
+      if (existing) {
+        existing.cantidad += 1;
+      } else {
+        const imgsArr = (p.imgs && p.imgs.length) ? p.imgs : (p.img ? [p.img] : []);
+        cart.push({
+          id: productId,
+          modelo: p.modelo,
+          color: p.color,
+          precio: (p.precio === null || p.precio === undefined) ? null : p.precio,
+          img: imgsArr[0] || null,
+          tratamientos: Array.isArray(p.tratamientos) ? p.tratamientos : [],
+          graduacion: 'sin',
+          cantidad: 1
+        });
+      }
+      saveCart();
+      renderCartBadge();
+      window.firebaseReady.then(fb => fb.logProductInterest(productId)).catch(() => {});
+      closeImgZoom();
+      closeImgLightbox();
+      startCheckout();
     }
 
     function cartSetGraduacion(id, tipo) {
@@ -7068,6 +7273,54 @@
     }
 
     let checkoutGraduacionGeneral = 'con'; // 'con' | 'sin' — se pregunta primero en el checkout
+    let checkoutMicaTipo = 'monofocal'; // 'monofocal' | 'bifocal' | 'progresiva'
+    let checkoutMicaIndice = 'estandar'; // 'estandar' | 'delgado' | 'ultradelgado'
+    let checkoutMicaTratamientos = [];
+
+    function setCheckoutMicaTipo(tipo) {
+      checkoutMicaTipo = tipo;
+      ['monofocal', 'bifocal', 'progresiva'].forEach(t => {
+        const btn = document.getElementById(`checkoutMicaTipo${t.charAt(0).toUpperCase()}${t.slice(1)}Btn`);
+        if (!btn) return;
+        if (t === tipo) {
+          btn.classList.add('border-brand-sky', 'text-brand-sky');
+          btn.classList.remove('border-slate-900/10', 'text-slate-500');
+        } else {
+          btn.classList.remove('border-brand-sky', 'text-brand-sky');
+          btn.classList.add('border-slate-900/10', 'text-slate-500');
+        }
+      });
+    }
+
+    function setCheckoutMicaIndice(indice) {
+      checkoutMicaIndice = indice;
+      ['estandar', 'delgado', 'ultradelgado'].forEach(i => {
+        const btn = document.getElementById(`checkoutMicaIndice${i.charAt(0).toUpperCase()}${i.slice(1)}Btn`);
+        if (!btn) return;
+        if (i === indice) {
+          btn.classList.add('border-brand-sky', 'text-brand-sky');
+          btn.classList.remove('border-slate-900/10', 'text-slate-500');
+        } else {
+          btn.classList.remove('border-brand-sky', 'text-brand-sky');
+          btn.classList.add('border-slate-900/10', 'text-slate-500');
+        }
+      });
+    }
+
+    function toggleCheckoutMicaTratamiento(nombre, checked) {
+      if (checked) {
+        if (!checkoutMicaTratamientos.includes(nombre)) checkoutMicaTratamientos.push(nombre);
+      } else {
+        checkoutMicaTratamientos = checkoutMicaTratamientos.filter(t => t !== nombre);
+      }
+    }
+
+    function resetCheckoutMicaConfig() {
+      checkoutMicaTratamientos = [];
+      document.querySelectorAll('#checkoutMicaWrap input[type="checkbox"]').forEach(cb => { cb.checked = false; });
+      setCheckoutMicaTipo('monofocal');
+      setCheckoutMicaIndice('estandar');
+    }
 
     function setCheckoutGraduacion(tipo) {
       checkoutGraduacionGeneral = tipo === 'sin' ? 'sin' : 'con';
@@ -7076,6 +7329,7 @@
       const tipoWrap = document.getElementById('checkoutTipoWrap');
       const recetaWrap = document.getElementById('checkoutRecetaWrap');
       const examenWrap = document.getElementById('checkoutExamenWrap');
+      const micaWrap = document.getElementById('checkoutMicaWrap');
 
       if (checkoutGraduacionGeneral === 'sin') {
         sinBtn.classList.add('border-brand-sky', 'text-brand-sky');
@@ -7083,10 +7337,12 @@
         conBtn.classList.remove('border-brand-sky', 'text-brand-sky');
         conBtn.classList.add('border-slate-900/10', 'text-slate-500');
 
-        // Sin graduación: no se pide receta ni se agenda examen, solo los datos de contacto.
+        // Sin graduación: no se pide receta, mica, ni se agenda examen, solo los datos de contacto.
         tipoWrap.classList.add('hidden');
         recetaWrap.classList.add('hidden');
         examenWrap.classList.add('hidden');
+        micaWrap.classList.add('hidden');
+        resetCheckoutMicaConfig();
         checkoutTipo = 'sin_graduacion';
       } else {
         conBtn.classList.add('border-brand-sky', 'text-brand-sky');
@@ -7094,11 +7350,13 @@
         sinBtn.classList.remove('border-brand-sky', 'text-brand-sky');
         sinBtn.classList.add('border-slate-900/10', 'text-slate-500');
 
-        // Con graduación: se pide elegir entre subir receta o agendar examen.
+        // Con graduación: se pide elegir entre subir receta o agendar examen, y configurar la mica.
         tipoWrap.classList.remove('hidden');
+        micaWrap.classList.remove('hidden');
         setCheckoutTipo('receta');
       }
     }
+
 
     function setCheckoutTipo(tipo) {
       checkoutTipo = tipo;
@@ -7155,6 +7413,7 @@
         setCheckoutGraduacion(anyConGraduacion ? 'con' : 'sin');
       }
       setCheckoutMetodo('whatsapp');
+      resetCheckoutMicaConfig();
       document.getElementById('checkoutReceta').value = '';
       document.getElementById('checkoutExamenPersonas').value = '1';
       document.getElementById('checkoutExamenDistancia').value = '0';
@@ -7204,6 +7463,9 @@
       status.textContent = 'Enviando pedido...';
 
       const items = cart.map(it => ({ modelo: it.modelo, color: it.color, precio: it.precio, cantidad: it.cantidad, tratamientos: it.tratamientos || [], graduacion: it.graduacion === 'con' ? 'con' : 'sin' }));
+      const micaConfig = checkoutGraduacionGeneral === 'con'
+        ? { tipo: checkoutMicaTipo, indice: checkoutMicaIndice, tratamientos: [...checkoutMicaTratamientos] }
+        : null;
       const lentesTotal = cartTotal();
       const examen = checkoutTipo === 'examen' ? checkoutExamCost() : null;
       const total = lentesTotal + (examen ? examen.total : 0);
@@ -7240,6 +7502,7 @@
           email,
           tipoPedido: checkoutTipo,
           receta,
+          micaConfig,
           items,
           examen: examen ? {
             personas: examen.personas,
@@ -7262,6 +7525,12 @@
         const tipoText = checkoutTipo === 'receta' ? 'Pedido CON RECETA' : checkoutTipo === 'examen' ? 'Pedido con EXAMEN A DOMICILIO' : 'Pedido SIN GRADUACIÓN';
         let msg = `Hola, quiero confirmar mi pedido en Visión EKA:%0A%0A${tipoText}%0A${itemsText}`;
         if (checkoutTipo === 'receta') msg += `%0AReceta: ${receta}`;
+        if (micaConfig) {
+          const micaTipoLabel = { monofocal: 'Monofocal', bifocal: 'Bifocal', progresiva: 'Progresiva' }[micaConfig.tipo] || micaConfig.tipo;
+          const micaIndiceLabel = { estandar: 'Estándar (1.56)', delgado: 'Delgado (1.61)', ultradelgado: 'Ultra delgado (1.67+)' }[micaConfig.indice] || micaConfig.indice;
+          msg += `%0A%0AConfiguración de mica:%0A• Tipo: ${micaTipoLabel}%0A• Índice: ${micaIndiceLabel}`;
+          if (micaConfig.tratamientos.length) msg += `%0A• Tratamientos: ${micaConfig.tratamientos.join(', ')}`;
+        }
         if (items.some(it => it.graduacion === 'con')) msg += `%0A%0ANota: algunos lentes son con graduación, el precio final de esos se confirma según la receta.`;
         if (examen) {
           msg += `%0A%0AExamen a domicilio (${examen.personas} persona${examen.personas > 1 ? 's' : ''}): $${examen.subtotal.toFixed(2)}%0ATraslado: $${examen.traslado.toFixed(2)}`;
@@ -8188,6 +8457,147 @@ async function deleteProduct(id, storagePaths) {
       logProductInterest,
       logProductView
     });
-  </script>
+  
+
+// ========== IA DE VENTAS EKA ==========
+(function() {
+  const salesAI = {
+    open: false, started: false,
+    context: { askedPrice: false, askedRecipe: false, askedStyle: false, shownCatalog: false, userName: null, greeted: false },
+    knowledge: {
+      greetings: ['hola', 'buenas', 'hey', 'saludos', 'qué tal', 'buen dia', 'buenos dias', 'buenas tardes', 'buenas noches'],
+      prices: ['precio', 'cuanto', 'cuánto', 'costo', 'vale', 'cuesta', 'barato', 'caro', 'economico', 'presupuesto'],
+      recipe: ['receta', 'graduacion', 'graduación', 'formula', 'fórmula', 'ojo', 'miopia', 'hipermetropia', 'astigmatismo', 'examen'],
+      shipping: ['envio', 'envío', 'entrega', 'domicilio', 'llega', 'tiempo', 'cuando', 'cuándo', 'pronto', 'urgente', 'express'],
+      styles: ['hombre', 'mujer', 'niño', 'niños', 'unisex', 'deportivo', 'elegante', 'formal', 'casual', 'redondo', 'cuadrado'],
+      protection: ['proteccion', 'protección', 'seguridad', 'laboral', 'obra', 'industrial', 'uv', 'antireflejante', 'blue light', 'computadora'],
+      doubts: ['duda', 'duvda', 'pregunta', 'ayuda', 'no se', 'no sé', 'como', 'cómo', 'que', 'qué', 'info', 'informacion', 'información'],
+      buy: ['comprar', 'quiero', 'deseo', 'me interesa', 'me gusta', 'pedir', 'ordenar', 'carrito', 'pagar', 'tarjeta', 'efectivo']
+    },
+    responses: {
+      greeting: [
+        "¡Hola! 👋 Soy el asesor virtual de Visión EKA. ¿Buscas lentes con graduación, de protección o de sol? Te ayudo a encontrar el ideal en 30 segundos.",
+        "¡Buen día! 😊 Estoy aquí para ayudarte. ¿Necesitas lentes para lectura, computadora, o para todo el día? También tengo opciones de protección industrial."
+      ],
+      price: (ctx) => {
+        if (!ctx.askedRecipe) { ctx.askedRecipe = true; return "💰 Los precios varían según tu necesidad:\n\n• **Lentes de sol sin graduación**: desde $390 MXN\n• **Con graduación básica**: desde $890 MXN\n• **Progresivos (multifocal)**: desde $2,490 MXN\n• **Protección industrial graduada**: desde $1,290 MXN\n\n¿Ya tienes tu receta o necesitas que vayamos a hacerte el examen a domicilio? 👨‍⚕️"; }
+        return "Para darte un precio exacto necesito saber: ¿tienes receta o necesitas examen? Y ¿qué tipo de lente prefieres: monofocal, bifocal o progresivo?";
+      },
+      recipe: "👨‍⚕️ **Tienes dos opciones:**\n\n1️⃣ **Ya tengo receta**: Solo mándamela por WhatsApp y en 48h tienes tus lentes listos.\n\n2️⃣ **Necesito examen**: Vamos a tu casa u oficina en Querétaro. El examen cuesta $290 y si pides lentes te bonificamos el 50%.\n\n¿Cuál es tu caso?",
+      shipping: "🚚 **Envío express en Querétaro:**\n• Centro y alrededores: mismo día o al siguiente\n• Resto del estado: 1-2 días hábiles\n• Todo México: 2-4 días por DHL/FedEx\n\n**Envío gratis** en compras mayores a $1,500 MXN. ¿A qué código postal te llegaría?",
+      styles: (msg) => {
+        const lower = msg.toLowerCase();
+        let reco = '';
+        if (lower.includes('hombre')) reco = "Te recomiendo ver nuestros modelos **Hombre** — tenemos desde clásicos de acetato hasta ultraligeros de titanio. ¿Buscas algo formal o casual?";
+        else if (lower.includes('mujer')) reco = "Nuestra línea **Mujer** tiene desde cat-eyes elegantes hasta round vintage. ¿Prefieres algo discreto o que resalte tu estilo?";
+        else if (lower.includes('niño') || lower.includes('ninos')) reco = "Los lentes **Kids** son irrompibles, flexibles y con garantía de 1 año. ¿Para qué edad buscas?";
+        else if (lower.includes('deportivo')) reco = "Tenemos lentes deportivos con montura de TR90 (superflexible) y micas polarizadas. ¿Practicas algún deporte específico?";
+        else reco = "Tenemos estilos para todos los gustos. ¿Me dices si buscas para hombre, mujer, niños o unisex? Así te muestro los que más se venden.";
+        return "🕶️ " + reco;
+      },
+      protection: "🛡️ **Lentes de protección graduados** son nuestro fuerte:\n\n• Cumplen norma NOM y ANSI Z87.1\n• Antirrayadura y antiempañante\n• Con tu graduación exacta\n• Ideales para: construcción, industria, laboratorios, cocina\n\n¿Trabajas en alguna empresa? Tenemos **cotizaciones corporativas** con precio especial.",
+      catalog: "🛒 **Aquí te dejo las opciones más populares:**\n\n[Ver catálogo completo →](#gallery)\n\nO dime: ¿buscas lentes con graduación o sin graduación? Así te filtro los mejores modelos.",
+      closing: (ctx) => {
+        const closings = [
+          "🎯 Parece que encontramos lo que necesitas. ¿Te gustaría que agregue este modelo a tu carrito y te mande el link para pagar? Es seguro y rápido.",
+          "💡 Casi listo. ¿Prefieres pagar ahora en línea o te mando el link de pago por WhatsApp? También aceptamos transferencia.",
+          "🚀 ¿Te animas a hacer el pedido hoy? Tenemos envío gratis esta semana en compras +$1,500. Te lo armo en el carrito con un clic."
+        ];
+        return closings[Math.floor(Math.random() * closings.length)];
+      },
+      fallback: [
+        "Entiendo 👍 Para ayudarte mejor, ¿me cuentas: buscas lentes para ver de lejos, de cerca, para computadora, o de protección?",
+        "Claro, con gusto te ayudo. ¿Ya sabes qué modelo te gusta o quieres que te recomiende según tu presupuesto?",
+        "Perfecto. ¿Tienes tu receta actualizada (menos de 1 año) o necesitas que agendemos un examen a domicilio?"
+      ]
+    }
+  };
+
+  window.toggleSalesAI = function() {
+    salesAI.open = !salesAI.open;
+    const chat = document.getElementById('salesAIChat');
+    const unread = document.getElementById('salesAIUnread');
+    if (salesAI.open) {
+      chat.classList.remove('opacity-0', 'scale-95', 'pointer-events-none');
+      chat.classList.add('opacity-100', 'scale-100', 'pointer-events-auto');
+      unread.classList.add('hidden');
+      if (!salesAI.started) {
+        salesAI.started = true;
+        setTimeout(() => addSalesAIMessage('bot', salesAI.responses.greeting[0]), 400);
+        setTimeout(() => showQuickReplies(['Ver catálogo', 'Precios', 'Examen a domicilio', 'Tengo mi receta']), 900);
+      }
+      document.getElementById('salesAIInput')?.focus();
+    } else {
+      chat.classList.add('opacity-0', 'scale-95', 'pointer-events-none');
+      chat.classList.remove('opacity-100', 'scale-100', 'pointer-events-auto');
+    }
+  };
+
+  window.addSalesAIMessage = function(from, text) {
+    const container = document.getElementById('salesAIMessages');
+    const div = document.createElement('div');
+    div.className = `flex ${from === 'user' ? 'justify-end' : 'justify-start'} animate-fade-in`;
+    const isHtml = text.includes('<') && text.includes('>');
+    const safeText = isHtml ? text : text.replace(/\*\*(.*?)\*\*/g, '<strong class="text-brand-ink">$1</strong>').replace(/\n/g, '<br>');
+    div.innerHTML = `<div class="max-w-[85%] ${from === 'user' ? 'bg-brand-sky/20 text-brand-ink rounded-2xl rounded-tr-sm' : 'bg-brand-navy/40 text-slate-400 rounded-2xl rounded-tl-sm'} px-3.5 py-2.5 text-xs leading-relaxed">${safeText}</div>`;
+    container.appendChild(div);
+    container.scrollTop = container.scrollHeight;
+  };
+
+  window.showQuickReplies = function(replies) {
+    const container = document.getElementById('salesAIQuickReplies');
+    container.innerHTML = replies.map(r => `<button onclick="sendSalesAIQuickReply('${r.replace(/'/g, "\\'")}')" class="flex-shrink-0 snap-start px-3 py-1.5 bg-brand-navy/50 border border-brand-sky/20 rounded-full text-[10px] text-brand-sky hover:bg-brand-sky/20 transition-colors">${r}</button>`).join('');
+  };
+
+  window.sendSalesAIQuickReply = function(text) { sendSalesAIMessage(text); };
+
+  window.sendSalesAIMessage = function(overrideText) {
+    const input = document.getElementById('salesAIInput');
+    const text = overrideText || input.value.trim();
+    if (!text) return;
+    if (!overrideText) input.value = '';
+    addSalesAIMessage('user', text);
+    showQuickReplies([]);
+    setTimeout(() => processSalesAIResponse(text), 600);
+  };
+
+  function processSalesAIResponse(userMsg) {
+    const lower = userMsg.toLowerCase();
+    const ctx = salesAI.context;
+    let response = '', quickReplies = [];
+    const isGreeting = salesAI.knowledge.greetings.some(k => lower.includes(k));
+    const isPrice = salesAI.knowledge.prices.some(k => lower.includes(k));
+    const isRecipe = salesAI.knowledge.recipe.some(k => lower.includes(k));
+    const isShipping = salesAI.knowledge.shipping.some(k => lower.includes(k));
+    const isStyle = salesAI.knowledge.styles.some(k => lower.includes(k));
+    const isProtection = salesAI.knowledge.protection.some(k => lower.includes(k));
+    const isBuy = salesAI.knowledge.buy.some(k => lower.includes(k));
+    const isCatalog = lower.includes('catalogo') || lower.includes('catálogo') || lower.includes('ver') || lower.includes('modelos');
+
+    if (isGreeting && !ctx.greeted) { ctx.greeted = true; response = salesAI.responses.greeting[1]; quickReplies = ['Ver catálogo', 'Precios', 'Examen a domicilio']; }
+    else if (isCatalog) { response = "🛍️ ¡Perfecto! Te muestro nuestro catálogo. ¿Buscas para hombre, mujer, niños o unisex?"; quickReplies = ['Mujer', 'Hombre', 'Niños', 'Unisex', 'Protección industrial']; setTimeout(() => document.getElementById('gallery')?.scrollIntoView({ behavior: 'smooth' }), 800); }
+    else if (isPrice) { response = salesAI.responses.price(ctx); quickReplies = ['Tengo receta', 'Necesito examen', 'Ver catálogo']; }
+    else if (isRecipe) { response = salesAI.responses.recipe; quickReplies = ['Ya tengo receta', 'Agendar examen', 'Ver precios']; }
+    else if (isShipping) { response = salesAI.responses.shipping; quickReplies = ['Soy de Querétaro', 'Soy de otro estado', 'Ver catálogo']; }
+    else if (isStyle) { response = salesAI.responses.styles(userMsg); quickReplies = ['Ver catálogo', '¿Cuánto cuestan?', 'Agendar examen']; }
+    else if (isProtection) { response = salesAI.responses.protection; quickReplies = ['Cotización empresa', 'Ver modelos', 'Hablar con humano']; }
+    else if (isBuy) { response = salesAI.responses.closing(ctx); quickReplies = ['Sí, agregar al carrito', 'Mándame info por WhatsApp', 'Ver más modelos']; }
+    else { response = salesAI.responses.fallback[Math.floor(Math.random() * salesAI.responses.fallback.length)]; quickReplies = ['Ver catálogo', 'Precios', 'Examen a domicilio', 'Hablar con humano']; }
+
+    const typingDiv = document.createElement('div');
+    typingDiv.id = 'salesAITyping';
+    typingDiv.className = 'flex justify-start';
+    typingDiv.innerHTML = `<div class="bg-brand-navy/40 rounded-2xl rounded-tl-sm px-3.5 py-2.5 flex gap-1"><span class="w-1.5 h-1.5 rounded-full bg-slate-500 animate-bounce"></span><span class="w-1.5 h-1.5 rounded-full bg-slate-500 animate-bounce" style="animation-delay:0.1s"></span><span class="w-1.5 h-1.5 rounded-full bg-slate-500 animate-bounce" style="animation-delay:0.2s"></span></div>`;
+    document.getElementById('salesAIMessages').appendChild(typingDiv);
+    document.getElementById('salesAIMessages').scrollTop = document.getElementById('salesAIMessages').scrollHeight;
+
+    setTimeout(() => {
+      document.getElementById('salesAITyping')?.remove();
+      addSalesAIMessage('bot', response);
+      if (quickReplies.length) showQuickReplies(quickReplies);
+    }, 1200);
+  }
+})();
+</script>
 </body>
 </html>
