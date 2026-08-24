@@ -60,6 +60,8 @@
     ::-webkit-scrollbar { width: 6px; }
     ::-webkit-scrollbar-track { background: #EDF4F7; }
     ::-webkit-scrollbar-thumb { background: #86B8CB; border-radius: 10px; }
+    .scrollbar-hide::-webkit-scrollbar { display: none; }
+    .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
 
     .bento-card {
       transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
@@ -257,6 +259,25 @@
         </a>
 
       </div>
+    </div>
+  </section>
+
+  </section>
+
+  <!-- ========== ARMAZONES PARA NIÑOS (catálogo dinámico, editable desde el panel) ========== -->
+  <section id="armazones" class="py-16 sm:py-24 bg-brand-navy">
+    <div class="max-w-7xl mx-auto px-6">
+
+      <div class="text-center max-w-3xl mx-auto mb-16" data-aos="fade-up">
+        <span class="text-brand-sky font-bold text-xs tracking-widest uppercase mb-3 block">Hechos para Sobrevivir el Recreo</span>
+        <h2 class="font-display font-bold text-3xl sm:text-4xl tracking-tight text-brand-ink mb-4">Armazones resistentes y a su gusto</h2>
+        <p class="text-slate-500 text-sm max-w-xl mx-auto">Materiales flexibles de alta resistencia a caídas y dobleces, en colores y diseños que ellos mismos elegirán con gusto.</p>
+      </div>
+
+      <div id="kidsProductGalleryLoading" class="text-center text-xs text-slate-500 py-10">Cargando catálogo...</div>
+      <div id="kidsProductGalleryEmpty" class="hidden text-center text-sm text-slate-500 py-10">Muy pronto publicaremos armazones para niños aquí.</div>
+      <div id="kidsProductGalleryGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8"></div>
+
     </div>
   </section>
 
@@ -502,23 +523,6 @@
     </div>
   </section>
 
-  <!-- ========== ARMAZONES PARA NIÑOS (catálogo dinámico, editable desde el panel) ========== -->
-  <section id="armazones" class="py-16 sm:py-24 bg-brand-navy">
-    <div class="max-w-7xl mx-auto px-6">
-
-      <div class="text-center max-w-3xl mx-auto mb-16" data-aos="fade-up">
-        <span class="text-brand-sky font-bold text-xs tracking-widest uppercase mb-3 block">Hechos para Sobrevivir el Recreo</span>
-        <h2 class="font-display font-bold text-3xl sm:text-4xl tracking-tight text-brand-ink mb-4">Armazones resistentes y a su gusto</h2>
-        <p class="text-slate-500 text-sm max-w-xl mx-auto">Materiales flexibles de alta resistencia a caídas y dobleces, en colores y diseños que ellos mismos elegirán con gusto.</p>
-      </div>
-
-      <div id="kidsProductGalleryLoading" class="text-center text-xs text-slate-500 py-10">Cargando catálogo...</div>
-      <div id="kidsProductGalleryEmpty" class="hidden text-center text-sm text-slate-500 py-10">Muy pronto publicaremos armazones para niños aquí.</div>
-      <div id="kidsProductGalleryGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8"></div>
-
-    </div>
-  </section>
-
   <!-- ========== CONTACT CTA ========== -->
   <section id="contacto" class="py-16 sm:py-24 lg:py-32 bg-brand-dark/40 border-t border-slate-900/5">
     <div class="max-w-3xl mx-auto px-6 text-center">
@@ -574,6 +578,16 @@
   </div>
 
   <!-- ========== CARRITO (drawer) ========== -->
+  <!-- ========== VISOR DE PANTALLA COMPLETA: la foto se ajusta al máximo del espacio, en computadora o teléfono ========== -->
+  <div id="kidsFullscreenViewer" class="fixed inset-0 z-[70] flex items-center justify-center bg-black/95 hidden opacity-0 transition-opacity duration-200" onclick="if(event.target===this) closeKidsImgFullscreen()">
+    <button onclick="closeKidsImgFullscreen()" class="absolute top-4 right-4 sm:top-6 sm:right-6 w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center text-xl z-10" aria-label="Cerrar">✕</button>
+    <img id="kidsFullscreenImg" src="" alt="" class="max-w-[92vw] max-h-[92vh] sm:max-w-[80vw] object-contain select-none">
+    <button id="kidsFullscreenPrev" onclick="event.stopPropagation(); kidsFullscreenNav(-1)" class="hidden absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 w-11 h-11 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center text-2xl">‹</button>
+    <button id="kidsFullscreenNext" onclick="event.stopPropagation(); kidsFullscreenNav(1)" class="hidden absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 w-11 h-11 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center text-2xl">›</button>
+    <span id="kidsFullscreenCount" class="hidden absolute bottom-3 left-1/2 -translate-x-1/2 bg-white/10 text-white text-xs font-bold px-3 py-1 rounded-full"></span>
+    <div id="kidsFullscreenThumbs" class="hidden absolute z-10 flex overflow-auto scrollbar-hide bottom-16 inset-x-0 flex-row gap-2 p-3 justify-center snap-x snap-mandatory sm:inset-y-0 sm:left-0 sm:right-auto sm:bottom-auto sm:top-0 sm:w-28 sm:p-3 sm:flex-col sm:justify-start sm:snap-y"></div>
+  </div>
+
   <div id="cartModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-brand-navy/80 backdrop-blur-md hidden opacity-0 transition-opacity duration-300">
     <div class="bg-brand-dark border-2 border-brand-coral/40 rounded-3xl max-w-lg w-full shadow-2xl transform scale-95 transition-transform duration-300 max-h-[85vh] flex flex-col" id="cartModalCard">
       <div class="flex items-center justify-between p-6 border-b border-slate-900/10">
@@ -1279,7 +1293,7 @@
     function buildKidsGalWrapHtml(key, p) {
       const imgsArr = (p.imgs && p.imgs.length) ? p.imgs : (p.img ? [p.img] : []);
       const imgTag = imgsArr.length
-        ? `<img id="galImg-${key}" src="${imgsArr[0]}" alt="${escapeHtml(p.modelo)}" class="w-full h-full object-cover">`
+        ? `<img id="galImg-${key}" src="${imgsArr[0]}" alt="${escapeHtml(p.modelo)}" class="w-full h-full object-cover cursor-zoom-in" onclick="event.preventDefault(); openKidsImgFullscreen('${key}')">`
         : `<div id="galImg-${key}" class="w-full h-full flex items-center justify-center text-5xl">🕶️</div>`;
       const navArrows = imgsArr.length > 1 ? `
         <button onclick="event.preventDefault(); galleryPhotoNav('${key}', -1)" class="absolute left-2 top-1/2 -translate-y-1/2 w-7 h-7 rounded-full bg-brand-navy/80 text-brand-ink text-xs flex items-center justify-center">‹</button>
@@ -1308,6 +1322,126 @@
       const counter = document.getElementById(`galPhotoCount-${key}`);
       if (counter) counter.textContent = `${state.photoIdx + 1}/${imgsArr.length}`;
     }
+
+    // ---- Dibuja la fila/columna de miniaturas (más grandes, para verse mejor) ----
+    function renderImgThumbs(containerId, imgs, activeIdx, jumpFnName) {
+      const container = document.getElementById(containerId);
+      if (!container) return;
+      if (!imgs || imgs.length <= 1) {
+        container.innerHTML = '';
+        container.classList.add('hidden');
+        return;
+      }
+      container.innerHTML = imgs.map((img, i) => `
+        <button onclick="event.stopPropagation(); ${jumpFnName}(${i})"
+          class="flex-shrink-0 w-14 h-14 sm:w-24 sm:h-24 rounded-xl border-2 overflow-hidden snap-start transition-all ${i === activeIdx ? 'border-brand-sky scale-105' : 'border-white/20 opacity-70'}">
+          <img src="${img}" class="w-full h-full object-cover" loading="lazy">
+        </button>
+      `).join('');
+      container.classList.remove('hidden');
+    }
+
+    // ---- Visor de pantalla completa: la foto se ajusta al máximo del espacio disponible ----
+    // tanto en computadora como en teléfono (se abre al hacer clic sobre la foto del armazón)
+    let kidsFullscreenState = { imgs: [], idx: 0, key: null };
+
+    function openKidsImgFullscreen(key) {
+      const state = window.__galleryState[key];
+      const variantes = window.__galleryGroups[key];
+      if (!state || !variantes) return;
+      const p = variantes[state.selectedIdx];
+      const imgsArr = (p.imgs && p.imgs.length) ? p.imgs : (p.img ? [p.img] : []);
+      if (!imgsArr.length) return;
+      kidsFullscreenState = { imgs: imgsArr, idx: state.photoIdx || 0, key };
+      document.getElementById('kidsFullscreenImg').src = imgsArr[kidsFullscreenState.idx];
+      updateKidsFullscreenChrome();
+      const modal = document.getElementById('kidsFullscreenViewer');
+      modal.classList.remove('hidden');
+      requestAnimationFrame(() => modal.classList.add('opacity-100'));
+    }
+
+    function updateKidsFullscreenChrome() {
+      const { imgs, idx } = kidsFullscreenState;
+      const prevBtn = document.getElementById('kidsFullscreenPrev');
+      const nextBtn = document.getElementById('kidsFullscreenNext');
+      const count = document.getElementById('kidsFullscreenCount');
+      if (imgs.length > 1) {
+        prevBtn.classList.remove('hidden');
+        nextBtn.classList.remove('hidden');
+        count.classList.remove('hidden');
+        count.textContent = `${idx + 1}/${imgs.length}`;
+      } else {
+        prevBtn.classList.add('hidden');
+        nextBtn.classList.add('hidden');
+        count.classList.add('hidden');
+      }
+      renderImgThumbs('kidsFullscreenThumbs', imgs, idx, 'kidsFullscreenJump');
+    }
+
+    function kidsFullscreenSync() {
+      const { imgs, key, idx } = kidsFullscreenState;
+      const state = window.__galleryState[key];
+      if (state) state.photoIdx = idx;
+      const cardImgEl = document.getElementById(`galImg-${key}`);
+      if (cardImgEl && cardImgEl.tagName === 'IMG') cardImgEl.src = imgs[idx];
+      const cardCounter = document.getElementById(`galPhotoCount-${key}`);
+      if (cardCounter) cardCounter.textContent = `${idx + 1}/${imgs.length}`;
+    }
+
+    function kidsFullscreenNav(dir) {
+      const { imgs } = kidsFullscreenState;
+      if (imgs.length <= 1) return;
+      kidsFullscreenState.idx = (kidsFullscreenState.idx + dir + imgs.length) % imgs.length;
+      document.getElementById('kidsFullscreenImg').src = imgs[kidsFullscreenState.idx];
+      updateKidsFullscreenChrome();
+      kidsFullscreenSync();
+    }
+
+    function kidsFullscreenJump(idx) {
+      const { imgs } = kidsFullscreenState;
+      if (!imgs.length) return;
+      kidsFullscreenState.idx = ((idx % imgs.length) + imgs.length) % imgs.length;
+      document.getElementById('kidsFullscreenImg').src = imgs[kidsFullscreenState.idx];
+      updateKidsFullscreenChrome();
+      kidsFullscreenSync();
+    }
+
+    function closeKidsImgFullscreen() {
+      const modal = document.getElementById('kidsFullscreenViewer');
+      modal.classList.remove('opacity-100');
+      setTimeout(() => modal.classList.add('hidden'), 200);
+    }
+
+    document.addEventListener('keydown', (e) => {
+      const modal = document.getElementById('kidsFullscreenViewer');
+      if (!modal || modal.classList.contains('hidden')) return;
+      if (e.key === 'Escape') closeKidsImgFullscreen();
+      if (e.key === 'ArrowLeft') kidsFullscreenNav(-1);
+      if (e.key === 'ArrowRight') kidsFullscreenNav(1);
+    });
+
+    // ---- Deslizar con el dedo (swipe) para cambiar de imagen en el teléfono ----
+    (function setupKidsFullscreenSwipe() {
+      const imgEl = document.getElementById('kidsFullscreenImg');
+      if (!imgEl) return;
+      let touchStartX = 0, touchStartY = 0, touching = false;
+      imgEl.addEventListener('touchstart', (e) => {
+        if (e.touches.length !== 1) return;
+        touching = true;
+        touchStartX = e.touches[0].clientX;
+        touchStartY = e.touches[0].clientY;
+      }, { passive: true });
+      imgEl.addEventListener('touchend', (e) => {
+        if (!touching) return;
+        touching = false;
+        const touch = e.changedTouches[0];
+        const dx = touch.clientX - touchStartX;
+        const dy = touch.clientY - touchStartY;
+        if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy) * 1.5) {
+          kidsFullscreenNav(dx < 0 ? 1 : -1);
+        }
+      }, { passive: true });
+    })();
 
     function renderKidsGalleryCard(key, variantes, selectedIdx) {
       window.__galleryState[key] = { selectedIdx, photoIdx: 0 };
