@@ -2746,7 +2746,7 @@
 
       try {
         const fb = await window.firebaseReady;
-        const items = (await fb.fetchProducts()).filter(p => !p.oculto && !p.esKids);
+        const items = (await fb.fetchProducts()).filter(p => !p.oculto && p.esSeguridad === true);
 
         loading.classList.add('hidden');
 
