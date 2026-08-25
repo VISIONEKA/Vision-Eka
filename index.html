@@ -1418,9 +1418,10 @@
 
         <div class="mb-4">
           <label class="block text-[9px] uppercase tracking-widest text-slate-500 font-extrabold mb-2">¿En qué catálogo aparece?</label>
-          <div class="grid grid-cols-2 gap-3">
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
             <button type="button" onclick="adminSetProductCatalogo('principal')" id="adminProductCatalogoPrincipalBtn" class="admin-catalogo-btn text-left p-3 rounded-xl border-2 border-brand-sky text-brand-sky text-xs font-bold transition-all">🕶️ Catálogo Principal<br><span class="font-normal normal-case text-[10px] text-slate-500">Aparece en la página normal</span></button>
             <button type="button" onclick="adminSetProductCatalogo('kids')" id="adminProductCatalogoKidsBtn" class="admin-catalogo-btn text-left p-3 rounded-xl border-2 border-slate-900/10 text-slate-500 text-xs font-bold transition-all">🧒 Catálogo Kids<br><span class="font-normal normal-case text-[10px] text-slate-500">Aparece solo en Visión EKA Kids</span></button>
+            <button type="button" onclick="adminSetProductCatalogo('empresas')" id="adminProductCatalogoEmpresasBtn" class="admin-catalogo-btn text-left p-3 rounded-xl border-2 border-slate-900/10 text-slate-500 text-xs font-bold transition-all">🦺 Catálogo Empresas<br><span class="font-normal normal-case text-[10px] text-slate-500">Lentes de seguridad — aparece solo en el sitio de Empresas</span></button>
           </div>
         </div>
 
@@ -4335,19 +4336,21 @@
 
     function adminSetProductCatalogo(destino) {
       adminProductCatalogo = destino;
-      const principalBtn = document.getElementById('adminProductCatalogoPrincipalBtn');
-      const kidsBtn = document.getElementById('adminProductCatalogoKidsBtn');
-      if (destino === 'kids') {
-        kidsBtn.classList.add('border-brand-sky', 'text-brand-sky');
-        kidsBtn.classList.remove('border-slate-900/10', 'text-slate-500');
-        principalBtn.classList.remove('border-brand-sky', 'text-brand-sky');
-        principalBtn.classList.add('border-slate-900/10', 'text-slate-500');
-      } else {
-        principalBtn.classList.add('border-brand-sky', 'text-brand-sky');
-        principalBtn.classList.remove('border-slate-900/10', 'text-slate-500');
-        kidsBtn.classList.remove('border-brand-sky', 'text-brand-sky');
-        kidsBtn.classList.add('border-slate-900/10', 'text-slate-500');
-      }
+      const btns = {
+        principal: document.getElementById('adminProductCatalogoPrincipalBtn'),
+        kids: document.getElementById('adminProductCatalogoKidsBtn'),
+        empresas: document.getElementById('adminProductCatalogoEmpresasBtn')
+      };
+      Object.entries(btns).forEach(([key, btn]) => {
+        if (!btn) return;
+        if (key === destino) {
+          btn.classList.add('border-brand-sky', 'text-brand-sky');
+          btn.classList.remove('border-slate-900/10', 'text-slate-500');
+        } else {
+          btn.classList.remove('border-brand-sky', 'text-brand-sky');
+          btn.classList.add('border-slate-900/10', 'text-slate-500');
+        }
+      });
     }
 
     function adminGetProductTratamientos() {
@@ -4403,6 +4406,7 @@
           categoria,
           genero,
           esKids: adminProductCatalogo === 'kids',
+          esSeguridad: adminProductCatalogo === 'empresas',
           tratamientos: adminGetProductTratamientos()
         };
 
@@ -4444,7 +4448,7 @@
       }
       document.getElementById('adminProductNewCategoryInput').classList.add('hidden');
       document.getElementById('adminProductGeneroSelect').value = p.genero || 'unisex';
-      adminSetProductCatalogo(p.esKids ? 'kids' : 'principal');
+      adminSetProductCatalogo(p.esKids ? 'kids' : (p.esSeguridad ? 'empresas' : 'principal'));
 
       const tratamientosGuardados = Array.isArray(p.tratamientos) ? p.tratamientos : [];
       const opcionesEstandar = [...document.querySelectorAll('.admin-product-tratamiento')].map(el => el.value);
@@ -4484,7 +4488,7 @@
       }
       document.getElementById('adminProductNewCategoryInput').classList.add('hidden');
       document.getElementById('adminProductGeneroSelect').value = p.genero || 'unisex';
-      adminSetProductCatalogo(p.esKids ? 'kids' : 'principal');
+      adminSetProductCatalogo(p.esKids ? 'kids' : (p.esSeguridad ? 'empresas' : 'principal'));
 
       const tratamientosGuardados = Array.isArray(p.tratamientos) ? p.tratamientos : [];
       const opcionesEstandar = [...document.querySelectorAll('.admin-product-tratamiento')].map(el => el.value);

@@ -60,8 +60,6 @@
   </script>
 
   <style>
-    .scrollbar-hide::-webkit-scrollbar { display: none; }
-    .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
     /* Carrusel de "Más vendidos": desliza las tarjetas continuamente hacia la derecha.
        El contenido se duplica en JS para que el loop sea perfecto (sin salto visible),
        y se pausa al pasar el mouse para poder hacer clic en los botones con calma. */
@@ -501,20 +499,11 @@
         </div>
       </div>
 
-      <!-- Catálogo completo de armazones: visible directamente en la página, sin necesidad de abrir una ventana -->
-      <div id="gallerySearchWrap" class="max-w-md mx-auto mb-8 sm:mb-10">
-        <div class="relative">
-          <svg class="w-4 h-4 text-slate-500 absolute left-4 top-1/2 -translate-y-1/2" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-4.35-4.35M17 10a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
-          <input type="text" id="gallerySearchInput" placeholder="Buscar por modelo o color..." oninput="applyGalleryFilters()" class="w-full pl-11 pr-4 py-3.5 bg-brand-navy border border-slate-900/10 rounded-full text-sm text-brand-ink focus:border-brand-sky focus:outline-none">
-        </div>
-      </div>
-      <p id="gallerySearchEmpty" class="hidden text-center text-sm text-slate-500 py-10">No encontramos lentes que coincidan con su búsqueda.</p>
-      <div id="productGalleryGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-8"></div>
 
     </div>
   </section>
 
-  <!-- ========== VENTANA DE CATÁLOGO POR CATEGORÍA (ya no se usa para mostrar el catálogo general; se deja por compatibilidad) ========== -->
+  <!-- ========== VENTANA DE CATÁLOGO POR CATEGORÍA ========== -->
   <div id="categoryModal" class="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 bg-brand-navy/80 backdrop-blur-md hidden opacity-0 transition-opacity duration-300">
     <div class="bg-brand-dark border-2 border-brand-sky/40 rounded-3xl max-w-6xl w-full shadow-2xl transform scale-95 transition-transform duration-300 max-h-[85vh] sm:max-h-[88vh] flex flex-col" id="categoryModalCard">
       <div class="flex items-center justify-between gap-3 p-4 sm:p-6 border-b border-slate-900/10 flex-shrink-0">
@@ -522,6 +511,14 @@
         <button onclick="closeCategoryModal()" class="text-slate-500 hover:text-brand-ink text-xl leading-none flex-shrink-0">✕</button>
       </div>
       <div class="p-4 sm:p-6 overflow-y-auto flex-1">
+        <div id="gallerySearchWrap" class="max-w-md mx-auto mb-6 sm:mb-8">
+          <div class="relative">
+            <svg class="w-4 h-4 text-slate-500 absolute left-4 top-1/2 -translate-y-1/2" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-4.35-4.35M17 10a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+            <input type="text" id="gallerySearchInput" placeholder="Buscar por modelo o color..." oninput="applyGalleryFilters()" class="w-full pl-11 pr-4 py-3.5 bg-brand-navy border border-slate-900/10 rounded-full text-sm text-brand-ink focus:border-brand-sky focus:outline-none">
+          </div>
+        </div>
+        <p id="gallerySearchEmpty" class="hidden text-center text-sm text-slate-500 py-10">No encontramos lentes que coincidan con su búsqueda.</p>
+        <div id="productGalleryGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-8"></div>
       </div>
     </div>
   </div>
@@ -1976,15 +1973,10 @@
     <button onclick="closeImgLightbox()" class="absolute top-4 right-4 sm:top-6 sm:right-6 w-10 h-10 rounded-full bg-brand-dark/80 border border-slate-900/10 text-brand-ink flex items-center justify-center text-xl hover:bg-brand-sky/20 transition-colors z-10" aria-label="Cerrar">✕</button>
     <div id="imgLightboxCard" class="relative bg-brand-dark border-2 border-brand-sky/20 rounded-3xl max-w-4xl w-full max-h-[90vh] overflow-y-auto transform scale-95 transition-transform duration-300 flex flex-col sm:flex-row">
       <div class="relative sm:w-3/5 flex-shrink-0 bg-slate-900 flex items-center justify-center">
-        <img id="imgLightboxImg" src="" alt="" class="w-full h-full max-h-[45vh] sm:max-h-[90vh] object-contain mx-auto cursor-zoom-in" onclick="event.stopPropagation(); openImgFullscreen();">
-        <button onclick="event.stopPropagation(); openImgFullscreen();" class="absolute top-2 left-2 w-8 h-8 rounded-full bg-brand-navy/80 text-brand-ink flex items-center justify-center hover:bg-brand-sky/30 transition-colors" title="Ver en pantalla completa" aria-label="Ver en pantalla completa">
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 8V5a1 1 0 011-1h3M20 8V5a1 1 0 00-1-1h-3M4 16v3a1 1 0 001 1h3m12-4v3a1 1 0 01-1 1h-3"/></svg>
-        </button>
+        <img id="imgLightboxImg" src="" alt="" class="w-full h-full max-h-[45vh] sm:max-h-[90vh] object-contain mx-auto">
         <button id="imgLightboxPrev" onclick="event.stopPropagation(); imgLightboxNav(-1)" class="hidden absolute left-2 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-brand-navy/80 text-brand-ink flex items-center justify-center text-lg hover:bg-brand-sky/30 transition-colors">‹</button>
         <button id="imgLightboxNext" onclick="event.stopPropagation(); imgLightboxNav(1)" class="hidden absolute right-2 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-brand-navy/80 text-brand-ink flex items-center justify-center text-lg hover:bg-brand-sky/30 transition-colors">›</button>
         <span id="imgLightboxCount" class="hidden absolute bottom-2 left-1/2 -translate-x-1/2 bg-brand-navy/80 text-brand-ink text-[10px] font-bold px-3 py-1 rounded-full"></span>
-        <!-- Miniaturas: fila abajo en móvil, columna a la izquierda en escritorio -->
-        <div id="imgLightboxThumbs" class="hidden absolute z-10 flex overflow-auto scrollbar-hide bottom-0 inset-x-0 flex-row gap-2 p-3 snap-x snap-mandatory bg-gradient-to-t from-black/80 to-transparent sm:inset-y-0 sm:left-0 sm:right-auto sm:bottom-auto sm:top-0 sm:w-28 sm:p-3 sm:pt-14 sm:flex-col sm:snap-y sm:bg-gradient-to-r sm:from-black/70 sm:to-transparent"></div>
       </div>
       <div class="p-6 sm:w-2/5 flex flex-col">
         <span id="imgLightboxCategoria" class="text-[9px] font-extrabold text-brand-sky uppercase tracking-widest mb-1.5"></span>
@@ -2006,16 +1998,6 @@
         </div>
       </div>
     </div>
-  </div>
-
-  <!-- ========== VISOR DE PANTALLA COMPLETA: la foto se ajusta al máximo del espacio, en computadora o teléfono ========== -->
-  <div id="imgFullscreenViewer" class="fixed inset-0 z-[70] flex items-center justify-center bg-black/95 hidden opacity-0 transition-opacity duration-200" onclick="if(event.target===this) closeImgFullscreen()">
-    <button onclick="closeImgFullscreen()" class="absolute top-4 right-4 sm:top-6 sm:right-6 w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center text-xl z-10" aria-label="Cerrar">✕</button>
-    <img id="imgFullscreenImg" src="" alt="" class="max-w-[92vw] max-h-[92vh] sm:max-w-[80vw] object-contain select-none">
-    <button id="imgFullscreenPrev" onclick="event.stopPropagation(); imgFullscreenNav(-1)" class="hidden absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 w-11 h-11 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center text-2xl">‹</button>
-    <button id="imgFullscreenNext" onclick="event.stopPropagation(); imgFullscreenNav(1)" class="hidden absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 w-11 h-11 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center text-2xl">›</button>
-    <span id="imgFullscreenCount" class="hidden absolute bottom-3 left-1/2 -translate-x-1/2 bg-white/10 text-white text-xs font-bold px-3 py-1 rounded-full"></span>
-    <div id="imgFullscreenThumbs" class="hidden absolute z-10 flex overflow-auto scrollbar-hide bottom-16 inset-x-0 flex-row gap-2 p-3 justify-center snap-x snap-mandatory sm:inset-y-0 sm:left-0 sm:right-auto sm:bottom-auto sm:top-0 sm:w-28 sm:p-3 sm:flex-col sm:justify-start sm:snap-y"></div>
   </div>
 
   <!-- ========== CARRITO (drawer) ========== -->
@@ -2268,7 +2250,7 @@
             config.slides.forEach((s, i) => {
               const img = slides[i];
               if (!img) return;
-              if (s.src) img.src = displayImageUrl(s.src);
+              if (s.src) img.src = s.src;
               if (s.posDesktop) img.dataset.posDesktop = s.posDesktop;
               if (s.posMobile) img.dataset.posMobile = s.posMobile;
             });
@@ -2746,7 +2728,7 @@
 
       try {
         const fb = await window.firebaseReady;
-        const items = (await fb.fetchProducts()).filter(p => !p.oculto && p.esSeguridad === true);
+        const items = (await fb.fetchProducts()).filter(p => !p.oculto && !p.esKids);
 
         loading.classList.add('hidden');
 
@@ -2825,24 +2807,6 @@
     // ---- Lightbox: ver imagen de producto ampliada ----
     let imgLightboxState = { imgs: [], idx: 0, key: null };
 
-    // Dibuja la fila/columna de miniaturas (más grandes, para verse mejor)
-    function renderImgThumbs(containerId, imgs, activeIdx, jumpFnName) {
-      const container = document.getElementById(containerId);
-      if (!container) return;
-      if (!imgs || imgs.length <= 1) {
-        container.innerHTML = '';
-        container.classList.add('hidden');
-        return;
-      }
-      container.innerHTML = imgs.map((img, i) => `
-        <button onclick="event.stopPropagation(); ${jumpFnName}(${i})"
-          class="flex-shrink-0 w-14 h-14 sm:w-24 sm:h-24 rounded-xl border-2 overflow-hidden snap-start transition-all ${i === activeIdx ? 'border-brand-sky scale-105' : 'border-white/20 opacity-70'}">
-          <img src="${img}" class="w-full h-full object-cover" loading="lazy">
-        </button>
-      `).join('');
-      container.classList.remove('hidden');
-    }
-
     function openImgLightbox(key) {
       const state = window.__galleryState[key];
       const variantes = window.__galleryGroups[key];
@@ -2881,7 +2845,6 @@
         nextBtn.classList.add('hidden');
         count.classList.add('hidden');
       }
-      renderImgThumbs('imgLightboxThumbs', imgs, idx, 'imgLightboxJump');
       if (!p) return;
 
       document.getElementById('imgLightboxCategoria').textContent = p.categoria || '';
@@ -2936,21 +2899,6 @@
       if (cardCounter) cardCounter.textContent = `${imgLightboxState.idx + 1}/${imgs.length}`;
     }
 
-    function imgLightboxJump(idx) {
-      const { imgs, key } = imgLightboxState;
-      if (!imgs.length) return;
-      imgLightboxState.idx = ((idx % imgs.length) + imgs.length) % imgs.length;
-      const variantes = window.__galleryGroups[key];
-      const state = window.__galleryState[key];
-      const p = variantes ? variantes[state.selectedIdx] : null;
-      updateImgLightbox(p);
-      if (state) state.photoIdx = imgLightboxState.idx;
-      const cardImgEl = document.getElementById(`galImg-${key}`);
-      if (cardImgEl && cardImgEl.tagName === 'IMG') cardImgEl.src = imgs[imgLightboxState.idx];
-      const cardCounter = document.getElementById(`galPhotoCount-${key}`);
-      if (cardCounter) cardCounter.textContent = `${imgLightboxState.idx + 1}/${imgs.length}`;
-    }
-
     function closeImgLightbox() {
       const modal = document.getElementById('imgLightbox');
       const card = document.getElementById('imgLightboxCard');
@@ -2961,138 +2909,11 @@
 
     document.addEventListener('keydown', (e) => {
       const modal = document.getElementById('imgLightbox');
-      const zoomModal = document.getElementById('imgFullscreenViewer');
-      if (zoomModal && !zoomModal.classList.contains('hidden')) {
-        if (e.key === 'Escape') closeImgFullscreen();
-        if (e.key === 'ArrowLeft') imgFullscreenNav(-1);
-        if (e.key === 'ArrowRight') imgFullscreenNav(1);
-        return;
-      }
       if (!modal || modal.classList.contains('hidden')) return;
       if (e.key === 'Escape') closeImgLightbox();
       if (e.key === 'ArrowLeft') imgLightboxNav(-1);
       if (e.key === 'ArrowRight') imgLightboxNav(1);
     });
-
-    // ---- Deslizar con el dedo (swipe) para cambiar de imagen en el teléfono, sin necesidad de tocar las flechas ----
-    (function setupImgLightboxSwipe() {
-      const imgEl = document.getElementById('imgLightboxImg');
-      if (!imgEl) return;
-      let touchStartX = 0, touchStartY = 0, touching = false;
-      imgEl.addEventListener('touchstart', (e) => {
-        if (e.touches.length !== 1) return;
-        touching = true;
-        touchStartX = e.touches[0].clientX;
-        touchStartY = e.touches[0].clientY;
-      }, { passive: true });
-      imgEl.addEventListener('touchend', (e) => {
-        if (!touching) return;
-        touching = false;
-        const touch = e.changedTouches[0];
-        const dx = touch.clientX - touchStartX;
-        const dy = touch.clientY - touchStartY;
-        if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy) * 1.5) {
-          imgLightboxNav(dx < 0 ? 1 : -1);
-        }
-      }, { passive: true });
-    })();
-
-    // ---- Visor de pantalla completa: la imagen se ajusta al máximo del espacio disponible ----
-    // tanto en computadora como en teléfono (se abre al hacer clic sobre la foto en el lightbox)
-    let imgFullscreenState = { imgs: [], idx: 0 };
-
-    function openImgFullscreen() {
-      const { imgs, idx } = imgLightboxState;
-      if (!imgs.length) return;
-      imgFullscreenState = { imgs, idx };
-      const modal = document.getElementById('imgFullscreenViewer');
-      const img = document.getElementById('imgFullscreenImg');
-      img.src = imgs[idx];
-      updateImgFullscreenChrome();
-      modal.classList.remove('hidden');
-      requestAnimationFrame(() => modal.classList.add('opacity-100'));
-    }
-
-    function updateImgFullscreenChrome() {
-      const { imgs, idx } = imgFullscreenState;
-      const prevBtn = document.getElementById('imgFullscreenPrev');
-      const nextBtn = document.getElementById('imgFullscreenNext');
-      const count = document.getElementById('imgFullscreenCount');
-      if (imgs.length > 1) {
-        prevBtn.classList.remove('hidden');
-        nextBtn.classList.remove('hidden');
-        count.classList.remove('hidden');
-        count.textContent = `${idx + 1}/${imgs.length}`;
-      } else {
-        prevBtn.classList.add('hidden');
-        nextBtn.classList.add('hidden');
-        count.classList.add('hidden');
-      }
-      renderImgThumbs('imgFullscreenThumbs', imgs, idx, 'imgFullscreenJump');
-    }
-
-    function imgFullscreenNav(dir) {
-      const { imgs } = imgFullscreenState;
-      if (imgs.length <= 1) return;
-      imgFullscreenState.idx = (imgFullscreenState.idx + dir + imgs.length) % imgs.length;
-      document.getElementById('imgFullscreenImg').src = imgs[imgFullscreenState.idx];
-      updateImgFullscreenChrome();
-      // mantiene sincronizado el lightbox de fondo
-      imgLightboxState.idx = imgFullscreenState.idx;
-      imgLightboxNavSync();
-    }
-
-    function imgFullscreenJump(idx) {
-      const { imgs } = imgFullscreenState;
-      if (!imgs.length) return;
-      imgFullscreenState.idx = ((idx % imgs.length) + imgs.length) % imgs.length;
-      document.getElementById('imgFullscreenImg').src = imgs[imgFullscreenState.idx];
-      updateImgFullscreenChrome();
-      imgLightboxState.idx = imgFullscreenState.idx;
-      imgLightboxNavSync();
-    }
-
-    // Sincroniza la miniatura/tarjeta de la galería con el índice actual, sin repetir la navegación
-    function imgLightboxNavSync() {
-      const { imgs, key, idx } = imgLightboxState;
-      const variantes = window.__galleryGroups[key];
-      const state = window.__galleryState[key];
-      const p = variantes ? variantes[state.selectedIdx] : null;
-      updateImgLightbox(p);
-      if (state) state.photoIdx = idx;
-      const cardImgEl = document.getElementById(`galImg-${key}`);
-      if (cardImgEl && cardImgEl.tagName === 'IMG') cardImgEl.src = imgs[idx];
-      const cardCounter = document.getElementById(`galPhotoCount-${key}`);
-      if (cardCounter) cardCounter.textContent = `${idx + 1}/${imgs.length}`;
-    }
-
-    function closeImgFullscreen() {
-      const modal = document.getElementById('imgFullscreenViewer');
-      modal.classList.remove('opacity-100');
-      setTimeout(() => modal.classList.add('hidden'), 200);
-    }
-
-    (function setupImgFullscreenSwipe() {
-      const imgEl = document.getElementById('imgFullscreenImg');
-      if (!imgEl) return;
-      let touchStartX = 0, touchStartY = 0, touching = false;
-      imgEl.addEventListener('touchstart', (e) => {
-        if (e.touches.length !== 1) return;
-        touching = true;
-        touchStartX = e.touches[0].clientX;
-        touchStartY = e.touches[0].clientY;
-      }, { passive: true });
-      imgEl.addEventListener('touchend', (e) => {
-        if (!touching) return;
-        touching = false;
-        const touch = e.changedTouches[0];
-        const dx = touch.clientX - touchStartX;
-        const dy = touch.clientY - touchStartY;
-        if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy) * 1.5) {
-          imgFullscreenNav(dx < 0 ? 1 : -1);
-        }
-      }, { passive: true });
-    })();
 
     function galleryPhotoNav(key, dir) {
       const state = window.__galleryState[key];
@@ -3335,18 +3156,6 @@
         return `https://raw.githubusercontent.com/${owner}/${repo}/${path}`;
       }
       return u;
-    }
-    // Añade, SOLO al momento de mostrar una imagen (nunca al guardarla), un parámetro que
-    // cambia cada hora. Así, si Gina sube una foto nueva reutilizando el mismo nombre de
-    // archivo en GitHub, el sitio deja de mostrar la versión vieja guardada en la caché del
-    // navegador o del CDN en cuanto pasa esa hora, en vez de seguir mostrándola por días.
-    function displayImageUrl(url) {
-      if (!url) return url;
-      if (/raw\.githubusercontent\.com|cdn\.jsdelivr\.net/i.test(url)) {
-        const bucket = Math.floor(Date.now() / (60 * 60 * 1000));
-        return url + (url.includes('?') ? '&' : '?') + 'v=' + bucket;
-      }
-      return url;
     }
 
     function checkAdminUrlHash() {
@@ -4021,8 +3830,8 @@
             : '';
          const imgsArr = (p.imgs && p.imgs.length) ? p.imgs : (p.img ? [p.img] : []);
           const thumb = imgsArr.length
-            ? `<div class="relative flex-shrink-0"><img src="${imgsArr[0]}" alt="${p.modelo}" class="w-10 h-10 object-cover rounded-lg bg-brand-navy border border-slate-900/5" onerror="this.replaceWith(Object.assign(document.createElement('div'), {className:'w-10 h-10 rounded-lg bg-brand-navy border border-slate-900/5 flex items-center justify-center text-sm flex-shrink-0', textContent:'🕶️'}))">${imgsArr.length > 1 ? `<span class="absolute -bottom-1 -right-1 bg-brand-sky text-brand-ink text-[8px] font-bold rounded-full w-4 h-4 flex items-center justify-center">${imgsArr.length}</span>` : ''}</div>`
-            : '<div class="w-10 h-10 rounded-lg bg-brand-navy border border-slate-900/5 flex items-center justify-center text-sm flex-shrink-0">🕶️</div>';
+            ? `<div class="relative flex-shrink-0"><img src="${imgsArr[0]}" alt="${p.modelo}" class="w-10 h-10 object-cover rounded-lg bg-brand-navy border border-slate-900/5">${imgsArr.length > 1 ? `<span class="absolute -bottom-1 -right-1 bg-brand-sky text-brand-ink text-[8px] font-bold rounded-full w-4 h-4 flex items-center justify-center">${imgsArr.length}</span>` : ''}</div>`
+            : '<div class="w-10 h-10 rounded-lg bg-brand-navy border border-slate-900/5 flex-shrink-0"></div>';
 
           return `
             <div class="flex flex-wrap items-center justify-between gap-3 bg-brand-dark border border-slate-900/5 rounded-xl p-3.5">
