@@ -501,11 +501,20 @@
         </div>
       </div>
 
+      <!-- Catálogo completo de armazones: visible directamente en la página, sin necesidad de abrir una ventana -->
+      <div id="gallerySearchWrap" class="max-w-md mx-auto mb-8 sm:mb-10">
+        <div class="relative">
+          <svg class="w-4 h-4 text-slate-500 absolute left-4 top-1/2 -translate-y-1/2" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-4.35-4.35M17 10a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+          <input type="text" id="gallerySearchInput" placeholder="Buscar por modelo o color..." oninput="applyGalleryFilters()" class="w-full pl-11 pr-4 py-3.5 bg-brand-navy border border-slate-900/10 rounded-full text-sm text-brand-ink focus:border-brand-sky focus:outline-none">
+        </div>
+      </div>
+      <p id="gallerySearchEmpty" class="hidden text-center text-sm text-slate-500 py-10">No encontramos lentes que coincidan con su búsqueda.</p>
+      <div id="productGalleryGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-8"></div>
 
     </div>
   </section>
 
-  <!-- ========== VENTANA DE CATÁLOGO POR CATEGORÍA ========== -->
+  <!-- ========== VENTANA DE CATÁLOGO POR CATEGORÍA (ya no se usa para mostrar el catálogo general; se deja por compatibilidad) ========== -->
   <div id="categoryModal" class="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 bg-brand-navy/80 backdrop-blur-md hidden opacity-0 transition-opacity duration-300">
     <div class="bg-brand-dark border-2 border-brand-sky/40 rounded-3xl max-w-6xl w-full shadow-2xl transform scale-95 transition-transform duration-300 max-h-[85vh] sm:max-h-[88vh] flex flex-col" id="categoryModalCard">
       <div class="flex items-center justify-between gap-3 p-4 sm:p-6 border-b border-slate-900/10 flex-shrink-0">
@@ -513,14 +522,6 @@
         <button onclick="closeCategoryModal()" class="text-slate-500 hover:text-brand-ink text-xl leading-none flex-shrink-0">✕</button>
       </div>
       <div class="p-4 sm:p-6 overflow-y-auto flex-1">
-        <div id="gallerySearchWrap" class="max-w-md mx-auto mb-6 sm:mb-8">
-          <div class="relative">
-            <svg class="w-4 h-4 text-slate-500 absolute left-4 top-1/2 -translate-y-1/2" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-4.35-4.35M17 10a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
-            <input type="text" id="gallerySearchInput" placeholder="Buscar por modelo o color..." oninput="applyGalleryFilters()" class="w-full pl-11 pr-4 py-3.5 bg-brand-navy border border-slate-900/10 rounded-full text-sm text-brand-ink focus:border-brand-sky focus:outline-none">
-          </div>
-        </div>
-        <p id="gallerySearchEmpty" class="hidden text-center text-sm text-slate-500 py-10">No encontramos lentes que coincidan con su búsqueda.</p>
-        <div id="productGalleryGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-8"></div>
       </div>
     </div>
   </div>
