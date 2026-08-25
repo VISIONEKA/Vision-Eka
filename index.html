@@ -1524,6 +1524,7 @@
         </div>
 
         <button onclick="adminAddSeguridadProduct()" id="adminAddSegBtn" class="w-full bg-gradient-to-r from-brand-sky to-brand-teal text-brand-ink font-bold text-xs uppercase tracking-widest py-3.5 rounded-full transition-all hover:shadow-lg hover:shadow-brand-sky/30 disabled:opacity-50">🦺 Publicar en Empresas</button>
+        <button onclick="adminCancelEditSeguridad()" id="adminCancelEditSegBtn" class="hidden w-full mt-2 text-slate-500 hover:text-brand-ink font-bold text-xs uppercase tracking-widest py-2">Cancelar edición</button>
         <p id="adminAddSegStatus" class="text-[11px] mt-3"></p>
 
         <div id="adminSegProductList" class="space-y-3 mt-5">
@@ -4730,6 +4731,8 @@
     // Lentes de Seguridad: registro simple (modelo, color, precio opcional)
     // sin categoría ni género — visible únicamente en el catálogo de Empresas.
     // =========================================================
+    let adminEditingSeguridadId = null;
+
     async function adminAddSeguridadProduct() {
       const modelInput = document.getElementById('adminSegModel');
       const colorInput = document.getElementById('adminSegColor');
@@ -4750,7 +4753,8 @@
       }
 
       btn.disabled = true;
-      status.textContent = 'Publicando lente de seguridad...';
+      const editingId = adminEditingSeguridadId;
+      status.textContent = editingId ? 'Guardando cambios...' : 'Publicando lente de seguridad...';
       status.className = 'text-[11px] text-slate-500 mt-3';
 
       try {
@@ -4766,14 +4770,16 @@
           esSeguridad: true,
           tratamientos: []
         };
-        await fb.addProduct(productData, imageUrl ? [imageUrl] : []);
-        status.textContent = '✓ Lente de seguridad publicado. Visible solo en el catálogo de Empresas.';
+        if (editingId) {
+          await fb.updateProduct(editingId, productData, imageUrl ? [imageUrl] : []);
+          status.textContent = '✓ Cambios guardados.';
+        } else {
+          await fb.addProduct(productData, imageUrl ? [imageUrl] : []);
+          status.textContent = '✓ Lente de seguridad publicado. Visible solo en el catálogo de Empresas.';
+        }
         status.className = 'text-[11px] text-brand-teal mt-3 font-semibold';
 
-        modelInput.value = '';
-        colorInput.value = '';
-        priceInput.value = '';
-        imageInput.value = '';
+        adminCancelEditSeguridad();
         adminLoadSeguridadProductList();
       } catch (err) {
         console.error('Error al guardar el lente de seguridad:', err);
@@ -4782,6 +4788,33 @@
       } finally {
         btn.disabled = false;
       }
+    }
+
+    function adminEditSeguridadProduct(id) {
+      window.firebaseReady.then(async fb => {
+        const p = (await fb.fetchProducts()).find(item => item.id === id);
+        if (!p) return;
+        adminEditingSeguridadId = id;
+        document.getElementById('adminSegModel').value = p.modelo || '';
+        document.getElementById('adminSegColor').value = p.color || '';
+        document.getElementById('adminSegPrice').value = (p.precio ?? '') === null ? '' : (p.precio ?? '');
+        const imgUrl = (p.imgs && p.imgs.length) ? p.imgs[0] : (p.img || '');
+        document.getElementById('adminSegImageUrl').value = imgUrl || '';
+        document.getElementById('adminAddSegBtn').textContent = '🦺 Guardar Cambios';
+        document.getElementById('adminCancelEditSegBtn').classList.remove('hidden');
+        document.getElementById('adminAddSegStatus').textContent = '';
+        document.getElementById('adminAddSegBtn').scrollIntoView({ behavior: 'smooth', block: 'center' });
+      });
+    }
+
+    function adminCancelEditSeguridad() {
+      adminEditingSeguridadId = null;
+      document.getElementById('adminSegModel').value = '';
+      document.getElementById('adminSegColor').value = '';
+      document.getElementById('adminSegPrice').value = '';
+      document.getElementById('adminSegImageUrl').value = '';
+      document.getElementById('adminAddSegBtn').textContent = '🦺 Publicar en Empresas';
+      document.getElementById('adminCancelEditSegBtn').classList.add('hidden');
     }
 
     async function adminLoadSeguridadProductList() {
@@ -4821,7 +4854,7 @@
               </div>
               <div class="flex items-center gap-3 flex-shrink-0">
                 ${ocultoBadge}
-                <button onclick="adminEditSeguridadImage('${p.id}', ${JSON.stringify(imgUrl)})" class="text-brand-coral hover:text-brand-sky text-xs font-bold uppercase tracking-wide">Imagen</button>
+                <button onclick="adminEditSeguridadProduct('${p.id}')" class="text-brand-teal hover:text-brand-sky text-xs font-bold uppercase tracking-wide">Editar</button>
                 <button onclick="adminToggleSeguridadVisibility('${p.id}', ${p.oculto ? 'false' : 'true'})" class="text-brand-sky hover:text-brand-teal text-xs font-bold uppercase tracking-wide">${p.oculto ? 'Mostrar' : 'Ocultar'}</button>
                 <button onclick="adminRemoveSeguridadProduct('${p.id}')" class="text-red-400 hover:text-red-300 text-xs font-bold uppercase tracking-wide">Eliminar</button>
               </div>
