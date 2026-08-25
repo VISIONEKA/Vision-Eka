@@ -4741,7 +4741,7 @@
       const modelo = modelInput.value.trim();
       const color = colorInput.value.trim();
       const precioRaw = priceInput.value.trim();
-      const imageUrl = imageInput.value.trim();
+      const imageUrl = normalizeImageUrl(imageInput.value.trim());
 
       if (!modelo || !color) {
         status.textContent = 'Escriba al menos el modelo y el color antes de publicar.';
@@ -4807,8 +4807,8 @@
             : '<span class="text-[9px] font-bold uppercase tracking-wide text-brand-teal bg-brand-teal/10 px-2 py-0.5 rounded-full whitespace-nowrap">Visible</span>';
           const imgUrl = (p.imgs && p.imgs.length) ? p.imgs[0] : (p.img || '');
           const thumb = imgUrl
-            ? `<img src="${imgUrl}" alt="${p.modelo}" class="w-10 h-10 object-cover rounded-lg bg-brand-navy border border-slate-900/5 flex-shrink-0">`
-            : '<div class="w-10 h-10 rounded-lg bg-brand-navy border border-slate-900/5 flex-shrink-0"></div>';
+            ? `<img src="${imgUrl}" alt="${p.modelo}" class="w-10 h-10 object-cover rounded-lg bg-brand-navy border border-slate-900/5 flex-shrink-0" onerror="this.replaceWith(Object.assign(document.createElement('div'), {className:'w-10 h-10 rounded-lg bg-brand-navy border border-slate-900/5 flex items-center justify-center text-sm flex-shrink-0', textContent:'🦺'}))">`
+            : '<div class="w-10 h-10 rounded-lg bg-brand-navy border border-slate-900/5 flex items-center justify-center text-sm flex-shrink-0">🦺</div>';
 
           return `
             <div class="flex flex-wrap items-center justify-between gap-3 bg-brand-dark border border-slate-900/5 rounded-xl p-3.5">
@@ -4848,6 +4848,7 @@
     async function adminEditSeguridadImage(id, currentUrl) {
       const newUrl = prompt('Enlace de la imagen (deje vacío para quitarla):', currentUrl || '');
       if (newUrl === null) return; // cancelado
+      const normalizedUrl = normalizeImageUrl(newUrl.trim());
       const p = (await (await window.firebaseReady).fetchProducts()).find(item => item.id === id);
       if (!p) return;
       try {
@@ -4862,7 +4863,7 @@
           esKids: false,
           esSeguridad: true,
           tratamientos: p.tratamientos || []
-        }, newUrl.trim() ? [newUrl.trim()] : []);
+        }, normalizedUrl ? [normalizedUrl] : []);
         adminLoadSeguridadProductList();
       } catch (err) {
         console.error('Error al actualizar la imagen del lente de seguridad:', err);
