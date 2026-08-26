@@ -736,6 +736,33 @@
     </div>
   </section>
 
+  <!-- ========== CATÁLOGO PÚBLICO: LENTES DE SEGURIDAD ========== -->
+  <!-- Muestra únicamente los modelos publicados desde el panel de administrador
+       con "¿En qué catálogo aparece?" = Catálogo Empresas (categoría Seguridad).
+       Esos mismos modelos NUNCA aparecen en el sitio público de Visión EKA (index.html). -->
+  <section id="catalogo-seguridad" class="py-16 sm:py-24 bg-brand-navy">
+    <div class="max-w-7xl mx-auto px-6">
+
+      <div class="mb-10 sm:mb-14" data-aos="fade-up">
+        <span class="text-brand-sky font-bold text-xs tracking-widest uppercase mb-3 block">Catálogo Empresas</span>
+        <h2 class="font-display font-bold text-3xl sm:text-4xl tracking-tight text-brand-ink mb-2">Lentes de Seguridad Certificados</h2>
+        <p class="text-slate-500 text-sm max-w-2xl">Modelos disponibles para dotación industrial, graduados o sin graduación, con protección NOM-017-STPS.</p>
+      </div>
+
+      <div class="relative mb-8" data-aos="fade-up">
+        <svg class="w-5 h-5 text-slate-500 absolute left-4 top-1/2 -translate-y-1/2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-4.35-4.35M17 10a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+        <input type="text" id="gallerySearchInput" placeholder="Buscar por modelo o color..." oninput="applyGalleryFilters()" class="w-full pl-11 pr-4 py-3.5 bg-brand-dark border border-slate-900/10 rounded-full text-sm text-brand-ink focus:border-brand-sky focus:outline-none">
+      </div>
+      <p id="gallerySearchEmpty" class="hidden text-center text-sm text-slate-500 py-6">No encontramos modelos con esa búsqueda.</p>
+
+      <div id="productGalleryLoading" class="text-center text-xs text-slate-500 py-10">Cargando catálogo...</div>
+      <div id="productGalleryEmpty" class="hidden text-center text-sm text-slate-500 py-10">Muy pronto publicaremos aquí nuestro catálogo de lentes de seguridad.</div>
+
+      <div id="productGalleryGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-8"></div>
+
+    </div>
+  </section>
+
   <!-- ========== JORNADAS LOGISTICS TIMELINE ========== -->
   <section id="jornadas" class="py-16 sm:py-24 lg:py-32 bg-brand-navy relative">
     <div class="absolute inset-0 bg-gradient-to-tr from-brand-sky/5 via-transparent to-brand-teal/5 pointer-events-none"></div>
@@ -2664,9 +2691,49 @@
     }
 
     async function loadPublicProductGallery() {
-      // El catálogo público fue eliminado de la página de Empresas por solicitud del cliente.
-      // Esta función se deja vacía (en vez de borrarse) porque otras partes del código aún la invocan.
-      return;
+      const loading = document.getElementById('productGalleryLoading');
+      const empty = document.getElementById('productGalleryEmpty');
+      const grid = document.getElementById('productGalleryGrid');
+      if (!loading || !empty || !grid) return; // sección no presente en esta página
+
+      try {
+        const fb = await window.firebaseReady;
+        // Solo se muestran aquí los modelos marcados como "Catálogo Empresas"
+        // (categoría Seguridad) desde el panel de administrador de Visión EKA.
+        const items = (await fb.fetchProducts()).filter(p => !p.oculto && p.esSeguridad);
+
+        loading.classList.add('hidden');
+
+        if (items.length === 0) {
+          empty.classList.remove('hidden');
+          grid.innerHTML = '';
+          return;
+        }
+        empty.classList.add('hidden');
+
+        window.__publicProductsCache = {};
+        items.forEach(p => { window.__publicProductsCache[p.id] = p; });
+        window.__galleryState = window.__galleryState || {};
+
+        // Agrupa por modelo (mismo modelo con distinto color son variantes de una tarjeta)
+        const grupos = {};
+        items.forEach(p => {
+          const key = 'seguridad::' + p.modelo.trim().toLowerCase();
+          if (!grupos[key]) grupos[key] = [];
+          grupos[key].push(p);
+        });
+
+        window.__galleryGroups = grupos;
+
+        grid.innerHTML = Object.entries(grupos).map(([key, variantes]) => renderGalleryCard(key, variantes, 0)).join('');
+
+        applyGalleryFilters();
+      } catch (err) {
+        console.error('Error al cargar el catálogo de lentes de seguridad:', err);
+        loading.classList.add('hidden');
+        empty.classList.remove('hidden');
+        empty.textContent = 'No se pudo cargar el catálogo en este momento.';
+      }
     }
 
     window.__galleryState = window.__galleryState || {};
@@ -3017,7 +3084,6 @@
 
     // Initialize catalog: load the published catalogo.json (falls back to demo)
     loadPublishedCatalog();
-    loadPublicProductGallery();
     loadPublicProductGallery();
 
     // =========================================================
