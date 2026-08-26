@@ -1504,8 +1504,8 @@
         <h3 class="font-display font-bold text-sm text-brand-ink mb-1">🦺 Lentes de Seguridad</h3>
         <p class="text-[10px] text-slate-600/70 mb-4">Estos modelos NO aparecen en este sitio — solo se muestran en el catálogo del sitio de Empresas. Sin categoría ni género: es un registro simple.</p>
 
-        <button onclick="adminSeedDemoSeguridad()" id="adminSeedSegBtn" class="w-full mb-4 border border-dashed border-slate-900/15 text-slate-500 hover:text-brand-ink hover:border-brand-sky/40 font-bold text-[10px] uppercase tracking-widest py-3 rounded-full transition-all">
-          🎲 Agregar 5 modelos de ejemplo (con foto de prueba)
+        <button onclick="adminAddMarvel1()" id="adminSeedSegBtn" class="w-full mb-4 border border-dashed border-slate-900/15 text-slate-500 hover:text-brand-ink hover:border-brand-sky/40 font-bold text-[10px] uppercase tracking-widest py-3 rounded-full transition-all">
+          ➕ Agregar modelo "Marvel 1" (Black, $400)
         </button>
 
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-4">
@@ -4798,50 +4798,37 @@
       }
     }
 
-    // Crea 5 modelos de ejemplo (con foto de prueba genérica) para que el
-    // catálogo de Empresas no se vea vacío mientras Gina sube las fotos reales.
-    // Quedan guardados en Firebase como cualquier otro lente: se editan,
-    // se les cambia la imagen o se eliminan desde la lista de abajo.
-    async function adminSeedDemoSeguridad() {
+    // Agrega el modelo real "Marvel 1" (Black, $400) con su foto ya subida a
+    // GitHub. Queda guardado en Firebase como cualquier otro lente: se edita,
+    // se le cambia la imagen o se elimina desde la lista de abajo.
+    async function adminAddMarvel1() {
       const btn = document.getElementById('adminSeedSegBtn');
       const status = document.getElementById('adminAddSegStatus');
-      const demoModels = [
-        { modelo: 'Lente de Seguridad ANSI Z87.1', color: 'Transparente', precio: 250 },
-        { modelo: 'Lente de Seguridad Ejecutivo Graduado', color: 'Gris humo', precio: 480 },
-        { modelo: 'Lente de Seguridad Oscuro UV', color: 'Negro', precio: 260 },
-        { modelo: 'Lente de Seguridad Deportivo', color: 'Espejo azul', precio: 310 },
-        { modelo: 'Lente de Seguridad Anti-empañante', color: 'Ámbar', precio: 290 }
-      ];
-
-      if (!confirm(`Se agregarán ${demoModels.length} modelos de ejemplo con foto de prueba al catálogo de Empresas. Podrás editarlos o borrarlos después. ¿Continuar?`)) return;
+      const imgUrl = normalizeImageUrl('https://github.com/VISIONEKA/Vision-Eka/blob/main/lentes%204/WhatsApp%20Image%202026-08-22%20at%202.00.57%20AM%20(1).jpeg');
 
       btn.disabled = true;
-      status.textContent = 'Agregando modelos de ejemplo...';
+      status.textContent = 'Agregando Marvel 1...';
       status.className = 'text-[11px] text-slate-500 mt-3';
 
       try {
         const fb = await window.firebaseReady;
-        for (let i = 0; i < demoModels.length; i++) {
-          const m = demoModels[i];
-          const demoImg = `https://placehold.co/600x400/1a2332/7dd3fc?text=${encodeURIComponent(m.modelo)}`;
-          await fb.addProduct({
-            modelo: m.modelo,
-            color: m.color,
-            unidades: null,
-            precio: m.precio,
-            categoria: 'Seguridad',
-            genero: 'seguridad',
-            esKids: false,
-            esSeguridad: true,
-            tratamientos: []
-          }, [demoImg]);
-        }
-        status.textContent = '✓ 5 modelos de ejemplo agregados. Edítalos abajo para poner tus fotos reales.';
+        await fb.addProduct({
+          modelo: 'Marvel 1',
+          color: 'Black',
+          unidades: null,
+          precio: 400,
+          categoria: 'Seguridad',
+          genero: 'seguridad',
+          esKids: false,
+          esSeguridad: true,
+          tratamientos: []
+        }, [imgUrl]);
+        status.textContent = '✓ Marvel 1 agregado al catálogo de Empresas.';
         status.className = 'text-[11px] text-brand-teal mt-3 font-semibold';
         adminLoadSeguridadProductList();
       } catch (err) {
-        console.error('Error al agregar modelos de ejemplo:', err);
-        status.textContent = 'No se pudieron agregar los modelos de ejemplo. Intenta de nuevo.';
+        console.error('Error al agregar Marvel 1:', err);
+        status.textContent = 'No se pudo agregar el modelo. Intenta de nuevo.';
         status.className = 'text-[11px] text-red-400 mt-3';
       } finally {
         btn.disabled = false;
