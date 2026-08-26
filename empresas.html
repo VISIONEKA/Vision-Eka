@@ -1450,12 +1450,8 @@
           <p class="text-[10px] text-slate-600/70 mt-1.5">Se usa para mostrarlo en las secciones "Mujer", "Hombre" o "Unisex" del catálogo. Para niños use el catálogo Kids, abajo.</p>
         </div>
 
-        <div class="mb-4">
-          <label class="block text-[9px] uppercase tracking-widest text-slate-500 font-extrabold mb-2">¿En qué catálogo aparece?</label>
-          <div class="grid grid-cols-2 gap-3">
-            <button type="button" onclick="adminSetProductCatalogo('principal')" id="adminProductCatalogoPrincipalBtn" class="admin-catalogo-btn text-left p-3 rounded-xl border-2 border-brand-sky text-brand-sky text-xs font-bold transition-all">🕶️ Catálogo Principal<br><span class="font-normal normal-case text-[10px] text-slate-500">Aparece en la página normal</span></button>
-            <button type="button" onclick="adminSetProductCatalogo('kids')" id="adminProductCatalogoKidsBtn" class="admin-catalogo-btn text-left p-3 rounded-xl border-2 border-slate-900/10 text-slate-500 text-xs font-bold transition-all">🧒 Catálogo Kids<br><span class="font-normal normal-case text-[10px] text-slate-500">Aparece solo en Visión EKA Kids</span></button>
-          </div>
+        <div class="mb-4 p-3 rounded-xl border border-brand-sky/30 bg-brand-sky/5">
+          <p class="text-[10px] text-slate-500">🏢 Este lente se publicará únicamente en el catálogo de <span class="font-bold text-brand-sky">Empresas</span>. No aparecerá en Inicio ni en Kids.</p>
         </div>
 
         <div class="mb-4">
@@ -2717,7 +2713,7 @@
 
       try {
         const fb = await window.firebaseReady;
-        const items = (await fb.fetchProducts()).filter(p => !p.oculto);
+        const items = (await fb.fetchProducts()).filter(p => !p.oculto && p.esSeguridad);
 
         loading.classList.add('hidden');
 
@@ -3597,25 +3593,6 @@
     let adminAllProducts = [];
     let adminEditingProductId = null;
 
-    let adminProductCatalogo = 'principal';
-
-    function adminSetProductCatalogo(destino) {
-      adminProductCatalogo = destino;
-      const principalBtn = document.getElementById('adminProductCatalogoPrincipalBtn');
-      const kidsBtn = document.getElementById('adminProductCatalogoKidsBtn');
-      if (destino === 'kids') {
-        kidsBtn.classList.add('border-brand-sky', 'text-brand-sky');
-        kidsBtn.classList.remove('border-slate-900/10', 'text-slate-500');
-        principalBtn.classList.remove('border-brand-sky', 'text-brand-sky');
-        principalBtn.classList.add('border-slate-900/10', 'text-slate-500');
-      } else {
-        principalBtn.classList.add('border-brand-sky', 'text-brand-sky');
-        principalBtn.classList.remove('border-slate-900/10', 'text-slate-500');
-        kidsBtn.classList.remove('border-brand-sky', 'text-brand-sky');
-        kidsBtn.classList.add('border-slate-900/10', 'text-slate-500');
-      }
-    }
-
     function adminGetProductTratamientos() {
       const marcados = [...document.querySelectorAll('.admin-product-tratamiento:checked')].map(el => el.value);
       const otro = document.getElementById('adminProductTratamientoOtro').value.trim();
@@ -3668,7 +3645,8 @@
           precio: precioRaw ? parseFloat(precioRaw) : null,
           categoria,
           genero,
-          esKids: adminProductCatalogo === 'kids',
+          esKids: false,
+          esSeguridad: true,
           tratamientos: adminGetProductTratamientos()
         };
 
@@ -3710,7 +3688,6 @@
       }
       document.getElementById('adminProductNewCategoryInput').classList.add('hidden');
       document.getElementById('adminProductGeneroSelect').value = p.genero || 'unisex';
-      adminSetProductCatalogo(p.esKids ? 'kids' : 'principal');
 
       const tratamientosGuardados = Array.isArray(p.tratamientos) ? p.tratamientos : [];
       const opcionesEstandar = [...document.querySelectorAll('.admin-product-tratamiento')].map(el => el.value);
@@ -3750,7 +3727,6 @@
       }
       document.getElementById('adminProductNewCategoryInput').classList.add('hidden');
       document.getElementById('adminProductGeneroSelect').value = p.genero || 'unisex';
-      adminSetProductCatalogo(p.esKids ? 'kids' : 'principal');
 
       const tratamientosGuardados = Array.isArray(p.tratamientos) ? p.tratamientos : [];
       const opcionesEstandar = [...document.querySelectorAll('.admin-product-tratamiento')].map(el => el.value);
@@ -3782,7 +3758,6 @@
       document.getElementById('adminProductNewCategoryInput').value = '';
       document.getElementById('adminProductNewCategoryInput').classList.add('hidden');
       document.getElementById('adminProductGeneroSelect').value = 'unisex';
-      adminSetProductCatalogo('principal');
       document.querySelectorAll('.admin-product-tratamiento').forEach(el => { el.checked = false; });
       document.getElementById('adminProductTratamientoOtro').value = '';
       adminProductUrlsInput.value = '';
@@ -3799,7 +3774,7 @@
       list.innerHTML = '<p class="text-xs text-slate-600/80 italic">Cargando...</p>';
       try {
         const fb = await window.firebaseReady;
-        const items = await fb.fetchProducts();
+        const items = (await fb.fetchProducts()).filter(p => p.esSeguridad);
         adminAllProducts = items || [];
 
         if (!items || items.length === 0) {
@@ -5704,7 +5679,7 @@
       grid.classList.add('hidden');
       try {
         const fb = await window.firebaseReady;
-        checkoutArmazonesCache = (await fb.fetchProducts()).filter(p => !p.oculto && !p.esKids);
+        checkoutArmazonesCache = (await fb.fetchProducts()).filter(p => !p.oculto && p.esSeguridad);
         loading.classList.add('hidden');
         grid.classList.remove('hidden');
 
@@ -6362,6 +6337,7 @@
         categoria: data.categoria,
         genero: data.genero || 'unisex',
         esKids: !!data.esKids,
+        esSeguridad: !!data.esSeguridad,
         tratamientos,
         imgs,
         storagePaths: [],
@@ -6383,6 +6359,7 @@
         categoria: data.categoria,
         genero: data.genero || 'unisex',
         esKids: !!data.esKids,
+        esSeguridad: !!data.esSeguridad,
         tratamientos,
         imgs,
         img: imgs[0] || null
