@@ -500,13 +500,6 @@
       </div>
 
       <!-- Catálogo completo de lentes de seguridad: se muestra directo en la página, sin necesidad de abrir un modal -->
-      <div id="gallerySearchWrap" class="max-w-md mx-auto mb-6 sm:mb-8">
-        <div class="relative">
-          <svg class="w-4 h-4 text-slate-500 absolute left-4 top-1/2 -translate-y-1/2" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-4.35-4.35M17 10a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
-          <input type="text" id="gallerySearchInput" placeholder="Buscar por modelo o color..." oninput="applyGalleryFilters()" class="w-full pl-11 pr-4 py-3.5 bg-brand-navy border border-slate-900/10 rounded-full text-sm text-brand-ink focus:border-brand-sky focus:outline-none">
-        </div>
-      </div>
-      <p id="gallerySearchEmpty" class="hidden text-center text-sm text-slate-500 py-10">No encontramos lentes que coincidan con su búsqueda.</p>
       <div id="productGalleryGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-8"></div>
 
     </div>
@@ -3069,7 +3062,8 @@
       document.querySelectorAll('.category-card').forEach(card => {
         card.classList.remove('ring-2', 'ring-brand-sky');
       });
-      document.getElementById('gallerySearchInput').value = '';
+      const searchInputEl = document.getElementById('gallerySearchInput');
+      if (searchInputEl) searchInputEl.value = '';
       closeCategoryModal();
     }
 
