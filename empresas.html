@@ -2699,6 +2699,42 @@
         .replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
     }
 
+    const securityProductFallback = [
+      {
+        id: 'catalogo-seguridad-1',
+        modelo: 'Armazon de Seguridad Transparente',
+        color: 'Transparente',
+        categoria: 'Lentes de Seguridad',
+        genero: 'unisex',
+        precio: null,
+        unidades: null,
+        tratamientos: ['Proteccion UV400'],
+        imgs: ['lentes/IMG-20260713-WA0029.jpg']
+      },
+      {
+        id: 'catalogo-seguridad-2',
+        modelo: 'Armazon de Seguridad Sin Montura',
+        color: 'Cristal',
+        categoria: 'Lentes de Seguridad',
+        genero: 'unisex',
+        precio: null,
+        unidades: null,
+        tratamientos: ['Proteccion UV400'],
+        imgs: ['lentes/IMG-20260713-WA0031.jpg']
+      },
+      {
+        id: 'catalogo-seguridad-3',
+        modelo: 'Armazon de Seguridad Clasico',
+        color: 'Rojo',
+        categoria: 'Lentes de Seguridad',
+        genero: 'unisex',
+        precio: null,
+        unidades: null,
+        tratamientos: ['Proteccion UV400'],
+        imgs: ['lentes/IMG-20260713-WA0033.jpg']
+      }
+    ];
+
     async function loadPublicProductGallery() {
       const loading = document.getElementById('productGalleryLoading');
       const empty = document.getElementById('productGalleryEmpty');
@@ -2706,7 +2742,8 @@
 
       try {
         const fb = await window.firebaseReady;
-        const items = (await fb.fetchProducts()).filter(p => !p.oculto && p.esSeguridad);
+        const publishedItems = (await fb.fetchProducts()).filter(p => !p.oculto && p.esSeguridad);
+        const items = publishedItems.length ? publishedItems : securityProductFallback;
 
         loading.classList.add('hidden');
 
@@ -3109,7 +3146,6 @@
 
     // Initialize catalog: load the published catalogo.json (falls back to demo)
     loadPublishedCatalog();
-    loadPublicProductGallery();
     loadPublicProductGallery();
 
     // =========================================================
