@@ -266,7 +266,8 @@
         <nav class="hidden xl:flex items-center gap-6 flex-shrink-0">
           <a href="#about" class="text-xs font-semibold text-slate-600 hover:text-brand-sky transition-colors tracking-wider uppercase">Nosotros</a>
           <a href="#test" class="text-xs font-semibold text-slate-600 hover:text-brand-sky transition-colors tracking-wider uppercase">Autodiagnóstico</a>
-          <a href="#simulator" class="text-xs font-semibold text-slate-600 hover:text-brand-sky transition-colors tracking-wider uppercase">Pruébatelos</a>
+          <!-- PROBADOR VIRTUAL DESACTIVADO TEMPORALMENTE: para reactivar, quite este comentario y el <a> de abajo -->
+          <!-- <a href="#simulator" class="text-xs font-semibold text-slate-600 hover:text-brand-sky transition-colors tracking-wider uppercase">Pruébatelos</a> -->
           <a href="#services" class="text-xs font-semibold text-slate-600 hover:text-brand-sky transition-colors tracking-wider uppercase">Servicios</a>
           <a href="index.html" class="text-xs font-semibold text-brand-sky hover:text-brand-teal transition-colors tracking-wider uppercase">🙋 Personas y Familias</a>
           <a href="#jornadas" class="text-xs font-semibold text-slate-600 hover:text-brand-sky transition-colors tracking-wider uppercase">Jornadas</a>
@@ -317,7 +318,8 @@
     <nav class="flex flex-col gap-6 text-2xl font-display font-medium mb-12">
       <a href="#about" class="mobile-link text-slate-600 hover:text-brand-sky transition-colors">Nosotros</a>
       <a href="#test" class="mobile-link text-slate-600 hover:text-brand-sky transition-colors">Autodiagnóstico</a>
-      <a href="#simulator" class="mobile-link text-slate-600 hover:text-brand-sky transition-colors">Pruébatelos</a>
+      <!-- PROBADOR VIRTUAL DESACTIVADO TEMPORALMENTE: para reactivar, quite este comentario y el <a> de abajo -->
+      <!-- <a href="#simulator" class="mobile-link text-slate-600 hover:text-brand-sky transition-colors">Pruébatelos</a> -->
       <a href="#services" class="mobile-link text-slate-600 hover:text-brand-sky transition-colors">Servicios</a>
       <a href="index.html" class="mobile-link text-brand-sky hover:text-brand-teal transition-colors">🙋 Sitio para Personas y Familias</a>
       <a href="#jornadas" class="mobile-link text-slate-600 hover:text-brand-sky transition-colors">Jornadas</a>
@@ -771,7 +773,8 @@
   </section>
 
   <!-- ========== INTERACTIVE LENS SIMULATOR (THE SPECTACULAR HOVER WIDGET) ========== -->
-  <section id="simulator" class="py-16 sm:py-24 lg:py-32 bg-brand-dark border-y border-slate-900/5 relative overflow-hidden">
+  <!-- PROBADOR VIRTUAL DESACTIVADO TEMPORALMENTE: para reactivar, quite la clase "hidden" de la sección de abajo -->
+  <section id="simulator" class="hidden py-16 sm:py-24 lg:py-32 bg-brand-dark border-y border-slate-900/5 relative overflow-hidden">
     <div class="glow-sphere float-glow absolute top-[15%] right-[-12%] w-[450px] h-[450px] bg-brand-sky/5 rounded-full pointer-events-none"></div>
     <div class="glow-sphere float-glow absolute bottom-[10%] left-[-12%] w-[400px] h-[400px] bg-brand-teal/5 rounded-full pointer-events-none" style="animation-delay: 5s;"></div>
 
@@ -2288,7 +2291,8 @@
           <button id="imgLightboxAddBtn" onclick="" class="flex items-center justify-center gap-2 text-[10px] font-bold uppercase tracking-widest text-brand-ink bg-gradient-to-r from-brand-sky to-brand-teal rounded-full py-2.5 transition-all duration-300 hover:shadow-lg hover:shadow-brand-sky/30">
             🛒 Agregar al carrito
           </button>
-          <a href="#simulator" onclick="closeImgLightbox()" class="flex items-center justify-center gap-2 text-[10px] font-bold uppercase tracking-widest text-brand-sky border border-brand-sky/30 hover:bg-brand-sky/10 rounded-full py-2.5 transition-all duration-300">
+          <!-- PROBADOR VIRTUAL DESACTIVADO TEMPORALMENTE: para reactivar, quite la clase "hidden" de este <a> -->
+          <a href="#simulator" onclick="closeImgLightbox()" class="hidden items-center justify-center gap-2 text-[10px] font-bold uppercase tracking-widest text-brand-sky border border-brand-sky/30 hover:bg-brand-sky/10 rounded-full py-2.5 transition-all duration-300">
             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
             Pruébatelo en vivo
           </a>
@@ -3325,7 +3329,8 @@
               ${agotado ? '' : `<button onclick="addToCart('${p.id}')" id="galAddBtn-${key}" class="flex items-center justify-center gap-2 text-[10px] font-bold uppercase tracking-widest text-brand-ink bg-gradient-to-r from-brand-sky to-brand-teal rounded-full py-2.5 transition-all duration-300 hover:shadow-lg hover:shadow-brand-sky/30">
                 🛒 Agregar al carrito
               </button>`}
-              <a href="#simulator" class="flex items-center justify-center gap-2 text-[10px] font-bold uppercase tracking-widest text-brand-sky border border-brand-sky/30 hover:bg-brand-sky/10 rounded-full py-2.5 transition-all duration-300">
+              <!-- PROBADOR VIRTUAL DESACTIVADO TEMPORALMENTE: para reactivar, quite "hidden " del class de este <a> -->
+              <a href="#simulator" class="hidden items-center justify-center gap-2 text-[10px] font-bold uppercase tracking-widest text-brand-sky border border-brand-sky/30 hover:bg-brand-sky/10 rounded-full py-2.5 transition-all duration-300">
                 <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
                 Pruébatelo en vivo
               </a>
