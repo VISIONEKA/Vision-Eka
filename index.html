@@ -2316,6 +2316,80 @@
     </div>
   </div>
 
+  <!-- ========== FLUJO DE COMPRA POR PRODUCTO (armazón / graduación / tratamiento) ========== -->
+  <!-- Se abre al presionar "Agregar al carrito" o "Comprar ahora" en cualquier lente del catálogo. -->
+  <div id="purchaseFlowModal" class="fixed inset-0 z-[60] flex items-center justify-center p-4 sm:p-6 bg-brand-navy/80 backdrop-blur-md hidden opacity-0 transition-opacity duration-300">
+    <div class="bg-brand-dark border-2 border-brand-sky/40 rounded-3xl max-w-lg w-full shadow-2xl transform scale-95 transition-transform duration-300 max-h-[85vh] overflow-y-auto p-6" id="purchaseFlowModalCard">
+
+      <div class="flex items-center justify-between mb-4">
+        <div class="flex items-center gap-2">
+          <button type="button" onclick="pfGoBack()" id="pfBackBtn" class="hidden text-slate-500 hover:text-brand-ink text-lg leading-none w-7 h-7 flex items-center justify-center rounded-full hover:bg-slate-900/5 transition-all" aria-label="Regresar">←</button>
+          <h3 class="font-display font-bold text-lg text-brand-ink">Configura tus lentes</h3>
+        </div>
+        <button onclick="closePurchaseFlowModal()" class="text-slate-500 hover:text-brand-ink text-xl leading-none">✕</button>
+      </div>
+
+      <!-- Mini resumen del producto elegido -->
+      <div id="pfProductSummary" class="flex items-center gap-3 mb-5 p-3 bg-brand-navy rounded-2xl border border-slate-900/10"></div>
+
+      <!-- Barra de pasos -->
+      <div class="flex items-center gap-1.5 mb-6" id="pfStepDots">
+        <span class="pf-dot h-1.5 flex-1 rounded-full bg-brand-sky transition-all" data-step="1"></span>
+        <span class="pf-dot h-1.5 flex-1 rounded-full bg-slate-900/10 transition-all" data-step="2"></span>
+        <span class="pf-dot h-1.5 flex-1 rounded-full bg-slate-900/10 transition-all" data-step="3"></span>
+      </div>
+
+      <!-- PASO 1: tipo de compra -->
+      <div id="pfStep1" class="pf-step">
+        <label class="block text-[9px] uppercase tracking-widest text-slate-500 font-extrabold mb-2">¿Cómo deseas adquirir tus lentes?</label>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <button type="button" onclick="pfSetTipo('con_graduacion')" id="pfTipoConBtn" class="checkout-graduacion-btn text-left p-4 rounded-xl border-2 border-slate-900/10 text-slate-500 text-xs font-bold transition-all">👓 Lentes con graduación<br><span class="font-normal normal-case text-[10px] text-slate-500">Necesito receta o examen de la vista</span></button>
+          <button type="button" onclick="pfSetTipo('solo_armazon')" id="pfTipoSoloBtn" class="checkout-graduacion-btn text-left p-4 rounded-xl border-2 border-slate-900/10 text-slate-500 text-xs font-bold transition-all">🕶️ Solo armazón<br><span class="font-normal normal-case text-[10px] text-slate-500">Sin graduación, va directo al carrito</span></button>
+        </div>
+      </div>
+
+      <!-- PASO 2: origen de la graduación -->
+      <div id="pfStep2" class="pf-step hidden">
+        <label class="block text-[9px] uppercase tracking-widest text-slate-500 font-extrabold mb-2">¿Ya tienes tu graduación?</label>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
+          <button type="button" onclick="pfSetGraduacionModo('receta')" id="pfModoRecetaBtn" class="checkout-tipo-btn text-left p-4 rounded-xl border-2 border-slate-900/10 text-slate-500 text-xs font-bold transition-all">📋 Sí, ya tengo mi receta<br><span class="font-normal normal-case text-[10px] text-slate-500">La escribo o pego el enlace</span></button>
+          <button type="button" onclick="pfSetGraduacionModo('examen')" id="pfModoExamenBtn" class="checkout-tipo-btn text-left p-4 rounded-xl border-2 border-slate-900/10 text-slate-500 text-xs font-bold transition-all">🏠 No, necesito examen<br><span class="font-normal normal-case text-[10px] text-slate-500">Agendar examen a domicilio</span></button>
+        </div>
+
+        <!-- Sub-bloque: capturar receta -->
+        <div id="pfRecetaWrap" class="hidden mb-2">
+          <label class="block text-[9px] uppercase tracking-widest text-slate-500 font-extrabold mb-2">Su receta / graduación</label>
+          <textarea id="pfRecetaInput" rows="2" placeholder="Escriba su graduación (ej. OD -2.00 OI -1.50) o pegue el enlace de la foto de su receta" class="w-full p-3.5 bg-brand-navy border border-slate-900/10 rounded-xl text-sm text-brand-ink focus:border-brand-sky focus:outline-none"></textarea>
+          <button type="button" onclick="pfConfirmReceta()" class="w-full mt-3 bg-gradient-to-r from-brand-sky to-brand-teal text-brand-ink font-bold py-3 rounded-xl transition-all hover:shadow-lg text-sm">Continuar</button>
+          <p id="pfRecetaStatus" class="text-[11px] text-red-400 mt-2 text-center"></p>
+        </div>
+
+        <!-- Sub-bloque: opción existente para solicitar/agendar el examen -->
+        <div id="pfExamenWrap" class="hidden mb-2 p-4 bg-brand-navy rounded-2xl border border-slate-900/10">
+          <p class="text-[11px] text-slate-500 mb-3 leading-relaxed">Sin problema. Agregamos este armazón a su carrito y, al finalizar su pedido, le mostraremos la opción para <strong class="text-brand-ink">agendar su examen de la vista a domicilio</strong> (fecha, horario y armazones para probarse).</p>
+          <button type="button" onclick="pfContinueToTratamiento()" class="w-full bg-gradient-to-r from-brand-sky to-brand-teal text-brand-ink font-bold py-3 rounded-xl transition-all hover:shadow-lg text-sm">Continuar</button>
+        </div>
+      </div>
+
+      <!-- PASO 3: tratamiento -->
+      <div id="pfStep3" class="pf-step hidden">
+        <label class="block text-[9px] uppercase tracking-widest text-slate-500 font-extrabold mb-2">¿Qué tratamiento deseas?</label>
+        <div class="grid grid-cols-1 gap-2 mb-5" id="pfTratamientoOptions">
+          <button type="button" onclick="pfSetTratamiento('Antirreflejante')" class="pf-trat-btn text-left p-3 rounded-xl border-2 border-slate-900/10 text-slate-500 text-xs font-bold transition-all">✨ Antirreflejante</button>
+          <button type="button" onclick="pfSetTratamiento('Protección para computadora (filtro de luz azul)')" class="pf-trat-btn text-left p-3 rounded-xl border-2 border-slate-900/10 text-slate-500 text-xs font-bold transition-all">💻 Protección para computadora <span class="font-normal normal-case text-slate-500">(filtro de luz azul)</span></button>
+          <button type="button" onclick="pfSetTratamiento('Protección UV / Sol')" class="pf-trat-btn text-left p-3 rounded-xl border-2 border-slate-900/10 text-slate-500 text-xs font-bold transition-all">☀️ Protección UV / Sol</button>
+          <button type="button" onclick="pfSetTratamiento('Fotocromático')" class="pf-trat-btn text-left p-3 rounded-xl border-2 border-slate-900/10 text-slate-500 text-xs font-bold transition-all">🌗 Fotocromático</button>
+          <button type="button" onclick="pfSetTratamiento('Sin tratamiento')" class="pf-trat-btn text-left p-3 rounded-xl border-2 border-slate-900/10 text-slate-500 text-xs font-bold transition-all">— Sin tratamiento</button>
+        </div>
+        <button type="button" onclick="pfFinish()" id="pfFinishBtn" disabled class="w-full bg-gradient-to-r from-brand-sky to-brand-teal text-brand-ink font-bold py-3.5 rounded-xl transition-all hover:shadow-lg opacity-50">
+          <span id="pfFinishBtnLabel">🛒 Agregar al carrito</span>
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+
   <!-- ========== MI CUENTA (login / registro / invitado) ========== -->
   <div id="accountModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-brand-navy/80 backdrop-blur-md hidden opacity-0 transition-opacity duration-300">
     <div class="bg-brand-dark border-2 border-brand-sky/40 rounded-3xl max-w-md w-full shadow-2xl transform scale-95 transition-transform duration-300 p-6 max-h-[85vh] overflow-y-auto" id="accountModalCard">
@@ -3330,9 +3404,9 @@
         buyNowBtn.classList.add('hidden');
       } else {
         addBtn.classList.remove('hidden');
-        addBtn.onclick = () => addToCart(p.id);
+        addBtn.onclick = () => openPurchaseFlow(p.id, false);
         buyNowBtn.classList.remove('hidden');
-        buyNowBtn.onclick = () => buyNowProduct(p.id);
+        buyNowBtn.onclick = () => openPurchaseFlow(p.id, true);
       }
 
       document.getElementById('imgLightboxShareBtn').onclick = () => shareProductWhatsapp(p.id);
@@ -3680,7 +3754,7 @@
               <span id="galStock-${key}">${stockBadge}</span>
             </div>
             <div id="galCartWrap-${key}" class="flex gal-compact-row gap-2 mt-auto gal-compact-mt">
-              ${agotado ? '' : `<button onclick="addToCart('${p.id}')" id="galAddBtn-${key}" class="flex items-center justify-center gap-2 text-[10px] font-bold uppercase tracking-widest text-brand-ink bg-gradient-to-r from-brand-sky to-brand-teal rounded-full py-2.5 gal-compact-icon-btn transition-all duration-300 hover:shadow-lg hover:shadow-brand-sky/30">
+              ${agotado ? '' : `<button onclick="openPurchaseFlow('${p.id}')" id="galAddBtn-${key}" class="flex items-center justify-center gap-2 text-[10px] font-bold uppercase tracking-widest text-brand-ink bg-gradient-to-r from-brand-sky to-brand-teal rounded-full py-2.5 gal-compact-icon-btn transition-all duration-300 hover:shadow-lg hover:shadow-brand-sky/30">
                 <span class="gal-compact-hide">🛒 Agregar al carrito</span>
                 <span class="gal-compact-show relative text-white">
                   <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
@@ -3739,9 +3813,9 @@
       if (agotado) {
         if (addBtn) addBtn.remove();
       } else if (addBtn) {
-        addBtn.setAttribute('onclick', `addToCart('${p.id}')`);
+        addBtn.setAttribute('onclick', `openPurchaseFlow('${p.id}')`);
       } else {
-        cartWrap.insertAdjacentHTML('afterbegin', `<button onclick="addToCart('${p.id}')" id="galAddBtn-${key}" class="flex items-center justify-center gap-2 text-[10px] font-bold uppercase tracking-widest text-brand-ink bg-gradient-to-r from-brand-sky to-brand-teal rounded-full py-2.5 transition-all duration-300 hover:shadow-lg hover:shadow-brand-sky/30">🛒 Agregar al carrito</button>`);
+        cartWrap.insertAdjacentHTML('afterbegin', `<button onclick="openPurchaseFlow('${p.id}')" id="galAddBtn-${key}" class="flex items-center justify-center gap-2 text-[10px] font-bold uppercase tracking-widest text-brand-ink bg-gradient-to-r from-brand-sky to-brand-teal rounded-full py-2.5 transition-all duration-300 hover:shadow-lg hover:shadow-brand-sky/30">🛒 Agregar al carrito</button>`);
       }
 
       document.querySelectorAll(`.gal-swatch-${key}`).forEach((el, i) => {
@@ -7049,6 +7123,236 @@
       startCheckout();
     }
 
+    // =========================================================
+    // ---- FLUJO DE COMPRA POR PRODUCTO (armazón / graduación / tratamiento) ----
+    // Se abre al presionar "Agregar al carrito" o "Comprar ahora". No reemplaza
+    // addToCart()/buyNowProduct(): los sigue usando tal cual y solo agrega
+    // metadata extra (tipoCompra, graduación, tratamiento) al item ya creado.
+    // =========================================================
+    let purchaseFlowState = {
+      productId: null,
+      buyNow: false,
+      step: 1,
+      tipoCompra: null,   // 'con_graduacion' | 'solo_armazon'
+      graduacionModo: null, // 'receta' | 'examen'
+      receta: '',
+      tratamiento: null
+    };
+
+    function pfResetState(productId, buyNow) {
+      purchaseFlowState = {
+        productId,
+        buyNow: !!buyNow,
+        step: 1,
+        tipoCompra: null,
+        graduacionModo: null,
+        receta: '',
+        tratamiento: null
+      };
+    }
+
+    function openPurchaseFlow(productId, buyNow) {
+      const p = (window.__publicProductsCache || {})[productId];
+      if (!p) return;
+
+      // Si el producto ya está en el carrito, precargamos su configuración previa
+      // para no perder lo que el cliente ya había elegido.
+      const existing = cart.find(it => it.id === productId);
+      pfResetState(productId, buyNow);
+      if (existing) {
+        purchaseFlowState.tipoCompra = existing.tipoCompra || null;
+        purchaseFlowState.graduacionModo = existing.graduacionInfo ? existing.graduacionInfo.modo : null;
+        purchaseFlowState.receta = (existing.graduacionInfo && existing.graduacionInfo.receta) || '';
+        purchaseFlowState.tratamiento = existing.tratamientoElegido || null;
+      }
+
+      const imgsArr = (p.imgs && p.imgs.length) ? p.imgs : (p.img ? [p.img] : []);
+      const precioText = (p.precio !== null && p.precio !== undefined)
+        ? `$${Number(p.precio).toLocaleString('es-MX', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} MXN`
+        : 'Consultar precio';
+      const thumb = imgsArr[0]
+        ? `<img src="${imgsArr[0]}" class="w-14 h-14 object-cover rounded-xl bg-brand-dark border border-slate-900/10 flex-shrink-0">`
+        : `<div class="w-14 h-14 rounded-xl bg-brand-dark border border-slate-900/10 flex items-center justify-center text-xl flex-shrink-0">🕶️</div>`;
+      document.getElementById('pfProductSummary').innerHTML = `
+        ${thumb}
+        <div class="min-w-0">
+          <p class="text-sm font-semibold text-brand-ink truncate">${escapeHtml(p.modelo || '')}</p>
+          <p class="text-[11px] text-slate-500 truncate">${escapeHtml(p.color || '')} · ${precioText}</p>
+        </div>
+      `;
+
+      pfShowStep(1);
+      openModal('purchaseFlowModal');
+    }
+
+    function closePurchaseFlowModal() {
+      closeModal('purchaseFlowModal');
+    }
+
+    function pfUpdateDots() {
+      document.querySelectorAll('#pfStepDots .pf-dot').forEach(dot => {
+        const step = Number(dot.getAttribute('data-step'));
+        dot.classList.toggle('bg-brand-sky', step <= purchaseFlowState.step);
+        dot.classList.toggle('bg-slate-900/10', step > purchaseFlowState.step);
+      });
+    }
+
+    function pfShowStep(step) {
+      purchaseFlowState.step = step;
+      document.querySelectorAll('.pf-step').forEach(el => el.classList.add('hidden'));
+      document.getElementById(`pfStep${step}`).classList.remove('hidden');
+      document.getElementById('pfBackBtn').classList.toggle('hidden', step === 1);
+      pfUpdateDots();
+
+      // Al volver a un paso, reflejamos las selecciones guardadas en los botones
+      if (step === 1) {
+        pfHighlightTipo();
+      } else if (step === 2) {
+        document.getElementById('pfRecetaWrap').classList.add('hidden');
+        document.getElementById('pfExamenWrap').classList.add('hidden');
+        pfHighlightGraduacionModo();
+        if (purchaseFlowState.graduacionModo === 'receta') {
+          document.getElementById('pfRecetaWrap').classList.remove('hidden');
+          document.getElementById('pfRecetaInput').value = purchaseFlowState.receta || '';
+        } else if (purchaseFlowState.graduacionModo === 'examen') {
+          document.getElementById('pfExamenWrap').classList.remove('hidden');
+        }
+      } else if (step === 3) {
+        pfHighlightTratamiento();
+      }
+    }
+
+    function pfGoBack() {
+      if (purchaseFlowState.step === 3) {
+        pfShowStep(2);
+      } else if (purchaseFlowState.step === 2) {
+        pfShowStep(1);
+      }
+    }
+
+    function pfHighlightTipo() {
+      const conBtn = document.getElementById('pfTipoConBtn');
+      const soloBtn = document.getElementById('pfTipoSoloBtn');
+      [conBtn, soloBtn].forEach(btn => {
+        btn.classList.remove('border-brand-sky', 'text-brand-sky');
+        btn.classList.add('border-slate-900/10', 'text-slate-500');
+      });
+      if (purchaseFlowState.tipoCompra === 'con_graduacion') {
+        conBtn.classList.add('border-brand-sky', 'text-brand-sky');
+        conBtn.classList.remove('border-slate-900/10', 'text-slate-500');
+      } else if (purchaseFlowState.tipoCompra === 'solo_armazon') {
+        soloBtn.classList.add('border-brand-sky', 'text-brand-sky');
+        soloBtn.classList.remove('border-slate-900/10', 'text-slate-500');
+      }
+    }
+
+    function pfSetTipo(tipo) {
+      purchaseFlowState.tipoCompra = tipo;
+      pfHighlightTipo();
+      if (tipo === 'solo_armazon') {
+        // "Solo armazón": no se pide graduación, examen ni tratamiento — directo al carrito.
+        purchaseFlowState.graduacionModo = null;
+        purchaseFlowState.receta = '';
+        purchaseFlowState.tratamiento = null;
+        pfFinish();
+      } else {
+        pfShowStep(2);
+      }
+    }
+
+    function pfHighlightGraduacionModo() {
+      const recetaBtn = document.getElementById('pfModoRecetaBtn');
+      const examenBtn = document.getElementById('pfModoExamenBtn');
+      [recetaBtn, examenBtn].forEach(btn => {
+        btn.classList.remove('border-brand-sky', 'text-brand-sky');
+        btn.classList.add('border-slate-900/10', 'text-slate-500');
+      });
+      if (purchaseFlowState.graduacionModo === 'receta') {
+        recetaBtn.classList.add('border-brand-sky', 'text-brand-sky');
+        recetaBtn.classList.remove('border-slate-900/10', 'text-slate-500');
+      } else if (purchaseFlowState.graduacionModo === 'examen') {
+        examenBtn.classList.add('border-brand-sky', 'text-brand-sky');
+        examenBtn.classList.remove('border-slate-900/10', 'text-slate-500');
+      }
+    }
+
+    function pfSetGraduacionModo(modo) {
+      purchaseFlowState.graduacionModo = modo;
+      pfHighlightGraduacionModo();
+      document.getElementById('pfRecetaWrap').classList.toggle('hidden', modo !== 'receta');
+      document.getElementById('pfExamenWrap').classList.toggle('hidden', modo !== 'examen');
+      document.getElementById('pfRecetaStatus').textContent = '';
+      if (modo === 'receta') {
+        document.getElementById('pfRecetaInput').value = purchaseFlowState.receta || '';
+      }
+    }
+
+    function pfConfirmReceta() {
+      const val = document.getElementById('pfRecetaInput').value.trim();
+      const status = document.getElementById('pfRecetaStatus');
+      if (!val) {
+        status.textContent = 'Escriba su graduación o pegue el enlace de su receta.';
+        return;
+      }
+      status.textContent = '';
+      purchaseFlowState.receta = val;
+      pfShowStep(3);
+    }
+
+    function pfContinueToTratamiento() {
+      pfShowStep(3);
+    }
+
+    function pfHighlightTratamiento() {
+      document.querySelectorAll('.pf-trat-btn').forEach(btn => {
+        const isSelected = btn.getAttribute('onclick') === `pfSetTratamiento('${purchaseFlowState.tratamiento}')`;
+        btn.classList.toggle('border-brand-sky', isSelected);
+        btn.classList.toggle('text-brand-sky', isSelected);
+        btn.classList.toggle('border-slate-900/10', !isSelected);
+        btn.classList.toggle('text-slate-500', !isSelected);
+      });
+      const finishBtn = document.getElementById('pfFinishBtn');
+      const enabled = !!purchaseFlowState.tratamiento;
+      finishBtn.disabled = !enabled;
+      finishBtn.classList.toggle('opacity-50', !enabled);
+      document.getElementById('pfFinishBtnLabel').textContent = purchaseFlowState.buyNow ? '⚡ Continuar a comprar' : '🛒 Agregar al carrito';
+    }
+
+    function pfSetTratamiento(nombre) {
+      purchaseFlowState.tratamiento = nombre;
+      pfHighlightTratamiento();
+    }
+
+    // Aplica la configuración elegida (tipo de compra, graduación, tratamiento) al
+    // item ya creado por addToCart()/buyNowProduct(), sin tocar esas funciones.
+    function pfApplyToCartItem(productId) {
+      const item = cart.find(it => it.id === productId);
+      if (!item) return;
+      item.tipoCompra = purchaseFlowState.tipoCompra;
+      item.graduacion = purchaseFlowState.tipoCompra === 'con_graduacion' ? 'con' : 'sin';
+      item.graduacionInfo = purchaseFlowState.tipoCompra === 'con_graduacion'
+        ? { modo: purchaseFlowState.graduacionModo, receta: purchaseFlowState.graduacionModo === 'receta' ? purchaseFlowState.receta : '' }
+        : null;
+      item.tratamientoElegido = purchaseFlowState.tipoCompra === 'con_graduacion' ? purchaseFlowState.tratamiento : null;
+      saveCart();
+    }
+
+    function pfFinish() {
+      if (purchaseFlowState.tipoCompra === 'con_graduacion' && !purchaseFlowState.tratamiento) return; // validación: falta tratamiento
+
+      const productId = purchaseFlowState.productId;
+      const buyNow = purchaseFlowState.buyNow;
+      closePurchaseFlowModal();
+
+      if (buyNow) {
+        buyNowProduct(productId); // función existente, sin modificar
+      } else {
+        addToCart(productId); // función existente, sin modificar
+      }
+      pfApplyToCartItem(productId);
+      renderCartDrawer(); // refleja la nueva metadata si el carrito está visible
+    }
+
     function cartSetGraduacion(id, tipo) {
       const item = cart.find(it => it.id === id);
       if (!item) return;
@@ -7104,6 +7408,27 @@
         const thumb = it.img
           ? `<img src="${it.img}" class="w-14 h-14 object-cover rounded-xl bg-brand-navy border border-slate-900/10 flex-shrink-0">`
           : `<div class="w-14 h-14 rounded-xl bg-brand-navy border border-slate-900/10 flex items-center justify-center text-xl flex-shrink-0">🕶️</div>`;
+
+        // Resumen del flujo de compra (tipo de compra / graduación / tratamiento),
+        // solo se muestra si el artículo pasó por el flujo "Configura tus lentes".
+        let purchaseFlowSummary = '';
+        if (it.tipoCompra) {
+          const tipoLabel = it.tipoCompra === 'con_graduacion' ? '👓 Lentes con graduación' : '🕶️ Solo armazón';
+          let graduacionLabel = '';
+          if (it.tipoCompra === 'con_graduacion' && it.graduacionInfo) {
+            graduacionLabel = it.graduacionInfo.modo === 'receta'
+              ? `Receta: ${escapeHtml(it.graduacionInfo.receta || '')}`
+              : 'Examen a domicilio pendiente de agendar';
+          }
+          purchaseFlowSummary = `
+            <div class="mt-1.5 p-2 bg-brand-navy rounded-lg border border-slate-900/10 space-y-0.5">
+              <p class="text-[10px] font-bold text-brand-ink">${tipoLabel}</p>
+              ${graduacionLabel ? `<p class="text-[10px] text-slate-500 truncate">${graduacionLabel}</p>` : ''}
+              ${it.tratamientoElegido ? `<p class="text-[10px] text-brand-teal truncate">Tratamiento: ${escapeHtml(it.tratamientoElegido)}</p>` : ''}
+              <p class="text-[10px] text-slate-500">Precio: ${precioText}</p>
+            </div>`;
+        }
+
         return `
         <div class="flex items-start gap-3">
           ${thumb}
@@ -7111,9 +7436,11 @@
             <p class="text-sm font-semibold text-brand-ink truncate">${it.modelo}</p>
             <p class="text-[11px] text-slate-500 truncate">${it.color} · ${precioText}${graduacion === 'con' ? ' <span class="text-brand-teal font-semibold">+ ajuste según receta</span>' : ''}</p>
             ${(it.tratamientos && it.tratamientos.length) ? `<p class="text-[10px] text-brand-teal truncate">${it.tratamientos.join(' · ')}</p>` : ''}
+            ${purchaseFlowSummary}
             <div class="flex items-center gap-1.5 mt-1.5">
               <button onclick="cartSetGraduacion('${it.id}', 'sin')" class="text-[9px] font-bold uppercase tracking-wide px-2 py-1 rounded-full border transition-all ${graduacion === 'sin' ? 'bg-brand-sky/20 border-brand-sky text-brand-ink' : 'border-slate-900/10 text-slate-500'}">Sin graduación</button>
               <button onclick="cartSetGraduacion('${it.id}', 'con')" class="text-[9px] font-bold uppercase tracking-wide px-2 py-1 rounded-full border transition-all ${graduacion === 'con' ? 'bg-brand-sky/20 border-brand-sky text-brand-ink' : 'border-slate-900/10 text-slate-500'}">Con graduación</button>
+              <button onclick="openPurchaseFlow('${it.id}', false)" class="text-[9px] font-bold uppercase tracking-wide px-2 py-1 rounded-full border border-slate-900/10 text-slate-500 hover:border-brand-sky/40 hover:text-brand-sky transition-all">Editar</button>
             </div>
             <div class="flex items-center gap-2 mt-1.5">
               <button onclick="cartChangeQty('${it.id}', -1)" class="w-6 h-6 rounded-full bg-brand-navy border border-slate-900/10 text-brand-ink text-xs font-bold flex items-center justify-center">−</button>
@@ -7495,6 +7822,10 @@
         graduacionWrap.classList.remove('hidden');
         const anyConGraduacion = cart.some(it => it.graduacion === 'con');
         setCheckoutGraduacion(anyConGraduacion ? 'con' : 'sin');
+        // Si algún artículo pidió "No, necesito examen" en el flujo de compra,
+        // preseleccionamos esa pestaña para no hacerle repetir la elección.
+        const anyPideExamen = cart.some(it => it.graduacionInfo && it.graduacionInfo.modo === 'examen');
+        if (anyConGraduacion && anyPideExamen) setCheckoutTipo('examen');
       }
       setCheckoutMetodo('whatsapp');
       resetCheckoutMicaConfig();
@@ -7546,7 +7877,7 @@
       status.className = 'text-[11px] text-slate-500 mt-2 text-center';
       status.textContent = 'Enviando pedido...';
 
-      const items = cart.map(it => ({ modelo: it.modelo, color: it.color, precio: it.precio, cantidad: it.cantidad, tratamientos: it.tratamientos || [], graduacion: it.graduacion === 'con' ? 'con' : 'sin' }));
+      const items = cart.map(it => ({ modelo: it.modelo, color: it.color, precio: it.precio, cantidad: it.cantidad, tratamientos: it.tratamientos || [], graduacion: it.graduacion === 'con' ? 'con' : 'sin', tipoCompra: it.tipoCompra || null, graduacionInfo: it.graduacionInfo || null, tratamientoElegido: it.tratamientoElegido || null }));
       const micaConfig = checkoutGraduacionGeneral === 'con'
         ? { tipo: checkoutMicaTipo, indice: checkoutMicaIndice, tratamientos: [...checkoutMicaTratamientos] }
         : null;
@@ -7605,7 +7936,7 @@
         });
 
         // Mensaje de WhatsApp con el resumen del pedido
-        const itemsText = items.map(it => `• ${it.modelo} (${it.color})${it.cantidad > 1 ? ` x${it.cantidad}` : ''}${it.precio ? ` — $${Number(it.precio).toFixed(2)}` : ''}${(it.tratamientos && it.tratamientos.length) ? ` [${it.tratamientos.join(', ')}]` : ''}${it.graduacion === 'con' ? ' [CON GRADUACIÓN — costo final según receta]' : ' [sin graduación]'}`).join('%0A');
+        const itemsText = items.map(it => `• ${it.modelo} (${it.color})${it.cantidad > 1 ? ` x${it.cantidad}` : ''}${it.precio ? ` — $${Number(it.precio).toFixed(2)}` : ''}${(it.tratamientos && it.tratamientos.length) ? ` [${it.tratamientos.join(', ')}]` : ''}${it.graduacion === 'con' ? ' [CON GRADUACIÓN — costo final según receta]' : ' [sin graduación]'}${it.tratamientoElegido ? ` — Tratamiento elegido: ${it.tratamientoElegido}` : ''}${(it.graduacionInfo && it.graduacionInfo.modo === 'receta' && it.graduacionInfo.receta) ? ` — Receta: ${it.graduacionInfo.receta}` : ''}${(it.graduacionInfo && it.graduacionInfo.modo === 'examen') ? ' — Pidió examen a domicilio' : ''}`).join('%0A');
         const tipoText = checkoutTipo === 'receta' ? 'Pedido CON RECETA' : checkoutTipo === 'examen' ? 'Pedido con EXAMEN A DOMICILIO' : 'Pedido SIN GRADUACIÓN';
         let msg = `Hola, quiero confirmar mi pedido en Visión EKA:%0A%0A${tipoText}%0A${itemsText}`;
         if (checkoutTipo === 'receta') msg += `%0AReceta: ${receta}`;
