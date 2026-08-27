@@ -2359,7 +2359,98 @@
         <!-- Sub-bloque: capturar receta -->
         <div id="pfRecetaWrap" class="hidden mb-2">
           <label class="block text-[9px] uppercase tracking-widest text-slate-500 font-extrabold mb-2">Su receta / graduación</label>
-          <textarea id="pfRecetaInput" rows="2" placeholder="Escriba su graduación (ej. OD -2.00 OI -1.50) o pegue el enlace de la foto de su receta" class="w-full p-3.5 bg-brand-navy border border-slate-900/10 rounded-xl text-sm text-brand-ink focus:border-brand-sky focus:outline-none"></textarea>
+
+          <!-- Sub-pestañas: formulario guiado vs texto libre -->
+          <div class="flex gap-2 mb-3 p-1 bg-brand-navy rounded-full">
+            <button type="button" onclick="pfSetRecetaModo('guiado')" id="pfRecetaModoGuiadoBtn" class="flex-1 py-2 rounded-full text-[10px] font-bold uppercase tracking-wider transition-all">📝 Formulario guiado</button>
+            <button type="button" onclick="pfSetRecetaModo('libre')" id="pfRecetaModoLibreBtn" class="flex-1 py-2 rounded-full text-[10px] font-bold uppercase tracking-wider transition-all">✍️ Texto libre</button>
+          </div>
+
+          <!-- Botón de ayuda: explica qué es cada dato y dónde encontrarlo -->
+          <button type="button" onclick="pfToggleRecetaHelp()" id="pfRecetaHelpToggleBtn" class="w-full flex items-center justify-center gap-2 text-[11px] font-semibold text-brand-sky border border-brand-sky/30 hover:bg-brand-sky/10 rounded-xl py-2.5 mb-3 transition-all">
+            ❓ Necesito ayuda para poner estos datos
+          </button>
+
+          <div id="pfRecetaHelpPanel" class="hidden mb-4 p-4 bg-brand-navy rounded-2xl border border-slate-900/10 text-[11px] text-slate-500 leading-relaxed space-y-3">
+            <p class="font-bold text-brand-ink text-xs">¿Dónde encuentro estos datos?</p>
+            <p>Vienen en la receta que le entregó su oftalmólogo(a) u optometrista después de su examen de la vista. Busque una tabla parecida a esta:</p>
+
+            <div class="bg-brand-dark rounded-xl p-3 border border-slate-900/10 overflow-x-auto">
+              <table class="w-full text-center font-mono text-[10px]">
+                <thead>
+                  <tr class="text-slate-500">
+                    <th class="text-left pb-1.5"></th>
+                    <th class="pb-1.5">ESF</th>
+                    <th class="pb-1.5">CIL</th>
+                    <th class="pb-1.5">EJE</th>
+                    <th class="pb-1.5">ADD</th>
+                  </tr>
+                </thead>
+                <tbody class="text-brand-ink">
+                  <tr><td class="text-left font-bold text-brand-sky">OD</td><td>-2.00</td><td>-0.75</td><td>90</td><td>+1.50</td></tr>
+                  <tr><td class="text-left font-bold text-brand-sky">OI</td><td>-1.75</td><td>-0.50</td><td>85</td><td>+1.50</td></tr>
+                </tbody>
+              </table>
+            </div>
+
+            <ul class="space-y-2 list-none">
+              <li><strong class="text-brand-ink">OD / OI:</strong> Ojo Derecho / Ojo Izquierdo. En inglés a veces aparecen como "R" (right) y "L" (left).</li>
+              <li><strong class="text-brand-ink">Esfera (ESF o SPH):</strong> corrige miopía (número negativo, con "-") o hipermetropía (número positivo, con "+"). Suele ser el número más grande de la tabla.</li>
+              <li><strong class="text-brand-ink">Cilindro (CIL o CYL):</strong> corrige el astigmatismo. Si su receta no trae este dato, puede dejarlo vacío.</li>
+              <li><strong class="text-brand-ink">Eje:</strong> un número entre 0° y 180° que siempre acompaña al cilindro.</li>
+              <li><strong class="text-brand-ink">Adición (ADD):</strong> solo aparece si necesita lentes bifocales o progresivos, para ver de cerca.</li>
+              <li><strong class="text-brand-ink">Distancia pupilar (DP):</strong> distancia entre sus pupilas, en milímetros. Si no la tiene a la mano, no se preocupe: se la medimos nosotros sin costo.</li>
+            </ul>
+
+            <p class="pt-1">¿No encuentra su receta o no logra entenderla? No hay problema: deje los campos vacíos, escriba "no tengo receta a la mano" en texto libre, o elija la opción <strong class="text-brand-ink">"No, necesito examen"</strong> para que se la hagamos nosotros.</p>
+          </div>
+
+          <!-- Formulario guiado: campos separados por ojo -->
+          <div id="pfRecetaGuiadoWrap">
+            <div class="overflow-x-auto -mx-1 px-1 mb-3">
+              <table class="w-full text-[11px] border-collapse">
+                <thead>
+                  <tr class="text-slate-500">
+                    <th class="text-left pb-2 pr-2 font-bold uppercase tracking-wide text-[9px]">Ojo</th>
+                    <th class="text-left pb-2 pr-2 font-bold uppercase tracking-wide text-[9px]">Esfera (ESF)</th>
+                    <th class="text-left pb-2 pr-2 font-bold uppercase tracking-wide text-[9px]">Cilindro (CIL)</th>
+                    <th class="text-left pb-2 font-bold uppercase tracking-wide text-[9px]">Eje</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="pr-2 py-1 font-bold text-brand-ink whitespace-nowrap">OD <span class="font-normal text-slate-500">(derecho)</span></td>
+                    <td class="pr-2 py-1"><input id="pfOdEsf" type="text" inputmode="decimal" placeholder="-2.00" class="w-full p-2 bg-brand-dark border border-slate-900/10 rounded-lg text-brand-ink focus:border-brand-sky focus:outline-none"></td>
+                    <td class="pr-2 py-1"><input id="pfOdCil" type="text" inputmode="decimal" placeholder="-0.75" class="w-full p-2 bg-brand-dark border border-slate-900/10 rounded-lg text-brand-ink focus:border-brand-sky focus:outline-none"></td>
+                    <td class="py-1"><input id="pfOdEje" type="text" inputmode="numeric" placeholder="90°" class="w-full p-2 bg-brand-dark border border-slate-900/10 rounded-lg text-brand-ink focus:border-brand-sky focus:outline-none"></td>
+                  </tr>
+                  <tr>
+                    <td class="pr-2 py-1 font-bold text-brand-ink whitespace-nowrap">OI <span class="font-normal text-slate-500">(izquierdo)</span></td>
+                    <td class="pr-2 py-1"><input id="pfOiEsf" type="text" inputmode="decimal" placeholder="-1.75" class="w-full p-2 bg-brand-dark border border-slate-900/10 rounded-lg text-brand-ink focus:border-brand-sky focus:outline-none"></td>
+                    <td class="pr-2 py-1"><input id="pfOiCil" type="text" inputmode="decimal" placeholder="-0.50" class="w-full p-2 bg-brand-dark border border-slate-900/10 rounded-lg text-brand-ink focus:border-brand-sky focus:outline-none"></td>
+                    <td class="py-1"><input id="pfOiEje" type="text" inputmode="numeric" placeholder="85°" class="w-full p-2 bg-brand-dark border border-slate-900/10 rounded-lg text-brand-ink focus:border-brand-sky focus:outline-none"></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="grid grid-cols-2 gap-3">
+              <div>
+                <label class="block text-[9px] uppercase tracking-widest text-slate-500 font-extrabold mb-1.5">Adición (ADD) <span class="normal-case font-medium text-slate-600/70">opcional</span></label>
+                <input id="pfAdd" type="text" placeholder="+1.50" class="w-full p-2.5 bg-brand-dark border border-slate-900/10 rounded-lg text-sm text-brand-ink focus:border-brand-sky focus:outline-none">
+              </div>
+              <div>
+                <label class="block text-[9px] uppercase tracking-widest text-slate-500 font-extrabold mb-1.5">Distancia pupilar (DP) <span class="normal-case font-medium text-slate-600/70">opcional</span></label>
+                <input id="pfDp" type="text" placeholder="62mm" class="w-full p-2.5 bg-brand-dark border border-slate-900/10 rounded-lg text-sm text-brand-ink focus:border-brand-sky focus:outline-none">
+              </div>
+            </div>
+            <p class="text-[10px] text-slate-500 mt-2">Si su receta no trae cilindro, eje, adición o DP, deje esos campos vacíos — no pasa nada.</p>
+          </div>
+
+          <!-- Texto libre: como antes, para quien prefiera escribir a su manera o pegar el enlace de una foto -->
+          <div id="pfRecetaLibreWrap" class="hidden">
+            <textarea id="pfRecetaInput" rows="3" placeholder="Escriba su graduación (ej. OD -2.00 OI -1.50) o pegue el enlace de la foto de su receta" class="w-full p-3.5 bg-brand-navy border border-slate-900/10 rounded-xl text-sm text-brand-ink focus:border-brand-sky focus:outline-none"></textarea>
+          </div>
+
           <button type="button" onclick="pfConfirmReceta()" class="w-full mt-3 bg-gradient-to-r from-brand-sky to-brand-teal text-brand-ink font-bold py-3 rounded-xl transition-all hover:shadow-lg text-sm">Continuar</button>
           <p id="pfRecetaStatus" class="text-[11px] text-red-400 mt-2 text-center"></p>
         </div>
@@ -7136,6 +7227,8 @@
       tipoCompra: null,   // 'con_graduacion' | 'solo_armazon'
       graduacionModo: null, // 'receta' | 'examen'
       receta: '',
+      recetaModo: 'guiado', // 'guiado' | 'libre'
+      recetaEstructurada: { odEsf: '', odCil: '', odEje: '', oiEsf: '', oiCil: '', oiEje: '', add: '', dp: '' },
       tratamiento: null
     };
 
@@ -7147,6 +7240,8 @@
         tipoCompra: null,
         graduacionModo: null,
         receta: '',
+        recetaModo: 'guiado',
+        recetaEstructurada: { odEsf: '', odCil: '', odEje: '', oiEsf: '', oiCil: '', oiEje: '', add: '', dp: '' },
         tratamiento: null
       };
     }
@@ -7163,6 +7258,9 @@
         purchaseFlowState.tipoCompra = existing.tipoCompra || null;
         purchaseFlowState.graduacionModo = existing.graduacionInfo ? existing.graduacionInfo.modo : null;
         purchaseFlowState.receta = (existing.graduacionInfo && existing.graduacionInfo.receta) || '';
+        purchaseFlowState.recetaModo = (existing.graduacionInfo && existing.graduacionInfo.recetaModo) || 'guiado';
+        purchaseFlowState.recetaEstructurada = (existing.graduacionInfo && existing.graduacionInfo.recetaEstructurada)
+          || { odEsf: '', odCil: '', odEje: '', oiEsf: '', oiCil: '', oiEje: '', add: '', dp: '' };
         purchaseFlowState.tratamiento = existing.tratamientoElegido || null;
       }
 
@@ -7214,6 +7312,8 @@
         if (purchaseFlowState.graduacionModo === 'receta') {
           document.getElementById('pfRecetaWrap').classList.remove('hidden');
           document.getElementById('pfRecetaInput').value = purchaseFlowState.receta || '';
+          pfFillRecetaEstructurada();
+          pfSetRecetaModo(purchaseFlowState.recetaModo || 'guiado');
         } else if (purchaseFlowState.graduacionModo === 'examen') {
           document.getElementById('pfExamenWrap').classList.remove('hidden');
         }
@@ -7284,18 +7384,86 @@
       document.getElementById('pfRecetaStatus').textContent = '';
       if (modo === 'receta') {
         document.getElementById('pfRecetaInput').value = purchaseFlowState.receta || '';
+        pfFillRecetaEstructurada();
+        pfSetRecetaModo(purchaseFlowState.recetaModo || 'guiado');
       }
     }
 
+    // Alterna entre el formulario guiado (campos por ojo) y el texto libre.
+    function pfSetRecetaModo(modo) {
+      purchaseFlowState.recetaModo = modo;
+      const guiadoBtn = document.getElementById('pfRecetaModoGuiadoBtn');
+      const libreBtn = document.getElementById('pfRecetaModoLibreBtn');
+      const guiadoWrap = document.getElementById('pfRecetaGuiadoWrap');
+      const libreWrap = document.getElementById('pfRecetaLibreWrap');
+
+      const activo = 'bg-brand-sky text-brand-ink';
+      const inactivo = 'text-slate-500';
+      guiadoBtn.className = `flex-1 py-2 rounded-full text-[10px] font-bold uppercase tracking-wider transition-all ${modo === 'guiado' ? activo : inactivo}`;
+      libreBtn.className = `flex-1 py-2 rounded-full text-[10px] font-bold uppercase tracking-wider transition-all ${modo === 'libre' ? activo : inactivo}`;
+      guiadoWrap.classList.toggle('hidden', modo !== 'guiado');
+      libreWrap.classList.toggle('hidden', modo !== 'libre');
+      document.getElementById('pfRecetaStatus').textContent = '';
+    }
+
+    // Muestra/oculta el panel de ayuda que explica qué es cada dato y dónde encontrarlo.
+    function pfToggleRecetaHelp() {
+      const panel = document.getElementById('pfRecetaHelpPanel');
+      const btn = document.getElementById('pfRecetaHelpToggleBtn');
+      const abierto = panel.classList.contains('hidden');
+      panel.classList.toggle('hidden', !abierto);
+      btn.textContent = abierto ? '✕ Ocultar ayuda' : '❓ Necesito ayuda para poner estos datos';
+    }
+
+    // Rellena los inputs del formulario guiado con lo que ya se había capturado antes.
+    function pfFillRecetaEstructurada() {
+      const e = purchaseFlowState.recetaEstructurada || {};
+      const setVal = (id, val) => { const el = document.getElementById(id); if (el) el.value = val || ''; };
+      setVal('pfOdEsf', e.odEsf); setVal('pfOdCil', e.odCil); setVal('pfOdEje', e.odEje);
+      setVal('pfOiEsf', e.oiEsf); setVal('pfOiCil', e.oiCil); setVal('pfOiEje', e.oiEje);
+      setVal('pfAdd', e.add); setVal('pfDp', e.dp);
+    }
+
     function pfConfirmReceta() {
-      const val = document.getElementById('pfRecetaInput').value.trim();
       const status = document.getElementById('pfRecetaStatus');
-      if (!val) {
-        status.textContent = 'Escriba su graduación o pegue el enlace de su receta.';
+      status.textContent = '';
+
+      if (purchaseFlowState.recetaModo === 'libre') {
+        const val = document.getElementById('pfRecetaInput').value.trim();
+        if (!val) {
+          status.textContent = 'Escriba su graduación o pegue el enlace de su receta.';
+          return;
+        }
+        purchaseFlowState.receta = val;
+        pfShowStep(3);
         return;
       }
-      status.textContent = '';
-      purchaseFlowState.receta = val;
+
+      // Modo guiado: leemos los campos por ojo y armamos un texto legible para el pedido.
+      const getVal = id => document.getElementById(id).value.trim();
+      const estructurada = {
+        odEsf: getVal('pfOdEsf'), odCil: getVal('pfOdCil'), odEje: getVal('pfOdEje'),
+        oiEsf: getVal('pfOiEsf'), oiCil: getVal('pfOiCil'), oiEje: getVal('pfOiEje'),
+        add: getVal('pfAdd'), dp: getVal('pfDp')
+      };
+
+      if (!estructurada.odEsf && !estructurada.oiEsf) {
+        status.textContent = 'Ponga al menos la Esfera (ESF) de un ojo, o cambie a "Texto libre".';
+        return;
+      }
+
+      const partes = [];
+      if (estructurada.odEsf || estructurada.odCil || estructurada.odEje) {
+        partes.push(`OD: ${['ESF ' + (estructurada.odEsf || '—'), estructurada.odCil ? 'CIL ' + estructurada.odCil : '', estructurada.odEje ? 'EJE ' + estructurada.odEje + '°' : ''].filter(Boolean).join(' ')}`);
+      }
+      if (estructurada.oiEsf || estructurada.oiCil || estructurada.oiEje) {
+        partes.push(`OI: ${['ESF ' + (estructurada.oiEsf || '—'), estructurada.oiCil ? 'CIL ' + estructurada.oiCil : '', estructurada.oiEje ? 'EJE ' + estructurada.oiEje + '°' : ''].filter(Boolean).join(' ')}`);
+      }
+      if (estructurada.add) partes.push(`ADD: ${estructurada.add}`);
+      if (estructurada.dp) partes.push(`DP: ${estructurada.dp}`);
+
+      purchaseFlowState.recetaEstructurada = estructurada;
+      purchaseFlowState.receta = partes.join(' | ');
       pfShowStep(3);
     }
 
@@ -7331,7 +7499,12 @@
       item.tipoCompra = purchaseFlowState.tipoCompra;
       item.graduacion = purchaseFlowState.tipoCompra === 'con_graduacion' ? 'con' : 'sin';
       item.graduacionInfo = purchaseFlowState.tipoCompra === 'con_graduacion'
-        ? { modo: purchaseFlowState.graduacionModo, receta: purchaseFlowState.graduacionModo === 'receta' ? purchaseFlowState.receta : '' }
+        ? {
+            modo: purchaseFlowState.graduacionModo,
+            receta: purchaseFlowState.graduacionModo === 'receta' ? purchaseFlowState.receta : '',
+            recetaModo: purchaseFlowState.graduacionModo === 'receta' ? purchaseFlowState.recetaModo : null,
+            recetaEstructurada: purchaseFlowState.graduacionModo === 'receta' ? purchaseFlowState.recetaEstructurada : null
+          }
         : null;
       item.tratamientoElegido = purchaseFlowState.tipoCompra === 'con_graduacion' ? purchaseFlowState.tratamiento : null;
       saveCart();
