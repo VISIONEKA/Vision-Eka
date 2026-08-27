@@ -3049,7 +3049,9 @@
 
       try {
         const fb = await window.firebaseReady;
-        const items = (await fb.fetchProducts()).filter(p => !p.oculto && !p.esKids);
+        // El catálogo de Empresas SOLO muestra lentes de seguridad (esSeguridad: true).
+        // Nunca se mezclan con el catálogo público de Visión EKA ni con el de Kids.
+        const items = (await fb.fetchProducts()).filter(p => !p.oculto && p.esSeguridad);
 
         loading.classList.add('hidden');
 
