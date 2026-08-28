@@ -88,8 +88,8 @@
       .carousel-card .gal-compact-row { flex-direction: row; }
       .carousel-card .gal-compact-mt { margin-top: 0.5rem; }
       .carousel-card .gal-compact-icon-btn { flex: 1; padding-left: 0; padding-right: 0; }
-      .carousel-card .h-56 { height: 8.5rem; }
-      .carousel-card .p-6 { padding: 0.9rem; }
+      .carousel-card .h-56 { height: 14rem; }
+      .carousel-card .p-6 { padding: 1.2rem; }
     }
 
     .gallery-item { min-height: 100%; }
@@ -112,18 +112,18 @@
     .gallery-item h4 { font-size: 1rem; font-weight: 600; line-height: 1.3; margin: 6px 0; }
     .gallery-item [id^="galCartWrap-"] { width: 100%; }
     @media (max-width: 639px) {
-      .gallery-item { padding: 10px; border-radius: 10px; }
-      .gallery-item .gal-product-image { height: auto; aspect-ratio: 16 / 9; }
+      .gallery-item { padding: 16px; border-radius: 14px; }
+      .gallery-item .gal-product-image { height: auto; aspect-ratio: 3 / 4; }
       .gallery-item h4 {
-        font-size: 0.95rem;
-        margin: 5px 0;
+        font-size: 1.1rem;
+        margin: 8px 0;
         min-height: 0 !important;
         display: -webkit-box;
         -webkit-line-clamp: 3;
         -webkit-box-orient: vertical;
         overflow: hidden;
       }
-      .gallery-item [id^="galCartWrap-"] button { padding-top: 7px; padding-bottom: 7px; font-size: 0.72rem; }
+      .gallery-item [id^="galCartWrap-"] button { padding-top: 10px; padding-bottom: 10px; font-size: 0.85rem; }
       .gallery-item .buy-text-full { display: none; }
       .gallery-item .buy-text-short { display: inline; }
     }
@@ -3352,7 +3352,7 @@
         });
 
         if (masVendidos.length > 0) {
-          bestSellersRow.innerHTML = masVendidos.map(p => `<div class="flex-shrink-0 carousel-card w-36 sm:w-80 snap-start">${renderGalleryCard(`bestseller-${p.id}`, [p], 0)}</div>`).join('');
+          bestSellersRow.innerHTML = masVendidos.map(p => `<div class="flex-shrink-0 carousel-card w-56 sm:w-80 snap-start">${renderGalleryCard(`bestseller-${p.id}`, [p], 0)}</div>`).join('');
           bestSellersWrap.classList.remove('hidden');
           initCarouselAutoplay('bestSellersViewport');
         } else {
@@ -3394,7 +3394,7 @@
         });
 
         if (masVistosFinal.length > 0) {
-          mostViewedRow.innerHTML = masVistosFinal.map(p => `<div class="flex-shrink-0 carousel-card w-36 sm:w-80 snap-start">${renderGalleryCard(`mostviewed-${p.id}`, [p], 0)}</div>`).join('');
+          mostViewedRow.innerHTML = masVistosFinal.map(p => `<div class="flex-shrink-0 carousel-card w-56 sm:w-80 snap-start">${renderGalleryCard(`mostviewed-${p.id}`, [p], 0)}</div>`).join('');
           mostViewedWrap.classList.remove('hidden');
           initCarouselAutoplay('mostViewedViewport');
         } else {
