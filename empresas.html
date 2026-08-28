@@ -3213,7 +3213,7 @@
         addBtn.classList.remove('hidden');
         addBtn.onclick = () => addToCart(p.id);
         buyNowBtn.classList.remove('hidden');
-        buyNowBtn.onclick = () => openPurchaseFlow(p.id);
+        buyNowBtn.onclick = () => buyNowProduct(p.id);
       }
 
       document.getElementById('imgLightboxShareBtn').onclick = () => shareProductWhatsapp(p.id);
@@ -3309,7 +3309,9 @@
               <span id="galStock-${key}">${stockBadge}</span>
             </div>
             <div id="galCartWrap-${key}" class="flex flex-col gap-2">
-              ${agotado ? '' : `<button onclick="openPurchaseFlow('${p.id}')" class="w-full flex items-center justify-center gap-2 text-[10px] font-bold uppercase tracking-widest text-white bg-brand-ink rounded-full py-3">⚡ Comprar ahora</button><button onclick="addToCart('${p.id}')" id="galAddBtn-${key}" class="w-full flex items-center justify-center gap-2 text-[9px] font-bold uppercase tracking-widest text-brand-ink border border-brand-sky/40 rounded-full py-2">🛒 Agregar al carrito</button>`}
+              ${agotado ? '' : `<button onclick="addToCart('${p.id}')" id="galAddBtn-${key}" class="flex items-center justify-center gap-2 text-[10px] font-bold uppercase tracking-widest text-brand-ink bg-gradient-to-r from-brand-sky to-brand-teal rounded-full py-2.5 transition-all duration-300 hover:shadow-lg hover:shadow-brand-sky/30">
+                🛒 Agregar al carrito
+              </button>`}
               <!-- PROBADOR VIRTUAL DESACTIVADO TEMPORALMENTE: para reactivar, quite "hidden " del class de este <a> -->
               <a href="#simulator" class="hidden items-center justify-center gap-2 text-[10px] font-bold uppercase tracking-widest text-brand-sky border border-brand-sky/30 hover:bg-brand-sky/10 rounded-full py-2.5 transition-all duration-300">
                 <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
@@ -3366,26 +3368,6 @@
         el.classList.toggle('border-slate-900/10', i !== idx);
       });
     }
-
-    let purchaseFlowState = { productId: null, step: 1, add: false, dp: false };
-    function openPurchaseFlow(productId) {
-      purchaseFlowState = { productId, step: 1, add: false, dp: false };
-      if (!document.getElementById('businessPurchaseFlow')) document.body.insertAdjacentHTML('beforeend', '<div id="businessPurchaseFlow" class="fixed inset-0 z-[70] hidden items-center justify-center p-4 bg-black/60"><div class="bg-brand-dark rounded-3xl max-w-lg w-full max-h-[90vh] overflow-y-auto p-6"><div class="flex justify-between items-center mb-5"><h3 class="font-display font-bold text-lg text-brand-ink">Configura tus lentes</h3><button onclick="closePurchaseFlow()" class="text-xl">✕</button></div><div id="businessPurchaseFlowBody"></div></div></div>');
-      renderPurchaseFlow(); const modal = document.getElementById('businessPurchaseFlow'); modal.classList.remove('hidden'); modal.classList.add('flex');
-    }
-    function closePurchaseFlow() { const modal = document.getElementById('businessPurchaseFlow'); if (modal) { modal.classList.add('hidden'); modal.classList.remove('flex'); } }
-    function purchaseSelectType(type) { if (type === 'solo') { addToCart(purchaseFlowState.productId); closePurchaseFlow(); return; } purchaseFlowState.step = 2; renderPurchaseFlow(); }
-    function purchaseSelectSource(source) { if (source === 'examen') { closePurchaseFlow(); startCheckout(true); return; } purchaseFlowState.step = 3; renderPurchaseFlow(); }
-    function purchaseToggleAdd(value) { purchaseFlowState.add = value; document.getElementById('businessAddField')?.classList.toggle('hidden', !value); }
-    function purchaseToggleDp(value) { purchaseFlowState.dp = value; document.getElementById('businessDpField')?.classList.toggle('hidden', !value); }
-    function renderPurchaseFlow() {
-      const body = document.getElementById('businessPurchaseFlowBody'); if (!body) return;
-      if (purchaseFlowState.step === 4) { body.innerHTML = `<button onclick="purchaseFlowState.step=3;renderPurchaseFlow()" class="text-xs text-slate-500 mb-4">← Regresar</button><p class="text-sm font-bold text-brand-ink mb-3">¿Qué tratamiento deseas?</p><div class="grid gap-2">${['✨ Antirreflejante','💻 Protección para computadora (filtro de luz azul)','☀️ Protección UV / Sol','🌤️ Fotocromático','○ Sin tratamiento'].map(t => `<button onclick="purchaseSetTreatment('${t.replace(/'/g, "\\'")}')" class="text-left p-3 rounded-xl border-2 border-slate-900/10 text-xs font-bold">${t}</button>`).join('')}</div><p class="text-[10px] text-slate-500 mt-3">El precio del tratamiento se confirmará según las opciones disponibles del producto.</p>`; return; }
-      if (purchaseFlowState.step === 1) body.innerHTML = '<p class="text-sm font-bold mb-3">¿Cómo deseas adquirir tus lentes?</p><div class="grid gap-3"><button onclick="purchaseSelectType(\'graduated\')" class="text-left p-4 rounded-xl border-2 border-brand-sky font-bold">👓 Lentes con graduación<br><small class="font-normal text-slate-500">Continúa al flujo de receta o examen</small></button><button onclick="purchaseSelectType(\'solo\')" class="text-left p-4 rounded-xl border-2 border-slate-900/10 font-bold">🕶️ Solo armazón<br><small class="font-normal text-slate-500">Va directo al carrito</small></button></div>';
-      else if (purchaseFlowState.step === 2) body.innerHTML = '<button onclick="purchaseFlowState.step=1;renderPurchaseFlow()" class="text-xs text-slate-500 mb-4">← Regresar</button><p class="text-sm font-bold mb-3">¿Ya tienes tu graduación?</p><div class="grid gap-3"><button onclick="purchaseSelectSource(\'receta\')" class="text-left p-4 rounded-xl border-2 border-brand-sky font-bold">📋 Sí, tengo mi receta</button><button onclick="purchaseSelectSource(\'examen\')" class="text-left p-4 rounded-xl border-2 border-slate-900/10 font-bold">👁️ Necesito examen de la vista</button></div>';
-      else body.innerHTML = '<button onclick="purchaseFlowState.step=2;renderPurchaseFlow()" class="text-xs text-slate-500 mb-4">← Regresar</button><p class="text-sm font-bold mb-3">¿Cómo quieres ingresar tu receta?</p><div class="flex gap-2 mb-4"><button onclick="document.getElementById(\'businessRecipeForm\').classList.remove(\'hidden\')" class="flex-1 py-3 rounded-xl bg-brand-sky/20 text-xs font-bold">✨ Te ayudo paso a paso</button><button onclick="document.getElementById(\'businessRecipeForm\').classList.remove(\'hidden\')" class="flex-1 py-3 rounded-xl border text-xs font-bold">✍️ Prefiero escribirla</button></div><div id="businessRecipeForm"><p class="text-[11px] text-slate-500 mb-3">Escribe los valores exactamente como aparecen en tu receta. No los conviertas.<br>Ejemplos: ESF -2.50 · CIL -1.25 · EJE 90°</p><div class="grid grid-cols-2 gap-3">${['OD','OI'].map(eye => `<div><p class="font-bold text-xs text-brand-sky mb-2">👁️ OJO ${eye === 'OD' ? 'DERECHO' : 'IZQUIERDO'} (${eye})</p><input id="business${eye}ESF" type="number" step="0.25" placeholder="ESF/SPH" class="w-full p-2 mb-2 rounded-lg border bg-brand-dark"><input id="business${eye}CIL" type="number" step="0.25" placeholder="CIL/CYL" class="w-full p-2 mb-2 rounded-lg border bg-brand-dark"><select id="business${eye}EJE" class="w-full p-2 rounded-lg border bg-brand-dark"><option value="">EJE/AXIS</option>${Array.from({length:181},(_,i)=>`<option value="${i}">${i}°</option>`).join('')}</select></div>`).join('')}</div><p class="text-xs font-bold mt-4 mb-2">¿Tu receta tiene ADD / Adición?</p><div class="flex gap-2"><button onclick="purchaseToggleAdd(true)" class="px-4 py-2 border rounded-lg text-xs">Sí</button><button onclick="purchaseToggleAdd(false)" class="px-4 py-2 border rounded-lg text-xs">No</button></div><input id="businessAddField" type="number" step="0.25" placeholder="ADD" class="hidden w-full p-2 mt-2 rounded-lg border bg-brand-dark"><p class="text-xs font-bold mt-4 mb-2">¿Tienes tu DP?</p><div class="flex gap-2"><button onclick="purchaseToggleDp(true)" class="px-4 py-2 border rounded-lg text-xs">Sí</button><button onclick="purchaseToggleDp(false)" class="px-4 py-2 border rounded-lg text-xs">No, necesito ayuda</button></div><input id="businessDpField" type="number" placeholder="DP en mm" class="hidden w-full p-2 mt-2 rounded-lg border bg-brand-dark"><details class="mt-4 text-xs text-slate-500"><summary class="font-bold text-brand-ink">¿Dónde encuentro estos datos en mi receta?</summary><p class="mt-2">OD es ojo derecho y OI ojo izquierdo. ESF/SPH es la graduación, CIL/CYL el astigmatismo, EJE acompaña al cilindro y ADD es la adición para cerca. Si no tienes DP, nuestro equipo puede ayudarte.</p></details><button onclick="confirmPurchaseRecipe()" class="w-full mt-4 py-3 rounded-xl bg-gradient-to-r from-brand-sky to-brand-teal font-bold">Confirmar graduación</button><p id="businessRecipeStatus" class="text-xs text-red-400 mt-2"></p></div>';
-    }
-    function confirmPurchaseRecipe() { const val = id => document.getElementById(id)?.value.trim() || ''; const receta = { odEsf:val('businessODESF'), odCil:val('businessODCIL'), odEje:val('businessODEJE'), oiEsf:val('businessOIESF'), oiCil:val('businessOICIL'), oiEje:val('businessOIEJE'), add:purchaseFlowState.add ? val('businessAddField') : '', dp:purchaseFlowState.dp ? val('businessDpField') : '' }; if (!receta.odEsf && !receta.oiEsf) { document.getElementById('businessRecipeStatus').textContent = 'Indica la esfera de al menos un ojo para continuar.'; return; } if (!cart.find(it => it.id === purchaseFlowState.productId)) addToCart(purchaseFlowState.productId); const item = cart.find(it => it.id === purchaseFlowState.productId); if (item) { item.tipoCompra = 'con_graduacion'; item.graduacion = 'con'; item.graduacionInfo = { modo:'receta', recetaEstructurada:receta, receta:JSON.stringify(receta) }; saveCart(); } closePurchaseFlow(); setCheckoutTipo('receta'); document.getElementById('checkoutReceta').value = JSON.stringify(receta); startCheckout(false); }
 
     let galleryActiveCategory = null; // null = ninguna categoría elegida todavía (solo se ven las tarjetas)
     let galleryActiveGenero = null; // 'mujer' | 'hombre' | 'unisex' | null
@@ -5939,14 +5921,12 @@
         const thumb = it.img
           ? `<img src="${it.img}" class="w-14 h-14 object-cover rounded-xl bg-brand-navy border border-slate-900/10 flex-shrink-0">`
           : `<div class="w-14 h-14 rounded-xl bg-brand-navy border border-slate-900/10 flex items-center justify-center text-xl flex-shrink-0">🕶️</div>`;
-        const purchaseSummary = it.tipoCompra ? `<div class="mt-1 text-[10px] text-slate-500"><p><strong class="text-brand-ink">Tipo:</strong> ${it.tipoCompra === 'solo_armazon' ? '🕶️ Solo armazón' : '👓 Lentes con graduación'}</p>${it.tipoCompra !== 'solo_armazon' ? `<p><strong class="text-brand-ink">Graduación:</strong> ${escapeHtml(it.graduacionInfo?.receta || 'Receta capturada')}</p>${it.tratamientoElegido ? `<p><strong class="text-brand-ink">Tratamiento:</strong> ${escapeHtml(it.tratamientoElegido)}</p>` : ''}` : ''}<p><strong class="text-brand-ink">Precio unitario:</strong> ${precioText}</p><p><strong class="text-brand-ink">Total:</strong> $${(Number(it.precio || 0) * it.cantidad).toLocaleString('es-MX', { minimumFractionDigits: 2 })}</p></div>` : '';
         return `
         <div class="flex items-center gap-3">
           ${thumb}
           <div class="flex-1 min-w-0">
             <p class="text-sm font-semibold text-brand-ink truncate">${it.modelo}</p>
             <p class="text-[11px] text-slate-500 truncate">${it.color} · ${precioText}</p>
-            ${purchaseSummary}
             ${(it.tratamientos && it.tratamientos.length) ? `<p class="text-[10px] text-brand-teal truncate">${it.tratamientos.join(' · ')}</p>` : ''}
             <div class="flex items-center gap-2 mt-1">
               <button onclick="cartChangeQty('${it.id}', -1)" class="w-6 h-6 rounded-full bg-brand-navy border border-slate-900/10 text-brand-ink text-xs font-bold flex items-center justify-center">−</button>
