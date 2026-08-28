@@ -67,8 +67,13 @@
       scroll-behavior: smooth;
       -webkit-overflow-scrolling: touch;
       scrollbar-width: none;
+      scroll-snap-type: x mandatory;
     }
     .carousel-track::-webkit-scrollbar { display: none; }
+
+    .carousel-card {
+      scroll-snap-align: center;
+    }
 
     /* Llama la atención hacia el botón de "Más información", para que se note que es tocable */
     @keyframes blinkAttention {
@@ -88,7 +93,7 @@
       .carousel-card .gal-compact-row { flex-direction: row; }
       .carousel-card .gal-compact-mt { margin-top: 0.5rem; }
       .carousel-card .gal-compact-icon-btn { flex: 1; padding-left: 0; padding-right: 0; }
-      .carousel-card .h-56 { height: 14rem; }
+      .carousel-card .h-56 { height: 11.2rem; }
       .carousel-card .p-6 { padding: 1.2rem; }
     }
 
@@ -105,7 +110,7 @@
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
     }
     .gallery-item .gal-product-image {
-      height: 210px;
+      height: 168px;
       flex-shrink: 0;
     }
     .gallery-item .gal-product-image img { width: 100%; height: 100%; object-fit: contain; }
@@ -113,7 +118,7 @@
     .gallery-item [id^="galCartWrap-"] { width: 100%; }
     @media (max-width: 639px) {
       .gallery-item { padding: 16px; border-radius: 14px; }
-      .gallery-item .gal-product-image { height: auto; aspect-ratio: 3 / 4; }
+      .gallery-item .gal-product-image { height: auto; aspect-ratio: 3 / 3.2; }
       .gallery-item h4 {
         font-size: 1.1rem;
         margin: 8px 0;
@@ -3352,7 +3357,7 @@
         });
 
         if (masVendidos.length > 0) {
-          bestSellersRow.innerHTML = masVendidos.map(p => `<div class="flex-shrink-0 carousel-card w-56 sm:w-80 snap-start">${renderGalleryCard(`bestseller-${p.id}`, [p], 0)}</div>`).join('');
+          bestSellersRow.innerHTML = masVendidos.map(p => `<div class="flex-shrink-0 carousel-card w-56 sm:w-80 snap-center">${renderGalleryCard(`bestseller-${p.id}`, [p], 0)}</div>`).join('');
           bestSellersWrap.classList.remove('hidden');
           initCarouselAutoplay('bestSellersViewport');
         } else {
@@ -3394,7 +3399,7 @@
         });
 
         if (masVistosFinal.length > 0) {
-          mostViewedRow.innerHTML = masVistosFinal.map(p => `<div class="flex-shrink-0 carousel-card w-56 sm:w-80 snap-start">${renderGalleryCard(`mostviewed-${p.id}`, [p], 0)}</div>`).join('');
+          mostViewedRow.innerHTML = masVistosFinal.map(p => `<div class="flex-shrink-0 carousel-card w-56 sm:w-80 snap-center">${renderGalleryCard(`mostviewed-${p.id}`, [p], 0)}</div>`).join('');
           mostViewedWrap.classList.remove('hidden');
           initCarouselAutoplay('mostViewedViewport');
         } else {
