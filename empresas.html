@@ -77,10 +77,13 @@
     .gallery-item [id^="galWrap-"] img { width: 100%; height: 100%; object-fit: contain; padding: 12px; }
     .gallery-item h4 { font-size: 1rem; font-weight: 600; line-height: 1.3; margin: 6px 0; }
     .gallery-item [id^="galCartWrap-"] button { padding-top: 7px; padding-bottom: 7px; font-size: 0.72rem; }
+    .gallery-item .cart-icon { display: none; }
     @media (max-width: 768px) {
       .gallery-item [id^="galWrap-"] { height: 165px; }
       .gallery-item { padding: 10px; border-radius: 10px; }
       .gallery-item h4 { font-size: 0.95rem; margin: 5px 0; }
+      .gallery-item .cart-label { display: none; }
+      .gallery-item .cart-icon { display: inline; font-size: 1rem; }
     }
     @media (max-width: 640px) {
       .best-sellers-track { animation-duration: 26s; }
@@ -3327,7 +3330,7 @@
               <span id="galStock-${key}">${stockBadge}</span>
             </div>
             <div id="galCartWrap-${key}" class="flex flex-col gap-2">
-              ${agotado ? '' : `<button onclick="openPurchaseFlow('${p.id}')" class="w-full flex items-center justify-center gap-2 text-[9px] font-bold uppercase tracking-widest text-white bg-brand-ink rounded-full py-2">⚡ Comprar ahora</button><button onclick="addToCart('${p.id}')" id="galAddBtn-${key}" class="w-full flex items-center justify-center gap-2 text-[9px] font-bold uppercase tracking-widest text-brand-ink border border-brand-sky/40 rounded-full py-1.5">🛒 Agregar al carrito</button>`}
+              ${agotado ? '' : `<button onclick="openPurchaseFlow('${p.id}')" class="w-full flex items-center justify-center gap-2 text-[9px] font-bold uppercase tracking-widest text-white bg-brand-ink rounded-full py-2">⚡ Comprar ahora</button><button onclick="addToCart('${p.id}')" id="galAddBtn-${key}" aria-label="Agregar al carrito" class="w-full flex items-center justify-center gap-2 text-[9px] font-bold uppercase tracking-widest text-brand-ink border border-brand-sky/40 rounded-full py-1.5"><span class="cart-label">🛒 Agregar al carrito</span><span class="cart-icon">🛒</span></button>`}
               <!-- PROBADOR VIRTUAL DESACTIVADO TEMPORALMENTE: para reactivar, quite "hidden " del class de este <a> -->
               <a href="#simulator" class="hidden items-center justify-center gap-2 text-[10px] font-bold uppercase tracking-widest text-brand-sky border border-brand-sky/30 hover:bg-brand-sky/10 rounded-full py-2.5 transition-all duration-300">
                 <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
@@ -3385,11 +3388,14 @@
       });
     }
 
+    let purchaseFlowState = { productId: null, receta: null };
     function openPurchaseFlow(productId) {
+      purchaseFlowState.productId = productId;
       const existing = document.getElementById('businessPurchaseChoice');
       if (existing) existing.remove();
-      document.body.insertAdjacentHTML('beforeend', `<div id="businessPurchaseChoice" class="fixed inset-0 z-[70] flex items-center justify-center p-4 bg-black/60"><div class="bg-brand-dark rounded-3xl max-w-md w-full p-6"><div class="flex items-center justify-between mb-5"><h3 class="font-display font-bold text-lg text-brand-ink">¿Cómo deseas adquirir tus lentes?</h3><button onclick="document.getElementById('businessPurchaseChoice').remove()" class="text-xl">✕</button></div><div class="grid gap-3"><button onclick="document.getElementById('businessPurchaseChoice').remove(); startCheckout(false)" class="text-left p-4 rounded-xl border-2 border-brand-sky font-bold">👓 Lentes con graduación<br><span class="text-xs font-normal text-slate-500">Continúa al flujo de receta o examen</span></button><button onclick="document.getElementById('businessPurchaseChoice').remove(); addToCart('${productId}')" class="text-left p-4 rounded-xl border-2 border-slate-900/10 font-bold">🕶️ Solo armazón<br><span class="text-xs font-normal text-slate-500">Va directo al carrito</span></button></div></div></div>`);
+      document.body.insertAdjacentHTML('beforeend', `<div id="businessPurchaseChoice" class="fixed inset-0 z-[70] flex items-center justify-center p-4 bg-black/60"><div class="bg-brand-dark rounded-3xl max-w-md w-full p-6"><div class="flex items-center justify-between mb-5"><h3 class="font-display font-bold text-lg text-brand-ink">¿Cómo deseas adquirir tus lentes?</h3><button onclick="document.getElementById('businessPurchaseChoice').remove()" class="text-xl">✕</button></div><div class="grid gap-3"><button onclick="document.getElementById('businessPurchaseChoice').remove(); startCheckout(false)" class="text-left p-4 rounded-xl border-2 border-brand-sky font-bold">👓 Lentes con graduación<br><span class="text-xs font-normal text-slate-500">Continúa al flujo de receta o examen</span></button><button onclick="document.getElementById('businessPurchaseChoice').remove(); addToCart('${productId}')" class="text-left p-4 rounded-xl border-2 border-slate-900/10 font-bold">🕶️ Solo armazón<br><span class="text-xs font-normal text-slate-500">Va directo al carrito</span></button></div><button type="button" onclick="document.getElementById('businessRecipePhotoInput').click()" class="w-full mt-4 py-2 rounded-xl border text-xs font-bold">📷 Subir foto de mi receta</button><input id="businessRecipePhotoInput" type="file" accept="image/*" capture="environment" class="hidden" onchange="uploadBusinessRecipePhoto(this)"><p id="businessRecipePhotoStatus" class="text-[10px] text-slate-500 mt-2"></p></div></div>`);
     }
+    async function uploadBusinessRecipePhoto(input) { const file = input.files && input.files[0]; if (!file || !file.type.startsWith('image/')) return; const status = document.getElementById('businessRecipePhotoStatus'); status.textContent = 'Subiendo receta...'; try { const url = await (await window.firebaseReady).uploadRecipeImage(file, purchaseFlowState.productId); if (!cart.find(it => it.id === purchaseFlowState.productId)) addToCart(purchaseFlowState.productId); const item = cart.find(it => it.id === purchaseFlowState.productId); item.tipoCompra = 'con_graduacion'; item.graduacion = 'con'; item.graduacionInfo = { modo: 'foto', fotoUrl: url, receta: `Foto de receta: ${url}` }; saveCart(); status.textContent = 'Foto guardada en tu pedido.'; document.getElementById('businessPurchaseChoice')?.remove(); document.getElementById('checkoutReceta').value = `Foto de receta: ${url}`; setCheckoutTipo('receta'); startCheckout(false); } catch (error) { status.textContent = 'No se pudo subir la foto. Intenta de nuevo.'; } }
 
     let galleryActiveCategory = null; // null = ninguna categoría elegida todavía (solo se ven las tarjetas)
     let galleryActiveGenero = null; // 'mujer' | 'hombre' | 'unisex' | null
@@ -6770,6 +6776,7 @@
         createdAt: serverTimestamp()
       });
     }
+    async function uploadRecipeImage(file, productId) { const path = `recetas/${productId || 'pedido'}-${Date.now()}-${String(file.name || 'receta').replace(/[^a-z0-9._-]/gi, '_')}`; const imageRef = ref(storage, path); await uploadBytes(imageRef, file, { contentType: file.type }); return getDownloadURL(imageRef); }
 
     async function updateProduct(id, data, imgUrls) {
       const imgs = (Array.isArray(imgUrls) ? imgUrls : (imgUrls ? [imgUrls] : [])).map(u => String(u).trim()).filter(Boolean);
@@ -7148,6 +7155,7 @@ async function deleteProduct(id, storagePaths) {
       addCategory,
       fetchProducts,
       addProduct,
+      uploadRecipeImage,
       fetchHeroConfig,
       saveHeroConfig,
       updateProduct,

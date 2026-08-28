@@ -2398,9 +2398,12 @@
 
           <!-- Sub-pestañas: formulario guiado vs texto libre -->
           <div class="flex gap-2 mb-3 p-1 bg-brand-navy rounded-full">
+            <button type="button" onclick="document.getElementById('pfRecetaFotoInput').click()" class="flex-1 py-2 rounded-full text-[10px] font-bold uppercase tracking-wider transition-all">📷 Subir foto</button>
             <button type="button" onclick="pfSetRecetaModo('guiado')" id="pfRecetaModoGuiadoBtn" class="flex-1 py-2 rounded-full text-[10px] font-bold uppercase tracking-wider transition-all">📝 Formulario guiado</button>
             <button type="button" onclick="pfSetRecetaModo('libre')" id="pfRecetaModoLibreBtn" class="flex-1 py-2 rounded-full text-[10px] font-bold uppercase tracking-wider transition-all">✍️ Texto libre</button>
           </div>
+          <input id="pfRecetaFotoInput" type="file" accept="image/*" capture="environment" class="hidden" onchange="pfUploadRecipePhoto(this)">
+          <p id="pfRecetaFotoStatus" class="text-[10px] text-slate-500 mb-3"></p>
 
           <!-- Botón de ayuda: explica qué es cada dato y dónde encontrarlo -->
           <button type="button" onclick="pfToggleRecetaHelp()" id="pfRecetaHelpToggleBtn" class="w-full flex items-center justify-center gap-2 text-[11px] font-semibold text-brand-sky border border-brand-sky/30 hover:bg-brand-sky/10 rounded-xl py-2.5 mb-3 transition-all">
@@ -7493,6 +7496,24 @@
       document.getElementById('pfRecetaStatus').textContent = '';
     }
 
+    async function pfUploadRecipePhoto(input) {
+      const file = input.files && input.files[0];
+      if (!file || !file.type.startsWith('image/')) return;
+      const status = document.getElementById('pfRecetaFotoStatus');
+      status.textContent = 'Subiendo receta...';
+      try {
+        const fb = await window.firebaseReady;
+        const url = await fb.uploadRecipeImage(file, purchaseFlowState.productId);
+        purchaseFlowState.receta = `Foto de receta: ${url}`;
+        purchaseFlowState.recetaEstructurada = { fotoUrl: url };
+        status.textContent = 'Foto guardada. Puedes continuar.';
+        pfShowStep(3);
+      } catch (error) {
+        console.error('No se pudo subir la receta:', error);
+        status.textContent = 'No se pudo subir la foto. Intenta de nuevo.';
+      }
+    }
+
     function pfSetOptionalField(field, enabled) {
       const wrap = document.getElementById(field === 'add' ? 'pfAddWrap' : 'pfDpWrap');
       if (wrap) wrap.classList.toggle('hidden', !enabled);
@@ -8667,6 +8688,14 @@
       });
     }
 
+    async function uploadRecipeImage(file, productId) {
+      const safeName = String(file.name || 'receta').replace(/[^a-z0-9._-]/gi, '_');
+      const path = `recetas/${productId || 'pedido'}-${Date.now()}-${safeName}`;
+      const imageRef = ref(storage, path);
+      await uploadBytes(imageRef, file, { contentType: file.type });
+      return getDownloadURL(imageRef);
+    }
+
     async function updateProduct(id, data, imgUrls) {
       const imgs = (Array.isArray(imgUrls) ? imgUrls : (imgUrls ? [imgUrls] : [])).map(u => String(u).trim()).filter(Boolean);
       const tratamientos = (Array.isArray(data.tratamientos) ? data.tratamientos : []).map(t => String(t).trim()).filter(Boolean);
@@ -9097,6 +9126,7 @@ async function deleteProduct(id, storagePaths) {
       fetchExtraImgConfig,
       saveExtraImgConfig,
       addProduct,
+      uploadRecipeImage,
       updateProduct,
       updateProductVisibility,
       deleteProduct,
