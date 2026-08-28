@@ -62,6 +62,26 @@
     ::-webkit-scrollbar-thumb { background: #86B8CB; border-radius: 10px; }
     .scrollbar-hide::-webkit-scrollbar { display: none; }
     .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+    .gallery-product-card {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      background: #ffffff;
+      border-radius: 12px;
+      padding: 12px;
+      height: 100%;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    }
+    .gallery-product-card [id^="galWrap-"] { height: 210px; flex-shrink: 0; }
+    .gallery-product-card [id^="galWrap-"] img { width: 100%; height: 100%; object-fit: contain; }
+    .gallery-product-card h4 { font-size: 1rem; font-weight: 600; line-height: 1.3; margin: 6px 0; }
+    .gallery-product-card [id^="galCartWrap-"] { width: 100%; }
+    @media (max-width: 768px) {
+      .gallery-product-card { padding: 10px; border-radius: 10px; }
+      .gallery-product-card [id^="galWrap-"] { height: 165px; }
+      .gallery-product-card h4 { font-size: 0.95rem; margin: 5px 0; }
+      .gallery-product-card [id^="galCartWrap-"] button { padding-top: 7px; padding-bottom: 7px; font-size: 0.72rem; }
+    }
 
     .bento-card {
       transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
@@ -1474,13 +1494,13 @@
       ` : '';
 
       return `
-        <div class="bento-card rounded-3xl overflow-hidden bg-brand-dark flex flex-col">
-          <div class="h-48 relative overflow-hidden bg-slate-900 flex items-center justify-center" id="galWrap-${key}">
+          <div class="bento-card gallery-product-card rounded-3xl overflow-hidden bg-brand-dark flex flex-col">
+          <div class="h-40 sm:h-48 relative overflow-hidden bg-brand-mid flex items-center justify-center" id="galWrap-${key}">
             ${buildKidsGalWrapHtml(key, p)}
           </div>
-          <div class="p-6 flex flex-col flex-grow">
+          <div class="p-4 sm:p-6 flex flex-col flex-grow">
             <span class="text-[9px] font-extrabold text-brand-coral uppercase tracking-widest mb-1.5 block">${escapeHtml(p.categoria)}</span>
-            <h4 class="font-display font-bold text-base text-brand-ink mb-1">${escapeHtml(p.modelo)}</h4>
+            <h4 class="font-display font-bold text-sm sm:text-base leading-tight text-brand-ink mb-1 min-h-[2.5rem]">${escapeHtml(p.modelo)}</h4>
             ${swatches}
             <p id="galColor-${key}" class="text-xs text-slate-500 mb-2">Color: ${escapeHtml(p.color)}</p>
             <div id="galTratamientos-${key}">${(p.tratamientos && p.tratamientos.length) ? `<div class="flex flex-wrap gap-1 mb-3">${p.tratamientos.map(t => `<span class="text-[8px] font-bold uppercase tracking-wide text-brand-sky bg-brand-sky/10 px-2 py-0.5 rounded-full">${escapeHtml(t)}</span>`).join('')}</div>` : '<div class="mb-1"></div>'}</div>
@@ -1489,7 +1509,7 @@
               <span id="galStock-${key}">${stockBadge}</span>
             </div>
             <div id="galCartWrap-${key}" class="flex flex-col gap-2">
-              ${agotado ? '' : `<button onclick="openPurchaseFlow('${p.id}')" class="w-full flex items-center justify-center gap-2 text-[10px] font-bold uppercase tracking-widest text-white bg-brand-ink rounded-full py-3">⚡ Comprar ahora</button><button onclick="addToCart('${p.id}')" id="galAddBtn-${key}" class="w-full flex items-center justify-center gap-2 text-[9px] font-bold uppercase tracking-widest text-brand-ink border border-brand-coral/40 rounded-full py-2">🛒 Agregar al carrito</button>`}
+              ${agotado ? '' : `<button onclick="openPurchaseFlow('${p.id}')" class="w-full flex items-center justify-center gap-2 text-[9px] font-bold uppercase tracking-widest text-white bg-brand-ink rounded-full py-2">⚡ Comprar ahora</button><button onclick="addToCart('${p.id}')" id="galAddBtn-${key}" class="w-full flex items-center justify-center gap-2 text-[9px] font-bold uppercase tracking-widest text-brand-ink border border-brand-coral/40 rounded-full py-1.5">🛒 Agregar al carrito</button>`}
               <!-- PROBADOR VIRTUAL DESACTIVADO TEMPORALMENTE: para reactivar, quite "hidden " del class de este <a> -->
               <a href="#pruebatelos" class="hidden items-center justify-center gap-2 text-[10px] font-bold uppercase tracking-widest text-brand-coral border border-brand-coral/30 hover:bg-brand-coral/10 rounded-full py-2.5 transition-all duration-300">
                 📸 Pruébatelo en vivo
@@ -1537,7 +1557,7 @@
       } else if (addBtn) {
         addBtn.setAttribute('onclick', `addToCart('${p.id}')`);
       } else {
-        cartWrap.insertAdjacentHTML('afterbegin', `<button onclick="addToCart('${p.id}')" id="galAddBtn-${key}" class="flex items-center justify-center gap-2 text-[10px] font-bold uppercase tracking-widest text-brand-ink bg-gradient-to-r from-brand-coral to-brand-sun rounded-full py-2.5 transition-all duration-300 hover:shadow-lg hover:shadow-brand-coral/30">🛒 Agregar al carrito</button>`);
+        cartWrap.insertAdjacentHTML('afterbegin', `<button onclick="addToCart('${p.id}')" id="galAddBtn-${key}" class="w-full flex items-center justify-center gap-2 text-[9px] font-bold uppercase tracking-widest text-brand-ink border border-brand-coral/40 rounded-full py-1.5">🛒 Agregar al carrito</button>`);
       }
 
       document.querySelectorAll(`.gal-swatch-${key}`).forEach((el, i) => {
