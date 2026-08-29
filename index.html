@@ -2264,38 +2264,49 @@
       <!-- Configurador de mica: solo se muestra cuando el pedido es con graduación -->
       <div id="checkoutMicaWrap" class="hidden mb-4 p-4 bg-brand-navy rounded-2xl border border-slate-900/10">
         <p class="text-xs font-bold text-brand-ink mb-3">🔧 Configure su mica</p>
+        <p class="text-[10px] text-brand-teal font-semibold mb-3">🎉 Promoción de septiembre: mica blanca (visión sencilla) hasta ±3.00 dioptrías, sin costo adicional.</p>
 
         <label class="block text-[9px] uppercase tracking-widest text-slate-500 font-extrabold mb-2">Tipo de mica</label>
         <div class="grid grid-cols-3 gap-2 mb-4">
-          <button type="button" onclick="setCheckoutMicaTipo('monofocal')" id="checkoutMicaTipoMonofocalBtn" class="checkout-mica-tipo-btn text-center p-2.5 rounded-xl border-2 border-brand-sky text-brand-sky text-[11px] font-bold transition-all">Monofocal<br><span class="font-normal normal-case text-[9px] text-slate-500">Visión sencilla</span></button>
-          <button type="button" onclick="setCheckoutMicaTipo('bifocal')" id="checkoutMicaTipoBifocalBtn" class="checkout-mica-tipo-btn text-center p-2.5 rounded-xl border-2 border-slate-900/10 text-slate-500 text-[11px] font-bold transition-all">Bifocal<br><span class="font-normal normal-case text-[9px] text-slate-500">Dos distancias</span></button>
-          <button type="button" onclick="setCheckoutMicaTipo('progresiva')" id="checkoutMicaTipoProgresivaBtn" class="checkout-mica-tipo-btn text-center p-2.5 rounded-xl border-2 border-slate-900/10 text-slate-500 text-[11px] font-bold transition-all">Progresiva<br><span class="font-normal normal-case text-[9px] text-slate-500">Multifocal</span></button>
+          <button type="button" onclick="setCheckoutMicaTipo('monofocal')" id="checkoutMicaTipoMonofocalBtn" class="checkout-mica-tipo-btn text-center p-2.5 rounded-xl border-2 border-brand-sky text-brand-sky text-[11px] font-bold transition-all">Monofocal<br><span class="font-normal normal-case text-[9px] text-slate-500">Visión sencilla · $0</span></button>
+          <button type="button" onclick="setCheckoutMicaTipo('bifocal')" id="checkoutMicaTipoBifocalBtn" class="checkout-mica-tipo-btn text-center p-2.5 rounded-xl border-2 border-slate-900/10 text-slate-500 text-[11px] font-bold transition-all">Bifocal FT-28<br><span class="font-normal normal-case text-[9px] text-slate-500">Dos distancias · $1,290</span></button>
+          <button type="button" onclick="setCheckoutMicaTipo('progresiva')" id="checkoutMicaTipoProgresivaBtn" class="checkout-mica-tipo-btn text-center p-2.5 rounded-xl border-2 border-slate-900/10 text-slate-500 text-[11px] font-bold transition-all">Progresivo Plus<br><span class="font-normal normal-case text-[9px] text-slate-500">Multifocal · $1,890</span></button>
         </div>
 
-        <label class="block text-[9px] uppercase tracking-widest text-slate-500 font-extrabold mb-2">Grosor / índice de la mica</label>
+        <label class="block text-[9px] uppercase tracking-widest text-slate-500 font-extrabold mb-2">Material de la mica</label>
         <div class="grid grid-cols-3 gap-2 mb-1">
-          <button type="button" onclick="setCheckoutMicaIndice('estandar')" id="checkoutMicaIndiceEstandarBtn" class="checkout-mica-indice-btn text-center p-2.5 rounded-xl border-2 border-brand-sky text-brand-sky text-[11px] font-bold transition-all">Estándar<br><span class="font-normal normal-case text-[9px] text-slate-500">1.56</span></button>
-          <button type="button" onclick="setCheckoutMicaIndice('delgado')" id="checkoutMicaIndiceDelgadoBtn" class="checkout-mica-indice-btn text-center p-2.5 rounded-xl border-2 border-slate-900/10 text-slate-500 text-[11px] font-bold transition-all">Delgado<br><span class="font-normal normal-case text-[9px] text-slate-500">1.61</span></button>
-          <button type="button" onclick="setCheckoutMicaIndice('ultradelgado')" id="checkoutMicaIndiceUltradelgadoBtn" class="checkout-mica-indice-btn text-center p-2.5 rounded-xl border-2 border-slate-900/10 text-slate-500 text-[11px] font-bold transition-all">Ultra delgado<br><span class="font-normal normal-case text-[9px] text-slate-500">1.67+</span></button>
+          <button type="button" onclick="setCheckoutMicaIndice('estandar')" id="checkoutMicaIndiceEstandarBtn" class="checkout-mica-indice-btn text-center p-2.5 rounded-xl border-2 border-brand-sky text-brand-sky text-[11px] font-bold transition-all">Estándar<br><span class="font-normal normal-case text-[9px] text-slate-500">Incluido · $0</span></button>
+          <button type="button" onclick="setCheckoutMicaIndice('hiindex')" id="checkoutMicaIndiceHiindexBtn" class="checkout-mica-indice-btn text-center p-2.5 rounded-xl border-2 border-slate-900/10 text-slate-500 text-[11px] font-bold transition-all">Hi Index<br><span class="font-normal normal-case text-[9px] text-slate-500">Más delgada · $680</span></button>
+          <button type="button" onclick="setCheckoutMicaIndice('policarbonato')" id="checkoutMicaIndicePolicarbonatoBtn" class="checkout-mica-indice-btn text-center p-2.5 rounded-xl border-2 border-slate-900/10 text-slate-500 text-[11px] font-bold transition-all">Policarbonato<br><span class="font-normal normal-case text-[9px] text-slate-500">Resistente · $890</span></button>
         </div>
-        <p class="text-[10px] text-slate-500 mb-4">Entre más fuerte su graduación, más conviene un índice alto: la mica queda más delgada y ligera.</p>
+        <p class="text-[10px] text-slate-500 mb-4">Entre más fuerte su graduación, más conviene un material Hi Index o Policarbonato: la mica queda más delgada, ligera y resistente.</p>
 
         <label class="block text-[9px] uppercase tracking-widest text-slate-500 font-extrabold mb-2">Tratamientos que desea <span class="normal-case text-slate-600/70 font-medium">(opcional)</span></label>
         <div class="grid grid-cols-2 gap-2 mb-3">
           <label class="flex items-center gap-2 text-[11px] text-slate-500 bg-brand-dark border border-slate-900/10 rounded-xl px-3 py-2.5 cursor-pointer">
-            <input type="checkbox" value="Antirreflejante" onchange="toggleCheckoutMicaTratamiento('Antirreflejante', this.checked)" class="accent-brand-sky"> Antirreflejante
+            <input type="checkbox" value="Antirreflejante" onchange="toggleCheckoutMicaTratamiento('Antirreflejante', this.checked)" class="accent-brand-sky"> Antirreflejante <span class="text-slate-600">(incluido)</span>
           </label>
           <label class="flex items-center gap-2 text-[11px] text-slate-500 bg-brand-dark border border-slate-900/10 rounded-xl px-3 py-2.5 cursor-pointer">
-            <input type="checkbox" value="Antivaho" onchange="toggleCheckoutMicaTratamiento('Antivaho', this.checked)" class="accent-brand-sky"> Antivaho
+            <input type="checkbox" value="Antivaho" onchange="toggleCheckoutMicaTratamiento('Antivaho', this.checked)" class="accent-brand-sky"> Antivaho <span class="text-slate-600">(incluido)</span>
           </label>
           <label class="flex items-center gap-2 text-[11px] text-slate-500 bg-brand-dark border border-slate-900/10 rounded-xl px-3 py-2.5 cursor-pointer">
-            <input type="checkbox" value="Fotocromático" onchange="toggleCheckoutMicaTratamiento('Fotocromático', this.checked)" class="accent-brand-sky"> Fotocromático <span class="text-slate-600">(oscurece con el sol)</span>
+            <input type="checkbox" value="Fotocromático" onchange="toggleCheckoutMicaTratamiento('Fotocromático', this.checked)" class="accent-brand-sky"> Fotocromático <span class="text-slate-600">(oscurece con el sol) · $890</span>
           </label>
           <label class="flex items-center gap-2 text-[11px] text-slate-500 bg-brand-dark border border-slate-900/10 rounded-xl px-3 py-2.5 cursor-pointer">
-            <input type="checkbox" value="Filtro de luz azul" onchange="toggleCheckoutMicaTratamiento('Filtro de luz azul', this.checked)" class="accent-brand-sky"> Filtro de luz azul
+            <input type="checkbox" value="Polarizado" onchange="toggleCheckoutMicaTratamiento('Polarizado', this.checked)" class="accent-brand-sky"> Polarizado <span class="text-slate-600">· $1,290</span>
+          </label>
+          <label class="flex items-center gap-2 text-[11px] text-slate-500 bg-brand-dark border border-slate-900/10 rounded-xl px-3 py-2.5 cursor-pointer">
+            <input type="checkbox" value="Filtro de luz azul" onchange="toggleCheckoutMicaTratamiento('Filtro de luz azul', this.checked)" class="accent-brand-sky"> Filtro Blu Ray (luz azul) <span class="text-slate-600">· $490</span>
           </label>
         </div>
-        <p class="text-[10px] text-brand-teal leading-snug">* El costo final de la mica y los tratamientos se confirma junto con su receta, antes de armar su pedido.</p>
+
+        <div id="checkoutMicaCostBox" class="text-xs text-slate-600 space-y-1 pt-3 border-t border-slate-900/10">
+          <div class="flex justify-between"><span id="checkoutMicaTipoLine">Tipo: Monofocal</span><span id="checkoutMicaTipoCosto">$0.00</span></div>
+          <div class="flex justify-between"><span id="checkoutMicaIndiceLine">Material: Estándar</span><span id="checkoutMicaIndiceCosto">$0.00</span></div>
+          <div id="checkoutMicaTratamientosLines" class="space-y-1"></div>
+          <div class="flex justify-between font-bold text-brand-ink pt-1"><span>Total mica y tratamientos</span><span id="checkoutMicaCostTotal">$0.00</span></div>
+        </div>
+        <p class="text-[10px] text-brand-teal leading-snug mt-2">* Este costo se suma al precio del armazón y se confirma junto con su receta, antes de armar su pedido.</p>
       </div>
 
       <div id="checkoutRecetaWrap" class="hidden mb-4">
@@ -2429,6 +2440,8 @@
             <img id="pfRecetaFotoPreview" class="hidden w-full max-h-56 object-contain rounded-xl border border-slate-900/10 bg-brand-navy mb-2">
             <p id="pfRecetaFotoStatus" class="text-[11px] text-slate-500 mb-2"></p>
             <button type="button" onclick="document.getElementById('pfRecetaFotoInput').click()" class="w-full text-[11px] font-semibold text-brand-sky border border-brand-sky/30 hover:bg-brand-sky/10 rounded-xl py-2.5 transition-all">📷 Elegir otra foto</button>
+            <!-- Respaldo: si la subida falla, dejamos que la mande directo por WhatsApp en vez de quedarse atorado -->
+            <button type="button" onclick="pfSkipRecetaFotoToWhatsapp()" id="pfRecetaFotoWhatsappBtn" class="hidden w-full mt-2 text-[11px] font-semibold text-green-500 border border-green-500/30 hover:bg-green-500/10 rounded-xl py-2.5 transition-all">📱 Mejor la mando por WhatsApp</button>
           </div>
 
           <!-- Botón de ayuda: explica qué es cada dato y dónde encontrarlo (solo aplica al formulario/texto) -->
@@ -7016,7 +7029,7 @@
               ${p.telefono ? `<p><strong class="text-brand-ink">Tel:</strong> ${p.telefono}</p>` : ''}
               ${p.email ? `<p><strong class="text-brand-ink">Correo:</strong> ${p.email}</p>` : ''}
               ${p.receta ? `<p><strong class="text-brand-ink">Receta:</strong> ${p.receta}</p>` : ''}
-              ${p.micaConfig ? `<p><strong class="text-brand-ink">Mica:</strong> ${{ monofocal: 'Monofocal', bifocal: 'Bifocal', progresiva: 'Progresiva' }[p.micaConfig.tipo] || p.micaConfig.tipo} · Índice ${{ estandar: 'Estándar (1.56)', delgado: 'Delgado (1.61)', ultradelgado: 'Ultra delgado (1.67+)' }[p.micaConfig.indice] || p.micaConfig.indice}${(p.micaConfig.tratamientos && p.micaConfig.tratamientos.length) ? ` · ${p.micaConfig.tratamientos.join(', ')}` : ''}</p>` : ''}
+              ${p.micaConfig ? `<p><strong class="text-brand-ink">Mica:</strong> ${MICA_TIPO_LABELS[p.micaConfig.tipo] || p.micaConfig.tipo} · Material ${MICA_INDICE_LABELS[p.micaConfig.indice] || { delgado: 'Delgado (anterior)', ultradelgado: 'Ultra delgado (anterior)' }[p.micaConfig.indice] || p.micaConfig.indice}${(p.micaConfig.tratamientos && p.micaConfig.tratamientos.length) ? ` · ${p.micaConfig.tratamientos.join(', ')}` : ''}${(p.micaConfig.costo !== undefined && p.micaConfig.costo !== null) ? ` · Costo mica: $${Number(p.micaConfig.costo).toLocaleString('es-MX', {minimumFractionDigits:2, maximumFractionDigits:2})}` : ''}</p>` : ''}
               ${p.examen ? `<p><strong class="text-brand-ink">Examen a domicilio:</strong> ${p.examen.personas} persona${p.examen.personas > 1 ? 's' : ''} — Subtotal $${Number(p.examen.subtotal).toFixed(2)} + Traslado $${Number(p.examen.traslado).toFixed(2)}${p.examen.bono > 0 ? ` − Bonificación $${Number(p.examen.bono).toFixed(2)}` : ''} = <strong>$${Number(p.examen.total).toFixed(2)}</strong></p>` : ''}
               ${p.examen?.fecha ? `<p><strong class="text-brand-ink">Fecha y hora:</strong> ${p.examen.fecha} ${p.examen.hora || ''}</p>` : ''}
               ${(p.examen?.armazonesElegidos && p.examen.armazonesElegidos.length) ? `<p><strong class="text-brand-ink">Armazones para probarse:</strong> ${p.examen.armazonesElegidos.map(a => `${a.modelo} (${a.color})`).join(', ')}</p>` : ''}
@@ -7540,11 +7553,16 @@
       if (modo === 'foto') {
         const preview = document.getElementById('pfRecetaFotoPreview');
         const status = document.getElementById('pfRecetaFotoStatus');
+        const whatsappBtn = document.getElementById('pfRecetaFotoWhatsappBtn');
+        if (whatsappBtn) whatsappBtn.classList.add('hidden');
         const fotoUrl = purchaseFlowState.recetaEstructurada?.fotoUrl;
         if (fotoUrl) {
           preview.src = fotoUrl;
           preview.classList.remove('hidden');
           status.textContent = 'Foto guardada. Puedes continuar o elegir otra.';
+        } else if (purchaseFlowState.recetaEstructurada?.fotoPorWhatsapp) {
+          preview.classList.add('hidden');
+          status.textContent = 'Elegiste mandarla por WhatsApp al confirmar tu pedido. También puedes intentar subirla aquí.';
         } else {
           preview.classList.add('hidden');
           status.textContent = '';
@@ -7597,6 +7615,8 @@
       const preview = document.getElementById('pfRecetaFotoPreview');
       preview.classList.add('hidden');
       status.textContent = 'Preparando imagen...';
+      const whatsappBtnReset = document.getElementById('pfRecetaFotoWhatsappBtn');
+      if (whatsappBtnReset) whatsappBtnReset.classList.add('hidden');
 
       try {
         let uploadFile = file;
@@ -7625,9 +7645,22 @@
         } else {
           status.textContent = 'No se pudo subir la foto. Revisa tu conexión e intenta de nuevo.';
         }
+        // Si falló, ofrecemos mandarla por WhatsApp en vez de dejar a la persona atorada.
+        const whatsappBtn = document.getElementById('pfRecetaFotoWhatsappBtn');
+        if (whatsappBtn) whatsappBtn.classList.remove('hidden');
       } finally {
         input.value = '';
       }
+    }
+
+    // Respaldo cuando la subida web falla: en vez de insistir, marcamos que la persona
+    // enviará la foto directamente por WhatsApp, y seguimos con el flujo normalmente.
+    function pfSkipRecetaFotoToWhatsapp() {
+      purchaseFlowState.receta = 'El cliente enviará la foto de su receta por WhatsApp';
+      purchaseFlowState.recetaEstructurada = { ...(purchaseFlowState.recetaEstructurada || {}), fotoUrl: null, fotoPorWhatsapp: true };
+      document.getElementById('pfRecetaFotoStatus').textContent = 'Listo, la mandarás por WhatsApp al confirmar tu pedido.';
+      document.getElementById('pfRecetaFotoWhatsappBtn').classList.add('hidden');
+      pfShowStep(3);
     }
 
     function pfSetOptionalField(field, enabled) {
@@ -7737,7 +7770,8 @@
             receta: purchaseFlowState.graduacionModo === 'receta' ? purchaseFlowState.receta : '',
             recetaModo: purchaseFlowState.graduacionModo === 'receta' ? purchaseFlowState.recetaModo : null,
             recetaEstructurada: purchaseFlowState.graduacionModo === 'receta' ? purchaseFlowState.recetaEstructurada : null,
-            fotoUrl: purchaseFlowState.recetaEstructurada?.fotoUrl || null
+            fotoUrl: purchaseFlowState.recetaEstructurada?.fotoUrl || null,
+            fotoPorWhatsapp: !!purchaseFlowState.recetaEstructurada?.fotoPorWhatsapp
           }
         : null;
       item.tratamientoElegido = purchaseFlowState.tipoCompra === 'con_graduacion' ? purchaseFlowState.tratamiento : null;
@@ -7829,6 +7863,8 @@
               : 'Examen a domicilio pendiente de agendar';
             if (it.graduacionInfo.fotoUrl) {
               recetaFotoThumb = `<img src="${it.graduacionInfo.fotoUrl}" class="w-12 h-12 object-cover rounded-lg border border-slate-900/10 mt-1" alt="Foto de receta">`;
+            } else if (it.graduacionInfo.fotoPorWhatsapp) {
+              recetaFotoThumb = `<p class="text-[10px] text-brand-teal font-semibold">📱 Foto pendiente: la enviará por WhatsApp</p>`;
             }
           }
           purchaseFlowSummary = `
@@ -8097,8 +8133,16 @@
 
     let checkoutGraduacionGeneral = 'con'; // 'con' | 'sin' — se pregunta primero en el checkout
     let checkoutMicaTipo = 'monofocal'; // 'monofocal' | 'bifocal' | 'progresiva'
-    let checkoutMicaIndice = 'estandar'; // 'estandar' | 'delgado' | 'ultradelgado'
+    let checkoutMicaIndice = 'estandar'; // 'estandar' | 'hiindex' | 'policarbonato'
     let checkoutMicaTratamientos = [];
+
+    // Precios de mica y tratamientos (lista de precios vigente).
+    // Promoción de septiembre: mica blanca / visión sencilla hasta ±3.00D sin costo extra.
+    const MICA_TIPO_PRECIOS = { monofocal: 0, bifocal: 1290, progresiva: 1890 };
+    const MICA_TIPO_LABELS = { monofocal: 'Monofocal', bifocal: 'Bifocal FT-28', progresiva: 'Progresivo Plus' };
+    const MICA_INDICE_PRECIOS = { estandar: 0, hiindex: 680, policarbonato: 890 };
+    const MICA_INDICE_LABELS = { estandar: 'Estándar', hiindex: 'Hi Index', policarbonato: 'Policarbonato' };
+    const MICA_TRATAMIENTO_PRECIOS = { 'Fotocromático': 890, 'Polarizado': 1290, 'Filtro de luz azul': 490 };
 
     function setCheckoutMicaTipo(tipo) {
       checkoutMicaTipo = tipo;
@@ -8113,11 +8157,12 @@
           btn.classList.add('border-slate-900/10', 'text-slate-500');
         }
       });
+      updateCheckoutMicaCostDisplay();
     }
 
     function setCheckoutMicaIndice(indice) {
       checkoutMicaIndice = indice;
-      ['estandar', 'delgado', 'ultradelgado'].forEach(i => {
+      ['estandar', 'hiindex', 'policarbonato'].forEach(i => {
         const btn = document.getElementById(`checkoutMicaIndice${i.charAt(0).toUpperCase()}${i.slice(1)}Btn`);
         if (!btn) return;
         if (i === indice) {
@@ -8128,6 +8173,7 @@
           btn.classList.add('border-slate-900/10', 'text-slate-500');
         }
       });
+      updateCheckoutMicaCostDisplay();
     }
 
     function toggleCheckoutMicaTratamiento(nombre, checked) {
@@ -8136,6 +8182,39 @@
       } else {
         checkoutMicaTratamientos = checkoutMicaTratamientos.filter(t => t !== nombre);
       }
+      updateCheckoutMicaCostDisplay();
+    }
+
+    // Calcula el costo extra de mica + tratamientos según lo elegido (no incluye el armazón).
+    function checkoutMicaCost() {
+      const tipoCosto = MICA_TIPO_PRECIOS[checkoutMicaTipo] || 0;
+      const indiceCosto = MICA_INDICE_PRECIOS[checkoutMicaIndice] || 0;
+      const tratamientos = checkoutMicaTratamientos.map(nombre => ({
+        nombre,
+        costo: MICA_TRATAMIENTO_PRECIOS[nombre] || 0
+      }));
+      const tratamientosCosto = tratamientos.reduce((sum, t) => sum + t.costo, 0);
+      const total = tipoCosto + indiceCosto + tratamientosCosto;
+      return { tipoCosto, indiceCosto, tratamientos, tratamientosCosto, total };
+    }
+
+    function updateCheckoutMicaCostDisplay() {
+      const c = checkoutMicaCost();
+      const fmt = n => `$${n.toLocaleString('es-MX', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+      const tipoLine = document.getElementById('checkoutMicaTipoLine');
+      const tipoCosto = document.getElementById('checkoutMicaTipoCosto');
+      const indiceLine = document.getElementById('checkoutMicaIndiceLine');
+      const indiceCosto = document.getElementById('checkoutMicaIndiceCosto');
+      const tratWrap = document.getElementById('checkoutMicaTratamientosLines');
+      const totalEl = document.getElementById('checkoutMicaCostTotal');
+      if (!tipoLine) return; // el checkout aún no está en el DOM (p.ej. primera carga)
+
+      tipoLine.textContent = `Tipo: ${MICA_TIPO_LABELS[checkoutMicaTipo] || checkoutMicaTipo}`;
+      tipoCosto.textContent = fmt(c.tipoCosto);
+      indiceLine.textContent = `Material: ${MICA_INDICE_LABELS[checkoutMicaIndice] || checkoutMicaIndice}`;
+      indiceCosto.textContent = fmt(c.indiceCosto);
+      tratWrap.innerHTML = c.tratamientos.map(t => `<div class="flex justify-between"><span>${escapeHtml(t.nombre)}</span><span>${fmt(t.costo)}</span></div>`).join('');
+      totalEl.textContent = fmt(c.total);
     }
 
     function resetCheckoutMicaConfig() {
@@ -8143,6 +8222,7 @@
       document.querySelectorAll('#checkoutMicaWrap input[type="checkbox"]').forEach(cb => { cb.checked = false; });
       setCheckoutMicaTipo('monofocal');
       setCheckoutMicaIndice('estandar');
+      updateCheckoutMicaCostDisplay();
     }
 
     function setCheckoutGraduacion(tipo) {
@@ -8298,12 +8378,13 @@
       status.textContent = 'Enviando pedido...';
 
       const items = cart.map(it => ({ modelo: it.modelo, color: it.color, precio: it.precio, cantidad: it.cantidad, tratamientos: it.tratamientos || [], graduacion: it.graduacion === 'con' ? 'con' : 'sin', tipoCompra: it.tipoCompra || null, graduacionInfo: it.graduacionInfo || null, tratamientoElegido: it.tratamientoElegido || null }));
+      const micaCost = checkoutGraduacionGeneral === 'con' ? checkoutMicaCost() : null;
       const micaConfig = checkoutGraduacionGeneral === 'con'
-        ? { tipo: checkoutMicaTipo, indice: checkoutMicaIndice, tratamientos: [...checkoutMicaTratamientos] }
+        ? { tipo: checkoutMicaTipo, indice: checkoutMicaIndice, tratamientos: [...checkoutMicaTratamientos], costo: micaCost.total }
         : null;
       const lentesTotal = cartTotal();
       const examen = checkoutTipo === 'examen' ? checkoutExamCost() : null;
-      const total = lentesTotal + (examen ? examen.total : 0);
+      const total = lentesTotal + (micaCost ? micaCost.total : 0) + (examen ? examen.total : 0);
       const chosenSlot = checkoutSlotsCache.find(s => s.id === slotId);
 
       try {
@@ -8362,11 +8443,18 @@
         if (checkoutTipo === 'receta') msg += `%0AReceta: ${receta}`;
         const fotosRecetaMsg = items.filter(it => it.graduacionInfo && it.graduacionInfo.fotoUrl).map(it => `• ${it.modelo}: ${it.graduacionInfo.fotoUrl}`);
         if (fotosRecetaMsg.length) msg += `%0A%0AFotos de receta subidas:%0A${fotosRecetaMsg.join('%0A')}`;
+        // Si el cliente no pudo subir la foto en la web, le recordamos adjuntarla aquí mismo en el chat.
+        const fotosPendientesWhatsapp = items.filter(it => it.graduacionInfo && it.graduacionInfo.fotoPorWhatsapp).map(it => it.modelo);
+        if (fotosPendientesWhatsapp.length) msg += `%0A%0A📎 Voy a adjuntar aquí la foto de mi receta para: ${fotosPendientesWhatsapp.join(', ')}`;
         if (micaConfig) {
-          const micaTipoLabel = { monofocal: 'Monofocal', bifocal: 'Bifocal', progresiva: 'Progresiva' }[micaConfig.tipo] || micaConfig.tipo;
-          const micaIndiceLabel = { estandar: 'Estándar (1.56)', delgado: 'Delgado (1.61)', ultradelgado: 'Ultra delgado (1.67+)' }[micaConfig.indice] || micaConfig.indice;
-          msg += `%0A%0AConfiguración de mica:%0A• Tipo: ${micaTipoLabel}%0A• Índice: ${micaIndiceLabel}`;
-          if (micaConfig.tratamientos.length) msg += `%0A• Tratamientos: ${micaConfig.tratamientos.join(', ')}`;
+          const micaTipoLabel = MICA_TIPO_LABELS[micaConfig.tipo] || micaConfig.tipo;
+          const micaIndiceLabel = MICA_INDICE_LABELS[micaConfig.indice] || micaConfig.indice;
+          msg += `%0A%0AConfiguración de mica:%0A• Tipo: ${micaTipoLabel} ($${(MICA_TIPO_PRECIOS[micaConfig.tipo] || 0).toFixed(2)})%0A• Material: ${micaIndiceLabel} ($${(MICA_INDICE_PRECIOS[micaConfig.indice] || 0).toFixed(2)})`;
+          if (micaConfig.tratamientos.length) {
+            const tratLabels = micaConfig.tratamientos.map(t => `${t} ($${(MICA_TRATAMIENTO_PRECIOS[t] || 0).toFixed(2)})`);
+            msg += `%0A• Tratamientos: ${tratLabels.join(', ')}`;
+          }
+          msg += `%0A• Subtotal mica y tratamientos: $${micaConfig.costo.toFixed(2)}`;
         }
         if (items.some(it => it.graduacion === 'con')) msg += `%0A%0ANota: algunos lentes son con graduación, el precio final de esos se confirma según la receta.`;
         if (examen) {
