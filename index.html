@@ -7618,7 +7618,13 @@
         pfShowStep(3);
       } catch (error) {
         console.error('No se pudo subir la receta:', error);
-        status.textContent = 'No se pudo subir la foto. Revisa tu conexión e intenta de nuevo.';
+        if (error && error.code === 'storage/unauthorized') {
+          status.textContent = 'No se pudo subir: permisos de almacenamiento. Avisa al administrador.';
+        } else if (error && (error.code === 'storage/canceled' || error.code === 'storage/retry-limit-exceeded')) {
+          status.textContent = 'La subida se interrumpió por la conexión. Intenta de nuevo.';
+        } else {
+          status.textContent = 'No se pudo subir la foto. Revisa tu conexión e intenta de nuevo.';
+        }
       } finally {
         input.value = '';
       }
@@ -8818,13 +8824,29 @@
       const safeName = String(file.name || 'receta').replace(/[^a-z0-9._-]/gi, '_');
       const path = `recetas/${productId || 'pedido'}-${Date.now()}-${safeName}`;
       const imageRef = ref(storage, path);
-      return new Promise((resolve, reject) => {
+
+      // Subida "resumable" con progreso real. Si en unos segundos no arranca
+      // (0% fijo — típico de algunas redes/proxys que no manejan bien las subidas
+      // por partes), se cancela y se reintenta con una subida simple de una sola vez.
+      const tryResumable = () => new Promise((resolve, reject) => {
         const task = uploadBytesResumable(imageRef, file, { contentType: file.type });
+        let sawProgress = false;
+        const stallTimer = setTimeout(() => {
+          if (!sawProgress) {
+            task.cancel();
+            reject(new Error('STALLED'));
+          }
+        }, 6000);
         task.on('state_changed', snapshot => {
+          if (snapshot.bytesTransferred > 0) sawProgress = true;
           if (typeof onProgress === 'function' && snapshot.totalBytes) {
             onProgress(Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100));
           }
-        }, reject, async () => {
+        }, err => {
+          clearTimeout(stallTimer);
+          reject(err);
+        }, async () => {
+          clearTimeout(stallTimer);
           try {
             resolve(await getDownloadURL(task.snapshot.ref));
           } catch (err) {
@@ -8832,6 +8854,24 @@
           }
         });
       });
+
+      const trySimple = async () => {
+        if (typeof onProgress === 'function') onProgress(0);
+        await uploadBytes(imageRef, file, { contentType: file.type });
+        if (typeof onProgress === 'function') onProgress(100);
+        return getDownloadURL(imageRef);
+      };
+
+      try {
+        return await tryResumable();
+      } catch (err) {
+        if (err && err.message === 'STALLED') {
+          console.warn('Subida resumable se quedó en 0%, reintentando con subida simple.');
+          return await trySimple();
+        }
+        console.error('Error de Firebase Storage al subir receta:', err && err.code, err && err.message);
+        throw err;
+      }
     }
 
     async function updateProduct(id, data, imgUrls) {
