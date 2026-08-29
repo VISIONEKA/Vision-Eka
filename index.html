@@ -2551,11 +2551,11 @@
       <div id="pfStep3" class="pf-step hidden">
         <label class="block text-[9px] uppercase tracking-widest text-slate-500 font-extrabold mb-2">¿Qué tratamiento deseas?</label>
         <div class="grid grid-cols-1 gap-2 mb-5" id="pfTratamientoOptions">
-          <button type="button" onclick="pfSetTratamiento('Antirreflejante')" class="pf-trat-btn text-left p-3 rounded-xl border-2 border-slate-900/10 text-slate-500 text-xs font-bold transition-all">✨ Antirreflejante</button>
-          <button type="button" onclick="pfSetTratamiento('Protección para computadora (filtro de luz azul)')" class="pf-trat-btn text-left p-3 rounded-xl border-2 border-slate-900/10 text-slate-500 text-xs font-bold transition-all">💻 Protección para computadora <span class="font-normal normal-case text-slate-500">(filtro de luz azul)</span></button>
-          <button type="button" onclick="pfSetTratamiento('Protección UV / Sol')" class="pf-trat-btn text-left p-3 rounded-xl border-2 border-slate-900/10 text-slate-500 text-xs font-bold transition-all">☀️ Protección UV / Sol</button>
-          <button type="button" onclick="pfSetTratamiento('Fotocromático')" class="pf-trat-btn text-left p-3 rounded-xl border-2 border-slate-900/10 text-slate-500 text-xs font-bold transition-all">🌗 Fotocromático</button>
-          <button type="button" onclick="pfSetTratamiento('Sin tratamiento')" class="pf-trat-btn text-left p-3 rounded-xl border-2 border-slate-900/10 text-slate-500 text-xs font-bold transition-all">— Sin tratamiento</button>
+          <button type="button" onclick="pfSetTratamiento('Antirreflejante')" class="pf-trat-btn text-left p-3 rounded-xl border-2 border-slate-900/10 text-slate-500 text-xs font-bold transition-all flex items-center justify-between gap-2"><span>✨ Antirreflejante</span><span class="text-[10px] font-semibold normal-case text-brand-teal whitespace-nowrap">Incluido</span></button>
+          <button type="button" onclick="pfSetTratamiento('Protección para computadora (filtro de luz azul)')" class="pf-trat-btn text-left p-3 rounded-xl border-2 border-slate-900/10 text-slate-500 text-xs font-bold transition-all flex items-center justify-between gap-2"><span>💻 Protección para computadora <span class="font-normal normal-case text-slate-500">(filtro de luz azul)</span></span><span class="text-[10px] font-semibold normal-case text-brand-teal whitespace-nowrap">+$490.00</span></button>
+          <button type="button" onclick="pfSetTratamiento('Protección UV / Sol')" class="pf-trat-btn text-left p-3 rounded-xl border-2 border-slate-900/10 text-slate-500 text-xs font-bold transition-all flex items-center justify-between gap-2"><span>☀️ Protección UV / Sol</span><span class="text-[10px] font-semibold normal-case text-brand-teal whitespace-nowrap">Incluido</span></button>
+          <button type="button" onclick="pfSetTratamiento('Fotocromático')" class="pf-trat-btn text-left p-3 rounded-xl border-2 border-slate-900/10 text-slate-500 text-xs font-bold transition-all flex items-center justify-between gap-2"><span>🌗 Fotocromático</span><span class="text-[10px] font-semibold normal-case text-brand-teal whitespace-nowrap">+$890.00</span></button>
+          <button type="button" onclick="pfSetTratamiento('Sin tratamiento')" class="pf-trat-btn text-left p-3 rounded-xl border-2 border-slate-900/10 text-slate-500 text-xs font-bold transition-all flex items-center justify-between gap-2"><span>— Sin tratamiento</span><span class="text-[10px] font-semibold normal-case text-brand-teal whitespace-nowrap">$0.00</span></button>
         </div>
         <button type="button" onclick="pfFinish()" id="pfFinishBtn" disabled class="w-full bg-gradient-to-r from-brand-sky to-brand-teal text-brand-ink font-bold py-3.5 rounded-xl transition-all hover:shadow-lg opacity-50">
           <span id="pfFinishBtnLabel">🛒 Agregar al carrito</span>
@@ -7351,6 +7351,15 @@
     // addToCart()/buyNowProduct(): los sigue usando tal cual y solo agrega
     // metadata extra (tipoCompra, graduación, tratamiento) al item ya creado.
     // =========================================================
+    // Costos por tratamiento en el flujo de compra (mismos precios que la sección de mica).
+    const PF_TRATAMIENTO_PRECIOS = {
+      'Antirreflejante': 0,
+      'Protección para computadora (filtro de luz azul)': 490,
+      'Protección UV / Sol': 0,
+      'Fotocromático': 890,
+      'Sin tratamiento': 0
+    };
+
     let purchaseFlowState = {
       productId: null,
       buyNow: false,
@@ -7615,8 +7624,10 @@
       const preview = document.getElementById('pfRecetaFotoPreview');
       preview.classList.add('hidden');
       status.textContent = 'Preparando imagen...';
+      // Dejamos visible la opción de WhatsApp desde ya: si la subida se tarda o se
+      // queda pegada, la persona no tiene que esperar a que falle para poder seguir.
       const whatsappBtnReset = document.getElementById('pfRecetaFotoWhatsappBtn');
-      if (whatsappBtnReset) whatsappBtnReset.classList.add('hidden');
+      if (whatsappBtnReset) whatsappBtnReset.classList.remove('hidden');
 
       try {
         let uploadFile = file;
@@ -7627,25 +7638,43 @@
         }
         status.textContent = 'Subiendo receta... 0%';
         const fb = await window.firebaseReady;
-        const url = await fb.uploadRecipeImage(uploadFile, purchaseFlowState.productId, pct => {
-          status.textContent = `Subiendo receta... ${pct}%`;
+
+        // Respaldo: si la subida no termina en 20s (se queda pegada, típico de redes
+        // lentas o bloqueadas), la cancelamos nosotros mismos y ofrecemos WhatsApp,
+        // en vez de dejar a la persona esperando para siempre.
+        const UPLOAD_TIMEOUT_MS = 20000;
+        let timedOut = false;
+        const timeoutPromise = new Promise((_, reject) => {
+          setTimeout(() => { timedOut = true; reject(new Error('UPLOAD_TIMEOUT')); }, UPLOAD_TIMEOUT_MS);
         });
+
+        const url = await Promise.race([
+          fb.uploadRecipeImage(uploadFile, purchaseFlowState.productId, pct => {
+            if (!timedOut) status.textContent = `Subiendo receta... ${pct}%`;
+          }),
+          timeoutPromise
+        ]);
+
         purchaseFlowState.receta = `Foto de receta: ${url}`;
         purchaseFlowState.recetaEstructurada = { ...(purchaseFlowState.recetaEstructurada || {}), fotoUrl: url };
         preview.src = url;
         preview.classList.remove('hidden');
         status.textContent = 'Foto guardada. Puedes continuar.';
+        const whatsappBtnDone = document.getElementById('pfRecetaFotoWhatsappBtn');
+        if (whatsappBtnDone) whatsappBtnDone.classList.add('hidden');
         pfShowStep(3);
       } catch (error) {
         console.error('No se pudo subir la receta:', error);
-        if (error && error.code === 'storage/unauthorized') {
+        if (error && error.message === 'UPLOAD_TIMEOUT') {
+          status.textContent = 'La subida está tardando demasiado. Puedes mandarla por WhatsApp y seguir con tu pedido.';
+        } else if (error && error.code === 'storage/unauthorized') {
           status.textContent = 'No se pudo subir: permisos de almacenamiento. Avisa al administrador.';
         } else if (error && (error.code === 'storage/canceled' || error.code === 'storage/retry-limit-exceeded')) {
-          status.textContent = 'La subida se interrumpió por la conexión. Intenta de nuevo.';
+          status.textContent = 'La subida se interrumpió por la conexión. Intenta de nuevo o mándala por WhatsApp.';
         } else {
-          status.textContent = 'No se pudo subir la foto. Revisa tu conexión e intenta de nuevo.';
+          status.textContent = 'No se pudo subir la foto. Intenta de nuevo o mándala por WhatsApp.';
         }
-        // Si falló, ofrecemos mandarla por WhatsApp en vez de dejar a la persona atorada.
+        // Si falló o se quedó pegada, ofrecemos mandarla por WhatsApp en vez de dejar a la persona atorada.
         const whatsappBtn = document.getElementById('pfRecetaFotoWhatsappBtn');
         if (whatsappBtn) whatsappBtn.classList.remove('hidden');
       } finally {
@@ -7775,6 +7804,7 @@
           }
         : null;
       item.tratamientoElegido = purchaseFlowState.tipoCompra === 'con_graduacion' ? purchaseFlowState.tratamiento : null;
+      item.tratamientoElegidoCosto = item.tratamientoElegido ? (PF_TRATAMIENTO_PRECIOS[item.tratamientoElegido] || 0) : 0;
       saveCart();
     }
 
@@ -7820,7 +7850,7 @@
     }
 
     function cartTotal() {
-      return cart.reduce((sum, it) => sum + (Number(it.precio || 0) * it.cantidad), 0);
+      return cart.reduce((sum, it) => sum + ((Number(it.precio || 0) + Number(it.tratamientoElegidoCosto || 0)) * it.cantidad), 0);
     }
 
     function renderCartDrawer() {
@@ -7872,8 +7902,8 @@
               <p class="text-[10px] font-bold text-brand-ink">${tipoLabel}</p>
               ${graduacionLabel ? `<p class="text-[10px] text-slate-500 truncate">${graduacionLabel}</p>` : ''}
               ${recetaFotoThumb}
-              ${it.tratamientoElegido ? `<p class="text-[10px] text-brand-teal truncate">Tratamiento: ${escapeHtml(it.tratamientoElegido)}</p>` : ''}
-              <p class="text-[10px] text-slate-500">Precio: ${precioText}</p>
+              ${it.tratamientoElegido ? `<p class="text-[10px] text-brand-teal truncate">Tratamiento: ${escapeHtml(it.tratamientoElegido)}${it.tratamientoElegidoCosto ? ` (+$${Number(it.tratamientoElegidoCosto).toLocaleString('es-MX', {minimumFractionDigits:2, maximumFractionDigits:2})})` : ' (incluido)'}</p>` : ''}
+              <p class="text-[10px] text-slate-500">Precio: ${precioText}${it.tratamientoElegidoCosto ? ` + $${Number(it.tratamientoElegidoCosto).toLocaleString('es-MX', {minimumFractionDigits:2, maximumFractionDigits:2})} tratamiento` : ''}</p>
             </div>`;
         }
 
@@ -8377,7 +8407,7 @@
       status.className = 'text-[11px] text-slate-500 mt-2 text-center';
       status.textContent = 'Enviando pedido...';
 
-      const items = cart.map(it => ({ modelo: it.modelo, color: it.color, precio: it.precio, cantidad: it.cantidad, tratamientos: it.tratamientos || [], graduacion: it.graduacion === 'con' ? 'con' : 'sin', tipoCompra: it.tipoCompra || null, graduacionInfo: it.graduacionInfo || null, tratamientoElegido: it.tratamientoElegido || null }));
+      const items = cart.map(it => ({ modelo: it.modelo, color: it.color, precio: it.precio, cantidad: it.cantidad, tratamientos: it.tratamientos || [], graduacion: it.graduacion === 'con' ? 'con' : 'sin', tipoCompra: it.tipoCompra || null, graduacionInfo: it.graduacionInfo || null, tratamientoElegido: it.tratamientoElegido || null, tratamientoElegidoCosto: it.tratamientoElegidoCosto || 0 }));
       const micaCost = checkoutGraduacionGeneral === 'con' ? checkoutMicaCost() : null;
       const micaConfig = checkoutGraduacionGeneral === 'con'
         ? { tipo: checkoutMicaTipo, indice: checkoutMicaIndice, tratamientos: [...checkoutMicaTratamientos], costo: micaCost.total }
@@ -8437,7 +8467,7 @@
         });
 
         // Mensaje de WhatsApp con el resumen del pedido
-        const itemsText = items.map(it => `• ${it.modelo} (${it.color})${it.cantidad > 1 ? ` x${it.cantidad}` : ''}${it.precio ? ` — $${Number(it.precio).toFixed(2)}` : ''}${(it.tratamientos && it.tratamientos.length) ? ` [${it.tratamientos.join(', ')}]` : ''}${it.graduacion === 'con' ? ' [CON GRADUACIÓN — costo final según receta]' : ' [sin graduación]'}${it.tratamientoElegido ? ` — Tratamiento elegido: ${it.tratamientoElegido}` : ''}${(it.graduacionInfo && it.graduacionInfo.modo === 'receta' && it.graduacionInfo.receta) ? ` — Receta: ${it.graduacionInfo.receta}` : ''}${(it.graduacionInfo && it.graduacionInfo.modo === 'examen') ? ' — Pidió examen a domicilio' : ''}`).join('%0A');
+        const itemsText = items.map(it => `• ${it.modelo} (${it.color})${it.cantidad > 1 ? ` x${it.cantidad}` : ''}${it.precio ? ` — $${Number(it.precio).toFixed(2)}` : ''}${(it.tratamientos && it.tratamientos.length) ? ` [${it.tratamientos.join(', ')}]` : ''}${it.graduacion === 'con' ? ' [CON GRADUACIÓN — costo final según receta]' : ' [sin graduación]'}${it.tratamientoElegido ? ` — Tratamiento elegido: ${it.tratamientoElegido}${it.tratamientoElegidoCosto ? ` (+$${Number(it.tratamientoElegidoCosto).toFixed(2)})` : ' (incluido)'}` : ''}${(it.graduacionInfo && it.graduacionInfo.modo === 'receta' && it.graduacionInfo.receta) ? ` — Receta: ${it.graduacionInfo.receta}` : ''}${(it.graduacionInfo && it.graduacionInfo.modo === 'examen') ? ' — Pidió examen a domicilio' : ''}`).join('%0A');
         const tipoText = checkoutTipo === 'receta' ? 'Pedido CON RECETA' : checkoutTipo === 'examen' ? 'Pedido con EXAMEN A DOMICILIO' : 'Pedido SIN GRADUACIÓN';
         let msg = `Hola, quiero confirmar mi pedido en Visión EKA:%0A%0A${tipoText}%0A${itemsText}`;
         if (checkoutTipo === 'receta') msg += `%0AReceta: ${receta}`;
