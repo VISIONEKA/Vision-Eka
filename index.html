@@ -2280,24 +2280,11 @@
         </div>
         <p class="text-[10px] text-slate-500 mb-4">Entre más fuerte su graduación, más conviene un material Hi Index o Policarbonato: la mica queda más delgada, ligera y resistente.</p>
 
-        <label class="block text-[9px] uppercase tracking-widest text-slate-500 font-extrabold mb-2">Tratamientos que desea <span class="normal-case text-slate-600/70 font-medium">(opcional)</span></label>
-        <div class="grid grid-cols-2 gap-2 mb-3">
-          <label class="flex items-center gap-2 text-[11px] text-slate-500 bg-brand-dark border border-slate-900/10 rounded-xl px-3 py-2.5 cursor-pointer">
-            <input type="checkbox" value="Fotocromático" onchange="toggleCheckoutMicaTratamiento('Fotocromático', this.checked)" class="accent-brand-sky"> Fotocromático <span class="text-slate-600">(oscurece con el sol) · $890</span>
-          </label>
-          <label class="flex items-center gap-2 text-[11px] text-slate-500 bg-brand-dark border border-slate-900/10 rounded-xl px-3 py-2.5 cursor-pointer">
-            <input type="checkbox" value="Polarizado" onchange="toggleCheckoutMicaTratamiento('Polarizado', this.checked)" class="accent-brand-sky"> Polarizado <span class="text-slate-600">· $1,290</span>
-          </label>
-          <label class="flex items-center gap-2 text-[11px] text-slate-500 bg-brand-dark border border-slate-900/10 rounded-xl px-3 py-2.5 cursor-pointer">
-            <input type="checkbox" value="Filtro de luz azul" onchange="toggleCheckoutMicaTratamiento('Filtro de luz azul', this.checked)" class="accent-brand-sky"> Blu Ray (luz azul) <span class="text-slate-600">· $490</span>
-          </label>
-        </div>
-
         <div id="checkoutMicaCostBox" class="text-xs text-slate-600 space-y-1 pt-3 border-t border-slate-900/10">
           <div class="flex justify-between"><span id="checkoutMicaTipoLine">Tipo: Monofocal</span><span id="checkoutMicaTipoCosto">$0.00</span></div>
           <div class="flex justify-between"><span id="checkoutMicaIndiceLine">Material: Estándar</span><span id="checkoutMicaIndiceCosto">$0.00</span></div>
           <div id="checkoutMicaTratamientosLines" class="space-y-1"></div>
-          <div class="flex justify-between font-bold text-brand-ink pt-1"><span>Total mica y tratamientos</span><span id="checkoutMicaCostTotal">$0.00</span></div>
+          <div class="flex justify-between font-bold text-brand-ink pt-1"><span>Total mica</span><span id="checkoutMicaCostTotal">$0.00</span></div>
         </div>
         <p class="text-[10px] text-brand-teal leading-snug mt-2">* Este costo se suma al precio del armazón y se confirma junto con su receta, antes de armar su pedido.</p>
       </div>
@@ -2360,6 +2347,13 @@
       <div class="mb-5">
         <label class="block text-[9px] uppercase tracking-widest text-slate-500 font-extrabold mb-2">Correo <span class="normal-case text-slate-600/70 font-medium">(opcional)</span></label>
         <input type="email" id="checkoutEmail" class="w-full p-3.5 bg-brand-navy border border-slate-900/10 rounded-xl text-sm text-brand-ink focus:border-brand-sky focus:outline-none">
+      </div>
+
+      <div id="checkoutGrandTotalBox" class="mb-5 p-4 bg-brand-navy rounded-2xl border border-brand-sky/20 text-xs text-slate-600 space-y-1.5">
+        <div class="flex justify-between"><span>Armazón(es) y tratamiento elegido</span><span id="checkoutGrandTotalLentes">$0.00</span></div>
+        <div id="checkoutGrandTotalMicaRow" class="hidden flex justify-between"><span>Mica (tipo y material)</span><span id="checkoutGrandTotalMica">$0.00</span></div>
+        <div id="checkoutGrandTotalExamenRow" class="hidden flex justify-between"><span>Examen a domicilio</span><span id="checkoutGrandTotalExamen">$0.00</span></div>
+        <div class="flex justify-between font-bold text-brand-ink text-sm pt-2 border-t border-slate-900/10"><span>Total del pedido</span><span id="checkoutGrandTotal">$0.00</span></div>
       </div>
 
       <label class="block text-[9px] uppercase tracking-widest text-slate-500 font-extrabold mb-2">¿Cómo quiere enviarlo?</label>
@@ -2551,10 +2545,9 @@
       <div id="pfStep3" class="pf-step hidden">
         <label class="block text-[9px] uppercase tracking-widest text-slate-500 font-extrabold mb-2">¿Qué tratamiento deseas?</label>
         <div class="grid grid-cols-1 gap-2 mb-5" id="pfTratamientoOptions">
-          <button type="button" onclick="pfSetTratamiento('Antirreflejante')" class="pf-trat-btn text-left p-3 rounded-xl border-2 border-slate-900/10 text-slate-500 text-xs font-bold transition-all flex items-center justify-between gap-2"><span>✨ Antirreflejante</span><span class="text-[10px] font-semibold normal-case text-brand-teal whitespace-nowrap">Incluido</span></button>
-          <button type="button" onclick="pfSetTratamiento('Protección para computadora (filtro de luz azul)')" class="pf-trat-btn text-left p-3 rounded-xl border-2 border-slate-900/10 text-slate-500 text-xs font-bold transition-all flex items-center justify-between gap-2"><span>💻 Protección para computadora <span class="font-normal normal-case text-slate-500">(filtro de luz azul)</span></span><span class="text-[10px] font-semibold normal-case text-brand-teal whitespace-nowrap">+$490.00</span></button>
-          <button type="button" onclick="pfSetTratamiento('Protección UV / Sol')" class="pf-trat-btn text-left p-3 rounded-xl border-2 border-slate-900/10 text-slate-500 text-xs font-bold transition-all flex items-center justify-between gap-2"><span>☀️ Protección UV / Sol</span><span class="text-[10px] font-semibold normal-case text-brand-teal whitespace-nowrap">Incluido</span></button>
           <button type="button" onclick="pfSetTratamiento('Fotocromático')" class="pf-trat-btn text-left p-3 rounded-xl border-2 border-slate-900/10 text-slate-500 text-xs font-bold transition-all flex items-center justify-between gap-2"><span>🌗 Fotocromático</span><span class="text-[10px] font-semibold normal-case text-brand-teal whitespace-nowrap">+$890.00</span></button>
+          <button type="button" onclick="pfSetTratamiento('Polarizado')" class="pf-trat-btn text-left p-3 rounded-xl border-2 border-slate-900/10 text-slate-500 text-xs font-bold transition-all flex items-center justify-between gap-2"><span>🕶️ Polarizado</span><span class="text-[10px] font-semibold normal-case text-brand-teal whitespace-nowrap">+$1,290.00</span></button>
+          <button type="button" onclick="pfSetTratamiento('Blu Ray (luz azul)')" class="pf-trat-btn text-left p-3 rounded-xl border-2 border-slate-900/10 text-slate-500 text-xs font-bold transition-all flex items-center justify-between gap-2"><span>💻 Blu Ray <span class="font-normal normal-case text-slate-500">(luz azul)</span></span><span class="text-[10px] font-semibold normal-case text-brand-teal whitespace-nowrap">+$490.00</span></button>
           <button type="button" onclick="pfSetTratamiento('Sin tratamiento')" class="pf-trat-btn text-left p-3 rounded-xl border-2 border-slate-900/10 text-slate-500 text-xs font-bold transition-all flex items-center justify-between gap-2"><span>— Sin tratamiento</span><span class="text-[10px] font-semibold normal-case text-brand-teal whitespace-nowrap">$0.00</span></button>
         </div>
         <button type="button" onclick="pfFinish()" id="pfFinishBtn" disabled class="w-full bg-gradient-to-r from-brand-sky to-brand-teal text-brand-ink font-bold py-3.5 rounded-xl transition-all hover:shadow-lg opacity-50">
@@ -7351,12 +7344,11 @@
     // addToCart()/buyNowProduct(): los sigue usando tal cual y solo agrega
     // metadata extra (tipoCompra, graduación, tratamiento) al item ya creado.
     // =========================================================
-    // Costos por tratamiento en el flujo de compra (mismos precios que la sección de mica).
+    // Costos por tratamiento en el flujo de compra (mismos 3 tratamientos y precios de la nota).
     const PF_TRATAMIENTO_PRECIOS = {
-      'Antirreflejante': 0,
-      'Protección para computadora (filtro de luz azul)': 490,
-      'Protección UV / Sol': 0,
       'Fotocromático': 890,
+      'Polarizado': 1290,
+      'Blu Ray (luz azul)': 490,
       'Sin tratamiento': 0
     };
 
@@ -8055,6 +8047,7 @@
         bonoRow.classList.remove('flex');
       }
       document.getElementById('checkoutExamenTotal').textContent = `$${c.total.toLocaleString('es-MX', { minimumFractionDigits: 2 })}`;
+      updateCheckoutGrandTotal();
     }
     document.getElementById('checkoutExamenPersonas')?.addEventListener('input', updateExamenCostDisplay);
 
@@ -8247,6 +8240,7 @@
       indiceCosto.textContent = fmt(c.indiceCosto);
       tratWrap.innerHTML = c.tratamientos.map(t => `<div class="flex justify-between"><span>${escapeHtml(t.nombre)}</span><span>${fmt(t.costo)}</span></div>`).join('');
       totalEl.textContent = fmt(c.total);
+      updateCheckoutGrandTotal();
     }
 
     function resetCheckoutMicaConfig() {
@@ -8255,6 +8249,41 @@
       setCheckoutMicaTipo('monofocal');
       setCheckoutMicaIndice('estandar');
       updateCheckoutMicaCostDisplay();
+    }
+
+    // Muestra el total real del pedido (armazones + su tratamiento elegido + mica + examen),
+    // para que se vea claramente que el costo del tratamiento sí se está sumando.
+    function updateCheckoutGrandTotal() {
+      const lentesEl = document.getElementById('checkoutGrandTotalLentes');
+      if (!lentesEl) return; // el checkout aún no está en el DOM
+
+      const lentesTotal = cartTotal();
+      const micaCost = checkoutGraduacionGeneral === 'con' ? checkoutMicaCost() : null;
+      const examenCost = checkoutTipo === 'examen' ? checkoutExamCost() : null;
+      const total = lentesTotal + (micaCost ? micaCost.total : 0) + (examenCost ? examenCost.total : 0);
+      const fmt = n => `$${n.toLocaleString('es-MX', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+
+      lentesEl.textContent = fmt(lentesTotal);
+
+      const micaRow = document.getElementById('checkoutGrandTotalMicaRow');
+      const micaEl = document.getElementById('checkoutGrandTotalMica');
+      if (micaCost) {
+        micaRow.classList.remove('hidden');
+        micaEl.textContent = fmt(micaCost.total);
+      } else {
+        micaRow.classList.add('hidden');
+      }
+
+      const examenRow = document.getElementById('checkoutGrandTotalExamenRow');
+      const examenEl = document.getElementById('checkoutGrandTotalExamen');
+      if (examenCost) {
+        examenRow.classList.remove('hidden');
+        examenEl.textContent = fmt(examenCost.total);
+      } else {
+        examenRow.classList.add('hidden');
+      }
+
+      document.getElementById('checkoutGrandTotal').textContent = fmt(total);
     }
 
     function setCheckoutGraduacion(tipo) {
@@ -8290,6 +8319,7 @@
         micaWrap.classList.remove('hidden');
         setCheckoutTipo('receta');
       }
+      updateCheckoutGrandTotal();
     }
 
 
@@ -8318,6 +8348,7 @@
         recetaWrap.classList.remove('hidden');
         examenWrap.classList.add('hidden');
       }
+      updateCheckoutGrandTotal();
     }
 
     async function startCheckout(forceExamen) {
@@ -8369,6 +8400,7 @@
       document.getElementById('checkoutStatus').textContent = '';
       checkoutArmazonesSeleccionados = [];
       document.getElementById('checkoutArmazonesStatus').textContent = '';
+      updateCheckoutGrandTotal();
       openModal('checkoutModal');
     }
 
