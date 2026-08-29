@@ -2273,9 +2273,8 @@
           <button type="button" onclick="setCheckoutMicaTipo('progresiva')" id="checkoutMicaTipoProgresivaBtn" class="checkout-mica-tipo-btn text-center p-2.5 rounded-xl border-2 border-slate-900/10 text-slate-500 text-[11px] font-bold transition-all">Progresivo Plus<br><span class="font-normal normal-case text-[9px] text-slate-500">Multifocal · $1,890</span></button>
         </div>
 
-        <label class="block text-[9px] uppercase tracking-widest text-slate-500 font-extrabold mb-2">Material de la mica</label>
-        <div class="grid grid-cols-3 gap-2 mb-1">
-          <button type="button" onclick="setCheckoutMicaIndice('estandar')" id="checkoutMicaIndiceEstandarBtn" class="checkout-mica-indice-btn text-center p-2.5 rounded-xl border-2 border-brand-sky text-brand-sky text-[11px] font-bold transition-all">Estándar<br><span class="font-normal normal-case text-[9px] text-slate-500">Incluido · $0</span></button>
+        <label class="block text-[9px] uppercase tracking-widest text-slate-500 font-extrabold mb-2">Extras <span class="normal-case text-slate-600/70 font-medium">(opcional — si no elige ninguno, incluye material estándar)</span></label>
+        <div class="grid grid-cols-2 gap-2 mb-1">
           <button type="button" onclick="setCheckoutMicaIndice('hiindex')" id="checkoutMicaIndiceHiindexBtn" class="checkout-mica-indice-btn text-center p-2.5 rounded-xl border-2 border-slate-900/10 text-slate-500 text-[11px] font-bold transition-all">Hi Index<br><span class="font-normal normal-case text-[9px] text-slate-500">Más delgada · $680</span></button>
           <button type="button" onclick="setCheckoutMicaIndice('policarbonato')" id="checkoutMicaIndicePolicarbonatoBtn" class="checkout-mica-indice-btn text-center p-2.5 rounded-xl border-2 border-slate-900/10 text-slate-500 text-[11px] font-bold transition-all">Policarbonato<br><span class="font-normal normal-case text-[9px] text-slate-500">Resistente · $890</span></button>
         </div>
@@ -2284,19 +2283,13 @@
         <label class="block text-[9px] uppercase tracking-widest text-slate-500 font-extrabold mb-2">Tratamientos que desea <span class="normal-case text-slate-600/70 font-medium">(opcional)</span></label>
         <div class="grid grid-cols-2 gap-2 mb-3">
           <label class="flex items-center gap-2 text-[11px] text-slate-500 bg-brand-dark border border-slate-900/10 rounded-xl px-3 py-2.5 cursor-pointer">
-            <input type="checkbox" value="Antirreflejante" onchange="toggleCheckoutMicaTratamiento('Antirreflejante', this.checked)" class="accent-brand-sky"> Antirreflejante <span class="text-slate-600">(incluido)</span>
-          </label>
-          <label class="flex items-center gap-2 text-[11px] text-slate-500 bg-brand-dark border border-slate-900/10 rounded-xl px-3 py-2.5 cursor-pointer">
-            <input type="checkbox" value="Antivaho" onchange="toggleCheckoutMicaTratamiento('Antivaho', this.checked)" class="accent-brand-sky"> Antivaho <span class="text-slate-600">(incluido)</span>
-          </label>
-          <label class="flex items-center gap-2 text-[11px] text-slate-500 bg-brand-dark border border-slate-900/10 rounded-xl px-3 py-2.5 cursor-pointer">
             <input type="checkbox" value="Fotocromático" onchange="toggleCheckoutMicaTratamiento('Fotocromático', this.checked)" class="accent-brand-sky"> Fotocromático <span class="text-slate-600">(oscurece con el sol) · $890</span>
           </label>
           <label class="flex items-center gap-2 text-[11px] text-slate-500 bg-brand-dark border border-slate-900/10 rounded-xl px-3 py-2.5 cursor-pointer">
             <input type="checkbox" value="Polarizado" onchange="toggleCheckoutMicaTratamiento('Polarizado', this.checked)" class="accent-brand-sky"> Polarizado <span class="text-slate-600">· $1,290</span>
           </label>
           <label class="flex items-center gap-2 text-[11px] text-slate-500 bg-brand-dark border border-slate-900/10 rounded-xl px-3 py-2.5 cursor-pointer">
-            <input type="checkbox" value="Filtro de luz azul" onchange="toggleCheckoutMicaTratamiento('Filtro de luz azul', this.checked)" class="accent-brand-sky"> Filtro Blu Ray (luz azul) <span class="text-slate-600">· $490</span>
+            <input type="checkbox" value="Filtro de luz azul" onchange="toggleCheckoutMicaTratamiento('Filtro de luz azul', this.checked)" class="accent-brand-sky"> Blu Ray (luz azul) <span class="text-slate-600">· $490</span>
           </label>
         </div>
 
@@ -2440,6 +2433,8 @@
             <img id="pfRecetaFotoPreview" class="hidden w-full max-h-56 object-contain rounded-xl border border-slate-900/10 bg-brand-navy mb-2">
             <p id="pfRecetaFotoStatus" class="text-[11px] text-slate-500 mb-2"></p>
             <button type="button" onclick="document.getElementById('pfRecetaFotoInput').click()" class="w-full text-[11px] font-semibold text-brand-sky border border-brand-sky/30 hover:bg-brand-sky/10 rounded-xl py-2.5 transition-all">📷 Elegir otra foto</button>
+            <!-- Alternativa: si la subida directa no funciona, pueden subirla a un sitio externo y pegar el enlace -->
+            <button type="button" onclick="pfSetRecetaModo('libre')" class="w-full mt-2 text-[11px] font-semibold text-brand-sky border border-brand-sky/30 hover:bg-brand-sky/10 rounded-xl py-2.5 transition-all">🔗 Mejor pego el enlace de mi foto</button>
             <!-- Respaldo: si la subida falla, dejamos que la mande directo por WhatsApp en vez de quedarse atorado -->
             <button type="button" onclick="pfSkipRecetaFotoToWhatsapp()" id="pfRecetaFotoWhatsappBtn" class="hidden w-full mt-2 text-[11px] font-semibold text-green-500 border border-green-500/30 hover:bg-green-500/10 rounded-xl py-2.5 transition-all">📱 Mejor la mando por WhatsApp</button>
           </div>
@@ -2531,7 +2526,12 @@
 
           <!-- Texto libre: como antes, para quien prefiera escribir a su manera o pegar el enlace de una foto -->
           <div id="pfRecetaLibreWrap" class="hidden">
-            <textarea id="pfRecetaInput" rows="3" placeholder="Escriba su graduación (ej. OD -2.00 OI -1.50) o pegue el enlace de la foto de su receta" class="w-full p-3.5 bg-brand-navy border border-slate-900/10 rounded-xl text-sm text-brand-ink focus:border-brand-sky focus:outline-none"></textarea>
+            <div class="mb-3 p-3 bg-brand-navy rounded-xl border border-brand-sky/20">
+              <p class="text-[11px] text-slate-500 leading-relaxed mb-2">¿La subida directa no le funcionó? Suba la foto gratis a este sitio y pegue aquí el enlace que le den.</p>
+              <a href="https://postimages.org/" target="_blank" rel="noopener noreferrer" class="block text-center text-[11px] font-semibold text-brand-sky border border-brand-sky/30 hover:bg-brand-sky/10 rounded-xl py-2.5 transition-all">🔗 Abrir sitio para subir su foto</a>
+              <p class="text-[10px] text-slate-600 mt-2">Ahí suba la foto de su receta y copie el <strong>"Direct link"</strong> (enlace directo). Péguelo abajo 👇</p>
+            </div>
+            <textarea id="pfRecetaInput" rows="3" placeholder="Escriba su graduación (ej. OD -2.00 OI -1.50) o pegue aquí el enlace de la foto de su receta" class="w-full p-3.5 bg-brand-navy border border-slate-900/10 rounded-xl text-sm text-brand-ink focus:border-brand-sky focus:outline-none"></textarea>
           </div>
 
           <div id="pfRecetaContinueWrap">
@@ -8191,11 +8191,13 @@
     }
 
     function setCheckoutMicaIndice(indice) {
-      checkoutMicaIndice = indice;
-      ['estandar', 'hiindex', 'policarbonato'].forEach(i => {
+      // Sin botón visible para "Estándar": si se vuelve a presionar el extra ya
+      // seleccionado, se deselecciona y regresa a estándar (incluido).
+      checkoutMicaIndice = (checkoutMicaIndice === indice) ? 'estandar' : indice;
+      ['hiindex', 'policarbonato'].forEach(i => {
         const btn = document.getElementById(`checkoutMicaIndice${i.charAt(0).toUpperCase()}${i.slice(1)}Btn`);
         if (!btn) return;
-        if (i === indice) {
+        if (i === checkoutMicaIndice) {
           btn.classList.add('border-brand-sky', 'text-brand-sky');
           btn.classList.remove('border-slate-900/10', 'text-slate-500');
         } else {
