@@ -2261,34 +2261,6 @@
         </div>
       </div>
 
-      <!-- Configurador de mica: solo se muestra cuando el pedido es con graduación -->
-      <div id="checkoutMicaWrap" class="hidden mb-4 p-4 bg-brand-navy rounded-2xl border border-slate-900/10">
-        <p class="text-xs font-bold text-brand-ink mb-3">🔧 Configure su mica</p>
-        <p class="text-[10px] text-brand-teal font-semibold mb-3">🎉 Promoción de septiembre: mica blanca (visión sencilla) hasta ±3.00 dioptrías, sin costo adicional.</p>
-
-        <label class="block text-[9px] uppercase tracking-widest text-slate-500 font-extrabold mb-2">Tipo de mica</label>
-        <div class="grid grid-cols-3 gap-2 mb-4">
-          <button type="button" onclick="setCheckoutMicaTipo('monofocal')" id="checkoutMicaTipoMonofocalBtn" class="checkout-mica-tipo-btn text-center p-2.5 rounded-xl border-2 border-brand-sky text-brand-sky text-[11px] font-bold transition-all">Monofocal<br><span class="font-normal normal-case text-[9px] text-slate-500">Visión sencilla · $0</span></button>
-          <button type="button" onclick="setCheckoutMicaTipo('bifocal')" id="checkoutMicaTipoBifocalBtn" class="checkout-mica-tipo-btn text-center p-2.5 rounded-xl border-2 border-slate-900/10 text-slate-500 text-[11px] font-bold transition-all">Bifocal FT-28<br><span class="font-normal normal-case text-[9px] text-slate-500">Dos distancias · $1,290</span></button>
-          <button type="button" onclick="setCheckoutMicaTipo('progresiva')" id="checkoutMicaTipoProgresivaBtn" class="checkout-mica-tipo-btn text-center p-2.5 rounded-xl border-2 border-slate-900/10 text-slate-500 text-[11px] font-bold transition-all">Progresivo Plus<br><span class="font-normal normal-case text-[9px] text-slate-500">Multifocal · $1,890</span></button>
-        </div>
-
-        <label class="block text-[9px] uppercase tracking-widest text-slate-500 font-extrabold mb-2">Extras <span class="normal-case text-slate-600/70 font-medium">(opcional — si no elige ninguno, incluye material estándar)</span></label>
-        <div class="grid grid-cols-2 gap-2 mb-1">
-          <button type="button" onclick="setCheckoutMicaIndice('hiindex')" id="checkoutMicaIndiceHiindexBtn" class="checkout-mica-indice-btn text-center p-2.5 rounded-xl border-2 border-slate-900/10 text-slate-500 text-[11px] font-bold transition-all">Hi Index<br><span class="font-normal normal-case text-[9px] text-slate-500">Más delgada · $680</span></button>
-          <button type="button" onclick="setCheckoutMicaIndice('policarbonato')" id="checkoutMicaIndicePolicarbonatoBtn" class="checkout-mica-indice-btn text-center p-2.5 rounded-xl border-2 border-slate-900/10 text-slate-500 text-[11px] font-bold transition-all">Policarbonato<br><span class="font-normal normal-case text-[9px] text-slate-500">Resistente · $890</span></button>
-        </div>
-        <p class="text-[10px] text-slate-500 mb-4">Entre más fuerte su graduación, más conviene un material Hi Index o Policarbonato: la mica queda más delgada, ligera y resistente.</p>
-
-        <div id="checkoutMicaCostBox" class="text-xs text-slate-600 space-y-1 pt-3 border-t border-slate-900/10">
-          <div class="flex justify-between"><span id="checkoutMicaTipoLine">Tipo: Monofocal</span><span id="checkoutMicaTipoCosto">$0.00</span></div>
-          <div class="flex justify-between"><span id="checkoutMicaIndiceLine">Material: Estándar</span><span id="checkoutMicaIndiceCosto">$0.00</span></div>
-          <div id="checkoutMicaTratamientosLines" class="space-y-1"></div>
-          <div class="flex justify-between font-bold text-brand-ink pt-1"><span>Total mica</span><span id="checkoutMicaCostTotal">$0.00</span></div>
-        </div>
-        <p class="text-[10px] text-brand-teal leading-snug mt-2">* Este costo se suma al precio del armazón y se confirma junto con su receta, antes de armar su pedido.</p>
-      </div>
-
       <div id="checkoutRecetaWrap" class="hidden mb-4">
         <label class="block text-[9px] uppercase tracking-widest text-slate-500 font-extrabold mb-2">Su receta / graduación</label>
         <textarea id="checkoutReceta" rows="2" placeholder="Escriba su graduación (ej. OD -2.00 OI -1.50) o pegue el enlace de la foto de su receta" class="w-full p-3.5 bg-brand-navy border border-slate-900/10 rounded-xl text-sm text-brand-ink focus:border-brand-sky focus:outline-none"></textarea>
@@ -2350,8 +2322,7 @@
       </div>
 
       <div id="checkoutGrandTotalBox" class="mb-5 p-4 bg-brand-navy rounded-2xl border border-brand-sky/20 text-xs text-slate-600 space-y-1.5">
-        <div class="flex justify-between"><span>Armazón(es) y tratamiento elegido</span><span id="checkoutGrandTotalLentes">$0.00</span></div>
-        <div id="checkoutGrandTotalMicaRow" class="hidden flex justify-between"><span>Mica (tipo y material)</span><span id="checkoutGrandTotalMica">$0.00</span></div>
+        <div class="flex justify-between"><span>Armazón(es), mica y tratamiento</span><span id="checkoutGrandTotalLentes">$0.00</span></div>
         <div id="checkoutGrandTotalExamenRow" class="hidden flex justify-between"><span>Examen a domicilio</span><span id="checkoutGrandTotalExamen">$0.00</span></div>
         <div class="flex justify-between font-bold text-brand-ink text-sm pt-2 border-t border-slate-900/10"><span>Total del pedido</span><span id="checkoutGrandTotal">$0.00</span></div>
       </div>
@@ -2391,6 +2362,8 @@
         <span class="pf-dot h-1.5 flex-1 rounded-full bg-brand-sky transition-all" data-step="1"></span>
         <span class="pf-dot h-1.5 flex-1 rounded-full bg-slate-900/10 transition-all" data-step="2"></span>
         <span class="pf-dot h-1.5 flex-1 rounded-full bg-slate-900/10 transition-all" data-step="3"></span>
+        <span class="pf-dot h-1.5 flex-1 rounded-full bg-slate-900/10 transition-all" data-step="4"></span>
+        <span class="pf-dot h-1.5 flex-1 rounded-full bg-slate-900/10 transition-all" data-step="5"></span>
       </div>
 
       <!-- PASO 1: tipo de compra -->
@@ -2541,16 +2514,92 @@
         </div>
       </div>
 
-      <!-- PASO 3: tratamiento -->
+      <!-- PASO 3: tipo de mica -->
       <div id="pfStep3" class="pf-step hidden">
-        <label class="block text-[9px] uppercase tracking-widest text-slate-500 font-extrabold mb-2">¿Qué tratamiento deseas?</label>
-        <div class="grid grid-cols-1 gap-2 mb-5" id="pfTratamientoOptions">
-          <button type="button" onclick="pfSetTratamiento('Fotocromático')" class="pf-trat-btn text-left p-3 rounded-xl border-2 border-slate-900/10 text-slate-500 text-xs font-bold transition-all flex items-center justify-between gap-2"><span>🌗 Fotocromático</span><span class="text-[10px] font-semibold normal-case text-brand-teal whitespace-nowrap">+$890.00</span></button>
-          <button type="button" onclick="pfSetTratamiento('Polarizado')" class="pf-trat-btn text-left p-3 rounded-xl border-2 border-slate-900/10 text-slate-500 text-xs font-bold transition-all flex items-center justify-between gap-2"><span>🕶️ Polarizado</span><span class="text-[10px] font-semibold normal-case text-brand-teal whitespace-nowrap">+$1,290.00</span></button>
-          <button type="button" onclick="pfSetTratamiento('Blu Ray (luz azul)')" class="pf-trat-btn text-left p-3 rounded-xl border-2 border-slate-900/10 text-slate-500 text-xs font-bold transition-all flex items-center justify-between gap-2"><span>💻 Blu Ray <span class="font-normal normal-case text-slate-500">(luz azul)</span></span><span class="text-[10px] font-semibold normal-case text-brand-teal whitespace-nowrap">+$490.00</span></button>
-          <button type="button" onclick="pfSetTratamiento('Sin tratamiento')" class="pf-trat-btn text-left p-3 rounded-xl border-2 border-slate-900/10 text-slate-500 text-xs font-bold transition-all flex items-center justify-between gap-2"><span>— Sin tratamiento</span><span class="text-[10px] font-semibold normal-case text-brand-teal whitespace-nowrap">$0.00</span></button>
+        <label class="block text-sm font-extrabold text-brand-ink mb-1">👓 Elige la mica perfecta para ti</label>
+        <p class="text-[11px] text-slate-500 leading-relaxed mb-4">Tu armazón ya incluye mica blanca de visión sencilla hasta ±3.00 dioptrías sin costo. ¿Quieres llevar tus lentes a otro nivel? Elige la opción que mejor se adapte a tu estilo de vida.</p>
+        <div class="grid grid-cols-1 gap-2.5 mb-5" id="pfMicaTipoOptions">
+          <button type="button" onclick="pfSetMicaTipo('monofocal')" class="pf-mica-tipo-btn text-left p-3.5 rounded-xl border-2 border-slate-900/10 transition-all">
+            <div class="flex items-center justify-between gap-2">
+              <span class="text-xs font-bold text-slate-700">🤍 Mica Blanca — Visión Sencilla</span>
+              <span class="text-[10px] font-semibold text-brand-teal whitespace-nowrap">Incluida</span>
+            </div>
+            <p class="text-[10px] font-semibold text-slate-500 mt-1">Lo esencial para ver bien, todos los días.</p>
+            <p class="text-[10px] text-slate-500 leading-snug mt-1">Mica transparente para corregir tu graduación de lejos o de cerca. Clara, práctica y lista para acompañarte todos los días. Incluida gratis hasta ±3.00 dioptrías.</p>
+          </button>
+          <button type="button" onclick="pfSetMicaTipo('bifocal')" class="pf-mica-tipo-btn text-left p-3.5 rounded-xl border-2 border-slate-900/10 transition-all">
+            <div class="flex items-center justify-between gap-2">
+              <span class="text-xs font-bold text-slate-700">👓 Bifocal FT-28</span>
+              <span class="text-[10px] font-semibold text-brand-teal whitespace-nowrap">+$1,290.00</span>
+            </div>
+            <p class="text-[10px] font-semibold text-slate-500 mt-1">Dos distancias. Una sola mica.</p>
+            <p class="text-[10px] text-slate-500 leading-snug mt-1">Ideal si necesitas ver de lejos y de cerca sin tener que cambiar constantemente de lentes. Una solución práctica para tu día a día, perfecta para quienes buscan comodidad y practicidad.</p>
+          </button>
+          <button type="button" onclick="pfSetMicaTipo('progresiva')" class="pf-mica-tipo-btn text-left p-3.5 rounded-xl border-2 border-slate-900/10 transition-all">
+            <div class="flex items-center justify-between gap-2">
+              <span class="text-xs font-bold text-slate-700">✨ Progresivo Plus</span>
+              <span class="text-[10px] font-semibold text-brand-teal whitespace-nowrap">+$1,890.00</span>
+            </div>
+            <p class="text-[10px] font-semibold text-slate-500 mt-1">Una mica. Todas tus distancias.</p>
+            <p class="text-[10px] text-slate-500 leading-snug mt-1">Disfruta una transición natural entre lejos, distancia intermedia y cerca, sin la línea visible de un bifocal. Ideal si quieres comodidad, estética y libertad visual en un solo lente.</p>
+          </button>
         </div>
-        <button type="button" onclick="pfFinish()" id="pfFinishBtn" disabled class="w-full bg-gradient-to-r from-brand-sky to-brand-teal text-brand-ink font-bold py-3.5 rounded-xl transition-all hover:shadow-lg opacity-50">
+        <button type="button" onclick="pfContinueToMaterialStep()" id="pfMicaTipoContinueBtn" disabled class="w-full bg-gradient-to-r from-brand-sky to-brand-teal text-brand-ink font-bold py-3.5 rounded-xl transition-all hover:shadow-lg opacity-50">Continuar</button>
+      </div>
+
+      <!-- PASO 4: material (opcional) -->
+      <div id="pfStep4" class="pf-step hidden">
+        <label class="block text-sm font-extrabold text-brand-ink mb-1">🚀 Lleva tu mica al siguiente nivel</label>
+        <p class="text-[11px] text-slate-500 leading-relaxed mb-4">Puede llevar su mica tal cual, o mejorarla con alguno de estos materiales (opcional).</p>
+        <div class="grid grid-cols-1 gap-2.5 mb-5" id="pfMicaMaterialOptions">
+          <button type="button" onclick="pfSetMicaMaterial('hiindex')" class="pf-mica-material-btn text-left p-3.5 rounded-xl border-2 border-slate-900/10 transition-all">
+            <div class="flex items-center justify-between gap-2">
+              <span class="text-xs font-bold text-slate-700">🔹 Hi Index</span>
+              <span class="text-[10px] font-semibold text-brand-teal whitespace-nowrap">+$680.00</span>
+            </div>
+            <p class="text-[10px] font-semibold text-slate-500 mt-1">Más delgado. Más elegante.</p>
+            <p class="text-[10px] text-slate-500 leading-snug mt-1">Diseñado para graduaciones altas, ayuda a reducir el grosor de la mica para lograr un aspecto más ligero, cómodo y estético. Ideal para graduaciones altas.</p>
+          </button>
+          <button type="button" onclick="pfSetMicaMaterial('policarbonato')" class="pf-mica-material-btn text-left p-3.5 rounded-xl border-2 border-slate-900/10 transition-all">
+            <div class="flex items-center justify-between gap-2">
+              <span class="text-xs font-bold text-slate-700">🛡️ Policarbonato</span>
+              <span class="text-[10px] font-semibold text-brand-teal whitespace-nowrap">+$890.00</span>
+            </div>
+            <p class="text-[10px] font-semibold text-slate-500 mt-1">Ligereza que protege.</p>
+            <p class="text-[10px] text-slate-500 leading-snug mt-1">Una mica ligera y resistente a impactos, pensada para quienes buscan mayor tranquilidad y resistencia en el uso diario. Ideal para un estilo de vida activo.</p>
+            <p class="text-[9px] text-amber-600/80 leading-snug mt-1.5">⚠️ Con Policarbonato no está disponible el Fotocromático a color.</p>
+          </button>
+        </div>
+        <p id="pfMicaMaterialHint" class="hidden text-[10px] text-amber-600 mb-3">Puede volver a presionar el material ya elegido para quitarlo (mica estándar, incluida).</p>
+        <button type="button" onclick="pfContinueToTratamientoStep()" class="w-full bg-gradient-to-r from-brand-sky to-brand-teal text-brand-ink font-bold py-3.5 rounded-xl transition-all hover:shadow-lg">Continuar</button>
+      </div>
+
+      <!-- PASO 5: tratamientos (opcional, hasta 2 a la vez: Blu Ray + Fotocromático) -->
+      <div id="pfStep5" class="pf-step hidden">
+        <label class="block text-sm font-extrabold text-brand-ink mb-1">✨ Tratamientos para su mica</label>
+        <p class="text-[11px] text-slate-500 leading-relaxed mb-4">Puede elegir un tratamiento, o combinar <strong class="text-brand-ink">Blu Ray + Fotocromático</strong> al mismo tiempo. Polarizado va solo (opcional).</p>
+
+        <p class="text-[10px] font-bold text-slate-600 mb-1.5">💻 Blue Ray <span class="font-normal text-slate-500">— más comodidad para tu mundo digital · +$490.00</span></p>
+        <div class="grid grid-cols-2 gap-2 mb-3">
+          <button type="button" onclick="pfToggleBluRay('verde')" class="pf-trat-bluray-btn text-center p-2.5 rounded-xl border-2 border-slate-900/10 text-[11px] font-bold text-slate-600 transition-all">🟢 Verde</button>
+          <button type="button" onclick="pfToggleBluRay('azul')" class="pf-trat-bluray-btn text-center p-2.5 rounded-xl border-2 border-slate-900/10 text-[11px] font-bold text-slate-600 transition-all">🔵 Azul</button>
+        </div>
+
+        <p class="text-[10px] font-bold text-slate-600 mb-1.5">☀️ Fotocromático <span class="font-normal text-slate-500">— de claro a oscuro automáticamente · +$890.00</span></p>
+        <div class="grid grid-cols-2 gap-2 mb-1">
+          <button type="button" onclick="pfToggleFotocromatico('gris_cafe')" class="pf-trat-foto-btn text-center p-2.5 rounded-xl border-2 border-slate-900/10 text-[11px] font-bold text-slate-600 transition-all">⚫ Gris / Café</button>
+          <button type="button" onclick="pfToggleFotocromatico('colores')" id="pfFotoColoresBtn" class="pf-trat-foto-btn text-center p-2.5 rounded-xl border-2 border-slate-900/10 text-[11px] font-bold text-slate-600 transition-all">🌈 Colores</button>
+        </div>
+        <p id="pfFotoColoresDisabledNote" class="hidden text-[9px] text-amber-600 mb-3">No disponible con Policarbonato.</p>
+        <div id="pfFotoColoresSpacer" class="mb-3"></div>
+
+        <p class="text-[10px] font-bold text-slate-600 mb-1.5">😎 Polarizado <span class="font-normal text-slate-500">— menos reflejos, más comodidad · +$1,290.00</span></p>
+        <button type="button" onclick="pfTogglePolarizado()" id="pfTratPolarizadoBtn" class="w-full text-left p-3 rounded-xl border-2 border-slate-900/10 text-xs font-bold text-slate-600 transition-all mb-1">Elegir Polarizado <span class="font-normal text-slate-500">(no se puede combinar con Blu Ray ni Fotocromático)</span></button>
+        <p class="text-[10px] text-slate-500 mb-5">Si no elige ninguno, su mica queda sin tratamiento adicional.</p>
+
+        <div id="pfTratamientoResumen" class="hidden mb-4 p-3 bg-brand-navy rounded-xl border border-brand-sky/20 text-[11px] text-slate-600"></div>
+
+        <button type="button" onclick="pfFinish()" id="pfFinishBtn" class="w-full bg-gradient-to-r from-brand-sky to-brand-teal text-brand-ink font-bold py-3.5 rounded-xl transition-all hover:shadow-lg">
           <span id="pfFinishBtnLabel">🛒 Agregar al carrito</span>
         </button>
       </div>
@@ -6999,10 +7048,10 @@
           const waPhone = (p.telefono || '').replace(/\D/g, '');
           const items = Array.isArray(p.items) ? p.items : [];
           const itemsHtml = items.length
-            ? `<div class="mt-1 mb-1 space-y-0.5">${items.map(it => `<p>• ${it.modelo || ''}${it.color ? ' · ' + it.color : ''} ${it.cantidad > 1 ? `x${it.cantidad}` : ''} ${it.precio ? `— $${Number(it.precio).toLocaleString('es-MX', {minimumFractionDigits:2, maximumFractionDigits:2})}` : ''}</p>`).join('')}</div>`
+            ? `<div class="mt-1 mb-1 space-y-0.5">${items.map(it => `<p>• ${it.modelo || ''}${it.color ? ' · ' + it.color : ''} ${it.cantidad > 1 ? `x${it.cantidad}` : ''} ${it.precio ? `— $${Number(it.precio).toLocaleString('es-MX', {minimumFractionDigits:2, maximumFractionDigits:2})}` : ''}${it.micaTipoElegido ? ` · Mica: ${PF_MICA_TIPO_LABELS[it.micaTipoElegido] || it.micaTipoElegido}${it.micaTipoElegidoCosto ? ` (+$${Number(it.micaTipoElegidoCosto).toFixed(2)})` : ''}` : ''}${it.micaMaterialElegido ? ` · Material: ${PF_MICA_MATERIAL_LABELS[it.micaMaterialElegido] || it.micaMaterialElegido}${it.micaMaterialElegidoCosto ? ` (+$${Number(it.micaMaterialElegidoCosto).toFixed(2)})` : ''}` : ''}${it.tratamientoElegido ? ` · Tratamiento: ${it.tratamientoElegido}${it.tratamientoElegidoCosto ? ` (+$${Number(it.tratamientoElegidoCosto).toFixed(2)})` : ''}` : ''}</p>`).join('')}</div>`
             : (p.producto ? `<p><strong class="text-brand-ink">Producto:</strong> ${p.producto} ${p.cantidad ? `(x${p.cantidad})` : ''}</p>` : '');
 
-          const itemsSum = items.reduce((sum, it) => sum + (Number(it.precio || 0) * Number(it.cantidad || 1)), 0);
+          const itemsSum = items.reduce((sum, it) => sum + ((Number(it.precio || 0) + Number(it.micaTipoElegidoCosto || 0) + Number(it.micaMaterialElegidoCosto || 0) + Number(it.tratamientoElegidoCosto || 0)) * Number(it.cantidad || 1)), 0);
           const totalPrecio = items.length
             ? itemsSum + (p.examen ? Number(p.examen.total || 0) : 0)
             : p.precio;
@@ -7022,7 +7071,7 @@
               ${p.telefono ? `<p><strong class="text-brand-ink">Tel:</strong> ${p.telefono}</p>` : ''}
               ${p.email ? `<p><strong class="text-brand-ink">Correo:</strong> ${p.email}</p>` : ''}
               ${p.receta ? `<p><strong class="text-brand-ink">Receta:</strong> ${p.receta}</p>` : ''}
-              ${p.micaConfig ? `<p><strong class="text-brand-ink">Mica:</strong> ${MICA_TIPO_LABELS[p.micaConfig.tipo] || p.micaConfig.tipo} · Material ${MICA_INDICE_LABELS[p.micaConfig.indice] || { delgado: 'Delgado (anterior)', ultradelgado: 'Ultra delgado (anterior)' }[p.micaConfig.indice] || p.micaConfig.indice}${(p.micaConfig.tratamientos && p.micaConfig.tratamientos.length) ? ` · ${p.micaConfig.tratamientos.join(', ')}` : ''}${(p.micaConfig.costo !== undefined && p.micaConfig.costo !== null) ? ` · Costo mica: $${Number(p.micaConfig.costo).toLocaleString('es-MX', {minimumFractionDigits:2, maximumFractionDigits:2})}` : ''}</p>` : ''}
+              ${p.micaConfig ? `<p><strong class="text-brand-ink">Extra de mica:</strong> ${p.micaConfig.tipo ? `${MICA_TIPO_LABELS[p.micaConfig.tipo] || p.micaConfig.tipo} · ` : ''}Material ${MICA_INDICE_LABELS[p.micaConfig.indice] || { delgado: 'Delgado (anterior)', ultradelgado: 'Ultra delgado (anterior)' }[p.micaConfig.indice] || p.micaConfig.indice}${(p.micaConfig.tratamientos && p.micaConfig.tratamientos.length) ? ` · ${p.micaConfig.tratamientos.join(', ')}` : ''}${(p.micaConfig.costo !== undefined && p.micaConfig.costo !== null && p.micaConfig.costo > 0) ? ` · Costo: $${Number(p.micaConfig.costo).toLocaleString('es-MX', {minimumFractionDigits:2, maximumFractionDigits:2})}` : ''}</p>` : ''}
               ${p.examen ? `<p><strong class="text-brand-ink">Examen a domicilio:</strong> ${p.examen.personas} persona${p.examen.personas > 1 ? 's' : ''} — Subtotal $${Number(p.examen.subtotal).toFixed(2)} + Traslado $${Number(p.examen.traslado).toFixed(2)}${p.examen.bono > 0 ? ` − Bonificación $${Number(p.examen.bono).toFixed(2)}` : ''} = <strong>$${Number(p.examen.total).toFixed(2)}</strong></p>` : ''}
               ${p.examen?.fecha ? `<p><strong class="text-brand-ink">Fecha y hora:</strong> ${p.examen.fecha} ${p.examen.hora || ''}</p>` : ''}
               ${(p.examen?.armazonesElegidos && p.examen.armazonesElegidos.length) ? `<p><strong class="text-brand-ink">Armazones para probarse:</strong> ${p.examen.armazonesElegidos.map(a => `${a.modelo} (${a.color})`).join(', ')}</p>` : ''}
@@ -7344,13 +7393,18 @@
     // addToCart()/buyNowProduct(): los sigue usando tal cual y solo agrega
     // metadata extra (tipoCompra, graduación, tratamiento) al item ya creado.
     // =========================================================
-    // Costos por tratamiento en el flujo de compra (mismos 3 tratamientos y precios de la nota).
-    const PF_TRATAMIENTO_PRECIOS = {
-      'Fotocromático': 890,
-      'Polarizado': 1290,
-      'Blu Ray (luz azul)': 490,
-      'Sin tratamiento': 0
-    };
+    // Costos por componente de tratamiento (el color/variante elegido no cambia el precio).
+    // Blu Ray + Fotocromático es la única combinación permitida de 2 a la vez; Polarizado va solo.
+    const PF_TRATAMIENTO_COMPONENTE_PRECIOS = { blu_ray: 490, fotocromatico: 890, polarizado: 1290 };
+    const PF_TRATAMIENTO_COMPONENTE_LABELS = { blu_ray: 'Blu Ray', fotocromatico: 'Fotocromático', polarizado: 'Polarizado' };
+    const PF_BLURAY_VARIANTE_LABELS = { verde: 'Verde', azul: 'Azul' };
+    const PF_FOTO_VARIANTE_LABELS = { gris_cafe: 'Gris/Café', colores: 'Colores' };
+    // Costos por tipo de mica en el flujo de compra (mismos precios de la nota).
+    const PF_MICA_TIPO_PRECIOS = { monofocal: 0, bifocal: 1290, progresiva: 1890 };
+    const PF_MICA_TIPO_LABELS = { monofocal: 'Blanca (visión sencilla)', bifocal: 'Bifocal FT-28', progresiva: 'Progresivo Plus' };
+    // Costos por material extra de mica (opcional, se elige por armazón).
+    const PF_MICA_MATERIAL_PRECIOS = { hiindex: 680, policarbonato: 890 };
+    const PF_MICA_MATERIAL_LABELS = { hiindex: 'Hi Index', policarbonato: 'Policarbonato' };
 
     let purchaseFlowState = {
       productId: null,
@@ -7361,7 +7415,11 @@
       receta: '',
       recetaModo: 'guiado', // 'guiado' | 'libre'
       recetaEstructurada: { odEsf: '', odCil: '', odEje: '', oiEsf: '', oiCil: '', oiEje: '', add: '', dp: '' },
-      tratamiento: null
+      micaTipo: null,
+      micaMaterial: null,             // null (estándar) | 'hiindex' | 'policarbonato'
+      tratBluRay: null,               // null | 'verde' | 'azul'
+      tratFotocromatico: null,        // null | 'gris_cafe' | 'colores'
+      tratPolarizado: false
     };
 
     function pfResetState(productId, buyNow) {
@@ -7374,7 +7432,11 @@
         receta: '',
         recetaModo: 'guiado',
         recetaEstructurada: { odEsf: '', odCil: '', odEje: '', oiEsf: '', oiCil: '', oiEje: '', add: '', dp: '' },
-        tratamiento: null
+        micaTipo: null,
+        micaMaterial: null,
+        tratBluRay: null,
+        tratFotocromatico: null,
+        tratPolarizado: false
       };
     }
 
@@ -7393,7 +7455,11 @@
         purchaseFlowState.recetaModo = (existing.graduacionInfo && existing.graduacionInfo.recetaModo) || 'guiado';
         purchaseFlowState.recetaEstructurada = (existing.graduacionInfo && existing.graduacionInfo.recetaEstructurada)
           || { odEsf: '', odCil: '', odEje: '', oiEsf: '', oiCil: '', oiEje: '', add: '', dp: '' };
-        purchaseFlowState.tratamiento = existing.tratamientoElegido || null;
+        purchaseFlowState.micaTipo = existing.micaTipoElegido || null;
+        purchaseFlowState.micaMaterial = existing.micaMaterialElegido || null;
+        purchaseFlowState.tratBluRay = (existing.tratamientosElegidos && existing.tratamientosElegidos.bluRay) || null;
+        purchaseFlowState.tratFotocromatico = (existing.tratamientosElegidos && existing.tratamientosElegidos.fotocromatico) || null;
+        purchaseFlowState.tratPolarizado = !!(existing.tratamientosElegidos && existing.tratamientosElegidos.polarizado);
       }
 
       const imgsArr = (p.imgs && p.imgs.length) ? p.imgs : (p.img ? [p.img] : []);
@@ -7450,12 +7516,20 @@
           document.getElementById('pfExamenWrap').classList.remove('hidden');
         }
       } else if (step === 3) {
-        pfHighlightTratamiento();
+        pfHighlightMicaTipo();
+      } else if (step === 4) {
+        pfHighlightMicaMaterial();
+      } else if (step === 5) {
+        pfHighlightTratamientos();
       }
     }
 
     function pfGoBack() {
-      if (purchaseFlowState.step === 3) {
+      if (purchaseFlowState.step === 5) {
+        pfShowStep(4);
+      } else if (purchaseFlowState.step === 4) {
+        pfShowStep(3);
+      } else if (purchaseFlowState.step === 3) {
         pfShowStep(2);
       } else if (purchaseFlowState.step === 2) {
         pfShowStep(1);
@@ -7758,27 +7832,141 @@
       pfShowStep(3);
     }
 
-    function pfHighlightTratamiento() {
-      document.querySelectorAll('.pf-trat-btn').forEach(btn => {
-        const isSelected = btn.getAttribute('onclick') === `pfSetTratamiento('${purchaseFlowState.tratamiento}')`;
+    function pfHighlightMicaTipo() {
+      document.querySelectorAll('.pf-mica-tipo-btn').forEach(btn => {
+        const isSelected = btn.getAttribute('onclick') === `pfSetMicaTipo('${purchaseFlowState.micaTipo}')`;
         btn.classList.toggle('border-brand-sky', isSelected);
-        btn.classList.toggle('text-brand-sky', isSelected);
+        btn.classList.toggle('bg-brand-sky/5', isSelected);
         btn.classList.toggle('border-slate-900/10', !isSelected);
-        btn.classList.toggle('text-slate-500', !isSelected);
       });
-      const finishBtn = document.getElementById('pfFinishBtn');
-      const enabled = !!purchaseFlowState.tratamiento;
-      finishBtn.disabled = !enabled;
-      finishBtn.classList.toggle('opacity-50', !enabled);
+      const continueBtn = document.getElementById('pfMicaTipoContinueBtn');
+      const enabled = !!purchaseFlowState.micaTipo;
+      continueBtn.disabled = !enabled;
+      continueBtn.classList.toggle('opacity-50', !enabled);
+    }
+
+    function pfSetMicaTipo(tipo) {
+      purchaseFlowState.micaTipo = tipo;
+      pfHighlightMicaTipo();
+    }
+
+    function pfContinueToMaterialStep() {
+      if (!purchaseFlowState.micaTipo) return; // validación: falta elegir tipo de mica
+      pfShowStep(4);
+    }
+
+    function pfHighlightMicaMaterial() {
+      document.querySelectorAll('.pf-mica-material-btn').forEach(btn => {
+        const isSelected = btn.getAttribute('onclick') === `pfSetMicaMaterial('${purchaseFlowState.micaMaterial}')`;
+        btn.classList.toggle('border-brand-sky', isSelected);
+        btn.classList.toggle('bg-brand-sky/5', isSelected);
+        btn.classList.toggle('border-slate-900/10', !isSelected);
+      });
+      document.getElementById('pfMicaMaterialHint').classList.toggle('hidden', !purchaseFlowState.micaMaterial);
+    }
+
+    function pfSetMicaMaterial(material) {
+      // Presionar el mismo material otra vez lo quita (regresa a estándar, incluido).
+      purchaseFlowState.micaMaterial = (purchaseFlowState.micaMaterial === material) ? null : material;
+      // Fotocromático a color no es compatible con Policarbonato: si ya estaba elegido, se limpia.
+      if (purchaseFlowState.micaMaterial === 'policarbonato' && purchaseFlowState.tratFotocromatico === 'colores') {
+        purchaseFlowState.tratFotocromatico = null;
+      }
+      pfHighlightMicaMaterial();
+    }
+
+    function pfContinueToTratamientoStep() {
+      pfShowStep(5);
+    }
+
+    // Calcula la etiqueta y el costo total de los tratamientos elegidos (0, 1 o 2 a la vez).
+    function pfComputeTratamiento() {
+      const partes = [];
+      let costo = 0;
+      if (purchaseFlowState.tratBluRay) {
+        partes.push(`Blu Ray ${PF_BLURAY_VARIANTE_LABELS[purchaseFlowState.tratBluRay] || ''}`);
+        costo += PF_TRATAMIENTO_COMPONENTE_PRECIOS.blu_ray;
+      }
+      if (purchaseFlowState.tratFotocromatico) {
+        partes.push(`Fotocromático ${PF_FOTO_VARIANTE_LABELS[purchaseFlowState.tratFotocromatico] || ''}`);
+        costo += PF_TRATAMIENTO_COMPONENTE_PRECIOS.fotocromatico;
+      }
+      if (purchaseFlowState.tratPolarizado) {
+        partes.push('Polarizado');
+        costo += PF_TRATAMIENTO_COMPONENTE_PRECIOS.polarizado;
+      }
+      return { label: partes.join(' + '), costo, count: partes.length };
+    }
+
+    function pfToggleBluRay(variante) {
+      if (purchaseFlowState.tratPolarizado) return; // exclusivo: no se combina con Polarizado
+      purchaseFlowState.tratBluRay = (purchaseFlowState.tratBluRay === variante) ? null : variante;
+      pfHighlightTratamientos();
+    }
+
+    function pfToggleFotocromatico(variante) {
+      if (purchaseFlowState.tratPolarizado) return; // exclusivo: no se combina con Polarizado
+      if (variante === 'colores' && purchaseFlowState.micaMaterial === 'policarbonato') return; // no disponible con Policarbonato
+      purchaseFlowState.tratFotocromatico = (purchaseFlowState.tratFotocromatico === variante) ? null : variante;
+      pfHighlightTratamientos();
+    }
+
+    function pfTogglePolarizado() {
+      if (purchaseFlowState.tratPolarizado) {
+        purchaseFlowState.tratPolarizado = false;
+      } else {
+        purchaseFlowState.tratPolarizado = true;
+        // Polarizado va solo: quita cualquier Blu Ray / Fotocromático ya elegido.
+        purchaseFlowState.tratBluRay = null;
+        purchaseFlowState.tratFotocromatico = null;
+      }
+      pfHighlightTratamientos();
+    }
+
+    function pfHighlightTratamientos() {
+      const polActivo = purchaseFlowState.tratPolarizado;
+      const policarbonato = purchaseFlowState.micaMaterial === 'policarbonato';
+
+      document.querySelectorAll('.pf-trat-bluray-btn').forEach(btn => {
+        const variante = (btn.getAttribute('onclick').match(/pfToggleBluRay\('([^']+)'\)/) || [])[1];
+        const isSelected = purchaseFlowState.tratBluRay === variante;
+        btn.classList.toggle('border-brand-sky', isSelected);
+        btn.classList.toggle('bg-brand-sky/5', isSelected);
+        btn.classList.toggle('border-slate-900/10', !isSelected);
+        btn.classList.toggle('opacity-40', polActivo);
+      });
+
+      document.querySelectorAll('.pf-trat-foto-btn').forEach(btn => {
+        const variante = (btn.getAttribute('onclick').match(/pfToggleFotocromatico\('([^']+)'\)/) || [])[1];
+        const isSelected = purchaseFlowState.tratFotocromatico === variante;
+        const bloqueado = polActivo || (variante === 'colores' && policarbonato);
+        btn.classList.toggle('border-brand-sky', isSelected);
+        btn.classList.toggle('bg-brand-sky/5', isSelected);
+        btn.classList.toggle('border-slate-900/10', !isSelected);
+        btn.classList.toggle('opacity-40', bloqueado);
+      });
+      document.getElementById('pfFotoColoresDisabledNote').classList.toggle('hidden', !policarbonato);
+
+      const polBtn = document.getElementById('pfTratPolarizadoBtn');
+      const bluOFotoActivo = !!(purchaseFlowState.tratBluRay || purchaseFlowState.tratFotocromatico);
+      polBtn.classList.toggle('border-brand-sky', polActivo);
+      polBtn.classList.toggle('bg-brand-sky/5', polActivo);
+      polBtn.classList.toggle('border-slate-900/10', !polActivo);
+      polBtn.classList.toggle('opacity-40', bluOFotoActivo);
+
+      const resumen = pfComputeTratamiento();
+      const resumenEl = document.getElementById('pfTratamientoResumen');
+      if (resumen.count > 0) {
+        resumenEl.classList.remove('hidden');
+        resumenEl.innerHTML = `<strong class="text-brand-ink">${escapeHtml(resumen.label)}</strong> — Total tratamiento: +$${resumen.costo.toLocaleString('es-MX', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+      } else {
+        resumenEl.classList.add('hidden');
+      }
+
       document.getElementById('pfFinishBtnLabel').textContent = purchaseFlowState.buyNow ? '⚡ Continuar a comprar' : '🛒 Agregar al carrito';
     }
 
-    function pfSetTratamiento(nombre) {
-      purchaseFlowState.tratamiento = nombre;
-      pfHighlightTratamiento();
-    }
-
-    // Aplica la configuración elegida (tipo de compra, graduación, tratamiento) al
+    // Aplica la configuración elegida (tipo de compra, graduación, mica, tratamientos) al
     // item ya creado por addToCart()/buyNowProduct(), sin tocar esas funciones.
     function pfApplyToCartItem(productId) {
       const item = cart.find(it => it.id === productId);
@@ -7795,13 +7983,27 @@
             fotoPorWhatsapp: !!purchaseFlowState.recetaEstructurada?.fotoPorWhatsapp
           }
         : null;
-      item.tratamientoElegido = purchaseFlowState.tipoCompra === 'con_graduacion' ? purchaseFlowState.tratamiento : null;
-      item.tratamientoElegidoCosto = item.tratamientoElegido ? (PF_TRATAMIENTO_PRECIOS[item.tratamientoElegido] || 0) : 0;
+
+      const conGraduacion = purchaseFlowState.tipoCompra === 'con_graduacion';
+
+      item.micaTipoElegido = conGraduacion ? purchaseFlowState.micaTipo : null;
+      item.micaTipoElegidoCosto = item.micaTipoElegido ? (PF_MICA_TIPO_PRECIOS[item.micaTipoElegido] || 0) : 0;
+
+      item.micaMaterialElegido = conGraduacion ? purchaseFlowState.micaMaterial : null;
+      item.micaMaterialElegidoCosto = item.micaMaterialElegido ? (PF_MICA_MATERIAL_PRECIOS[item.micaMaterialElegido] || 0) : 0;
+
+      const trat = conGraduacion ? pfComputeTratamiento() : { label: '', costo: 0, count: 0 };
+      item.tratamientosElegidos = conGraduacion
+        ? { bluRay: purchaseFlowState.tratBluRay, fotocromatico: purchaseFlowState.tratFotocromatico, polarizado: purchaseFlowState.tratPolarizado }
+        : null;
+      item.tratamientoElegido = trat.count > 0 ? trat.label : null;
+      item.tratamientoElegidoCosto = trat.costo;
+
       saveCart();
     }
 
     function pfFinish() {
-      if (purchaseFlowState.tipoCompra === 'con_graduacion' && !purchaseFlowState.tratamiento) return; // validación: falta tratamiento
+      if (purchaseFlowState.tipoCompra === 'con_graduacion' && !purchaseFlowState.micaTipo) return; // validación: falta tipo de mica
 
       const productId = purchaseFlowState.productId;
       const buyNow = purchaseFlowState.buyNow;
@@ -7842,7 +8044,7 @@
     }
 
     function cartTotal() {
-      return cart.reduce((sum, it) => sum + ((Number(it.precio || 0) + Number(it.tratamientoElegidoCosto || 0)) * it.cantidad), 0);
+      return cart.reduce((sum, it) => sum + ((Number(it.precio || 0) + Number(it.micaTipoElegidoCosto || 0) + Number(it.micaMaterialElegidoCosto || 0) + Number(it.tratamientoElegidoCosto || 0)) * it.cantidad), 0);
     }
 
     function renderCartDrawer() {
@@ -7894,8 +8096,10 @@
               <p class="text-[10px] font-bold text-brand-ink">${tipoLabel}</p>
               ${graduacionLabel ? `<p class="text-[10px] text-slate-500 truncate">${graduacionLabel}</p>` : ''}
               ${recetaFotoThumb}
-              ${it.tratamientoElegido ? `<p class="text-[10px] text-brand-teal truncate">Tratamiento: ${escapeHtml(it.tratamientoElegido)}${it.tratamientoElegidoCosto ? ` (+$${Number(it.tratamientoElegidoCosto).toLocaleString('es-MX', {minimumFractionDigits:2, maximumFractionDigits:2})})` : ' (incluido)'}</p>` : ''}
-              <p class="text-[10px] text-slate-500">Precio: ${precioText}${it.tratamientoElegidoCosto ? ` + $${Number(it.tratamientoElegidoCosto).toLocaleString('es-MX', {minimumFractionDigits:2, maximumFractionDigits:2})} tratamiento` : ''}</p>
+              ${it.micaTipoElegido ? `<p class="text-[10px] text-brand-teal truncate">Mica: ${escapeHtml(PF_MICA_TIPO_LABELS[it.micaTipoElegido] || it.micaTipoElegido)}${it.micaTipoElegidoCosto ? ` (+$${Number(it.micaTipoElegidoCosto).toLocaleString('es-MX', {minimumFractionDigits:2, maximumFractionDigits:2})})` : ' (incluida)'}</p>` : ''}
+              ${it.micaMaterialElegido ? `<p class="text-[10px] text-brand-teal truncate">Material: ${escapeHtml(PF_MICA_MATERIAL_LABELS[it.micaMaterialElegido] || it.micaMaterialElegido)}${it.micaMaterialElegidoCosto ? ` (+$${Number(it.micaMaterialElegidoCosto).toLocaleString('es-MX', {minimumFractionDigits:2, maximumFractionDigits:2})})` : ''}</p>` : ''}
+              ${it.tratamientoElegido ? `<p class="text-[10px] text-brand-teal truncate">Tratamiento: ${escapeHtml(it.tratamientoElegido)}${it.tratamientoElegidoCosto ? ` (+$${Number(it.tratamientoElegidoCosto).toLocaleString('es-MX', {minimumFractionDigits:2, maximumFractionDigits:2})})` : ''}</p>` : ''}
+              <p class="text-[10px] text-slate-500">Precio: ${precioText}${(it.micaTipoElegidoCosto || it.micaMaterialElegidoCosto || it.tratamientoElegidoCosto) ? ` + $${Number((it.micaTipoElegidoCosto||0) + (it.micaMaterialElegidoCosto||0) + (it.tratamientoElegidoCosto||0)).toLocaleString('es-MX', {minimumFractionDigits:2, maximumFractionDigits:2})} extras` : ''}</p>
             </div>`;
         }
 
@@ -8155,124 +8359,31 @@
     }
 
     let checkoutGraduacionGeneral = 'con'; // 'con' | 'sin' — se pregunta primero en el checkout
-    let checkoutMicaTipo = 'monofocal'; // 'monofocal' | 'bifocal' | 'progresiva'
-    let checkoutMicaIndice = 'estandar'; // 'estandar' | 'hiindex' | 'policarbonato'
-    let checkoutMicaTratamientos = [];
-
-    // Precios de mica y tratamientos (lista de precios vigente).
-    // Promoción de septiembre: mica blanca / visión sencilla hasta ±3.00D sin costo extra.
+    // Precios de mica (se conservan para leer pedidos anteriores en el panel de admin).
+    // El tipo, material y tratamiento de mica ahora se eligen por armazón en el flujo de
+    // compra (PF_MICA_TIPO_PRECIOS / PF_MICA_MATERIAL_PRECIOS / PF_TRATAMIENTO_COMPONENTE_PRECIOS).
     const MICA_TIPO_PRECIOS = { monofocal: 0, bifocal: 1290, progresiva: 1890 };
     const MICA_TIPO_LABELS = { monofocal: 'Monofocal', bifocal: 'Bifocal FT-28', progresiva: 'Progresivo Plus' };
     const MICA_INDICE_PRECIOS = { estandar: 0, hiindex: 680, policarbonato: 890 };
     const MICA_INDICE_LABELS = { estandar: 'Estándar', hiindex: 'Hi Index', policarbonato: 'Policarbonato' };
     const MICA_TRATAMIENTO_PRECIOS = { 'Fotocromático': 890, 'Polarizado': 1290, 'Filtro de luz azul': 490 };
 
-    function setCheckoutMicaTipo(tipo) {
-      checkoutMicaTipo = tipo;
-      ['monofocal', 'bifocal', 'progresiva'].forEach(t => {
-        const btn = document.getElementById(`checkoutMicaTipo${t.charAt(0).toUpperCase()}${t.slice(1)}Btn`);
-        if (!btn) return;
-        if (t === tipo) {
-          btn.classList.add('border-brand-sky', 'text-brand-sky');
-          btn.classList.remove('border-slate-900/10', 'text-slate-500');
-        } else {
-          btn.classList.remove('border-brand-sky', 'text-brand-sky');
-          btn.classList.add('border-slate-900/10', 'text-slate-500');
-        }
-      });
-      updateCheckoutMicaCostDisplay();
-    }
-
-    function setCheckoutMicaIndice(indice) {
-      // Sin botón visible para "Estándar": si se vuelve a presionar el extra ya
-      // seleccionado, se deselecciona y regresa a estándar (incluido).
-      checkoutMicaIndice = (checkoutMicaIndice === indice) ? 'estandar' : indice;
-      ['hiindex', 'policarbonato'].forEach(i => {
-        const btn = document.getElementById(`checkoutMicaIndice${i.charAt(0).toUpperCase()}${i.slice(1)}Btn`);
-        if (!btn) return;
-        if (i === checkoutMicaIndice) {
-          btn.classList.add('border-brand-sky', 'text-brand-sky');
-          btn.classList.remove('border-slate-900/10', 'text-slate-500');
-        } else {
-          btn.classList.remove('border-brand-sky', 'text-brand-sky');
-          btn.classList.add('border-slate-900/10', 'text-slate-500');
-        }
-      });
-      updateCheckoutMicaCostDisplay();
-    }
-
-    function toggleCheckoutMicaTratamiento(nombre, checked) {
-      if (checked) {
-        if (!checkoutMicaTratamientos.includes(nombre)) checkoutMicaTratamientos.push(nombre);
-      } else {
-        checkoutMicaTratamientos = checkoutMicaTratamientos.filter(t => t !== nombre);
-      }
-      updateCheckoutMicaCostDisplay();
-    }
-
-    // Calcula el costo extra de mica + tratamientos según lo elegido (no incluye el armazón).
-    function checkoutMicaCost() {
-      const tipoCosto = MICA_TIPO_PRECIOS[checkoutMicaTipo] || 0;
-      const indiceCosto = MICA_INDICE_PRECIOS[checkoutMicaIndice] || 0;
-      const tratamientos = checkoutMicaTratamientos.map(nombre => ({
-        nombre,
-        costo: MICA_TRATAMIENTO_PRECIOS[nombre] || 0
-      }));
-      const tratamientosCosto = tratamientos.reduce((sum, t) => sum + t.costo, 0);
-      const total = tipoCosto + indiceCosto + tratamientosCosto;
-      return { tipoCosto, indiceCosto, tratamientos, tratamientosCosto, total };
-    }
-
-    function updateCheckoutMicaCostDisplay() {
-      const c = checkoutMicaCost();
-      const fmt = n => `$${n.toLocaleString('es-MX', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
-      const tipoLine = document.getElementById('checkoutMicaTipoLine');
-      const tipoCosto = document.getElementById('checkoutMicaTipoCosto');
-      const indiceLine = document.getElementById('checkoutMicaIndiceLine');
-      const indiceCosto = document.getElementById('checkoutMicaIndiceCosto');
-      const tratWrap = document.getElementById('checkoutMicaTratamientosLines');
-      const totalEl = document.getElementById('checkoutMicaCostTotal');
-      if (!tipoLine) return; // el checkout aún no está en el DOM (p.ej. primera carga)
-
-      tipoLine.textContent = `Tipo: ${MICA_TIPO_LABELS[checkoutMicaTipo] || checkoutMicaTipo}`;
-      tipoCosto.textContent = fmt(c.tipoCosto);
-      indiceLine.textContent = `Material: ${MICA_INDICE_LABELS[checkoutMicaIndice] || checkoutMicaIndice}`;
-      indiceCosto.textContent = fmt(c.indiceCosto);
-      tratWrap.innerHTML = c.tratamientos.map(t => `<div class="flex justify-between"><span>${escapeHtml(t.nombre)}</span><span>${fmt(t.costo)}</span></div>`).join('');
-      totalEl.textContent = fmt(c.total);
+    function resetCheckoutMicaConfig() {
       updateCheckoutGrandTotal();
     }
 
-    function resetCheckoutMicaConfig() {
-      checkoutMicaTratamientos = [];
-      document.querySelectorAll('#checkoutMicaWrap input[type="checkbox"]').forEach(cb => { cb.checked = false; });
-      setCheckoutMicaTipo('monofocal');
-      setCheckoutMicaIndice('estandar');
-      updateCheckoutMicaCostDisplay();
-    }
-
-    // Muestra el total real del pedido (armazones + su tratamiento elegido + mica + examen),
-    // para que se vea claramente que el costo del tratamiento sí se está sumando.
+    // Muestra el total real del pedido (armazones + su mica/tratamiento elegidos + examen),
+    // para que se vea claramente que esos costos sí se están sumando.
     function updateCheckoutGrandTotal() {
       const lentesEl = document.getElementById('checkoutGrandTotalLentes');
       if (!lentesEl) return; // el checkout aún no está en el DOM
 
       const lentesTotal = cartTotal();
-      const micaCost = checkoutGraduacionGeneral === 'con' ? checkoutMicaCost() : null;
       const examenCost = checkoutTipo === 'examen' ? checkoutExamCost() : null;
-      const total = lentesTotal + (micaCost ? micaCost.total : 0) + (examenCost ? examenCost.total : 0);
+      const total = lentesTotal + (examenCost ? examenCost.total : 0);
       const fmt = n => `$${n.toLocaleString('es-MX', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 
       lentesEl.textContent = fmt(lentesTotal);
-
-      const micaRow = document.getElementById('checkoutGrandTotalMicaRow');
-      const micaEl = document.getElementById('checkoutGrandTotalMica');
-      if (micaCost) {
-        micaRow.classList.remove('hidden');
-        micaEl.textContent = fmt(micaCost.total);
-      } else {
-        micaRow.classList.add('hidden');
-      }
 
       const examenRow = document.getElementById('checkoutGrandTotalExamenRow');
       const examenEl = document.getElementById('checkoutGrandTotalExamen');
@@ -8293,7 +8404,6 @@
       const tipoWrap = document.getElementById('checkoutTipoWrap');
       const recetaWrap = document.getElementById('checkoutRecetaWrap');
       const examenWrap = document.getElementById('checkoutExamenWrap');
-      const micaWrap = document.getElementById('checkoutMicaWrap');
 
       if (checkoutGraduacionGeneral === 'sin') {
         sinBtn.classList.add('border-brand-sky', 'text-brand-sky');
@@ -8301,12 +8411,10 @@
         conBtn.classList.remove('border-brand-sky', 'text-brand-sky');
         conBtn.classList.add('border-slate-900/10', 'text-slate-500');
 
-        // Sin graduación: no se pide receta, mica, ni se agenda examen, solo los datos de contacto.
+        // Sin graduación: no se pide receta ni se agenda examen, solo los datos de contacto.
         tipoWrap.classList.add('hidden');
         recetaWrap.classList.add('hidden');
         examenWrap.classList.add('hidden');
-        micaWrap.classList.add('hidden');
-        resetCheckoutMicaConfig();
         checkoutTipo = 'sin_graduacion';
       } else {
         conBtn.classList.add('border-brand-sky', 'text-brand-sky');
@@ -8314,9 +8422,9 @@
         sinBtn.classList.remove('border-brand-sky', 'text-brand-sky');
         sinBtn.classList.add('border-slate-900/10', 'text-slate-500');
 
-        // Con graduación: se pide elegir entre subir receta o agendar examen, y configurar la mica.
+        // Con graduación: se pide elegir entre subir receta o agendar examen (la mica y
+        // el tratamiento ya se eligieron por armazón en el flujo de compra).
         tipoWrap.classList.remove('hidden');
-        micaWrap.classList.remove('hidden');
         setCheckoutTipo('receta');
       }
       updateCheckoutGrandTotal();
@@ -8441,14 +8549,10 @@
       status.className = 'text-[11px] text-slate-500 mt-2 text-center';
       status.textContent = 'Enviando pedido...';
 
-      const items = cart.map(it => ({ modelo: it.modelo, color: it.color, precio: it.precio, cantidad: it.cantidad, tratamientos: it.tratamientos || [], graduacion: it.graduacion === 'con' ? 'con' : 'sin', tipoCompra: it.tipoCompra || null, graduacionInfo: it.graduacionInfo || null, tratamientoElegido: it.tratamientoElegido || null, tratamientoElegidoCosto: it.tratamientoElegidoCosto || 0 }));
-      const micaCost = checkoutGraduacionGeneral === 'con' ? checkoutMicaCost() : null;
-      const micaConfig = checkoutGraduacionGeneral === 'con'
-        ? { tipo: checkoutMicaTipo, indice: checkoutMicaIndice, tratamientos: [...checkoutMicaTratamientos], costo: micaCost.total }
-        : null;
+      const items = cart.map(it => ({ modelo: it.modelo, color: it.color, precio: it.precio, cantidad: it.cantidad, tratamientos: it.tratamientos || [], graduacion: it.graduacion === 'con' ? 'con' : 'sin', tipoCompra: it.tipoCompra || null, graduacionInfo: it.graduacionInfo || null, micaTipoElegido: it.micaTipoElegido || null, micaTipoElegidoCosto: it.micaTipoElegidoCosto || 0, micaMaterialElegido: it.micaMaterialElegido || null, micaMaterialElegidoCosto: it.micaMaterialElegidoCosto || 0, tratamientoElegido: it.tratamientoElegido || null, tratamientoElegidoCosto: it.tratamientoElegidoCosto || 0 }));
       const lentesTotal = cartTotal();
       const examen = checkoutTipo === 'examen' ? checkoutExamCost() : null;
-      const total = lentesTotal + (micaCost ? micaCost.total : 0) + (examen ? examen.total : 0);
+      const total = lentesTotal + (examen ? examen.total : 0);
       const chosenSlot = checkoutSlotsCache.find(s => s.id === slotId);
 
       try {
@@ -8482,7 +8586,6 @@
           email,
           tipoPedido: checkoutTipo,
           receta,
-          micaConfig,
           items,
           examen: examen ? {
             personas: examen.personas,
@@ -8501,7 +8604,7 @@
         });
 
         // Mensaje de WhatsApp con el resumen del pedido
-        const itemsText = items.map(it => `• ${it.modelo} (${it.color})${it.cantidad > 1 ? ` x${it.cantidad}` : ''}${it.precio ? ` — $${Number(it.precio).toFixed(2)}` : ''}${(it.tratamientos && it.tratamientos.length) ? ` [${it.tratamientos.join(', ')}]` : ''}${it.graduacion === 'con' ? ' [CON GRADUACIÓN — costo final según receta]' : ' [sin graduación]'}${it.tratamientoElegido ? ` — Tratamiento elegido: ${it.tratamientoElegido}${it.tratamientoElegidoCosto ? ` (+$${Number(it.tratamientoElegidoCosto).toFixed(2)})` : ' (incluido)'}` : ''}${(it.graduacionInfo && it.graduacionInfo.modo === 'receta' && it.graduacionInfo.receta) ? ` — Receta: ${it.graduacionInfo.receta}` : ''}${(it.graduacionInfo && it.graduacionInfo.modo === 'examen') ? ' — Pidió examen a domicilio' : ''}`).join('%0A');
+        const itemsText = items.map(it => `• ${it.modelo} (${it.color})${it.cantidad > 1 ? ` x${it.cantidad}` : ''}${it.precio ? ` — $${Number(it.precio).toFixed(2)}` : ''}${(it.tratamientos && it.tratamientos.length) ? ` [${it.tratamientos.join(', ')}]` : ''}${it.graduacion === 'con' ? ' [CON GRADUACIÓN — costo final según receta]' : ' [sin graduación]'}${it.micaTipoElegido ? ` — Mica: ${PF_MICA_TIPO_LABELS[it.micaTipoElegido] || it.micaTipoElegido}${it.micaTipoElegidoCosto ? ` (+$${Number(it.micaTipoElegidoCosto).toFixed(2)})` : ' (incluida)'}` : ''}${it.micaMaterialElegido ? ` — Material: ${PF_MICA_MATERIAL_LABELS[it.micaMaterialElegido] || it.micaMaterialElegido}${it.micaMaterialElegidoCosto ? ` (+$${Number(it.micaMaterialElegidoCosto).toFixed(2)})` : ''}` : ''}${it.tratamientoElegido ? ` — Tratamiento: ${it.tratamientoElegido}${it.tratamientoElegidoCosto ? ` (+$${Number(it.tratamientoElegidoCosto).toFixed(2)})` : ''}` : ''}${(it.graduacionInfo && it.graduacionInfo.modo === 'receta' && it.graduacionInfo.receta) ? ` — Receta: ${it.graduacionInfo.receta}` : ''}${(it.graduacionInfo && it.graduacionInfo.modo === 'examen') ? ' — Pidió examen a domicilio' : ''}`).join('%0A');
         const tipoText = checkoutTipo === 'receta' ? 'Pedido CON RECETA' : checkoutTipo === 'examen' ? 'Pedido con EXAMEN A DOMICILIO' : 'Pedido SIN GRADUACIÓN';
         let msg = `Hola, quiero confirmar mi pedido en Visión EKA:%0A%0A${tipoText}%0A${itemsText}`;
         if (checkoutTipo === 'receta') msg += `%0AReceta: ${receta}`;
@@ -8510,16 +8613,6 @@
         // Si el cliente no pudo subir la foto en la web, le recordamos adjuntarla aquí mismo en el chat.
         const fotosPendientesWhatsapp = items.filter(it => it.graduacionInfo && it.graduacionInfo.fotoPorWhatsapp).map(it => it.modelo);
         if (fotosPendientesWhatsapp.length) msg += `%0A%0A📎 Voy a adjuntar aquí la foto de mi receta para: ${fotosPendientesWhatsapp.join(', ')}`;
-        if (micaConfig) {
-          const micaTipoLabel = MICA_TIPO_LABELS[micaConfig.tipo] || micaConfig.tipo;
-          const micaIndiceLabel = MICA_INDICE_LABELS[micaConfig.indice] || micaConfig.indice;
-          msg += `%0A%0AConfiguración de mica:%0A• Tipo: ${micaTipoLabel} ($${(MICA_TIPO_PRECIOS[micaConfig.tipo] || 0).toFixed(2)})%0A• Material: ${micaIndiceLabel} ($${(MICA_INDICE_PRECIOS[micaConfig.indice] || 0).toFixed(2)})`;
-          if (micaConfig.tratamientos.length) {
-            const tratLabels = micaConfig.tratamientos.map(t => `${t} ($${(MICA_TRATAMIENTO_PRECIOS[t] || 0).toFixed(2)})`);
-            msg += `%0A• Tratamientos: ${tratLabels.join(', ')}`;
-          }
-          msg += `%0A• Subtotal mica y tratamientos: $${micaConfig.costo.toFixed(2)}`;
-        }
         if (items.some(it => it.graduacion === 'con')) msg += `%0A%0ANota: algunos lentes son con graduación, el precio final de esos se confirma según la receta.`;
         if (examen) {
           msg += `%0A%0AExamen a domicilio (${examen.personas} persona${examen.personas > 1 ? 's' : ''}): $${examen.subtotal.toFixed(2)}%0ATraslado: $${examen.traslado.toFixed(2)}`;
