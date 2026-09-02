@@ -2387,23 +2387,15 @@
         <div id="pfRecetaWrap" class="hidden mb-2">
           <label class="block text-[9px] uppercase tracking-widest text-slate-500 font-extrabold mb-2">Su receta / graduación</label>
 
-          <!-- Sub-pestañas: foto vs formulario guiado vs texto libre -->
+          <!-- Sub-pestañas: solo WhatsApp o formulario guiado -->
           <div class="flex gap-2 mb-3 p-1 bg-brand-navy rounded-full">
-            <button type="button" onclick="pfChooseRecetaFoto()" id="pfRecetaModoFotoBtn" class="flex-1 py-2 rounded-full text-[10px] font-bold uppercase tracking-wider transition-all">📷 Subir foto</button>
+            <button type="button" onclick="pfSetRecetaModo('whatsapp')" id="pfRecetaModoWhatsappBtn" class="flex-1 py-2 rounded-full text-[10px] font-bold uppercase tracking-wider transition-all">📱 Por WhatsApp</button>
             <button type="button" onclick="pfSetRecetaModo('guiado')" id="pfRecetaModoGuiadoBtn" class="flex-1 py-2 rounded-full text-[10px] font-bold uppercase tracking-wider transition-all">📝 Formulario guiado</button>
-            <button type="button" onclick="pfSetRecetaModo('libre')" id="pfRecetaModoLibreBtn" class="flex-1 py-2 rounded-full text-[10px] font-bold uppercase tracking-wider transition-all">✍️ Texto libre</button>
           </div>
-          <input id="pfRecetaFotoInput" type="file" accept="image/*" capture="environment" class="hidden" onchange="pfUploadRecipePhoto(this)">
 
-          <!-- Sub-bloque: solo visible en modo "foto", nada de formulario guiado ni texto libre aquí -->
-          <div id="pfRecetaFotoWrap" class="hidden mb-3">
-            <img id="pfRecetaFotoPreview" class="hidden w-full max-h-56 object-contain rounded-xl border border-slate-900/10 bg-brand-navy mb-2">
-            <p id="pfRecetaFotoStatus" class="text-[11px] text-slate-500 mb-2"></p>
-            <button type="button" onclick="document.getElementById('pfRecetaFotoInput').click()" class="w-full text-[11px] font-semibold text-brand-sky border border-brand-sky/30 hover:bg-brand-sky/10 rounded-xl py-2.5 transition-all">📷 Elegir otra foto</button>
-            <!-- Alternativa: si la subida directa no funciona, pueden subirla a un sitio externo y pegar el enlace -->
-            <button type="button" onclick="pfSetRecetaModo('libre')" class="w-full mt-2 text-[11px] font-semibold text-brand-sky border border-brand-sky/30 hover:bg-brand-sky/10 rounded-xl py-2.5 transition-all">🔗 Mejor pego el enlace de mi foto</button>
-            <!-- Respaldo: si la subida falla, dejamos que la mande directo por WhatsApp en vez de quedarse atorado -->
-            <button type="button" onclick="pfSkipRecetaFotoToWhatsapp()" id="pfRecetaFotoWhatsappBtn" class="hidden w-full mt-2 text-[11px] font-semibold text-green-500 border border-green-500/30 hover:bg-green-500/10 rounded-xl py-2.5 transition-all">📱 Mejor la mando por WhatsApp</button>
+          <!-- Sub-bloque: solo visible en modo "whatsapp" -->
+          <div id="pfRecetaWhatsappWrap" class="hidden mb-3 p-3 bg-brand-navy rounded-xl border border-brand-sky/20">
+            <p class="text-[11px] text-slate-500 leading-relaxed">Perfecto, continúa con tu pedido y al confirmarlo se abrirá WhatsApp. Ahí mismo adjunta la foto de tu receta.</p>
           </div>
 
           <!-- Botón de ayuda: explica qué es cada dato y dónde encontrarlo (solo aplica al formulario/texto) -->
@@ -2491,16 +2483,6 @@
             <p class="text-[10px] text-slate-500 mt-2">Si su receta no trae cilindro, eje, adición o DP, deje esos campos vacíos — no pasa nada.</p>
           </div>
 
-          <!-- Texto libre: como antes, para quien prefiera escribir a su manera o pegar el enlace de una foto -->
-          <div id="pfRecetaLibreWrap" class="hidden">
-            <div class="mb-3 p-3 bg-brand-navy rounded-xl border border-brand-sky/20">
-              <p class="text-[11px] text-slate-500 leading-relaxed mb-2">¿La subida directa no le funcionó? Suba la foto gratis a este sitio y pegue aquí el enlace que le den.</p>
-              <a href="https://postimages.org/" target="_blank" rel="noopener noreferrer" class="block text-center text-[11px] font-semibold text-brand-sky border border-brand-sky/30 hover:bg-brand-sky/10 rounded-xl py-2.5 transition-all">🔗 Abrir sitio para subir su foto</a>
-              <p class="text-[10px] text-slate-600 mt-2">Ahí suba la foto de su receta y copie el <strong>"Direct link"</strong> (enlace directo). Péguelo abajo 👇</p>
-            </div>
-            <textarea id="pfRecetaInput" rows="3" placeholder="Escriba su graduación (ej. OD -2.00 OI -1.50) o pegue aquí el enlace de la foto de su receta" class="w-full p-3.5 bg-brand-navy border border-slate-900/10 rounded-xl text-sm text-brand-ink focus:border-brand-sky focus:outline-none"></textarea>
-          </div>
-
           <div id="pfRecetaContinueWrap">
             <button type="button" onclick="pfConfirmReceta()" class="w-full mt-3 bg-gradient-to-r from-brand-sky to-brand-teal text-brand-ink font-bold py-3 rounded-xl transition-all hover:shadow-lg text-sm">Continuar</button>
           </div>
@@ -2538,9 +2520,6 @@
             <p class="text-[10px] font-semibold text-slate-500 mt-1">Dos distancias. Una sola mica.</p>
             <p class="text-[10px] text-slate-500 leading-snug mt-1">Ideal si necesitas ver de lejos y de cerca sin tener que cambiar constantemente de lentes. Una solución práctica para tu día a día, perfecta para quienes buscan comodidad y practicidad.</p>
             <div class="mt-2.5 rounded-xl bg-white p-2 border border-slate-900/5">
-              <img src="https://raw.githubusercontent.com/VISIONEKA/Vision-Eka/main/lentes/WhatsApp%20Image%202026-09-01%20at%206.57.09%20PM.png" alt="Diagrama de la mica Bifocal FT-28: zona superior para ver de lejos, zona inferior para ver de cerca" class="w-full h-auto max-h-48 object-contain mx-auto" loading="lazy">
-            </div>
-            <div class="mt-2 rounded-xl bg-white p-2 border border-slate-900/5">
               <img src="https://raw.githubusercontent.com/VISIONEKA/Vision-Eka/main/lentes/WhatsApp%20Image%202026-09-01%20at%209.55.44%20PM.jpeg" alt="Bifocal FT-28: dos distancias, comodidad y practicidad" class="w-full h-auto max-h-48 object-contain mx-auto" loading="lazy">
             </div>
           </button>
@@ -7539,7 +7518,6 @@
         pfHighlightGraduacionModo();
         if (purchaseFlowState.graduacionModo === 'receta') {
           document.getElementById('pfRecetaWrap').classList.remove('hidden');
-          document.getElementById('pfRecetaInput').value = purchaseFlowState.receta || '';
           pfFillRecetaEstructurada();
           pfSetRecetaModo(purchaseFlowState.recetaModo || 'guiado');
         } else if (purchaseFlowState.graduacionModo === 'examen') {
@@ -7619,173 +7597,36 @@
       document.getElementById('pfExamenWrap').classList.toggle('hidden', modo !== 'examen');
       document.getElementById('pfRecetaStatus').textContent = '';
       if (modo === 'receta') {
-        document.getElementById('pfRecetaInput').value = purchaseFlowState.receta || '';
         pfFillRecetaEstructurada();
         pfSetRecetaModo(purchaseFlowState.recetaModo || 'guiado');
       }
     }
 
-    // Alterna entre las 3 formas de dar la receta: foto, formulario guiado o texto libre.
-    // Solo se muestra el bloque correspondiente al modo elegido, nunca varios a la vez.
+    // Alterna entre las 2 formas de dar la receta: por WhatsApp o formulario guiado.
+    // Solo se muestra el bloque correspondiente al modo elegido, nunca los dos a la vez.
     function pfSetRecetaModo(modo) {
       purchaseFlowState.recetaModo = modo;
-      const fotoBtn = document.getElementById('pfRecetaModoFotoBtn');
+      const whatsappBtn = document.getElementById('pfRecetaModoWhatsappBtn');
       const guiadoBtn = document.getElementById('pfRecetaModoGuiadoBtn');
-      const libreBtn = document.getElementById('pfRecetaModoLibreBtn');
-      const fotoWrap = document.getElementById('pfRecetaFotoWrap');
+      const whatsappWrap = document.getElementById('pfRecetaWhatsappWrap');
       const guiadoWrap = document.getElementById('pfRecetaGuiadoWrap');
-      const libreWrap = document.getElementById('pfRecetaLibreWrap');
       const helpBtn = document.getElementById('pfRecetaHelpToggleBtn');
       const helpPanel = document.getElementById('pfRecetaHelpPanel');
       const continueWrap = document.getElementById('pfRecetaContinueWrap');
 
       const activo = 'bg-brand-sky text-brand-ink';
       const inactivo = 'text-slate-500';
-      fotoBtn.className = `flex-1 py-2 rounded-full text-[10px] font-bold uppercase tracking-wider transition-all ${modo === 'foto' ? activo : inactivo}`;
+      whatsappBtn.className = `flex-1 py-2 rounded-full text-[10px] font-bold uppercase tracking-wider transition-all ${modo === 'whatsapp' ? activo : inactivo}`;
       guiadoBtn.className = `flex-1 py-2 rounded-full text-[10px] font-bold uppercase tracking-wider transition-all ${modo === 'guiado' ? activo : inactivo}`;
-      libreBtn.className = `flex-1 py-2 rounded-full text-[10px] font-bold uppercase tracking-wider transition-all ${modo === 'libre' ? activo : inactivo}`;
 
-      fotoWrap.classList.toggle('hidden', modo !== 'foto');
+      whatsappWrap.classList.toggle('hidden', modo !== 'whatsapp');
       guiadoWrap.classList.toggle('hidden', modo !== 'guiado');
-      libreWrap.classList.toggle('hidden', modo !== 'libre');
-      // La ayuda y el botón "Continuar" solo aplican al formulario/texto; en modo foto
-      // se sube y se avanza sola, así que no tiene sentido mostrarlos.
-      helpBtn.classList.toggle('hidden', modo === 'foto');
+      // La ayuda solo aplica al formulario guiado; en modo WhatsApp no hay campos que llenar.
+      helpBtn.classList.toggle('hidden', modo === 'whatsapp');
       helpPanel.classList.add('hidden');
-      continueWrap.classList.toggle('hidden', modo === 'foto');
+      continueWrap.classList.remove('hidden');
 
-      // Si ya había una foto subida antes, la mostramos como vista previa al volver a este modo.
-      if (modo === 'foto') {
-        const preview = document.getElementById('pfRecetaFotoPreview');
-        const status = document.getElementById('pfRecetaFotoStatus');
-        const whatsappBtn = document.getElementById('pfRecetaFotoWhatsappBtn');
-        if (whatsappBtn) whatsappBtn.classList.add('hidden');
-        const fotoUrl = purchaseFlowState.recetaEstructurada?.fotoUrl;
-        if (fotoUrl) {
-          preview.src = fotoUrl;
-          preview.classList.remove('hidden');
-          status.textContent = 'Foto guardada. Puedes continuar o elegir otra.';
-        } else if (purchaseFlowState.recetaEstructurada?.fotoPorWhatsapp) {
-          preview.classList.add('hidden');
-          status.textContent = 'Elegiste mandarla por WhatsApp al confirmar tu pedido. También puedes intentar subirla aquí.';
-        } else {
-          preview.classList.add('hidden');
-          status.textContent = '';
-        }
-      }
       document.getElementById('pfRecetaStatus').textContent = '';
-    }
-
-    // Se llama al presionar "Subir foto": cambia a modo foto (ocultando el resto) y abre el selector de archivo.
-    function pfChooseRecetaFoto() {
-      pfSetRecetaModo('foto');
-      document.getElementById('pfRecetaFotoInput').click();
-    }
-
-    // Reduce el tamaño de la foto antes de subirla, para que no se quede "cargando" para
-    // siempre con fotos pesadas tomadas directo de la cámara del celular (varios MB).
-    // 1400px es de sobra para que se lean los números de una receta, y baja mucho el peso.
-    function pfResizeImageForUpload(file, maxDim = 1400, quality = 0.75) {
-      return new Promise((resolve, reject) => {
-        const img = new Image();
-        const objectUrl = URL.createObjectURL(file);
-        img.onload = () => {
-          URL.revokeObjectURL(objectUrl);
-          let { width, height } = img;
-          if (width > maxDim || height > maxDim) {
-            const scale = maxDim / Math.max(width, height);
-            width = Math.round(width * scale);
-            height = Math.round(height * scale);
-          }
-          const canvas = document.createElement('canvas');
-          canvas.width = width;
-          canvas.height = height;
-          const ctx = canvas.getContext('2d');
-          ctx.drawImage(img, 0, 0, width, height);
-          canvas.toBlob(blob => {
-            if (!blob) { reject(new Error('No se pudo procesar la imagen')); return; }
-            resolve(new File([blob], (file.name || 'receta').replace(/\.[^.]+$/, '') + '.jpg', { type: 'image/jpeg' }));
-          }, 'image/jpeg', quality);
-        };
-        img.onerror = () => { URL.revokeObjectURL(objectUrl); reject(new Error('No se pudo leer la imagen')); };
-        img.src = objectUrl;
-      });
-    }
-
-    async function pfUploadRecipePhoto(input) {
-      const file = input.files && input.files[0];
-      if (!file || !file.type.startsWith('image/')) return;
-      pfSetRecetaModo('foto');
-      const status = document.getElementById('pfRecetaFotoStatus');
-      const preview = document.getElementById('pfRecetaFotoPreview');
-      preview.classList.add('hidden');
-      status.textContent = 'Preparando imagen...';
-      // Dejamos visible la opción de WhatsApp desde ya: si la subida se tarda o se
-      // queda pegada, la persona no tiene que esperar a que falle para poder seguir.
-      const whatsappBtnReset = document.getElementById('pfRecetaFotoWhatsappBtn');
-      if (whatsappBtnReset) whatsappBtnReset.classList.remove('hidden');
-
-      try {
-        let uploadFile = file;
-        try {
-          uploadFile = await pfResizeImageForUpload(file);
-        } catch (resizeError) {
-          console.warn('No se pudo reducir la imagen, se sube la original:', resizeError);
-        }
-        status.textContent = 'Subiendo receta... 0%';
-        const fb = await window.firebaseReady;
-
-        // Respaldo: si la subida no termina en 20s (se queda pegada, típico de redes
-        // lentas o bloqueadas), la cancelamos nosotros mismos y ofrecemos WhatsApp,
-        // en vez de dejar a la persona esperando para siempre.
-        const UPLOAD_TIMEOUT_MS = 20000;
-        let timedOut = false;
-        const timeoutPromise = new Promise((_, reject) => {
-          setTimeout(() => { timedOut = true; reject(new Error('UPLOAD_TIMEOUT')); }, UPLOAD_TIMEOUT_MS);
-        });
-
-        const url = await Promise.race([
-          fb.uploadRecipeImage(uploadFile, purchaseFlowState.productId, pct => {
-            if (!timedOut) status.textContent = `Subiendo receta... ${pct}%`;
-          }),
-          timeoutPromise
-        ]);
-
-        purchaseFlowState.receta = `Foto de receta: ${url}`;
-        purchaseFlowState.recetaEstructurada = { ...(purchaseFlowState.recetaEstructurada || {}), fotoUrl: url };
-        preview.src = url;
-        preview.classList.remove('hidden');
-        status.textContent = 'Foto guardada. Puedes continuar.';
-        const whatsappBtnDone = document.getElementById('pfRecetaFotoWhatsappBtn');
-        if (whatsappBtnDone) whatsappBtnDone.classList.add('hidden');
-        pfShowStep(3);
-      } catch (error) {
-        console.error('No se pudo subir la receta:', error);
-        if (error && error.message === 'UPLOAD_TIMEOUT') {
-          status.textContent = 'La subida está tardando demasiado. Puedes mandarla por WhatsApp y seguir con tu pedido.';
-        } else if (error && error.code === 'storage/unauthorized') {
-          status.textContent = 'No se pudo subir: permisos de almacenamiento. Avisa al administrador.';
-        } else if (error && (error.code === 'storage/canceled' || error.code === 'storage/retry-limit-exceeded')) {
-          status.textContent = 'La subida se interrumpió por la conexión. Intenta de nuevo o mándala por WhatsApp.';
-        } else {
-          status.textContent = 'No se pudo subir la foto. Intenta de nuevo o mándala por WhatsApp.';
-        }
-        // Si falló o se quedó pegada, ofrecemos mandarla por WhatsApp en vez de dejar a la persona atorada.
-        const whatsappBtn = document.getElementById('pfRecetaFotoWhatsappBtn');
-        if (whatsappBtn) whatsappBtn.classList.remove('hidden');
-      } finally {
-        input.value = '';
-      }
-    }
-
-    // Respaldo cuando la subida web falla: en vez de insistir, marcamos que la persona
-    // enviará la foto directamente por WhatsApp, y seguimos con el flujo normalmente.
-    function pfSkipRecetaFotoToWhatsapp() {
-      purchaseFlowState.receta = 'El cliente enviará la foto de su receta por WhatsApp';
-      purchaseFlowState.recetaEstructurada = { ...(purchaseFlowState.recetaEstructurada || {}), fotoUrl: null, fotoPorWhatsapp: true };
-      document.getElementById('pfRecetaFotoStatus').textContent = 'Listo, la mandarás por WhatsApp al confirmar tu pedido.';
-      document.getElementById('pfRecetaFotoWhatsappBtn').classList.add('hidden');
-      pfShowStep(3);
     }
 
     function pfSetOptionalField(field, enabled) {
@@ -7819,13 +7660,9 @@
       const status = document.getElementById('pfRecetaStatus');
       status.textContent = '';
 
-      if (purchaseFlowState.recetaModo === 'libre') {
-        const val = document.getElementById('pfRecetaInput').value.trim();
-        if (!val) {
-          status.textContent = 'Escriba su graduación o pegue el enlace de su receta.';
-          return;
-        }
-        purchaseFlowState.receta = val;
+      if (purchaseFlowState.recetaModo === 'whatsapp') {
+        purchaseFlowState.receta = 'El cliente enviará su receta por WhatsApp';
+        purchaseFlowState.recetaEstructurada = { ...(purchaseFlowState.recetaEstructurada || {}), fotoUrl: null, fotoPorWhatsapp: true };
         pfShowStep(3);
         return;
       }
@@ -8640,9 +8477,6 @@
         if (checkoutTipo === 'receta') msg += `%0AReceta: ${receta}`;
         const fotosRecetaMsg = items.filter(it => it.graduacionInfo && it.graduacionInfo.fotoUrl).map(it => `• ${it.modelo}: ${it.graduacionInfo.fotoUrl}`);
         if (fotosRecetaMsg.length) msg += `%0A%0AFotos de receta subidas:%0A${fotosRecetaMsg.join('%0A')}`;
-        // Si el cliente no pudo subir la foto en la web, le recordamos adjuntarla aquí mismo en el chat.
-        const fotosPendientesWhatsapp = items.filter(it => it.graduacionInfo && it.graduacionInfo.fotoPorWhatsapp).map(it => it.modelo);
-        if (fotosPendientesWhatsapp.length) msg += `%0A%0A📎 Voy a adjuntar aquí la foto de mi receta para: ${fotosPendientesWhatsapp.join(', ')}`;
         if (items.some(it => it.graduacion === 'con')) msg += `%0A%0ANota: algunos lentes son con graduación, el precio final de esos se confirma según la receta.`;
         if (examen) {
           msg += `%0A%0AExamen a domicilio (${examen.personas} persona${examen.personas > 1 ? 's' : ''}): $${examen.subtotal.toFixed(2)}%0ATraslado: $${examen.traslado.toFixed(2)}`;
@@ -8652,6 +8486,9 @@
           if (armazonesElegidos.length) msg += `%0AArmazones para probarse ese día: ${armazonesElegidos.map(a => `${a.modelo} (${a.color})`).join(', ')}`;
         }
         msg += `%0A%0ATotal general estimado: $${total.toFixed(2)} MXN%0A%0ANombre: ${nombre}%0ATeléfono: ${telefono}`;
+        // Si el cliente eligió mandar la receta por WhatsApp, se lo recordamos al final del mensaje.
+        const recetaPorWhatsapp = items.some(it => it.graduacionInfo && it.graduacionInfo.fotoPorWhatsapp);
+        if (recetaPorWhatsapp) msg += `%0A%0ARecuerda enviar tu receta`;
 
         cart = [];
         saveCart();
