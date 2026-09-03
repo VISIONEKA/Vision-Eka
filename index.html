@@ -2238,6 +2238,21 @@
   </div>
 
   <!-- ========== CHECKOUT (finalizar pedido) ========== -->
+  <!-- Modal: ver especificaciones de un tratamiento en grande -->
+  <div id="treatmentZoomModal" class="fixed inset-0 z-[60] flex items-center justify-center p-4 sm:p-6 bg-brand-navy/90 backdrop-blur-md hidden opacity-0 transition-opacity duration-300" onclick="if(event.target===this) closeModal('treatmentZoomModal')">
+    <div class="bg-brand-dark border-2 border-brand-sky/40 rounded-3xl max-w-md w-full shadow-2xl transform scale-95 transition-transform duration-300 max-h-[90vh] overflow-y-auto p-5" id="treatmentZoomModalCard">
+      <div class="flex items-center justify-between mb-3">
+        <h3 id="treatmentZoomTitle" class="font-display font-bold text-lg text-brand-ink"></h3>
+        <button onclick="closeModal('treatmentZoomModal')" class="text-slate-500 hover:text-brand-ink text-xl leading-none flex-shrink-0 ml-3">✕</button>
+      </div>
+      <div class="rounded-xl bg-white p-2 border border-slate-900/5 mb-3">
+        <img id="treatmentZoomImg" src="" alt="" class="w-full h-auto object-contain mx-auto">
+      </div>
+      <p id="treatmentZoomPrice" class="text-xs font-bold text-brand-sky mb-2"></p>
+      <p id="treatmentZoomDesc" class="text-[13px] text-slate-500 leading-relaxed"></p>
+    </div>
+  </div>
+
   <div id="checkoutModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-brand-navy/80 backdrop-blur-md hidden opacity-0 transition-opacity duration-300">
     <div class="bg-brand-dark border-2 border-brand-sky/40 rounded-3xl max-w-lg w-full shadow-2xl transform scale-95 transition-transform duration-300 max-h-[85vh] overflow-y-auto p-6" id="checkoutModalCard">
       <div class="flex items-center justify-between mb-5">
@@ -2511,8 +2526,9 @@
             </div>
             <p class="text-[10px] font-semibold text-slate-500 mt-1">Lo esencial para ver bien, todos los días.</p>
             <p class="text-[10px] text-slate-500 leading-snug mt-1">Mica transparente para corregir tu graduación de lejos o de cerca. Clara, práctica y lista para acompañarte todos los días. Incluida gratis hasta ±3.00 dioptrías.</p>
-            <div class="mt-2.5 rounded-xl bg-white p-2 border border-slate-900/5">
+            <div class="mt-2.5 rounded-xl bg-white p-2 border border-slate-900/5 cursor-zoom-in relative group" onclick="event.stopPropagation(); showTreatmentZoom('🤍 Mica Blanca — Visión Sencilla', 'Incluida', 'Mica transparente para corregir tu graduación de lejos o de cerca. Clara, práctica y lista para acompañarte todos los días. Incluida gratis hasta ±3.00 dioptrías. Lo esencial para ver bien, todos los días.', 'https://raw.githubusercontent.com/VISIONEKA/Vision-Eka/main/lentes/WhatsApp%20Image%202026-09-01%20at%209.38.07%20PM.jpeg')">
               <img src="https://raw.githubusercontent.com/VISIONEKA/Vision-Eka/main/lentes/WhatsApp%20Image%202026-09-01%20at%209.38.07%20PM.jpeg" alt="Diagrama de la Mica Blanca: visión sencilla, clara y práctica" class="w-full h-auto max-h-48 object-contain mx-auto" loading="lazy">
+              <span class="absolute bottom-1.5 right-1.5 bg-brand-dark/80 text-white text-[9px] font-bold px-2 py-0.5 rounded-full">🔍 Ver en grande</span>
             </div>
           </button>
           <button type="button" onclick="pfSetMicaTipo('bifocal')" class="pf-mica-tipo-btn text-left p-3.5 rounded-xl border-2 border-slate-900/10 transition-all">
@@ -2522,8 +2538,9 @@
             </div>
             <p class="text-[10px] font-semibold text-slate-500 mt-1">Dos distancias. Una sola mica.</p>
             <p class="text-[10px] text-slate-500 leading-snug mt-1">Ideal si necesitas ver de lejos y de cerca sin tener que cambiar constantemente de lentes. Una solución práctica para tu día a día, perfecta para quienes buscan comodidad y practicidad.</p>
-            <div class="mt-2.5 rounded-xl bg-white p-2 border border-slate-900/5">
+            <div class="mt-2.5 rounded-xl bg-white p-2 border border-slate-900/5 cursor-zoom-in relative group" onclick="event.stopPropagation(); showTreatmentZoom('👓 Bifocal FT-28', '+$1,290.00', 'Ideal si necesitas ver de lejos y de cerca sin tener que cambiar constantemente de lentes. Una solución práctica para tu día a día, perfecta para quienes buscan comodidad y practicidad. Dos distancias, una sola mica.', 'https://raw.githubusercontent.com/VISIONEKA/Vision-Eka/main/lentes/WhatsApp%20Image%202026-09-01%20at%209.55.44%20PM.jpeg')">
               <img src="https://raw.githubusercontent.com/VISIONEKA/Vision-Eka/main/lentes/WhatsApp%20Image%202026-09-01%20at%209.55.44%20PM.jpeg" alt="Bifocal FT-28: dos distancias, comodidad y practicidad" class="w-full h-auto max-h-48 object-contain mx-auto" loading="lazy">
+              <span class="absolute bottom-1.5 right-1.5 bg-brand-dark/80 text-white text-[9px] font-bold px-2 py-0.5 rounded-full">🔍 Ver en grande</span>
             </div>
           </button>
           <button type="button" onclick="pfSetMicaTipo('progresiva')" class="pf-mica-tipo-btn text-left p-3.5 rounded-xl border-2 border-slate-900/10 transition-all">
@@ -2533,8 +2550,9 @@
             </div>
             <p class="text-[10px] font-semibold text-slate-500 mt-1">Una mica. Todas tus distancias.</p>
             <p class="text-[10px] text-slate-500 leading-snug mt-1">Disfruta una transición natural entre lejos, distancia intermedia y cerca, sin la línea visible de un bifocal. Ideal si quieres comodidad, estética y libertad visual en un solo lente.</p>
-            <div class="mt-2.5 rounded-xl bg-white p-2 border border-slate-900/5">
+            <div class="mt-2.5 rounded-xl bg-white p-2 border border-slate-900/5 cursor-zoom-in relative group" onclick="event.stopPropagation(); showTreatmentZoom('✨ Progresivo Plus', '+$1,890.00', 'Disfruta una transición natural entre lejos, distancia intermedia y cerca, sin la línea visible de un bifocal. Ideal si quieres comodidad, estética y libertad visual en un solo lente. Una mica, todas tus distancias.', 'https://raw.githubusercontent.com/VISIONEKA/Vision-Eka/main/lentes/WhatsApp%20Image%202026-09-01%20at%209.53.28%20PM.jpeg')">
               <img src="https://raw.githubusercontent.com/VISIONEKA/Vision-Eka/main/lentes/WhatsApp%20Image%202026-09-01%20at%209.53.28%20PM.jpeg" alt="Diagrama de la mica Progresivo Plus: lejos, intermedia y cerca sin líneas" class="w-full h-auto max-h-48 object-contain mx-auto" loading="lazy">
+              <span class="absolute bottom-1.5 right-1.5 bg-brand-dark/80 text-white text-[9px] font-bold px-2 py-0.5 rounded-full">🔍 Ver en grande</span>
             </div>
           </button>
         </div>
@@ -2553,8 +2571,9 @@
             </div>
             <p class="text-[10px] font-semibold text-slate-500 mt-1">Más delgado. Más elegante.</p>
             <p class="text-[10px] text-slate-500 leading-snug mt-1">Diseñado para graduaciones altas, ayuda a reducir el grosor de la mica para lograr un aspecto más ligero, cómodo y estético. Ideal para graduaciones altas.</p>
-            <div class="mt-2.5 rounded-xl bg-white p-2 border border-slate-900/5">
+            <div class="mt-2.5 rounded-xl bg-white p-2 border border-slate-900/5 cursor-zoom-in relative group" onclick="event.stopPropagation(); showTreatmentZoom('🔹 Hi Index', '+$680.00', 'Diseñado para graduaciones altas, ayuda a reducir el grosor de la mica para lograr un aspecto más ligero, cómodo y estético. Ideal para graduaciones altas. Más delgado, más elegante.', 'https://raw.githubusercontent.com/VISIONEKA/Vision-Eka/main/lentes/WhatsApp%20Image%202026-09-01%20at%209.42.34%20PM.jpeg')">
               <img src="https://raw.githubusercontent.com/VISIONEKA/Vision-Eka/main/lentes/WhatsApp%20Image%202026-09-01%20at%209.42.34%20PM.jpeg" alt="Diagrama de Hi Index: mica más delgada y elegante para graduaciones altas" class="w-full h-auto max-h-48 object-contain mx-auto" loading="lazy">
+              <span class="absolute bottom-1.5 right-1.5 bg-brand-dark/80 text-white text-[9px] font-bold px-2 py-0.5 rounded-full">🔍 Ver en grande</span>
             </div>
           </button>
           <button type="button" onclick="pfSetMicaMaterial('policarbonato')" class="pf-mica-material-btn text-left p-3.5 rounded-xl border-2 border-slate-900/10 transition-all">
@@ -2564,8 +2583,9 @@
             </div>
             <p class="text-[10px] font-semibold text-slate-500 mt-1">Ligereza que protege.</p>
             <p class="text-[10px] text-slate-500 leading-snug mt-1">Una mica ligera y resistente a impactos, pensada para quienes buscan mayor tranquilidad y resistencia en el uso diario. Ideal para un estilo de vida activo.</p>
-            <div class="mt-2.5 rounded-xl bg-white p-2 border border-slate-900/5">
+            <div class="mt-2.5 rounded-xl bg-white p-2 border border-slate-900/5 cursor-zoom-in relative group" onclick="event.stopPropagation(); showTreatmentZoom('🛡️ Policarbonato', '+$890.00', 'Una mica ligera y resistente a impactos, pensada para quienes buscan mayor tranquilidad y resistencia en el uso diario. Ideal para un estilo de vida activo. Ligereza que protege.', 'https://raw.githubusercontent.com/VISIONEKA/Vision-Eka/main/lentes/WhatsApp%20Image%202026-09-01%20at%209.59.53%20PM.jpeg')">
               <img src="https://raw.githubusercontent.com/VISIONEKA/Vision-Eka/main/lentes/WhatsApp%20Image%202026-09-01%20at%209.59.53%20PM.jpeg" alt="Diagrama de Policarbonato: resistencia a impactos y seguridad" class="w-full h-auto max-h-48 object-contain mx-auto" loading="lazy">
+              <span class="absolute bottom-1.5 right-1.5 bg-brand-dark/80 text-white text-[9px] font-bold px-2 py-0.5 rounded-full">🔍 Ver en grande</span>
             </div>
             <p class="text-[9px] text-amber-600/80 leading-snug mt-1.5">⚠️ Con Policarbonato no está disponible el Fotocromático a color.</p>
           </button>
@@ -2582,8 +2602,9 @@
         <p class="text-xs font-bold text-slate-700">💻 Blue Ray <span class="font-normal text-slate-500">· +$490.00</span></p>
         <p class="text-[10px] font-semibold text-slate-500 mt-0.5">Más comodidad para tu mundo digital.</p>
         <p class="text-[10px] text-slate-500 leading-snug mt-1 mb-2">Ayuda a reducir la exposición a ciertas longitudes de onda de luz azul provenientes de pantallas y dispositivos digitales. Ideal si pasas gran parte del día frente a celulares, computadoras o tablets.</p>
-        <div class="mb-2 rounded-xl bg-white p-2 border border-slate-900/5">
+        <div class="mb-2 rounded-xl bg-white p-2 border border-slate-900/5 cursor-zoom-in relative group" onclick="showTreatmentZoom('💻 Blue Ray', '+$490.00', 'Ayuda a reducir la exposición a ciertas longitudes de onda de luz azul provenientes de pantallas y dispositivos digitales. Ideal si pasas gran parte del día frente a celulares, computadoras o tablets. Más comodidad para tu mundo digital.', 'https://raw.githubusercontent.com/VISIONEKA/Vision-Eka/main/lentes/WhatsApp%20Image%202026-09-01%20at%2010.03.11%20PM.jpeg')">
           <img src="https://raw.githubusercontent.com/VISIONEKA/Vision-Eka/main/lentes/WhatsApp%20Image%202026-09-01%20at%2010.03.11%20PM.jpeg" alt="Diagrama de Blue Ray: filtro de luz azul para uso digital" class="w-full h-auto max-h-48 object-contain mx-auto" loading="lazy">
+          <span class="absolute bottom-1.5 right-1.5 bg-brand-dark/80 text-white text-[9px] font-bold px-2 py-0.5 rounded-full">🔍 Ver en grande</span>
         </div>
         <div class="grid grid-cols-2 gap-2 mb-4">
           <button type="button" onclick="pfToggleBluRay('verde')" class="pf-trat-bluray-btn text-center p-2.5 rounded-xl border-2 border-slate-900/10 text-[11px] font-bold text-slate-600 transition-all">🟢 Verde</button>
@@ -2593,8 +2614,9 @@
         <p class="text-xs font-bold text-slate-700">☀️ Fotocromático <span class="font-normal text-slate-500">· +$890.00</span></p>
         <p class="text-[10px] font-semibold text-slate-500 mt-0.5">De claro a oscuro automáticamente.</p>
         <p class="text-[10px] text-slate-500 leading-snug mt-1 mb-2">La mica se adapta a la luz: clara en interiores y más oscura al exponerse a los rayos UV. Ideal si entras y sales constantemente de diferentes ambientes.</p>
-        <div class="mb-2 rounded-xl bg-white p-2 border border-slate-900/5">
-          <img src="https://raw.githubusercontent.com/VISIONEKA/Vision-Eka/main/lentes/WhatsApp%20Image%202026-09-01%20at%2010.07.27%20PM.jpeg" alt="Diagrama de Fotocromático: de claro a oscuro automáticamente" class="w-full h-auto max-h-48 object-contain mx-auto" loading="lazy">
+        <div class="mb-2 rounded-xl bg-white p-2 border border-slate-900/5 cursor-zoom-in relative group" onclick="showTreatmentZoom('☀️ Fotocromático', '+$890.00', 'La mica se adapta a la luz: clara en interiores y más oscura al exponerse a los rayos UV. Ideal si entras y sales constantemente de diferentes ambientes. De claro a oscuro automáticamente.', 'https://raw.githubusercontent.com/regina1503/lentes-visioon-eka/main/LENTES%20HOMBRE/WhatsApp%20Image%202026-09-02%20at%207.14.34%20PM%20(1).jpeg')">
+          <img src="https://raw.githubusercontent.com/regina1503/lentes-visioon-eka/main/LENTES%20HOMBRE/WhatsApp%20Image%202026-09-02%20at%207.14.34%20PM%20(1).jpeg" alt="Diagrama de Fotocromático: de claro a oscuro automáticamente" class="w-full h-auto max-h-48 object-contain mx-auto" loading="lazy">
+          <span class="absolute bottom-1.5 right-1.5 bg-brand-dark/80 text-white text-[9px] font-bold px-2 py-0.5 rounded-full">🔍 Ver en grande</span>
         </div>
         <div class="grid grid-cols-2 gap-2 mb-1">
           <button type="button" onclick="pfToggleFotocromatico('gris_cafe')" class="pf-trat-foto-btn text-center p-2.5 rounded-xl border-2 border-slate-900/10 text-[11px] font-bold text-slate-600 transition-all">⚫ Gris / Café</button>
@@ -2606,8 +2628,9 @@
         <p class="text-xs font-bold text-slate-700">😎 Polarizado <span class="font-normal text-slate-500">· +$1,290.00</span></p>
         <p class="text-[10px] font-semibold text-slate-500 mt-0.5">Menos reflejos. Más comodidad.</p>
         <p class="text-[10px] text-slate-500 leading-snug mt-1 mb-2">Reduce el deslumbramiento provocado por superficies como carretera, agua y vidrio, para que disfrutes tus actividades al aire libre con mayor comodidad visual. Ideal para conducir y disfrutar del exterior.</p>
-        <div class="mb-2 rounded-xl bg-white p-2 border border-slate-900/5">
+        <div class="mb-2 rounded-xl bg-white p-2 border border-slate-900/5 cursor-zoom-in relative group" onclick="showTreatmentZoom('😎 Polarizado', '+$1,290.00', 'Reduce el deslumbramiento provocado por superficies como carretera, agua y vidrio, para que disfrutes tus actividades al aire libre con mayor comodidad visual. Ideal para conducir y disfrutar del exterior. Menos reflejos, más comodidad.', 'https://raw.githubusercontent.com/VISIONEKA/Vision-Eka/main/lentes/WhatsApp%20Image%202026-09-01%20at%209.41.33%20PM.jpeg')">
           <img src="https://raw.githubusercontent.com/VISIONEKA/Vision-Eka/main/lentes/WhatsApp%20Image%202026-09-01%20at%209.41.33%20PM.jpeg" alt="Diagrama de Polarizado: menos reflejos, más comodidad" class="w-full h-auto max-h-48 object-contain mx-auto" loading="lazy">
+          <span class="absolute bottom-1.5 right-1.5 bg-brand-dark/80 text-white text-[9px] font-bold px-2 py-0.5 rounded-full">🔍 Ver en grande</span>
         </div>
         <button type="button" onclick="pfTogglePolarizado()" id="pfTratPolarizadoBtn" class="w-full text-left p-3 rounded-xl border-2 border-slate-900/10 text-xs font-bold text-slate-600 transition-all mb-1">Elegir Polarizado <span class="font-normal text-slate-500">(no se puede combinar con Blu Ray ni Fotocromático)</span></button>
         <p class="text-[10px] text-slate-500 mb-5">Si no elige ninguno, su mica queda sin tratamiento adicional.</p>
@@ -7369,6 +7392,17 @@
       modal.classList.remove('opacity-100');
       card.classList.remove('scale-100');
       setTimeout(() => modal.classList.add('hidden'), 300);
+    }
+
+    // Abre en grande la imagen + descripción completa de un tratamiento (Blue Ray, Fotocromático, Polarizado)
+    function showTreatmentZoom(title, price, desc, imgUrl) {
+      document.getElementById('treatmentZoomTitle').textContent = title;
+      document.getElementById('treatmentZoomPrice').textContent = price;
+      document.getElementById('treatmentZoomDesc').textContent = desc;
+      const img = document.getElementById('treatmentZoomImg');
+      img.src = imgUrl;
+      img.alt = title;
+      openModal('treatmentZoomModal');
     }
 
     // =========================================================
