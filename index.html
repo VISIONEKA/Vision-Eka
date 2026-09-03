@@ -2579,6 +2579,9 @@
         <p class="text-xs font-bold text-slate-700">💻 Blue Ray <span class="font-normal text-slate-500">· +$490.00</span></p>
         <p class="text-[10px] font-semibold text-slate-500 mt-0.5">Más comodidad para tu mundo digital.</p>
         <p class="text-[10px] text-slate-500 leading-snug mt-1 mb-2">Ayuda a reducir la exposición a ciertas longitudes de onda de luz azul provenientes de pantallas y dispositivos digitales. Ideal si pasas gran parte del día frente a celulares, computadoras o tablets.</p>
+        <div class="mb-2 rounded-xl bg-white p-2 border border-slate-900/5">
+          <img src="https://raw.githubusercontent.com/VISIONEKA/Vision-Eka/main/lentes/WhatsApp%20Image%202026-09-01%20at%2010.03.11%20PM.jpeg" alt="Diagrama de Blue Ray: filtro de luz azul para uso digital" class="w-full h-auto max-h-48 object-contain mx-auto" loading="lazy">
+        </div>
         <div class="grid grid-cols-2 gap-2 mb-4">
           <button type="button" onclick="pfToggleBluRay('verde')" class="pf-trat-bluray-btn text-center p-2.5 rounded-xl border-2 border-slate-900/10 text-[11px] font-bold text-slate-600 transition-all">🟢 Verde</button>
           <button type="button" onclick="pfToggleBluRay('azul')" class="pf-trat-bluray-btn text-center p-2.5 rounded-xl border-2 border-slate-900/10 text-[11px] font-bold text-slate-600 transition-all">🔵 Azul</button>
@@ -2779,10 +2782,25 @@
 
     // ---- Hero Carousel: alterna varias fotos reales cada pocos segundos ----
     (function () {
-      const slides = document.querySelectorAll('#heroCarousel .hero-slide');
-      const dots = document.querySelectorAll('#heroCarouselDots .hero-dot');
+      let slides = Array.from(document.querySelectorAll('#heroCarousel .hero-slide'));
+      let dots = Array.from(document.querySelectorAll('#heroCarouselDots .hero-dot'));
       let heroIdx = 0;
       let heroTimer = null;
+
+      // Quita del DOM las fotos/puntos sobrantes cuando el admin elimina una
+      // foto del banner (deja el carrusel con exactamente `count` fotos).
+      function pruneHeroSlidesTo(count) {
+        while (slides.length > count) {
+          const img = slides.pop();
+          img.remove();
+        }
+        while (dots.length > count) {
+          const dot = dots.pop();
+          dot.remove();
+        }
+        if (heroIdx >= slides.length) heroIdx = 0;
+      }
+      window.pruneHeroSlidesTo = pruneHeroSlidesTo;
 
       // Aplica la posición de recorte (X/Y) guardada para cada foto, según sea
       // pantalla de teléfono o de computadora. Se puede editar desde el admin.
@@ -2814,6 +2832,10 @@
               if (s.posDesktop) img.dataset.posDesktop = s.posDesktop;
               if (s.posMobile) img.dataset.posMobile = s.posMobile;
             });
+            // Si en el admin se eliminaron fotos (quedaron menos de las 4 de
+            // fábrica), se quitan del carrusel en vivo — si no, la foto por
+            // defecto seguía apareciendo aunque ya no estuviera en la config.
+            pruneHeroSlidesTo(config.slides.length);
             applyHeroPositions();
           }
         } catch (err) {
@@ -5859,7 +5881,10 @@
       if (!wrap) return;
       wrap.innerHTML = adminHeroSlidesData.map((s, i) => `
         <div class="bg-brand-navy border border-slate-900/10 rounded-3xl p-5">
-          <span class="text-[10px] font-extrabold uppercase tracking-widest text-brand-sky mb-3 block">Foto ${i + 1}</span>
+          <div class="flex items-center justify-between mb-3">
+            <span class="text-[10px] font-extrabold uppercase tracking-widest text-brand-sky block">Foto ${i + 1}</span>
+            <button type="button" onclick="adminRemoveHeroSlide(${i})" class="text-[10px] font-bold uppercase tracking-wider text-red-400 hover:text-red-300">🗑️ Eliminar</button>
+          </div>
 
           <label class="block text-[10px] uppercase tracking-widest text-slate-500 font-extrabold mb-1.5">URL de la imagen</label>
           <input type="text" value="${escapeHtml(s.src)}" oninput="adminUpdateHeroSlide(${i}, 'src', this.value)" class="w-full p-3 mb-4 bg-brand-dark border border-slate-900/10 rounded-xl text-xs text-brand-ink focus:border-brand-sky focus:outline-none">
@@ -5893,6 +5918,16 @@
       `).join('');
     }
 
+    function adminRemoveHeroSlide(i) {
+      if (adminHeroSlidesData.length <= 1) {
+        alert('Debe quedar al menos una foto en el banner de inicio.');
+        return;
+      }
+      if (!confirm('¿Eliminar esta foto del banner de inicio? Se quitará de la página principal en cuanto guardes los cambios.')) return;
+      adminHeroSlidesData.splice(i, 1);
+      adminRenderHeroSlidesEditor();
+    }
+
     function adminUpdateHeroSlide(i, field, value) {
       adminHeroSlidesData[i][field] = (field === 'src') ? normalizeImageUrl(String(value || '').trim()) : Number(value);
       const s = adminHeroSlidesData[i];
@@ -5918,7 +5953,9 @@
         }));
         await fb.saveHeroConfig(slides);
 
-        // Actualiza también la portada en vivo, sin recargar la página
+        // Actualiza también la portada en vivo, sin recargar la página —
+        // incluyendo quitar del carrusel las fotos que se hayan eliminado.
+        if (window.pruneHeroSlidesTo) window.pruneHeroSlidesTo(slides.length);
         const domSlides = document.querySelectorAll('#heroCarousel .hero-slide');
         slides.forEach((s, i) => {
           const img = domSlides[i];
@@ -8599,14 +8636,43 @@
           const pagos = Array.isArray(o.pagos) && o.pagos.length ? o.pagos : (o.anticipo > 0 ? [{ monto: o.anticipo, nota: 'Anticipo' }] : []);
           const totalPagado = pagos.reduce((sum, pg) => sum + (Number(pg.monto) || 0), 0);
           const restante = (o.precio && totalPagado > 0) ? Math.max(0, Number(o.precio) - totalPagado) : null;
+          const money = (n) => `$${Number(n || 0).toLocaleString('es-MX', {minimumFractionDigits:2, maximumFractionDigits:2})}`;
+
+          // ---- Desglose detallado por artículo: armazón, mica, material y tratamiento ----
+          const desgloseItems = items.map(it => {
+            const cantidad = Number(it.cantidad) > 0 ? Number(it.cantidad) : 1;
+            const filas = [];
+            filas.push(`<div class="flex justify-between"><span class="text-slate-500">🕶️ Armazón${it.color ? ` (${escapeHtml(it.color)})` : ''}</span><span class="text-slate-600">${money(it.precio)}</span></div>`);
+            if (it.micaTipoElegido) {
+              filas.push(`<div class="flex justify-between"><span class="text-slate-500">🔎 Mica: ${escapeHtml(it.micaTipoElegido)}</span><span class="text-slate-600">${Number(it.micaTipoElegidoCosto) > 0 ? '+' + money(it.micaTipoElegidoCosto) : 'Incluido'}</span></div>`);
+            }
+            if (it.micaMaterialElegido) {
+              const nombreMaterial = it.micaMaterialElegido === 'hiindex' ? 'Hi Index' : (it.micaMaterialElegido === 'policarbonato' ? 'Policarbonato' : it.micaMaterialElegido);
+              filas.push(`<div class="flex justify-between"><span class="text-slate-500">🔹 Material: ${escapeHtml(nombreMaterial)}</span><span class="text-slate-600">+${money(it.micaMaterialElegidoCosto)}</span></div>`);
+            }
+            if (it.tratamientoElegido) {
+              filas.push(`<div class="flex justify-between"><span class="text-slate-500">✨ Tratamiento: ${escapeHtml(it.tratamientoElegido)}</span><span class="text-slate-600">+${money(it.tratamientoElegidoCosto)}</span></div>`);
+            }
+            const subtotalUnitario = Number(it.precio || 0) + Number(it.micaTipoElegidoCosto || 0) + Number(it.micaMaterialElegidoCosto || 0) + Number(it.tratamientoElegidoCosto || 0);
+            const subtotal = subtotalUnitario * cantidad;
+            return `
+              <div class="mb-2 last:mb-0">
+                <p class="text-[11px] font-bold text-brand-ink mb-1">${escapeHtml(it.modelo || 'Lente')}${cantidad > 1 ? ` <span class="font-normal text-slate-500">x${cantidad}</span>` : ''}</p>
+                <div class="space-y-0.5 text-[10.5px] pl-1">${filas.join('')}</div>
+                <div class="flex justify-between text-[10.5px] font-bold text-brand-ink mt-1 pt-1 border-t border-slate-900/5"><span>Subtotal</span><span>${money(subtotal)}</span></div>
+              </div>
+            `;
+          }).join('');
+
           return `
           <div class="p-3.5 bg-brand-navy border border-slate-900/10 rounded-xl">
             <div class="flex items-center justify-between mb-1">
               <span class="text-[10px] text-slate-500">${formatFecha(o.createdAt)}</span>
-              ${o.precio ? `<span class="text-xs font-bold text-brand-ink">$${Number(o.precio).toLocaleString('es-MX', {minimumFractionDigits:2})}</span>` : ''}
+              ${o.precio ? `<span class="text-xs font-bold text-brand-ink">${money(o.precio)}</span>` : ''}
             </div>
             <p class="text-xs text-slate-600 mb-2">${itemsText || 'Pedido registrado'}</p>
-            ${restante !== null ? `<p class="text-[11px] text-slate-500 mb-2">Pagado: $${totalPagado.toLocaleString('es-MX', {minimumFractionDigits:2})} · Falta por pagar: <strong class="text-brand-ink">$${restante.toLocaleString('es-MX', {minimumFractionDigits:2})}</strong></p>` : ''}
+            ${desgloseItems ? `<div class="mb-2 p-2.5 bg-brand-dark rounded-lg border border-slate-900/10">${desgloseItems}</div>` : ''}
+            ${restante !== null ? `<p class="text-[11px] text-slate-500 mb-2">Pagado: ${money(totalPagado)} · Falta por pagar: <strong class="text-brand-ink">${money(restante)}</strong></p>` : ''}
             <div class="flex flex-wrap gap-2">
               ${estadoPagoBadge(o.estadoPago || 'pendiente')}
               ${estadoEnvioBadge(o.estadoEnvio || 'preparando')}
