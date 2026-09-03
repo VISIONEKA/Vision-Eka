@@ -2245,11 +2245,20 @@
         <h3 id="treatmentZoomTitle" class="font-display font-bold text-lg text-brand-ink"></h3>
         <button onclick="closeModal('treatmentZoomModal')" class="text-slate-500 hover:text-brand-ink text-xl leading-none flex-shrink-0 ml-3">✕</button>
       </div>
-      <div class="rounded-xl bg-white p-2 border border-slate-900/5 mb-3">
+      <div class="rounded-xl bg-white p-2 border border-slate-900/5 mb-3 cursor-zoom-in relative group" onclick="event.stopPropagation(); openImageFullscreen(document.getElementById('treatmentZoomImg').src, document.getElementById('treatmentZoomTitle').textContent)">
         <img id="treatmentZoomImg" src="" alt="" class="w-full h-auto object-contain mx-auto">
+        <span class="absolute bottom-3 right-3 bg-brand-dark/80 text-white text-[9px] font-bold px-2 py-0.5 rounded-full">⛶ Pantalla completa</span>
       </div>
       <p id="treatmentZoomPrice" class="text-xs font-bold text-brand-sky mb-2"></p>
       <p id="treatmentZoomDesc" class="text-[13px] text-slate-500 leading-relaxed"></p>
+    </div>
+  </div>
+
+  <!-- Visor de imagen a pantalla completa (para tratamientos, micas, etc.) -->
+  <div id="imageFullscreenModal" class="fixed inset-0 z-[70] flex items-center justify-center p-2 bg-black/95 hidden opacity-0 transition-opacity duration-300" onclick="closeModal('imageFullscreenModal')">
+    <div id="imageFullscreenModalCard" class="relative w-full h-full flex items-center justify-center transform scale-95 transition-transform duration-300">
+      <button onclick="event.stopPropagation(); closeModal('imageFullscreenModal')" class="absolute top-2 right-2 sm:top-4 sm:right-4 text-white text-3xl leading-none z-10 w-10 h-10 flex items-center justify-center rounded-full bg-white/10 hover:bg-white/20">✕</button>
+      <img id="imageFullscreenImg" src="" alt="" class="max-w-full max-h-full object-contain" onclick="event.stopPropagation()">
     </div>
   </div>
 
@@ -2606,9 +2615,8 @@
           <img src="https://raw.githubusercontent.com/VISIONEKA/Vision-Eka/main/lentes/WhatsApp%20Image%202026-09-01%20at%2010.03.11%20PM.jpeg" alt="Diagrama de Blue Ray: filtro de luz azul para uso digital" class="w-full h-auto max-h-48 object-contain mx-auto" loading="lazy">
           <span class="absolute bottom-1.5 right-1.5 bg-brand-dark/80 text-white text-[9px] font-bold px-2 py-0.5 rounded-full">🔍 Ver en grande</span>
         </div>
-        <div class="grid grid-cols-2 gap-2 mb-4">
-          <button type="button" onclick="pfToggleBluRay('verde')" class="pf-trat-bluray-btn text-center p-2.5 rounded-xl border-2 border-slate-900/10 text-[11px] font-bold text-slate-600 transition-all">🟢 Verde</button>
-          <button type="button" onclick="pfToggleBluRay('azul')" class="pf-trat-bluray-btn text-center p-2.5 rounded-xl border-2 border-slate-900/10 text-[11px] font-bold text-slate-600 transition-all">🔵 Azul</button>
+        <div class="mb-4">
+          <button type="button" onclick="pfToggleBluRay('azul')" class="pf-trat-bluray-btn w-full text-center p-2.5 rounded-xl border-2 border-slate-900/10 text-[11px] font-bold text-slate-600 transition-all">🔵 Azul</button>
         </div>
 
         <p class="text-xs font-bold text-slate-700">☀️ Fotocromático <span class="font-normal text-slate-500">· +$890.00</span></p>
@@ -2623,7 +2631,13 @@
           <button type="button" onclick="pfToggleFotocromatico('colores')" id="pfFotoColoresBtn" class="pf-trat-foto-btn text-center p-2.5 rounded-xl border-2 border-slate-900/10 text-[11px] font-bold text-slate-600 transition-all">🌈 Colores</button>
         </div>
         <p id="pfFotoColoresDisabledNote" class="hidden text-[9px] text-amber-600 mb-3">No disponible con Policarbonato.</p>
-        <div id="pfFotoColoresSpacer" class="mb-3"></div>
+        <div id="pfFotoColorPicker" class="hidden grid grid-cols-3 gap-2 mb-3">
+          <button type="button" onclick="pfSetFotoColor('azul')" class="pf-foto-color-btn text-center p-2 rounded-xl border-2 border-slate-900/10 text-[10px] font-bold text-slate-600 transition-all">🔵 Azul</button>
+          <button type="button" onclick="pfSetFotoColor('morado')" class="pf-foto-color-btn text-center p-2 rounded-xl border-2 border-slate-900/10 text-[10px] font-bold text-slate-600 transition-all">🟣 Morado</button>
+          <button type="button" onclick="pfSetFotoColor('naranja')" class="pf-foto-color-btn text-center p-2 rounded-xl border-2 border-slate-900/10 text-[10px] font-bold text-slate-600 transition-all">🟠 Naranja</button>
+          <button type="button" onclick="pfSetFotoColor('granate')" class="pf-foto-color-btn text-center p-2 rounded-xl border-2 border-slate-900/10 text-[10px] font-bold text-slate-600 transition-all">🍷 Granate</button>
+          <button type="button" onclick="pfSetFotoColor('rosa_fiusha')" class="pf-foto-color-btn text-center p-2 rounded-xl border-2 border-slate-900/10 text-[10px] font-bold text-slate-600 transition-all">🌸 Rosa Fiusha</button>
+        </div>
 
         <p class="text-xs font-bold text-slate-700">😎 Polarizado <span class="font-normal text-slate-500">· +$1,290.00</span></p>
         <p class="text-[10px] font-semibold text-slate-500 mt-0.5">Menos reflejos. Más comodidad.</p>
@@ -2633,6 +2647,13 @@
           <span class="absolute bottom-1.5 right-1.5 bg-brand-dark/80 text-white text-[9px] font-bold px-2 py-0.5 rounded-full">🔍 Ver en grande</span>
         </div>
         <button type="button" onclick="pfTogglePolarizado()" id="pfTratPolarizadoBtn" class="w-full text-left p-3 rounded-xl border-2 border-slate-900/10 text-xs font-bold text-slate-600 transition-all mb-1">Elegir Polarizado <span class="font-normal text-slate-500">(no se puede combinar con Blu Ray ni Fotocromático)</span></button>
+        <div id="pfPolarizadoColorPicker" class="hidden grid grid-cols-3 gap-2 mb-3">
+          <button type="button" onclick="pfSetPolarizadoColor('azul')" class="pf-pol-color-btn text-center p-2 rounded-xl border-2 border-slate-900/10 text-[10px] font-bold text-slate-600 transition-all">🔵 Azul</button>
+          <button type="button" onclick="pfSetPolarizadoColor('morado')" class="pf-pol-color-btn text-center p-2 rounded-xl border-2 border-slate-900/10 text-[10px] font-bold text-slate-600 transition-all">🟣 Morado</button>
+          <button type="button" onclick="pfSetPolarizadoColor('naranja')" class="pf-pol-color-btn text-center p-2 rounded-xl border-2 border-slate-900/10 text-[10px] font-bold text-slate-600 transition-all">🟠 Naranja</button>
+          <button type="button" onclick="pfSetPolarizadoColor('granate')" class="pf-pol-color-btn text-center p-2 rounded-xl border-2 border-slate-900/10 text-[10px] font-bold text-slate-600 transition-all">🍷 Granate</button>
+          <button type="button" onclick="pfSetPolarizadoColor('rosa_fiusha')" class="pf-pol-color-btn text-center p-2 rounded-xl border-2 border-slate-900/10 text-[10px] font-bold text-slate-600 transition-all">🌸 Rosa Fiusha</button>
+        </div>
         <p class="text-[10px] text-slate-500 mb-5">Si no elige ninguno, su mica queda sin tratamiento adicional.</p>
 
         <div id="pfTratamientoResumen" class="hidden mb-4 p-3 bg-brand-navy rounded-xl border border-brand-sky/20 text-[11px] text-slate-600"></div>
@@ -7405,6 +7426,14 @@
       openModal('treatmentZoomModal');
     }
 
+    // Abre cualquier imagen (tratamiento, mica, armazón, etc.) a pantalla completa para verla mejor.
+    function openImageFullscreen(imgUrl, alt) {
+      const img = document.getElementById('imageFullscreenImg');
+      img.src = imgUrl;
+      img.alt = alt || '';
+      openModal('imageFullscreenModal');
+    }
+
     // =========================================================
     // ---- CARRITO (persistido en localStorage) ----
     // =========================================================
@@ -7530,8 +7559,9 @@
     // Blu Ray + Fotocromático es la única combinación permitida de 2 a la vez; Polarizado va solo.
     const PF_TRATAMIENTO_COMPONENTE_PRECIOS = { blu_ray: 490, fotocromatico: 890, polarizado: 1290 };
     const PF_TRATAMIENTO_COMPONENTE_LABELS = { blu_ray: 'Blu Ray', fotocromatico: 'Fotocromático', polarizado: 'Polarizado' };
-    const PF_BLURAY_VARIANTE_LABELS = { verde: 'Verde', azul: 'Azul' };
+    const PF_BLURAY_VARIANTE_LABELS = { azul: 'Azul' };
     const PF_FOTO_VARIANTE_LABELS = { gris_cafe: 'Gris/Café', colores: 'Colores' };
+    const PF_COLOR_LABELS = { azul: 'Azul', morado: 'Morado', naranja: 'Naranja', granate: 'Granate', rosa_fiusha: 'Rosa Fiusha' };
     // Costos por tipo de mica en el flujo de compra (mismos precios de la nota).
     const PF_MICA_TIPO_PRECIOS = { monofocal: 0, bifocal: 1290, progresiva: 1890 };
     const PF_MICA_TIPO_LABELS = { monofocal: 'Blanca (visión sencilla)', bifocal: 'Bifocal FT-28', progresiva: 'Progresivo Plus' };
@@ -7550,9 +7580,11 @@
       recetaEstructurada: { odEsf: '', odCil: '', odEje: '', oiEsf: '', oiCil: '', oiEje: '', add: '', dp: '' },
       micaTipo: null,
       micaMaterial: null,             // null (estándar) | 'hiindex' | 'policarbonato'
-      tratBluRay: null,               // null | 'verde' | 'azul'
+      tratBluRay: null,               // null | 'azul'
       tratFotocromatico: null,        // null | 'gris_cafe' | 'colores'
-      tratPolarizado: false
+      tratFotocromaticoColor: null,   // null | 'azul'|'morado'|'naranja'|'granate'|'rosa_fiusha' (solo si tratFotocromatico === 'colores')
+      tratPolarizado: false,
+      tratPolarizadoColor: null       // null | 'azul'|'morado'|'naranja'|'granate'|'rosa_fiusha'
     };
 
     function pfResetState(productId, buyNow) {
@@ -7569,7 +7601,9 @@
         micaMaterial: null,
         tratBluRay: null,
         tratFotocromatico: null,
-        tratPolarizado: false
+        tratFotocromaticoColor: null,
+        tratPolarizado: false,
+        tratPolarizadoColor: null
       };
     }
 
@@ -7592,7 +7626,9 @@
         purchaseFlowState.micaMaterial = existing.micaMaterialElegido || null;
         purchaseFlowState.tratBluRay = (existing.tratamientosElegidos && existing.tratamientosElegidos.bluRay) || null;
         purchaseFlowState.tratFotocromatico = (existing.tratamientosElegidos && existing.tratamientosElegidos.fotocromatico) || null;
+        purchaseFlowState.tratFotocromaticoColor = (existing.tratamientosElegidos && existing.tratamientosElegidos.fotocromaticoColor) || null;
         purchaseFlowState.tratPolarizado = !!(existing.tratamientosElegidos && existing.tratamientosElegidos.polarizado);
+        purchaseFlowState.tratPolarizadoColor = (existing.tratamientosElegidos && existing.tratamientosElegidos.polarizadoColor) || null;
       }
 
       const imgsArr = (p.imgs && p.imgs.length) ? p.imgs : (p.img ? [p.img] : []);
@@ -7862,6 +7898,7 @@
       // Fotocromático a color no es compatible con Policarbonato: si ya estaba elegido, se limpia.
       if (purchaseFlowState.micaMaterial === 'policarbonato' && purchaseFlowState.tratFotocromatico === 'colores') {
         purchaseFlowState.tratFotocromatico = null;
+        purchaseFlowState.tratFotocromaticoColor = null;
       }
       pfHighlightMicaMaterial();
     }
@@ -7879,11 +7916,17 @@
         costo += PF_TRATAMIENTO_COMPONENTE_PRECIOS.blu_ray;
       }
       if (purchaseFlowState.tratFotocromatico) {
-        partes.push(`Fotocromático ${PF_FOTO_VARIANTE_LABELS[purchaseFlowState.tratFotocromatico] || ''}`);
+        let label = `Fotocromático ${PF_FOTO_VARIANTE_LABELS[purchaseFlowState.tratFotocromatico] || ''}`;
+        if (purchaseFlowState.tratFotocromatico === 'colores' && purchaseFlowState.tratFotocromaticoColor) {
+          label += ` (${PF_COLOR_LABELS[purchaseFlowState.tratFotocromaticoColor]})`;
+        }
+        partes.push(label.trim());
         costo += PF_TRATAMIENTO_COMPONENTE_PRECIOS.fotocromatico;
       }
       if (purchaseFlowState.tratPolarizado) {
-        partes.push('Polarizado');
+        let label = 'Polarizado';
+        if (purchaseFlowState.tratPolarizadoColor) label += ` (${PF_COLOR_LABELS[purchaseFlowState.tratPolarizadoColor]})`;
+        partes.push(label);
         costo += PF_TRATAMIENTO_COMPONENTE_PRECIOS.polarizado;
       }
       return { label: partes.join(' + '), costo, count: partes.length };
@@ -7899,17 +7942,30 @@
       if (purchaseFlowState.tratPolarizado) return; // exclusivo: no se combina con Polarizado
       if (variante === 'colores' && purchaseFlowState.micaMaterial === 'policarbonato') return; // no disponible con Policarbonato
       purchaseFlowState.tratFotocromatico = (purchaseFlowState.tratFotocromatico === variante) ? null : variante;
+      if (purchaseFlowState.tratFotocromatico !== 'colores') purchaseFlowState.tratFotocromaticoColor = null;
+      pfHighlightTratamientos();
+    }
+
+    function pfSetFotoColor(color) {
+      purchaseFlowState.tratFotocromaticoColor = (purchaseFlowState.tratFotocromaticoColor === color) ? null : color;
+      pfHighlightTratamientos();
+    }
+
+    function pfSetPolarizadoColor(color) {
+      purchaseFlowState.tratPolarizadoColor = (purchaseFlowState.tratPolarizadoColor === color) ? null : color;
       pfHighlightTratamientos();
     }
 
     function pfTogglePolarizado() {
       if (purchaseFlowState.tratPolarizado) {
         purchaseFlowState.tratPolarizado = false;
+        purchaseFlowState.tratPolarizadoColor = null;
       } else {
         purchaseFlowState.tratPolarizado = true;
         // Polarizado va solo: quita cualquier Blu Ray / Fotocromático ya elegido.
         purchaseFlowState.tratBluRay = null;
         purchaseFlowState.tratFotocromatico = null;
+        purchaseFlowState.tratFotocromaticoColor = null;
       }
       pfHighlightTratamientos();
     }
@@ -7938,12 +7994,38 @@
       });
       document.getElementById('pfFotoColoresDisabledNote').classList.toggle('hidden', !policarbonato);
 
+      // Selector de color de Fotocromático (solo visible si se eligió la variante "Colores")
+      const fotoColorWrap = document.getElementById('pfFotoColorPicker');
+      if (fotoColorWrap) {
+        fotoColorWrap.classList.toggle('hidden', purchaseFlowState.tratFotocromatico !== 'colores');
+        document.querySelectorAll('.pf-foto-color-btn').forEach(btn => {
+          const color = (btn.getAttribute('onclick').match(/pfSetFotoColor\('([^']+)'\)/) || [])[1];
+          const isSelected = purchaseFlowState.tratFotocromaticoColor === color;
+          btn.classList.toggle('border-brand-sky', isSelected);
+          btn.classList.toggle('bg-brand-sky/5', isSelected);
+          btn.classList.toggle('border-slate-900/10', !isSelected);
+        });
+      }
+
       const polBtn = document.getElementById('pfTratPolarizadoBtn');
       const bluOFotoActivo = !!(purchaseFlowState.tratBluRay || purchaseFlowState.tratFotocromatico);
       polBtn.classList.toggle('border-brand-sky', polActivo);
       polBtn.classList.toggle('bg-brand-sky/5', polActivo);
       polBtn.classList.toggle('border-slate-900/10', !polActivo);
       polBtn.classList.toggle('opacity-40', bluOFotoActivo);
+
+      // Selector de color de Polarizado (solo visible si Polarizado está activo)
+      const polColorWrap = document.getElementById('pfPolarizadoColorPicker');
+      if (polColorWrap) {
+        polColorWrap.classList.toggle('hidden', !polActivo);
+        document.querySelectorAll('.pf-pol-color-btn').forEach(btn => {
+          const color = (btn.getAttribute('onclick').match(/pfSetPolarizadoColor\('([^']+)'\)/) || [])[1];
+          const isSelected = purchaseFlowState.tratPolarizadoColor === color;
+          btn.classList.toggle('border-brand-sky', isSelected);
+          btn.classList.toggle('bg-brand-sky/5', isSelected);
+          btn.classList.toggle('border-slate-900/10', !isSelected);
+        });
+      }
 
       const resumen = pfComputeTratamiento();
       const resumenEl = document.getElementById('pfTratamientoResumen');
@@ -7985,7 +8067,7 @@
 
       const trat = conGraduacion ? pfComputeTratamiento() : { label: '', costo: 0, count: 0 };
       item.tratamientosElegidos = conGraduacion
-        ? { bluRay: purchaseFlowState.tratBluRay, fotocromatico: purchaseFlowState.tratFotocromatico, polarizado: purchaseFlowState.tratPolarizado }
+        ? { bluRay: purchaseFlowState.tratBluRay, fotocromatico: purchaseFlowState.tratFotocromatico, fotocromaticoColor: purchaseFlowState.tratFotocromaticoColor, polarizado: purchaseFlowState.tratPolarizado, polarizadoColor: purchaseFlowState.tratPolarizadoColor }
         : null;
       item.tratamientoElegido = trat.count > 0 ? trat.label : null;
       item.tratamientoElegidoCosto = trat.costo;
@@ -8086,8 +8168,8 @@
           if (it.tratamientosElegidos) {
             const partes = [];
             if (it.tratamientosElegidos.bluRay) partes.push(`<p class="text-[10px] text-brand-teal truncate">Blue Ray${PF_BLURAY_VARIANTE_LABELS[it.tratamientosElegidos.bluRay] ? ` (${escapeHtml(PF_BLURAY_VARIANTE_LABELS[it.tratamientosElegidos.bluRay])})` : ''}: +$${Number(PF_TRATAMIENTO_COMPONENTE_PRECIOS.blu_ray).toLocaleString('es-MX', {minimumFractionDigits:2, maximumFractionDigits:2})}</p>`);
-            if (it.tratamientosElegidos.fotocromatico) partes.push(`<p class="text-[10px] text-brand-teal truncate">Fotocromático${PF_FOTO_VARIANTE_LABELS[it.tratamientosElegidos.fotocromatico] ? ` (${escapeHtml(PF_FOTO_VARIANTE_LABELS[it.tratamientosElegidos.fotocromatico])})` : ''}: +$${Number(PF_TRATAMIENTO_COMPONENTE_PRECIOS.fotocromatico).toLocaleString('es-MX', {minimumFractionDigits:2, maximumFractionDigits:2})}</p>`);
-            if (it.tratamientosElegidos.polarizado) partes.push(`<p class="text-[10px] text-brand-teal truncate">Polarizado: +$${Number(PF_TRATAMIENTO_COMPONENTE_PRECIOS.polarizado).toLocaleString('es-MX', {minimumFractionDigits:2, maximumFractionDigits:2})}</p>`);
+            if (it.tratamientosElegidos.fotocromatico) partes.push(`<p class="text-[10px] text-brand-teal truncate">Fotocromático${PF_FOTO_VARIANTE_LABELS[it.tratamientosElegidos.fotocromatico] ? ` (${escapeHtml(PF_FOTO_VARIANTE_LABELS[it.tratamientosElegidos.fotocromatico])}${it.tratamientosElegidos.fotocromaticoColor && PF_COLOR_LABELS[it.tratamientosElegidos.fotocromaticoColor] ? ' · ' + escapeHtml(PF_COLOR_LABELS[it.tratamientosElegidos.fotocromaticoColor]) : ''})` : ''}: +$${Number(PF_TRATAMIENTO_COMPONENTE_PRECIOS.fotocromatico).toLocaleString('es-MX', {minimumFractionDigits:2, maximumFractionDigits:2})}</p>`);
+            if (it.tratamientosElegidos.polarizado) partes.push(`<p class="text-[10px] text-brand-teal truncate">Polarizado${it.tratamientosElegidos.polarizadoColor && PF_COLOR_LABELS[it.tratamientosElegidos.polarizadoColor] ? ` (${escapeHtml(PF_COLOR_LABELS[it.tratamientosElegidos.polarizadoColor])})` : ''}: +$${Number(PF_TRATAMIENTO_COMPONENTE_PRECIOS.polarizado).toLocaleString('es-MX', {minimumFractionDigits:2, maximumFractionDigits:2})}</p>`);
             tratamientoLineas = partes.join('');
           } else if (it.tratamientoElegido) {
             tratamientoLineas = `<p class="text-[10px] text-brand-teal truncate">Tratamiento: ${escapeHtml(it.tratamientoElegido)}${it.tratamientoElegidoCosto ? ` (+$${Number(it.tratamientoElegidoCosto).toLocaleString('es-MX', {minimumFractionDigits:2, maximumFractionDigits:2})})` : ''}</p>`;
@@ -8835,8 +8917,8 @@
             }
             if (it.tratamientosElegidos) {
               if (it.tratamientosElegidos.bluRay) filas.push(`<div class="flex justify-between"><span class="text-slate-500">✨ Blue Ray</span><span class="text-slate-600">+${money(PF_TRATAMIENTO_COMPONENTE_PRECIOS.blu_ray)}</span></div>`);
-              if (it.tratamientosElegidos.fotocromatico) filas.push(`<div class="flex justify-between"><span class="text-slate-500">✨ Fotocromático</span><span class="text-slate-600">+${money(PF_TRATAMIENTO_COMPONENTE_PRECIOS.fotocromatico)}</span></div>`);
-              if (it.tratamientosElegidos.polarizado) filas.push(`<div class="flex justify-between"><span class="text-slate-500">✨ Polarizado</span><span class="text-slate-600">+${money(PF_TRATAMIENTO_COMPONENTE_PRECIOS.polarizado)}</span></div>`);
+              if (it.tratamientosElegidos.fotocromatico) filas.push(`<div class="flex justify-between"><span class="text-slate-500">✨ Fotocromático${it.tratamientosElegidos.fotocromaticoColor && PF_COLOR_LABELS[it.tratamientosElegidos.fotocromaticoColor] ? ' (' + escapeHtml(PF_COLOR_LABELS[it.tratamientosElegidos.fotocromaticoColor]) + ')' : ''}</span><span class="text-slate-600">+${money(PF_TRATAMIENTO_COMPONENTE_PRECIOS.fotocromatico)}</span></div>`);
+              if (it.tratamientosElegidos.polarizado) filas.push(`<div class="flex justify-between"><span class="text-slate-500">✨ Polarizado${it.tratamientosElegidos.polarizadoColor && PF_COLOR_LABELS[it.tratamientosElegidos.polarizadoColor] ? ' (' + escapeHtml(PF_COLOR_LABELS[it.tratamientosElegidos.polarizadoColor]) + ')' : ''}</span><span class="text-slate-600">+${money(PF_TRATAMIENTO_COMPONENTE_PRECIOS.polarizado)}</span></div>`);
             } else if (it.tratamientoElegido) {
               filas.push(`<div class="flex justify-between"><span class="text-slate-500">✨ Tratamiento: ${escapeHtml(it.tratamientoElegido)}</span><span class="text-slate-600">+${money(it.tratamientoElegidoCosto)}</span></div>`);
             }
