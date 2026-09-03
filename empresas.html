@@ -1385,6 +1385,11 @@
             <span>✓</span> Servicio en todo Querétaro y Parques Industriales
           </div>
 
+          <p id="heroExamPromoBanner" class="hidden mt-3 inline-flex items-center gap-1.5 text-xs font-bold text-brand-teal bg-brand-teal/10 border border-brand-teal/20 rounded-full px-4 py-2">
+            🎉 Examen a domicilio GRATIS hasta el 19 de septiembre
+          </p>
+          <p id="heroExamPromoRestricciones" class="hidden mt-1.5 text-[10px] text-slate-500">*Aplican restricciones.</p>
+
         </div>
 
         <!-- Form Right Block -->
@@ -2270,12 +2275,14 @@
         <span id="imgLightboxCount" class="hidden absolute bottom-2 left-1/2 -translate-x-1/2 bg-brand-navy/80 text-brand-ink text-[10px] font-bold px-3 py-1 rounded-full"></span>
       </div>
       <div class="p-6 sm:w-2/5 flex flex-col">
-        <span id="imgLightboxCategoria" class="text-[9px] font-extrabold text-brand-sky uppercase tracking-widest mb-1.5"></span>
+        <div class="flex items-center justify-between gap-2 mb-1.5">
+          <span id="imgLightboxCategoria" class="text-[9px] font-extrabold text-brand-sky uppercase tracking-widest"></span>
+          <span id="imgLightboxPrecio" class="text-xs font-display font-bold text-brand-ink flex-shrink-0"></span>
+        </div>
         <h4 id="imgLightboxModelo" class="font-display font-bold text-lg text-brand-ink mb-1"></h4>
         <p id="imgLightboxColor" class="text-xs text-slate-500 mb-2"></p>
         <div id="imgLightboxTratamientos" class="mb-2"></div>
-        <div class="flex items-center justify-between mt-1 mb-4">
-          <span id="imgLightboxPrecio" class="text-sm font-display font-bold text-brand-ink"></span>
+        <div class="flex items-center justify-end mt-1 mb-4">
           <span id="imgLightboxStock"></span>
         </div>
         <div id="imgLightboxCartWrap" class="flex flex-col gap-2 mt-auto">
@@ -2351,6 +2358,8 @@
       <!-- Sub-flujo: agendar examen de la vista a domicilio -->
       <div id="checkoutExamenWrap" class="hidden mb-4 p-4 bg-brand-navy rounded-2xl border border-slate-900/10">
         <p class="text-[11px] text-slate-500 mb-3 leading-relaxed">Vamos a su domicilio a realizar el examen de la vista. El costo depende de cuántas personas se lo harán y qué tan lejos está de nuestra sucursal (Plaza El Manantial, Corregidora).</p>
+        <p id="checkoutExamenPromoBanner" class="hidden text-[11px] font-bold text-brand-teal bg-brand-teal/10 border border-brand-teal/20 rounded-lg p-2.5 mb-1 leading-snug">🎉 Promoción: el examen a domicilio es GRATIS hasta el 19 de septiembre.</p>
+        <p id="checkoutExamenPromoRestricciones" class="hidden text-[9px] text-slate-500 mb-3">*Aplican restricciones.</p>
 
         <label class="block text-[9px] uppercase tracking-widest text-slate-500 font-extrabold mb-2">Número de personas a examinar</label>
         <input type="number" id="checkoutExamenPersonas" min="1" step="1" value="1" class="w-full p-3.5 mb-4 bg-brand-dark border border-slate-900/10 rounded-xl text-sm text-brand-ink focus:border-brand-sky focus:outline-none">
@@ -2380,7 +2389,7 @@
         <p id="checkoutArmazonesStatus" class="text-[10px] text-slate-500 mb-3"></p>
 
         <div id="checkoutExamenCostBox" class="text-xs text-slate-600 space-y-1 pt-3 border-t border-slate-900/10">
-          <div class="flex justify-between"><span>Examen (<span id="checkoutExamenPersonasText">1</span> persona × $300)</span><span id="checkoutExamenSubtotal">$300.00</span></div>
+          <div class="flex justify-between"><span>Examen (<span id="checkoutExamenPersonasText">1</span> persona × <span id="checkoutExamenPrecioPersona">$300</span>)</span><span id="checkoutExamenSubtotal">$300.00</span></div>
           <div class="flex justify-between"><span>Traslado</span><span id="checkoutExamenTraslado">$0.00</span></div>
           <div id="checkoutExamenBonoRow" class="hidden flex justify-between text-brand-teal font-semibold"><span>Bonificación 50% (por pedir lentes)</span><span id="checkoutExamenBono">-$0.00</span></div>
           <div class="flex justify-between font-bold text-brand-ink pt-1"><span>Total examen</span><span id="checkoutExamenTotal">$300.00</span></div>
@@ -6045,6 +6054,14 @@
     // =========================================================
     // ---- Precios del examen de la vista a domicilio (AJUSTE ESTOS VALORES SEGÚN SU NEGOCIO) ----
     const EXAM_PRICE_PER_PERSON = 300;   // MXN por persona examinada
+    // ---- Promoción: examen a domicilio GRATIS hasta el 19 de septiembre ----
+    // Después de esa fecha vuelve a cobrarse normal ($EXAM_PRICE_PER_PERSON por persona).
+    const EXAM_FREE_PROMO_DEADLINE = new Date('2026-09-19T23:59:59-06:00');
+    function isExamFreePromoActive() {
+      return new Date() <= EXAM_FREE_PROMO_DEADLINE;
+    }
+    document.getElementById('heroExamPromoBanner')?.classList.toggle('hidden', !isExamFreePromoActive());
+    document.getElementById('heroExamPromoRestricciones')?.classList.toggle('hidden', !isExamFreePromoActive());
     const EXAM_FREE_RADIUS_KM = 1.5;     // Radio gratuito de traslado
     const EXAM_TRAVEL_TIERS = [           // Costo de traslado según distancia (más allá del radio gratuito)
       { maxKm: 5, price: 150 },
@@ -6125,18 +6142,24 @@
     function checkoutExamCost() {
       const personas = Math.max(1, parseInt(document.getElementById('checkoutExamenPersonas').value, 10) || 1);
       const traslado = Number(document.getElementById('checkoutExamenDistancia').value) || 0;
-      const subtotal = personas * EXAM_PRICE_PER_PERSON;
+      const promoGratis = isExamFreePromoActive();
+      const precioPorPersona = promoGratis ? 0 : EXAM_PRICE_PER_PERSON;
+      const subtotal = personas * precioPorPersona;
       const bruto = subtotal + traslado;
       const conBono = checkoutSelectedItems().length > 0;
       const bono = conBono ? bruto * EXAM_BONUS_PERCENT : 0;
       const total = bruto - bono;
-      return { personas, traslado, subtotal, bruto, bono, total, conBono };
+      return { personas, traslado, subtotal, bruto, bono, total, conBono, promoGratis };
     }
 
     function updateExamenCostDisplay() {
       const c = checkoutExamCost();
       document.getElementById('checkoutExamenPersonasText').textContent = c.personas;
-      document.getElementById('checkoutExamenSubtotal').textContent = `$${c.subtotal.toLocaleString('es-MX', { minimumFractionDigits: 2 })}`;
+      const precioPersonaEl = document.getElementById('checkoutExamenPrecioPersona');
+      if (precioPersonaEl) precioPersonaEl.textContent = c.promoGratis ? 'GRATIS' : `$${EXAM_PRICE_PER_PERSON}`;
+      const subtotalEl = document.getElementById('checkoutExamenSubtotal');
+      subtotalEl.textContent = c.promoGratis ? 'GRATIS 🎉' : `$${c.subtotal.toLocaleString('es-MX', { minimumFractionDigits: 2 })}`;
+      subtotalEl.className = c.promoGratis ? 'text-brand-teal font-bold' : '';
       document.getElementById('checkoutExamenTraslado').textContent = c.traslado > 0 ? `$${c.traslado.toLocaleString('es-MX', { minimumFractionDigits: 2 })}` : 'Gratis';
       const bonoRow = document.getElementById('checkoutExamenBonoRow');
       if (c.conBono) {
@@ -6148,6 +6171,10 @@
         bonoRow.classList.remove('flex');
       }
       document.getElementById('checkoutExamenTotal').textContent = `$${c.total.toLocaleString('es-MX', { minimumFractionDigits: 2 })}`;
+      const promoBanner = document.getElementById('checkoutExamenPromoBanner');
+      if (promoBanner) promoBanner.classList.toggle('hidden', !c.promoGratis);
+      const promoRestricciones = document.getElementById('checkoutExamenPromoRestricciones');
+      if (promoRestricciones) promoRestricciones.classList.toggle('hidden', !c.promoGratis);
     }
     document.getElementById('checkoutExamenPersonas')?.addEventListener('input', updateExamenCostDisplay);
 

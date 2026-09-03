@@ -917,6 +917,11 @@
             <span>✓</span> Servicio en todo Querétaro
           </div>
 
+          <p id="heroExamPromoBanner" class="hidden mt-3 inline-flex items-center gap-1.5 text-xs font-bold text-brand-teal bg-brand-teal/10 border border-brand-teal/20 rounded-full px-4 py-2">
+            🎉 Examen a domicilio GRATIS hasta el 19 de septiembre
+          </p>
+          <p id="heroExamPromoRestricciones" class="hidden mt-1.5 text-[10px] text-slate-500">*Aplican restricciones.</p>
+
         </div>
 
         <!-- Form Right Block -->
@@ -2160,12 +2165,14 @@
         <div id="imgLightboxThumbs" class="hidden absolute z-10 flex overflow-auto scrollbar-hide bottom-0 inset-x-0 flex-row gap-2 p-3 snap-x snap-mandatory bg-gradient-to-t from-black/80 to-transparent sm:inset-y-0 sm:left-0 sm:right-auto sm:bottom-auto sm:top-0 sm:w-28 sm:p-3 sm:pt-14 sm:flex-col sm:snap-y sm:bg-gradient-to-r sm:from-black/70 sm:to-transparent"></div>
       </div>
       <div class="p-6 sm:w-2/5 flex flex-col">
-        <span id="imgLightboxCategoria" class="text-[9px] font-extrabold text-brand-sky uppercase tracking-widest mb-1.5"></span>
+        <div class="flex items-center justify-between gap-2 mb-1.5">
+          <span id="imgLightboxCategoria" class="text-[9px] font-extrabold text-brand-sky uppercase tracking-widest"></span>
+          <span id="imgLightboxPrecio" class="text-xs font-display font-bold text-brand-ink flex-shrink-0"></span>
+        </div>
         <h4 id="imgLightboxModelo" class="font-display font-bold text-lg text-brand-ink mb-1"></h4>
         <p id="imgLightboxColor" class="text-xs text-slate-500 mb-2"></p>
         <div id="imgLightboxTratamientos" class="mb-2"></div>
-        <div class="flex items-center justify-between mt-1 mb-4">
-          <span id="imgLightboxPrecio" class="text-sm font-display font-bold text-brand-ink"></span>
+        <div class="flex items-center justify-end mt-1 mb-4">
           <span id="imgLightboxStock"></span>
         </div>
         <div id="imgLightboxCartWrap" class="flex flex-col gap-2 mt-auto">
@@ -2313,6 +2320,8 @@
       <!-- Sub-flujo: agendar examen de la vista a domicilio -->
       <div id="checkoutExamenWrap" class="hidden mb-4 p-4 bg-brand-navy rounded-2xl border border-slate-900/10">
         <p class="text-[11px] text-slate-500 mb-3 leading-relaxed">Vamos a su domicilio a realizar el examen de la vista. El costo depende de cuántas personas se lo harán y qué tan lejos está de nuestra sucursal (Plaza El Manantial, Corregidora).</p>
+        <p id="checkoutExamenPromoBanner" class="hidden text-[11px] font-bold text-brand-teal bg-brand-teal/10 border border-brand-teal/20 rounded-lg p-2.5 mb-1 leading-snug">🎉 Promoción: el examen a domicilio es GRATIS hasta el 19 de septiembre.</p>
+        <p id="checkoutExamenPromoRestricciones" class="hidden text-[9px] text-slate-500 mb-3">*Aplican restricciones.</p>
 
         <label class="block text-[9px] uppercase tracking-widest text-slate-500 font-extrabold mb-2">Número de personas a examinar</label>
         <input type="number" id="checkoutExamenPersonas" min="1" step="1" value="1" class="w-full p-3.5 mb-4 bg-brand-dark border border-slate-900/10 rounded-xl text-sm text-brand-ink focus:border-brand-sky focus:outline-none">
@@ -2342,7 +2351,7 @@
         <p id="checkoutArmazonesStatus" class="text-[10px] text-slate-500 mb-3"></p>
 
         <div id="checkoutExamenCostBox" class="text-xs text-slate-600 space-y-1 pt-3 border-t border-slate-900/10">
-          <div class="flex justify-between"><span>Examen (<span id="checkoutExamenPersonasText">1</span> persona × $300)</span><span id="checkoutExamenSubtotal">$300.00</span></div>
+          <div class="flex justify-between"><span>Examen (<span id="checkoutExamenPersonasText">1</span> persona × <span id="checkoutExamenPrecioPersona">$300</span>)</span><span id="checkoutExamenSubtotal">$300.00</span></div>
           <div class="flex justify-between"><span>Traslado</span><span id="checkoutExamenTraslado">$0.00</span></div>
           <div id="checkoutExamenBonoRow" class="hidden flex justify-between text-brand-teal font-semibold"><span>Bonificación 50% (por pedir lentes)</span><span id="checkoutExamenBono">-$0.00</span></div>
           <div class="flex justify-between font-bold text-brand-ink pt-1"><span>Total examen</span><span id="checkoutExamenTotal">$300.00</span></div>
@@ -8315,6 +8324,14 @@
     // =========================================================
     // ---- Precios del examen de la vista a domicilio (AJUSTE ESTOS VALORES SEGÚN SU NEGOCIO) ----
     const EXAM_PRICE_PER_PERSON = 300;   // MXN por persona examinada
+    // ---- Promoción: examen a domicilio GRATIS hasta el 19 de septiembre ----
+    // Después de esa fecha vuelve a cobrarse normal ($EXAM_PRICE_PER_PERSON por persona).
+    const EXAM_FREE_PROMO_DEADLINE = new Date('2026-09-19T23:59:59-06:00');
+    function isExamFreePromoActive() {
+      return new Date() <= EXAM_FREE_PROMO_DEADLINE;
+    }
+    document.getElementById('heroExamPromoBanner')?.classList.toggle('hidden', !isExamFreePromoActive());
+    document.getElementById('heroExamPromoRestricciones')?.classList.toggle('hidden', !isExamFreePromoActive());
     const EXAM_FREE_RADIUS_KM = 1.5;     // Radio gratuito de traslado
     const EXAM_TRAVEL_TIERS = [           // Costo de traslado según distancia (más allá del radio gratuito)
       { maxKm: 5, price: 150 },
@@ -8396,18 +8413,24 @@
     function checkoutExamCost() {
       const personas = Math.max(1, parseInt(document.getElementById('checkoutExamenPersonas').value, 10) || 1);
       const traslado = Number(document.getElementById('checkoutExamenDistancia').value) || 0;
-      const subtotal = personas * EXAM_PRICE_PER_PERSON;
+      const promoGratis = isExamFreePromoActive();
+      const precioPorPersona = promoGratis ? 0 : EXAM_PRICE_PER_PERSON;
+      const subtotal = personas * precioPorPersona;
       const bruto = subtotal + traslado;
       const conBono = checkoutSelectedItems().length > 0;
       const bono = conBono ? bruto * EXAM_BONUS_PERCENT : 0;
       const total = bruto - bono;
-      return { personas, traslado, subtotal, bruto, bono, total, conBono };
+      return { personas, traslado, subtotal, bruto, bono, total, conBono, promoGratis };
     }
 
     function updateExamenCostDisplay() {
       const c = checkoutExamCost();
       document.getElementById('checkoutExamenPersonasText').textContent = c.personas;
-      document.getElementById('checkoutExamenSubtotal').textContent = `$${c.subtotal.toLocaleString('es-MX', { minimumFractionDigits: 2 })}`;
+      const precioPersonaEl = document.getElementById('checkoutExamenPrecioPersona');
+      if (precioPersonaEl) precioPersonaEl.textContent = c.promoGratis ? 'GRATIS' : `$${EXAM_PRICE_PER_PERSON}`;
+      const subtotalEl = document.getElementById('checkoutExamenSubtotal');
+      subtotalEl.textContent = c.promoGratis ? 'GRATIS 🎉' : `$${c.subtotal.toLocaleString('es-MX', { minimumFractionDigits: 2 })}`;
+      subtotalEl.className = c.promoGratis ? 'text-brand-teal font-bold' : '';
       document.getElementById('checkoutExamenTraslado').textContent = c.traslado > 0 ? `$${c.traslado.toLocaleString('es-MX', { minimumFractionDigits: 2 })}` : 'Gratis';
       const bonoRow = document.getElementById('checkoutExamenBonoRow');
       if (c.conBono) {
@@ -8419,6 +8442,10 @@
         bonoRow.classList.remove('flex');
       }
       document.getElementById('checkoutExamenTotal').textContent = `$${c.total.toLocaleString('es-MX', { minimumFractionDigits: 2 })}`;
+      const promoBanner = document.getElementById('checkoutExamenPromoBanner');
+      if (promoBanner) promoBanner.classList.toggle('hidden', !c.promoGratis);
+      const promoRestricciones = document.getElementById('checkoutExamenPromoRestricciones');
+      if (promoRestricciones) promoRestricciones.classList.toggle('hidden', !c.promoGratis);
       updateCheckoutGrandTotal();
     }
     document.getElementById('checkoutExamenPersonas')?.addEventListener('input', updateExamenCostDisplay);
@@ -9931,8 +9958,10 @@ async function deleteProduct(id, storagePaths) {
         if (!ctx.askedRecipe) { ctx.askedRecipe = true; return "💰 Los precios varían según tu necesidad:\n\n• **Lentes de sol sin graduación**: desde $390 MXN\n• **Con graduación básica**: desde $890 MXN\n• **Progresivos (multifocal)**: desde $2,490 MXN\n• **Protección industrial graduada**: desde $1,290 MXN\n\n¿Ya tienes tu receta o necesitas que vayamos a hacerte el examen a domicilio? 👨‍⚕️"; }
         return "Para darte un precio exacto necesito saber: ¿tienes receta o necesitas examen? Y ¿qué tipo de lente prefieres: monofocal, bifocal o progresivo?";
       },
-      recipe: "👨‍⚕️ **Tienes dos opciones:**\n\n1️⃣ **Ya tengo receta**: Solo mándamela por WhatsApp y en 48h tienes tus lentes listos.\n\n2️⃣ **Necesito examen**: Vamos a tu casa u oficina en Querétaro. El examen cuesta $290 y si pides lentes te bonificamos el 50%.\n\n¿Cuál es tu caso?",
-      shipping: "🚚 **Envío express en Querétaro:**\n• Centro y alrededores: mismo día o al siguiente\n• Resto del estado: 1-2 días hábiles\n• Todo México: 2-4 días por DHL/FedEx\n\n**Envío gratis** en compras mayores a $1,500 MXN. ¿A qué código postal te llegaría?",
+      recipe: () => isExamFreePromoActive()
+        ? "👨‍⚕️ **Tienes dos opciones:**\n\n1️⃣ **Ya tengo receta**: Solo mándamela por WhatsApp y en 48h tienes tus lentes listos.\n\n2️⃣ **Necesito examen**: Vamos a tu casa u oficina en Querétaro. 🎉 Por promoción, el examen es **GRATIS hasta el 19 de septiembre** (y si pides lentes, te bonificamos aún más).\n\n¿Cuál es tu caso?"
+        : "👨‍⚕️ **Tienes dos opciones:**\n\n1️⃣ **Ya tengo receta**: Solo mándamela por WhatsApp y en 48h tienes tus lentes listos.\n\n2️⃣ **Necesito examen**: Vamos a tu casa u oficina en Querétaro. El examen cuesta $290 y si pides lentes te bonificamos el 50%.\n\n¿Cuál es tu caso?",
+      shipping: "🚚 **Envío express en Querétaro:**\n• Centro y alrededores: mismo día o al siguiente\n• Resto del estado: 1-2 días hábiles\n• Todo México: 2-4 días por DHL/FedEx\n\n¿A qué código postal te llegaría?",
       styles: (msg) => {
         const lower = msg.toLowerCase();
         let reco = '';
@@ -9949,7 +9978,7 @@ async function deleteProduct(id, storagePaths) {
         const closings = [
           "🎯 Parece que encontramos lo que necesitas. ¿Te gustaría que agregue este modelo a tu carrito y te mande el link para pagar? Es seguro y rápido.",
           "💡 Casi listo. ¿Prefieres pagar ahora en línea o te mando el link de pago por WhatsApp? También aceptamos transferencia.",
-          "🚀 ¿Te animas a hacer el pedido hoy? Tenemos envío gratis esta semana en compras +$1,500. Te lo armo en el carrito con un clic."
+          "🚀 ¿Te animas a hacer el pedido hoy? Te lo armo en el carrito con un clic."
         ];
         return closings[Math.floor(Math.random() * closings.length)];
       },
@@ -10025,7 +10054,7 @@ async function deleteProduct(id, storagePaths) {
     if (isGreeting && !ctx.greeted) { ctx.greeted = true; response = salesAI.responses.greeting[1]; quickReplies = ['Ver catálogo', 'Precios', 'Examen a domicilio']; }
     else if (isCatalog) { response = "🛍️ ¡Perfecto! Te muestro nuestro catálogo. ¿Buscas para hombre, mujer, niños o unisex?"; quickReplies = ['Mujer', 'Hombre', 'Niños', 'Unisex', 'Protección industrial']; setTimeout(() => document.getElementById('gallery')?.scrollIntoView({ behavior: 'smooth' }), 800); }
     else if (isPrice) { response = salesAI.responses.price(ctx); quickReplies = ['Tengo receta', 'Necesito examen', 'Ver catálogo']; }
-    else if (isRecipe) { response = salesAI.responses.recipe; quickReplies = ['Ya tengo receta', 'Agendar examen', 'Ver precios']; }
+    else if (isRecipe) { response = salesAI.responses.recipe(); quickReplies = ['Ya tengo receta', 'Agendar examen', 'Ver precios']; }
     else if (isShipping) { response = salesAI.responses.shipping; quickReplies = ['Soy de Querétaro', 'Soy de otro estado', 'Ver catálogo']; }
     else if (isStyle) { response = salesAI.responses.styles(userMsg); quickReplies = ['Ver catálogo', '¿Cuánto cuestan?', 'Agendar examen']; }
     else if (isProtection) { response = salesAI.responses.protection; quickReplies = ['Cotización empresa', 'Ver modelos', 'Hablar con humano']; }
