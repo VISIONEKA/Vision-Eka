@@ -2358,12 +2358,6 @@
         </select>
         <p id="checkoutSlotStatus" class="text-[10px] text-slate-500 mb-3"></p>
 
-        <label class="block text-[9px] uppercase tracking-widest text-slate-500 font-extrabold mb-2">Elija 3 armazones para probarse el día de la visita <span id="checkoutArmazonesCount" class="text-brand-sky normal-case">(0 elegidos)</span></label>
-        <p class="text-[10px] text-slate-500 mb-2">Se los llevaremos ese día para que elija en persona el que más le guste — no es una compra todavía.</p>
-        <div id="checkoutArmazonesLoading" class="text-center text-[11px] text-slate-500 py-4">Cargando armazones...</div>
-        <div id="checkoutArmazonesGrid" class="hidden grid grid-cols-3 sm:grid-cols-4 gap-2 mb-1 max-h-64 overflow-y-auto p-1"></div>
-        <p id="checkoutArmazonesStatus" class="text-[10px] text-slate-500 mb-3"></p>
-
         <div id="checkoutExamenCostBox" class="text-xs text-slate-600 space-y-1 pt-3 border-t border-slate-900/10">
           <div class="flex justify-between"><span>Examen (<span id="checkoutExamenPersonasText">1</span> persona × <span id="checkoutExamenPrecioPersona">$300</span>)</span><span id="checkoutExamenSubtotal">$300.00</span></div>
           <div class="flex justify-between"><span>Traslado</span><span id="checkoutExamenTraslado">$0.00</span></div>
@@ -5284,23 +5278,31 @@
         showAllBtn.classList.add('hidden');
       }
 
-      citas.sort((a, b) => (a.fecha + (a.hora || '')).localeCompare(b.fecha + (b.hora || '')));
-
       if (!citas.length) {
         list.innerHTML = '';
         list.appendChild(empty);
         return;
       }
 
-      list.innerHTML = citas.map(c => {
-        const [y, m, d] = (c.fecha || '').split('-');
-        const fechaLabel = (y && m && d) ? `${d}/${m}/${y}` : c.fecha;
+      citas.sort((a, b) => (a.fecha || '').localeCompare(b.fecha || '') || (a.hora || '').localeCompare(b.hora || ''));
+      const grupos = citas.reduce((resultado, cita) => {
+        (resultado[cita.fecha || 'sin-fecha'] ||= []).push(cita);
+        return resultado;
+      }, {});
+      const formatDateLabel = fecha => {
+        if (fecha === 'sin-fecha') return 'Fecha pendiente';
+        const [year, month, day] = fecha.split('-').map(Number);
+        const date = new Date(year, month - 1, day);
+        const label = date.toLocaleDateString('es-MX', { weekday: 'long', day: 'numeric', month: 'long' });
+        return label.charAt(0).toUpperCase() + label.slice(1);
+      };
+      const renderCita = c => {
         const waPhone = (c.telefono || '').replace(/\D/g, '');
         return `
         <div class="p-4 bg-brand-dark border border-slate-900/10 rounded-2xl">
           <div class="flex items-start justify-between gap-3 mb-2">
             <div>
-              <span class="font-bold text-sm text-brand-ink">${fechaLabel}${c.hora ? ' · ' + c.hora : ''}</span>
+              <span class="font-bold text-sm text-brand-ink">${c.hora || 'Horario pendiente'}</span>
               <span class="ml-2">${estadoCitaBadge(c.estado || 'confirmada')}</span>
             </div>
           </div>
@@ -5318,7 +5320,17 @@
             <button onclick="adminRemoveCita('${c.id}')" class="text-[10px] uppercase tracking-widest font-bold text-slate-500 hover:text-brand-ink">Eliminar</button>
           </div>
         </div>
-      `; }).join('');
+      `;
+      };
+      list.innerHTML = Object.entries(grupos).map(([fecha, citasDelDia], index) => `
+        <details ${index === 0 ? 'open' : ''} class="border border-slate-900/10 rounded-2xl overflow-hidden">
+          <summary class="flex items-center justify-between gap-3 cursor-pointer list-none p-4 bg-brand-dark font-display font-bold text-sm text-brand-ink">
+            <span>${formatDateLabel(fecha)}</span>
+            <span class="text-[10px] uppercase tracking-widest text-brand-sky">${citasDelDia.length} cita${citasDelDia.length === 1 ? '' : 's'}</span>
+          </summary>
+          <div class="space-y-3 p-3 bg-brand-navy">${citasDelDia.map(renderCita).join('')}</div>
+        </details>
+      `).join('');
     }
 
     async function adminAddCita() {
@@ -6333,7 +6345,6 @@
         recetaWrap.classList.add('hidden');
         updateExamenCostDisplay();
         loadCheckoutExamSlots();
-        loadCheckoutArmazonesPicker();
       } else {
         recetaBtn.classList.add('border-brand-sky', 'text-brand-sky');
         recetaBtn.classList.remove('border-slate-900/10', 'text-slate-500');
@@ -6373,8 +6384,6 @@
       document.getElementById('checkoutGeoStatus').textContent = '';
       document.getElementById('checkoutSlotStatus').textContent = '';
       document.getElementById('checkoutStatus').textContent = '';
-      checkoutArmazonesSeleccionados = [];
-      document.getElementById('checkoutArmazonesStatus').textContent = '';
       openModal('checkoutModal');
     }
 
@@ -6402,10 +6411,6 @@
       if (checkoutTipo === 'examen') {
         if (!slotId) {
           status.textContent = 'Elija una fecha y horario disponible.';
-          return;
-        }
-        if (checkoutArmazonesSeleccionados.length < 3 || checkoutArmazonesSeleccionados.length > 5) {
-          status.textContent = 'Elija 3 armazones para probarse el día de la visita.';
           return;
         }
       }
@@ -6444,12 +6449,7 @@
         }
 
         const user = fb.getCurrentUser();
-        const armazonesElegidos = checkoutTipo === 'examen'
-          ? checkoutArmazonesSeleccionados.map(id => {
-              const p = checkoutArmazonesCache.find(item => item.id === id);
-              return p ? { modelo: p.modelo, color: p.color, img: (p.imgs && p.imgs[0]) || p.img || null } : null;
-            }).filter(Boolean)
-          : [];
+        const armazonesElegidos = [];
 
         await fb.addOrder({
           cliente: nombre,
@@ -6484,7 +6484,6 @@
           if (examen.bono > 0) msg += `%0ABonificación 50%25 por pedir lentes: -$${examen.bono.toFixed(2)}`;
           msg += `%0ATotal examen: $${examen.total.toFixed(2)}`;
           if (chosenSlot) msg += `%0AFecha y hora: ${chosenSlot.fecha} ${chosenSlot.hora}`;
-          if (armazonesElegidos.length) msg += `%0AArmazones para probarse ese día: ${armazonesElegidos.map(a => `${a.modelo} (${a.color})`).join(', ')}`;
         }
         msg += `%0A%0ATotal general estimado: $${total.toFixed(2)} MXN%0A%0ANombre: ${nombre}%0ATeléfono: ${telefono}`;
 
