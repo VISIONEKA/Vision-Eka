@@ -2239,7 +2239,7 @@
 
   <!-- ========== CHECKOUT (finalizar pedido) ========== -->
   <!-- Modal: ver especificaciones de un tratamiento en grande -->
-  <div id="treatmentZoomModal" class="fixed inset-0 z-[60] flex items-center justify-center p-4 sm:p-6 bg-brand-navy/90 backdrop-blur-md hidden opacity-0 transition-opacity duration-300" onclick="if(event.target===this) closeModal('treatmentZoomModal')">
+  <div id="treatmentZoomModal" class="fixed inset-0 z-[65] flex items-center justify-center p-4 sm:p-6 bg-brand-navy/90 backdrop-blur-md hidden opacity-0 transition-opacity duration-300" onclick="if(event.target===this) closeModal('treatmentZoomModal')">
     <div class="bg-brand-dark border-2 border-brand-sky/40 rounded-3xl max-w-md w-full shadow-2xl transform scale-95 transition-transform duration-300 max-h-[90vh] overflow-y-auto p-5" id="treatmentZoomModalCard">
       <div class="flex items-center justify-between mb-3">
         <h3 id="treatmentZoomTitle" class="font-display font-bold text-lg text-brand-ink"></h3>
@@ -2264,10 +2264,14 @@
 
   <div id="checkoutModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-brand-navy/80 backdrop-blur-md hidden opacity-0 transition-opacity duration-300">
     <div class="bg-brand-dark border-2 border-brand-sky/40 rounded-3xl max-w-lg w-full shadow-2xl transform scale-95 transition-transform duration-300 max-h-[85vh] overflow-y-auto p-6" id="checkoutModalCard">
-      <div class="flex items-center justify-between mb-5">
-        <h3 class="font-display font-bold text-lg text-brand-ink">Finalizar pedido</h3>
+      <div class="flex items-center justify-between mb-2">
+        <div class="flex items-center gap-2">
+          <button type="button" onclick="checkoutBackToCart()" class="text-slate-500 hover:text-brand-ink text-lg leading-none w-7 h-7 flex items-center justify-center rounded-full hover:bg-slate-900/5 transition-all" aria-label="Regresar al carrito">←</button>
+          <h3 class="font-display font-bold text-lg text-brand-ink">Finalizar pedido</h3>
+        </div>
         <button onclick="closeCheckoutModal()" class="text-slate-500 hover:text-brand-ink text-xl leading-none">✕</button>
       </div>
+      <p class="text-[10px] text-slate-500 mb-3">¿Quiere cambiar la mica o el tratamiento de algún lente? <button type="button" onclick="checkoutBackToCart()" class="text-brand-sky font-bold underline">Regrese al carrito</button> y presione "Editar" en ese artículo.</p>
 
       <div id="checkoutGraduacionWrap" class="mb-4">
         <label class="block text-[9px] uppercase tracking-widest text-slate-500 font-extrabold mb-2">¿Sus lentes serán con o sin graduación?</label>
@@ -8677,6 +8681,13 @@
 
     function closeCheckoutModal() {
       closeModal('checkoutModal');
+    }
+
+    // Regresa del checkout al carrito, por si el cliente quiere cambiar la mica o el
+    // tratamiento de algún artículo (desde el carrito puede presionar "Editar").
+    function checkoutBackToCart() {
+      closeCheckoutModal();
+      setTimeout(() => openCartDrawer(), 260);
     }
 
     async function submitCheckout() {
