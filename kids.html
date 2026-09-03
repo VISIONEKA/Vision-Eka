@@ -680,7 +680,7 @@
         </select>
         <p id="checkoutSlotStatus" class="text-[10px] text-slate-500 mb-3"></p>
 
-        <label class="block text-[9px] uppercase tracking-widest text-slate-500 font-extrabold mb-2">Elija de 3 a 5 armazones para que su hijo/a se los pruebe ese día <span id="checkoutArmazonesCount" class="text-brand-coral normal-case">(0 elegidos)</span></label>
+        <label class="block text-[9px] uppercase tracking-widest text-slate-500 font-extrabold mb-2">Elija 3 armazones para que su hijo/a se los pruebe ese día <span id="checkoutArmazonesCount" class="text-brand-coral normal-case">(0 elegidos)</span></label>
         <p class="text-[10px] text-slate-500 mb-2">Se los llevaremos ese día para que elija en persona el que más le guste — no es una compra todavía.</p>
         <div id="checkoutArmazonesLoading" class="text-center text-[11px] text-slate-500 py-4">Cargando armazones...</div>
         <div id="checkoutArmazonesGrid" class="hidden grid grid-cols-3 sm:grid-cols-4 gap-2 mb-1 max-h-64 overflow-y-auto p-1"></div>
@@ -1973,8 +1973,12 @@
           status.textContent = 'Contáctenos por WhatsApp para coordinar una fecha especial.';
           return;
         }
+        const grupos = checkoutSlotsCache.reduce((resultado, slot) => {
+          (resultado[slot.fecha] ||= []).push(slot);
+          return resultado;
+        }, {});
         select.innerHTML = '<option value="">Seleccione fecha y horario...</option>' +
-          checkoutSlotsCache.map(s => `<option value="${s.id}">${formatSlotLabel(s)}</option>`).join('');
+          Object.entries(grupos).map(([fecha, horarios]) => `<optgroup label="${fecha}">${horarios.map(s => `<option value="${s.id}">${s.hora}</option>`).join('')}</optgroup>`).join('');
       } catch (e) {
         console.error('Error al cargar horarios disponibles:', e);
         select.innerHTML = '<option value="">No se pudieron cargar los horarios</option>';
@@ -2069,7 +2073,7 @@
       if (checkoutTipo === 'examen') {
         if (!slotId) { status.textContent = 'Elija una fecha y horario disponible.'; return; }
         if (checkoutArmazonesSeleccionados.length < 3 || checkoutArmazonesSeleccionados.length > 5) {
-          status.textContent = 'Elija entre 3 y 5 armazones para probarse el día de la visita.';
+          status.textContent = 'Elija 3 armazones para probarse el día de la visita.';
           return;
         }
       }

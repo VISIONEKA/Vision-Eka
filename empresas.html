@@ -1980,6 +1980,7 @@
             <h4 id="adminCalendarLabel" class="font-display font-bold text-sm text-brand-ink"></h4>
             <button onclick="adminCalendarShift(1)" class="w-9 h-9 rounded-full bg-brand-dark border border-slate-900/10 text-brand-ink hover:border-brand-sky/50 flex items-center justify-center font-bold">›</button>
           </div>
+          <div class="flex gap-1 p-1 bg-brand-dark rounded-xl mb-4 w-fit"><button type="button" onclick="adminSetCalendarView('day')" class="admin-calendar-view px-3 py-2 rounded-lg text-[10px] font-bold text-slate-500">Día</button><button type="button" onclick="adminSetCalendarView('week')" class="admin-calendar-view px-3 py-2 rounded-lg text-[10px] font-bold text-slate-500">Semana</button><button type="button" onclick="adminSetCalendarView('month')" class="admin-calendar-view px-3 py-2 rounded-lg text-[10px] font-bold bg-brand-sky text-brand-ink">Mes</button></div>
           <div class="grid grid-cols-7 gap-1.5 mb-2 text-center">
             <span class="text-[9px] uppercase font-extrabold tracking-widest text-slate-500">Do</span>
             <span class="text-[9px] uppercase font-extrabold tracking-widest text-slate-500">Lu</span>
@@ -2042,67 +2043,40 @@
           </div>
         </div>
 
-        <!-- Horarios disponibles para examen a domicilio -->
+        <!-- Configuración de disponibilidad -->
         <div class="bg-brand-navy border border-slate-900/10 rounded-3xl p-6 mb-8">
-          <h3 class="font-display font-bold text-sm text-brand-ink mb-3">🩺 Horarios disponibles para examen a domicilio</h3>
-          <p class="text-xs text-slate-600 leading-relaxed mb-4">Ponga la hora y elija si aplica a un solo día o a varios días de una vez. Los clientes que pidan "Necesito examen" en el sitio solo podrán elegir entre estos horarios; en cuanto alguien agenda uno, desaparece para los demás automáticamente.</p>
+          <div class="flex flex-wrap items-start justify-between gap-4 mb-5"><div><p class="text-[10px] uppercase tracking-widest font-extrabold text-brand-sky mb-1">Disponibilidad</p><h3 class="font-display font-bold text-sm text-brand-ink">🩺 Horarios para examen a domicilio</h3><p class="text-xs text-slate-600 leading-relaxed mt-2">Configura varios días y genera citas automáticamente. Una reserva cambia el horario a Ocupado.</p></div><div class="flex gap-1 p-1 bg-brand-dark rounded-xl"><button type="button" onclick="adminSetSlotMode('single')" id="adminSlotModeSingleBtn" class="px-3 py-2 rounded-lg text-[10px] font-bold bg-brand-sky text-brand-ink">Manual</button><button type="button" onclick="adminSetSlotMode('multi')" id="adminSlotModeMultiBtn" class="px-3 py-2 rounded-lg text-[10px] font-bold text-slate-500">Varios días</button></div></div>
 
-          <div class="mb-4">
-            <label class="block text-[9px] uppercase tracking-widest text-slate-500 font-extrabold mb-2">Hora</label>
-            <input type="time" id="adminSlotHora" class="w-full sm:w-48 p-3.5 bg-brand-dark border border-slate-900/10 rounded-xl text-sm text-brand-ink focus:border-brand-sky focus:outline-none">
-          </div>
+          <div class="grid sm:grid-cols-2 gap-4 mb-4 max-w-2xl" id="adminSlotSingleWrap"><div><label class="block text-[9px] uppercase tracking-widest text-slate-500 font-extrabold mb-2">Día</label><input type="date" id="adminSlotFecha" class="w-full p-3.5 bg-brand-dark border border-slate-900/10 rounded-xl text-sm text-brand-ink"></div><div><label class="block text-[9px] uppercase tracking-widest text-slate-500 font-extrabold mb-2">Duración de cada cita</label><select id="adminSlotIntervalo" onchange="adminUpdateSlotPreview()" class="w-full p-3.5 bg-brand-dark border border-slate-900/10 rounded-xl text-sm text-brand-ink"><option value="15">15 minutos</option><option value="30" selected>30 minutos</option><option value="60">1 hora</option></select></div></div>
+          <div id="adminSlotMultiWrap" class="hidden mb-4"><div class="grid sm:grid-cols-2 gap-4 mb-3 max-w-2xl"><div><label class="block text-[9px] uppercase tracking-widest text-slate-500 font-extrabold mb-2">Desde fecha</label><input type="date" id="adminSlotFechaInicio" class="w-full p-3.5 bg-brand-dark border border-slate-900/10 rounded-xl text-sm text-brand-ink"></div><div><label class="block text-[9px] uppercase tracking-widest text-slate-500 font-extrabold mb-2">Hasta fecha</label><input type="date" id="adminSlotFechaFin" class="w-full p-3.5 bg-brand-dark border border-slate-900/10 rounded-xl text-sm text-brand-ink"></div></div><label class="block text-[9px] uppercase tracking-widest text-slate-500 font-extrabold mb-2">Días de la semana</label><div class="flex flex-wrap gap-2"><label class="flex items-center gap-1.5 px-3 py-2 bg-brand-dark border border-slate-900/10 rounded-xl text-xs text-slate-600"><input type="checkbox" value="0" class="admin-slot-weekday accent-brand-sky">Do</label><label class="flex items-center gap-1.5 px-3 py-2 bg-brand-dark border border-slate-900/10 rounded-xl text-xs text-slate-600"><input type="checkbox" value="1" class="admin-slot-weekday accent-brand-sky">Lu</label><label class="flex items-center gap-1.5 px-3 py-2 bg-brand-dark border border-slate-900/10 rounded-xl text-xs text-slate-600"><input type="checkbox" value="2" class="admin-slot-weekday accent-brand-sky">Ma</label><label class="flex items-center gap-1.5 px-3 py-2 bg-brand-dark border border-slate-900/10 rounded-xl text-xs text-slate-600"><input type="checkbox" value="3" class="admin-slot-weekday accent-brand-sky">Mi</label><label class="flex items-center gap-1.5 px-3 py-2 bg-brand-dark border border-slate-900/10 rounded-xl text-xs text-slate-600"><input type="checkbox" value="4" class="admin-slot-weekday accent-brand-sky">Ju</label><label class="flex items-center gap-1.5 px-3 py-2 bg-brand-dark border border-slate-900/10 rounded-xl text-xs text-slate-600"><input type="checkbox" value="5" class="admin-slot-weekday accent-brand-sky">Vi</label><label class="flex items-center gap-1.5 px-3 py-2 bg-brand-dark border border-slate-900/10 rounded-xl text-xs text-slate-600"><input type="checkbox" value="6" class="admin-slot-weekday accent-brand-sky">Sa</label></div></div>
+          <div class="grid sm:grid-cols-2 gap-4 mb-4 max-w-2xl"><div><label class="block text-[9px] uppercase tracking-widest text-slate-500 font-extrabold mb-2">Desde</label><input type="time" id="adminSlotDesde" value="09:00" oninput="adminUpdateSlotPreview" class="w-full p-3.5 bg-brand-dark border border-slate-900/10 rounded-xl text-sm text-brand-ink"></div><div><label class="block text-[9px] uppercase tracking-widest text-slate-500 font-extrabold mb-2">Hasta</label><input type="time" id="adminSlotHasta" value="15:00" oninput="adminUpdateSlotPreview" class="w-full p-3.5 bg-brand-dark border border-slate-900/10 rounded-xl text-sm text-brand-ink"></div></div>
+          <p id="adminSlotPreview" class="text-[11px] text-brand-teal mb-4">Se crearán 12 horarios de 30 minutos.</p>
 
-          <div class="flex gap-2 mb-4 p-1 bg-brand-dark rounded-full w-fit">
-            <button type="button" onclick="adminSetSlotMode('single')" id="adminSlotModeSingleBtn" class="px-5 py-2 rounded-full text-[11px] font-bold uppercase tracking-wider bg-brand-sky text-brand-ink transition-all">Un solo día</button>
-            <button type="button" onclick="adminSetSlotMode('multi')" id="adminSlotModeMultiBtn" class="px-5 py-2 rounded-full text-[11px] font-bold uppercase tracking-wider text-slate-500 transition-all">Varios días</button>
-          </div>
-
-          <!-- Modo: un solo día -->
-          <div id="adminSlotSingleWrap">
-            <label class="block text-[9px] uppercase tracking-widest text-slate-500 font-extrabold mb-2">Fecha</label>
-            <input type="date" id="adminSlotFecha" class="w-full sm:w-64 p-3.5 bg-brand-dark border border-slate-900/10 rounded-xl text-sm text-brand-ink focus:border-brand-sky focus:outline-none mb-4">
-          </div>
-
-          <!-- Modo: varios días -->
-          <div id="adminSlotMultiWrap" class="hidden">
-            <div class="grid sm:grid-cols-2 gap-4 mb-4">
-              <div>
-                <label class="block text-[9px] uppercase tracking-widest text-slate-500 font-extrabold mb-2">Desde</label>
-                <input type="date" id="adminSlotFechaInicio" class="w-full p-3.5 bg-brand-dark border border-slate-900/10 rounded-xl text-sm text-brand-ink focus:border-brand-sky focus:outline-none">
-              </div>
-              <div>
-                <label class="block text-[9px] uppercase tracking-widest text-slate-500 font-extrabold mb-2">Hasta</label>
-                <input type="date" id="adminSlotFechaFin" class="w-full p-3.5 bg-brand-dark border border-slate-900/10 rounded-xl text-sm text-brand-ink focus:border-brand-sky focus:outline-none">
-              </div>
+          <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-4 max-w-4xl">
+            <div>
+              <label class="block text-[9px] uppercase tracking-widest text-slate-500 font-extrabold mb-2">Día</label>
+              <input type="date" id="adminSlotFecha" class="w-full p-3.5 bg-brand-dark border border-slate-900/10 rounded-xl text-sm text-brand-ink focus:border-brand-sky focus:outline-none">
             </div>
-            <label class="block text-[9px] uppercase tracking-widest text-slate-500 font-extrabold mb-2">¿Qué días de la semana?</label>
-            <div class="grid grid-cols-4 sm:grid-cols-7 gap-2 mb-4">
-              <label class="flex items-center justify-center gap-1.5 p-2.5 bg-brand-dark border border-slate-900/10 rounded-xl cursor-pointer text-xs text-slate-500 has-[:checked]:border-brand-sky has-[:checked]:text-brand-sky">
-                <input type="checkbox" class="admin-slot-weekday hidden" value="1"> Lu
-              </label>
-              <label class="flex items-center justify-center gap-1.5 p-2.5 bg-brand-dark border border-slate-900/10 rounded-xl cursor-pointer text-xs text-slate-500 has-[:checked]:border-brand-sky has-[:checked]:text-brand-sky">
-                <input type="checkbox" class="admin-slot-weekday hidden" value="2"> Ma
-              </label>
-              <label class="flex items-center justify-center gap-1.5 p-2.5 bg-brand-dark border border-slate-900/10 rounded-xl cursor-pointer text-xs text-slate-500 has-[:checked]:border-brand-sky has-[:checked]:text-brand-sky">
-                <input type="checkbox" class="admin-slot-weekday hidden" value="3"> Mi
-              </label>
-              <label class="flex items-center justify-center gap-1.5 p-2.5 bg-brand-dark border border-slate-900/10 rounded-xl cursor-pointer text-xs text-slate-500 has-[:checked]:border-brand-sky has-[:checked]:text-brand-sky">
-                <input type="checkbox" class="admin-slot-weekday hidden" value="4"> Ju
-              </label>
-              <label class="flex items-center justify-center gap-1.5 p-2.5 bg-brand-dark border border-slate-900/10 rounded-xl cursor-pointer text-xs text-slate-500 has-[:checked]:border-brand-sky has-[:checked]:text-brand-sky">
-                <input type="checkbox" class="admin-slot-weekday hidden" value="5"> Vi
-              </label>
-              <label class="flex items-center justify-center gap-1.5 p-2.5 bg-brand-dark border border-slate-900/10 rounded-xl cursor-pointer text-xs text-slate-500 has-[:checked]:border-brand-sky has-[:checked]:text-brand-sky">
-                <input type="checkbox" class="admin-slot-weekday hidden" value="6"> Sá
-              </label>
-              <label class="flex items-center justify-center gap-1.5 p-2.5 bg-brand-dark border border-slate-900/10 rounded-xl cursor-pointer text-xs text-slate-500 has-[:checked]:border-brand-sky has-[:checked]:text-brand-sky">
-                <input type="checkbox" class="admin-slot-weekday hidden" value="0"> Do
-              </label>
+            <div>
+              <label class="block text-[9px] uppercase tracking-widest text-slate-500 font-extrabold mb-2">Desde</label>
+              <input type="time" id="adminSlotDesde" value="09:00" class="w-full p-3.5 bg-brand-dark border border-slate-900/10 rounded-xl text-sm text-brand-ink focus:border-brand-sky focus:outline-none">
+            </div>
+            <div>
+              <label class="block text-[9px] uppercase tracking-widest text-slate-500 font-extrabold mb-2">Hasta</label>
+              <input type="time" id="adminSlotHasta" value="15:00" class="w-full p-3.5 bg-brand-dark border border-slate-900/10 rounded-xl text-sm text-brand-ink focus:border-brand-sky focus:outline-none">
+            </div>
+            <div>
+              <label class="block text-[9px] uppercase tracking-widest text-slate-500 font-extrabold mb-2">Cada</label>
+              <select id="adminSlotIntervalo" class="w-full p-3.5 bg-brand-dark border border-slate-900/10 rounded-xl text-sm text-brand-ink focus:border-brand-sky focus:outline-none">
+                <option value="15">15 minutos</option>
+                <option value="30" selected>30 minutos</option>
+                <option value="60">1 hora</option>
+              </select>
             </div>
           </div>
 
           <button onclick="adminAddExamSlot()" id="adminAddSlotBtn" class="bg-brand-sky/10 border border-brand-sky/30 text-brand-sky font-bold text-xs uppercase tracking-wider py-3 px-5 rounded-full hover:bg-brand-sky/20 transition-all">
-            Agregar horario(s)
+            Crear horarios
           </button>
           <p id="adminAddSlotStatus" class="text-[11px] text-slate-500 mt-3 mb-4"></p>
 
@@ -2110,6 +2084,8 @@
             <p id="adminSlotListEmpty" class="text-xs text-slate-600/80 italic pt-3">Aún no ha agregado horarios.</p>
           </div>
         </div>
+
+        <div class="bg-brand-navy border border-brand-sky/20 rounded-3xl p-6 mb-8"><div class="flex items-center gap-3 mb-3"><span class="text-xl">🤖</span><div><p class="text-[10px] uppercase tracking-widest font-extrabold text-brand-sky">Agente inteligente</p><h3 class="font-display font-bold text-sm text-brand-ink">Describe tu disponibilidad</h3></div></div><p class="text-xs text-slate-600 mb-4">Ejemplos: “todos los martes y jueves de 3 a 7 PM” o “este jueves no estoy disponible”.</p><div class="flex flex-col sm:flex-row gap-2"><input id="adminAvailabilityAgentInput" type="text" placeholder="Escribe una instrucción..." class="flex-1 p-3.5 bg-brand-dark border border-slate-900/10 rounded-xl text-sm text-brand-ink"><button type="button" onclick="adminParseAvailabilityInstruction()" class="bg-brand-sky text-brand-ink font-bold text-xs uppercase tracking-wider py-3 px-5 rounded-xl">Revisar cambio</button></div><div id="adminAvailabilityAgentPreview" class="hidden mt-4"></div></div>
 
       </div>
       <!-- ===== FIN TAB: CITAS ===== -->
@@ -2382,7 +2358,7 @@
         </select>
         <p id="checkoutSlotStatus" class="text-[10px] text-slate-500 mb-3"></p>
 
-        <label class="block text-[9px] uppercase tracking-widest text-slate-500 font-extrabold mb-2">Elija de 3 a 5 armazones para probarse el día de la visita <span id="checkoutArmazonesCount" class="text-brand-sky normal-case">(0 elegidos)</span></label>
+        <label class="block text-[9px] uppercase tracking-widest text-slate-500 font-extrabold mb-2">Elija 3 armazones para probarse el día de la visita <span id="checkoutArmazonesCount" class="text-brand-sky normal-case">(0 elegidos)</span></label>
         <p class="text-[10px] text-slate-500 mb-2">Se los llevaremos ese día para que elija en persona el que más le guste — no es una compra todavía.</p>
         <div id="checkoutArmazonesLoading" class="text-center text-[11px] text-slate-500 py-4">Cargando armazones...</div>
         <div id="checkoutArmazonesGrid" class="hidden grid grid-cols-3 sm:grid-cols-4 gap-2 mb-1 max-h-64 overflow-y-auto p-1"></div>
@@ -5193,8 +5169,10 @@
     // ---- ADMIN PANEL: AGENDA DE CITAS ----
     // =========================================================
     let adminAllCitas = [];
+    let adminAllExamSlots = [];
     let adminCalendarDate = new Date();
     let adminSelectedDay = null; // 'YYYY-MM-DD' string or null
+    let adminCalendarView = 'month';
 
     function toDateKey(d) {
       const y = d.getFullYear();
@@ -5228,6 +5206,12 @@
       const year = adminCalendarDate.getFullYear();
       const month = adminCalendarDate.getMonth();
       label.textContent = adminCalendarDate.toLocaleDateString('es-MX', { month: 'long', year: 'numeric' });
+      if (adminCalendarView !== 'month') {
+        const base = new Date(adminCalendarDate); if (adminCalendarView === 'week') base.setDate(base.getDate() - base.getDay()); const days = adminCalendarView === 'day' ? [base] : Array.from({ length: 7 }, (_, index) => { const day = new Date(base); day.setDate(base.getDate() + index); return day; });
+        label.textContent = `${adminCalendarView === 'day' ? 'Día' : 'Semana'} · ${toDateKey(base)}`; grid.className = adminCalendarView === 'day' ? 'grid grid-cols-1 gap-2' : 'grid grid-cols-1 sm:grid-cols-7 gap-1.5';
+        grid.innerHTML = days.map(day => { const key = toDateKey(day); const slots = adminAllExamSlots.filter(slot => slot.fecha === key); const citas = adminAllCitas.filter(cita => cita.fecha === key); const content = slots.length ? slots.map(slot => `<span class="block text-[9px] ${slot.reservadoPor ? 'text-amber-500' : slot.disponible === false ? 'text-slate-500' : 'text-brand-teal'}">${slot.hora} · ${slot.reservadoPor ? 'Ocupado' : slot.disponible === false ? 'No disponible' : 'Disponible'}</span>`).join('') : '<span class="text-[10px] text-slate-500">Sin horarios</span>'; return `<button onclick="adminCalendarSelectDay('${key}')" class="text-left min-h-24 p-3 bg-brand-dark border border-slate-900/10 rounded-xl"><strong class="block text-xs text-brand-ink mb-2">${day.toLocaleDateString('es-MX', { weekday: 'short', day: 'numeric' })}</strong>${content}${citas.length ? `<span class="block text-[9px] text-brand-sky mt-2">${citas.length} cita(s)</span>` : ''}</button>`; }).join(''); return;
+      }
+      grid.className = 'grid grid-cols-7 gap-1.5';
 
       // Count appointments per day
       const countsByDay = {};
@@ -5261,6 +5245,7 @@
       }
       grid.innerHTML = html;
     }
+    function adminSetCalendarView(view) { adminCalendarView = view; document.querySelectorAll('.admin-calendar-view').forEach(button => { const active = button.textContent.toLowerCase() === view; button.classList.toggle('bg-brand-sky', active); button.classList.toggle('text-brand-ink', active); button.classList.toggle('text-slate-500', !active); }); renderAdminCalendar(); }
 
     function adminCalendarSelectDay(key) {
       adminSelectedDay = (adminSelectedDay === key) ? null : key;
@@ -5416,24 +5401,35 @@
           return;
         }
 
-        list.innerHTML = slots.map(s => {
+        const grupos = slots.reduce((resultado, slot) => {
+          (resultado[slot.fecha] ||= []).push(slot);
+          return resultado;
+        }, {});
+        list.innerHTML = Object.entries(grupos).map(([fecha, horarios]) => {
+          const [y, m, d] = fecha.split('-');
+          const fechaLabel = (y && m && d) ? new Date(Number(y), Number(m) - 1, Number(d)).toLocaleDateString('es-MX', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }) : fecha;
+          return `<div class="pt-3 first:pt-0">
+            <h4 class="text-xs font-bold uppercase tracking-wider text-brand-ink mb-2">${fechaLabel}</h4>
+            <div class="space-y-2">${horarios.map(s => {
           const [y, m, d] = (s.fecha || '').split('-');
-          const fechaLabel = (y && m && d) ? `${d}/${m}/${y}` : s.fecha;
           const disponible = s.disponible !== false;
+          const reservado = Boolean(s.reservadoPor);
           return `
           <div class="flex flex-wrap items-center justify-between gap-3 bg-brand-dark border border-slate-900/5 rounded-xl p-3.5">
             <div class="min-w-0">
-              <span class="block text-brand-ink text-xs font-semibold">${fechaLabel} · ${s.hora}</span>
-              ${disponible
-                ? '<span class="text-[9px] font-bold uppercase tracking-wide text-brand-teal">Disponible</span>'
-                : `<span class="text-[9px] font-bold uppercase tracking-wide text-amber-500">Reservado${s.reservadoPor?.nombre ? ` — ${s.reservadoPor.nombre} (${s.reservadoPor.telefono || 's/tel'})` : ''}</span>`}
+              <span class="block text-brand-ink text-xs font-semibold">${s.hora}</span>
+              ${disponible ? '<span class="text-[9px] font-bold uppercase tracking-wide text-brand-teal">Disponible</span>'
+                : reservado ? `<span class="text-[9px] font-bold uppercase tracking-wide text-amber-500">Ocupado${s.reservadoPor?.nombre ? ` — ${s.reservadoPor.nombre} (${s.reservadoPor.telefono || 's/tel'})` : ''}</span>`
+                : '<span class="text-[9px] font-bold uppercase tracking-wide text-slate-500">No disponible</span>'}
             </div>
             <div class="flex items-center gap-3 flex-shrink-0">
-              ${!disponible ? `<button onclick="adminReleaseSlot('${s.id}')" class="text-brand-sky hover:text-brand-teal text-xs font-bold uppercase tracking-wide">Liberar</button>` : ''}
+              ${reservado ? `<button onclick="adminReleaseSlot('${s.id}')" class="text-brand-sky hover:text-brand-teal text-xs font-bold uppercase tracking-wide">Liberar</button>`
+                : `<button onclick="adminToggleSlot('${s.id}', ${!disponible})" class="text-brand-sky hover:text-brand-teal text-xs font-bold uppercase tracking-wide">${disponible ? 'No disponible' : 'Habilitar'}</button>`}
               <button onclick="adminRemoveSlot('${s.id}')" class="text-red-400 hover:text-red-300 text-xs font-bold uppercase tracking-wide">Eliminar</button>
             </div>
           </div>
-        `; }).join('');
+        `; }).join('')}</div></div>`;
+        }).join('');
       } catch (e) {
         console.error('Error al cargar horarios de examen:', e);
       }
@@ -5473,12 +5469,23 @@
     }
 
     async function adminAddExamSlot() {
-      const hora = document.getElementById('adminSlotHora').value;
+      const desde = document.getElementById('adminSlotDesde').value;
+      const hasta = document.getElementById('adminSlotHasta').value;
+      const intervalo = Number(document.getElementById('adminSlotIntervalo').value);
       const status = document.getElementById('adminAddSlotStatus');
       const btn = document.getElementById('adminAddSlotBtn');
 
-      if (!hora) {
-        status.textContent = 'Elija la hora.';
+      if (!desde || !hasta) {
+        status.textContent = 'Elija la hora de inicio y de fin.';
+        status.className = 'text-[11px] text-red-400 mt-3 mb-4';
+        return;
+      }
+      const [desdeHora, desdeMinuto] = desde.split(':').map(Number);
+      const [hastaHora, hastaMinuto] = hasta.split(':').map(Number);
+      const inicioMinutos = desdeHora * 60 + desdeMinuto;
+      const finMinutos = hastaHora * 60 + hastaMinuto;
+      if (finMinutos <= inicioMinutos) {
+        status.textContent = 'La hora de fin debe ser posterior al inicio.';
         status.className = 'text-[11px] text-red-400 mt-3 mb-4';
         return;
       }
@@ -5542,16 +5549,17 @@
       status.className = 'text-[11px] text-slate-500 mt-3 mb-4';
       try {
         const fb = await window.firebaseReady;
+        const horarios = [];
+        for (let minutos = inicioMinutos; minutos < finMinutos; minutos += intervalo) {
+          horarios.push(`${String(Math.floor(minutos / 60)).padStart(2, '0')}:${String(minutos % 60).padStart(2, '0')}`);
+        }
         for (const fecha of fechas) {
-          await fb.addExamSlot(fecha, hora);
+          for (const hora of horarios) await fb.addExamSlot(fecha, hora);
         }
         document.getElementById('adminSlotFecha').value = '';
-        document.getElementById('adminSlotHora').value = '';
-        document.getElementById('adminSlotFechaInicio').value = '';
-        document.getElementById('adminSlotFechaFin').value = '';
-        document.querySelectorAll('.admin-slot-weekday:checked').forEach(el => el.checked = false);
 
-        status.textContent = `✓ ${fechas.length} horario${fechas.length > 1 ? 's agregados' : ' agregado'} correctamente.`;
+        const totalHorarios = fechas.length * horarios.length;
+        status.textContent = `✓ ${totalHorarios} horarios agregados correctamente.`;
         status.className = 'text-[11px] text-emerald-500 mt-3 mb-4';
         adminLoadExamSlots();
       } catch (e) {
@@ -5563,6 +5571,20 @@
       }
     }
 
+    let adminAgentAvailabilityChange = null;
+    const adminWeekdayNames = ['domingo', 'lunes', 'martes', 'miércoles', 'jueves', 'viernes', 'sábado'];
+    function adminParseAvailabilityInstruction() {
+      const input = document.getElementById('adminAvailabilityAgentInput'); const preview = document.getElementById('adminAvailabilityAgentPreview'); const text = input.value.trim().toLowerCase(); if (!text) return;
+      const weekdays = adminWeekdayNames.map((name, index) => text.includes(name) ? index : -1).filter(index => index >= 0); const times = [...text.matchAll(/(\d{1,2})(?::(\d{2}))?\s*(am|pm)?/g)].map(match => { let hour = Number(match[1]); if (match[3] === 'pm' && hour < 12) hour += 12; if (match[3] === 'am' && hour === 12) hour = 0; return hour * 60 + Number(match[2] || 0); }); const isException = /no estoy disponible|no disponible|bloquea|cancel/.test(text);
+      if (!weekdays.length || (!isException && times.length < 2)) { preview.className = 'mt-4 text-xs text-red-400'; preview.textContent = 'No pude identificar los días y el rango. Prueba: “martes y jueves de 3 a 7 PM”.'; return; }
+      adminAgentAvailabilityChange = isException ? { type: 'block', weekday: weekdays[0] } : { type: 'create', weekdays, desde: Math.min(...times), hasta: Math.max(...times), intervalo: Number(document.getElementById('adminSlotIntervalo').value) || 30 }; const detail = isException ? `Bloquear horarios del próximo ${adminWeekdayNames[weekdays[0]]}.` : `Crear horarios cada ${adminAgentAvailabilityChange.intervalo} minutos, durante 90 días, los ${weekdays.map(index => adminWeekdayNames[index]).join(' y ')}.`;
+      preview.className = 'mt-4 p-4 bg-brand-dark border border-brand-sky/20 rounded-xl text-xs text-brand-ink'; preview.innerHTML = `<p class="mb-3">${detail}</p><button type="button" onclick="adminApplyAgentAvailability()" class="bg-brand-sky text-brand-ink font-bold text-[10px] uppercase tracking-wider py-2.5 px-4 rounded-lg">Confirmar y aplicar</button>`;
+    }
+    async function adminApplyAgentAvailability() {
+      if (!adminAgentAvailabilityChange) return; const preview = document.getElementById('adminAvailabilityAgentPreview');
+      try { const fb = await window.firebaseReady; if (adminAgentAvailabilityChange.type === 'block') { const slots = await fb.fetchExamSlots(); const target = new Date(); target.setDate(target.getDate() + ((adminAgentAvailabilityChange.weekday - target.getDay() + 7) % 7 || 7)); const targetKey = toDateKeyLocal(target); await Promise.all(slots.filter(slot => slot.fecha === targetKey && slot.disponible !== false && !slot.reservadoPor).map(slot => fb.setExamSlotAvailability(slot.id, false))); } else { const change = adminAgentAvailabilityChange; const start = new Date(); for (let offset = 0; offset < 90; offset++) { const date = new Date(start); date.setDate(start.getDate() + offset); if (!change.weekdays.includes(date.getDay())) continue; for (let minutes = change.desde; minutes < change.hasta; minutes += change.intervalo) await fb.addExamSlot(toDateKeyLocal(date), `${String(Math.floor(minutes / 60)).padStart(2, '0')}:${String(minutes % 60).padStart(2, '0')}`); } } preview.className = 'mt-4 text-xs text-emerald-500'; preview.textContent = '✓ Cambio aplicado. La agenda ya está actualizada.'; adminAgentAvailabilityChange = null; adminLoadExamSlots(); } catch (error) { console.error('Error al aplicar instrucción de disponibilidad:', error); preview.className = 'mt-4 text-xs text-red-400'; preview.textContent = 'No se pudo aplicar el cambio. Intente de nuevo.'; }
+    }
+
     async function adminReleaseSlot(id) {
       try {
         const fb = await window.firebaseReady;
@@ -5570,6 +5592,16 @@
         adminLoadExamSlots();
       } catch (e) {
         console.error('Error al liberar horario:', e);
+      }
+    }
+
+    async function adminToggleSlot(id, habilitar) {
+      try {
+        const fb = await window.firebaseReady;
+        await fb.setExamSlotAvailability(id, habilitar);
+        adminLoadExamSlots();
+      } catch (e) {
+        console.error('Error al cambiar disponibilidad del horario:', e);
       }
     }
 
@@ -6273,8 +6305,12 @@
           status.textContent = 'Contáctenos por WhatsApp para coordinar una fecha especial.';
           return;
         }
+        const grupos = checkoutSlotsCache.reduce((resultado, slot) => {
+          (resultado[slot.fecha] ||= []).push(slot);
+          return resultado;
+        }, {});
         select.innerHTML = '<option value="">Seleccione fecha y horario...</option>' +
-          checkoutSlotsCache.map(s => `<option value="${s.id}">${formatSlotLabel(s)}</option>`).join('');
+          Object.entries(grupos).map(([fecha, horarios]) => `<optgroup label="${fecha}">${horarios.map(s => `<option value="${s.id}">${s.hora}</option>`).join('')}</optgroup>`).join('');
       } catch (e) {
         console.error('Error al cargar horarios disponibles:', e);
         select.innerHTML = '<option value="">No se pudieron cargar los horarios</option>';
@@ -6369,7 +6405,7 @@
           return;
         }
         if (checkoutArmazonesSeleccionados.length < 3 || checkoutArmazonesSeleccionados.length > 5) {
-          status.textContent = 'Elija entre 3 y 5 armazones para probarse el día de la visita.';
+          status.textContent = 'Elija 3 armazones para probarse el día de la visita.';
           return;
         }
       }
@@ -7122,6 +7158,10 @@ async function deleteProduct(id, storagePaths) {
       await updateDoc(doc(db, EXAM_SLOTS_COLLECTION, id), { disponible: true, reservadoPor: null });
     }
 
+    async function setExamSlotAvailability(id, disponible) {
+      await updateDoc(doc(db, EXAM_SLOTS_COLLECTION, id), { disponible, reservadoPor: disponible ? null : null });
+    }
+
     // ---- Lista de pendientes de Opti (privada, solo para el administrador) ----
     // ---- Analítica del sitio: visitas, clientes registrados y productos más elegidos ----
     async function logVisit(pagina) {
@@ -7290,6 +7330,7 @@ async function deleteProduct(id, storagePaths) {
       fetchAvailableExamSlots,
       addExamSlot,
       deleteExamSlot,
+      setExamSlotAvailability,
       bookExamSlot,
       releaseExamSlot,
       fetchAdminTasks,
