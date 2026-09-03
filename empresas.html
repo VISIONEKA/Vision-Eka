@@ -305,8 +305,8 @@
             Cotizar
           </a>
           
-          <button id="menuToggle" class="xl:hidden relative right-[3px] lg:right-0 -mr-1 lg:mr-0 p-[2px] lg:p-2.5 rounded-full text-slate-600 hover:text-brand-ink hover:bg-slate-900/5 transition-all flex-shrink-0" aria-label="Abrir menú">
-            <svg class="w-[11px] h-[11px] lg:w-5 lg:h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+          <button id="menuToggle" class="xl:hidden relative right-[3px] lg:right-0 -mr-1 lg:mr-0 p-1 lg:p-2.5 rounded-full text-slate-600 hover:text-brand-ink hover:bg-slate-900/5 transition-all flex-shrink-0" aria-label="Abrir menú">
+            <svg class="w-[14px] h-[14px] lg:w-5 lg:h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16m-7 6h7"/>
             </svg>
           </button>
@@ -2327,6 +2327,14 @@
       <div class="flex items-center justify-between mb-5">
         <h3 class="font-display font-bold text-lg text-brand-ink">Finalizar pedido</h3>
         <button onclick="closeCheckoutModal()" class="text-slate-500 hover:text-brand-ink text-xl leading-none">✕</button>
+      </div>
+
+      <!-- Selector de qué armazones del carrito se compran en este pedido: solo aparece
+           si hay más de un artículo guardado, para no obligar a comprar todo junto. -->
+      <div id="checkoutItemsWrap" class="hidden mb-4">
+        <label class="block text-[9px] uppercase tracking-widest text-slate-500 font-extrabold mb-2">¿Qué armazones quiere comprar ahora?</label>
+        <p class="text-[10px] text-slate-500 mb-2">Tiene varios artículos guardados en su carrito. Elija cuáles incluir en este pedido; los demás se quedan guardados para después.</p>
+        <div id="checkoutItemsList" class="space-y-2 max-h-56 overflow-y-auto p-0.5"></div>
       </div>
 
       <label class="block text-[9px] uppercase tracking-widest text-slate-500 font-extrabold mb-2">Tipo de pedido</label>
@@ -5833,6 +5841,10 @@
     // =========================================================
     let cart = [];
     try { cart = JSON.parse(localStorage.getItem('vekaCart') || '[]'); } catch (e) { cart = []; }
+    // IDs de los artículos del carrito que se incluirán en ESTE pedido. Por default
+    // se incluyen todos, pero si el cliente entra por "Comprar ahora" desde un
+    // armazón específico del catálogo, aquí solo queda ese id (ver startCheckout()).
+    let checkoutSelectedIds = [];
 
     function saveCart() {
       localStorage.setItem('vekaCart', JSON.stringify(cart));
@@ -5900,7 +5912,7 @@
       renderCartBadge();
       window.firebaseReady.then(fb => fb.logProductInterest(productId)).catch(() => {});
       closeImgLightbox();
-      startCheckout();
+      startCheckout(false, productId);
     }
 
     function cartChangeQty(id, delta) {
@@ -5918,6 +5930,55 @@
       cart = cart.filter(it => it.id !== id);
       saveCart();
       renderCartDrawer();
+    }
+
+    // Solo los artículos del carrito marcados para comprarse en ESTE pedido
+    // (ver checkoutSelectedIds). El resto del carrito se queda guardado para después.
+    function checkoutSelectedItems() {
+      return cart.filter(it => checkoutSelectedIds.includes(it.id));
+    }
+
+    function checkoutSelectedTotal() {
+      return checkoutSelectedItems().reduce((sum, it) => sum + (Number(it.precio || 0) * it.cantidad), 0);
+    }
+
+    // Dibuja, dentro del checkout, la lista de artículos del carrito con checkbox
+    // para que el cliente elija cuáles quiere comprar ahora. Solo se muestra si
+    // hay más de un artículo en el carrito (con uno solo no hace falta elegir).
+    function renderCheckoutItemsSelector() {
+      const wrap = document.getElementById('checkoutItemsWrap');
+      const list = document.getElementById('checkoutItemsList');
+      if (!wrap || !list) return;
+
+      if (cart.length <= 1) {
+        wrap.classList.add('hidden');
+        return;
+      }
+      wrap.classList.remove('hidden');
+      list.innerHTML = cart.map(it => {
+        const checked = checkoutSelectedIds.includes(it.id);
+        const precioTxt = it.precio ? `$${Number(it.precio).toLocaleString('es-MX', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` : 'Precio a confirmar';
+        return `
+          <label class="flex items-center gap-3 p-2.5 rounded-xl border-2 ${checked ? 'border-brand-sky bg-brand-sky/5' : 'border-slate-900/10'} cursor-pointer transition-all">
+            <input type="checkbox" ${checked ? 'checked' : ''} onchange="checkoutToggleItem('${it.id}')" class="w-4 h-4 accent-brand-sky flex-shrink-0">
+            ${it.img ? `<img src="${it.img}" class="w-10 h-10 object-cover rounded-lg flex-shrink-0" alt="${it.modelo}">` : ''}
+            <span class="flex-1 min-w-0">
+              <span class="block text-xs font-bold text-brand-ink truncate">${it.modelo}${it.cantidad > 1 ? ` x${it.cantidad}` : ''}</span>
+              <span class="block text-[10px] text-slate-500 truncate">${it.color || ''}</span>
+            </span>
+            <span class="text-[11px] font-bold text-brand-sky flex-shrink-0">${precioTxt}</span>
+          </label>`;
+      }).join('');
+    }
+
+    function checkoutToggleItem(id) {
+      const idx = checkoutSelectedIds.indexOf(id);
+      if (idx >= 0) {
+        checkoutSelectedIds.splice(idx, 1);
+      } else {
+        checkoutSelectedIds.push(id);
+      }
+      renderCheckoutItemsSelector();
     }
 
     function cartTotal() {
@@ -6066,7 +6127,7 @@
       const traslado = Number(document.getElementById('checkoutExamenDistancia').value) || 0;
       const subtotal = personas * EXAM_PRICE_PER_PERSON;
       const bruto = subtotal + traslado;
-      const conBono = cart.length > 0;
+      const conBono = checkoutSelectedItems().length > 0;
       const bono = conBono ? bruto * EXAM_BONUS_PERCENT : 0;
       const total = bruto - bono;
       return { personas, traslado, subtotal, bruto, bono, total, conBono };
@@ -6220,9 +6281,15 @@
       }
     }
 
-    async function startCheckout(forceExamen) {
+    async function startCheckout(forceExamen, onlyProductId) {
       if (cart.length === 0 && !forceExamen) return;
       closeCartDrawer();
+
+      // Si viene de "Comprar ahora" sobre un armazón específico del catálogo, solo
+      // ese artículo entra en este pedido (aunque haya otros guardados en el carrito).
+      // Si no, por default se incluyen todos los artículos del carrito.
+      checkoutSelectedIds = onlyProductId ? [onlyProductId] : cart.map(it => it.id);
+      renderCheckoutItemsSelector();
 
       // Prefill contact fields if the customer is logged in
       try {
@@ -6285,8 +6352,13 @@
       status.className = 'text-[11px] text-slate-500 mt-2 text-center';
       status.textContent = 'Enviando pedido...';
 
-      const items = cart.map(it => ({ modelo: it.modelo, color: it.color, precio: it.precio, cantidad: it.cantidad, tratamientos: it.tratamientos || [] }));
-      const lentesTotal = cartTotal();
+      if (checkoutSelectedItems().length === 0) {
+        status.textContent = 'Elija al menos un armazón para comprar.';
+        return;
+      }
+
+      const items = checkoutSelectedItems().map(it => ({ modelo: it.modelo, color: it.color, precio: it.precio, cantidad: it.cantidad, tratamientos: it.tratamientos || [] }));
+      const lentesTotal = checkoutSelectedTotal();
       const examen = checkoutTipo === 'examen' ? checkoutExamCost() : null;
       const total = lentesTotal + (examen ? examen.total : 0);
       const chosenSlot = checkoutSlotsCache.find(s => s.id === slotId);
@@ -6353,7 +6425,10 @@
         }
         msg += `%0A%0ATotal general estimado: $${total.toFixed(2)} MXN%0A%0ANombre: ${nombre}%0ATeléfono: ${telefono}`;
 
-        cart = [];
+        // Solo se quitan del carrito los armazones que se acaban de comprar; si el
+        // cliente dejó otros sin marcar, se quedan guardados para un pedido posterior.
+        cart = cart.filter(it => !checkoutSelectedIds.includes(it.id));
+        checkoutSelectedIds = [];
         saveCart();
 
         status.textContent = '';

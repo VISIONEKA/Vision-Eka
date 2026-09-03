@@ -2245,7 +2245,7 @@
         <h3 id="treatmentZoomTitle" class="font-display font-bold text-lg text-brand-ink"></h3>
         <button onclick="closeModal('treatmentZoomModal')" class="text-slate-500 hover:text-brand-ink text-xl leading-none flex-shrink-0 ml-3">✕</button>
       </div>
-      <div class="rounded-xl bg-white p-2 border border-slate-900/5 mb-3 cursor-zoom-in relative group" onclick="event.stopPropagation(); openImageFullscreen(document.getElementById('treatmentZoomImg').src, document.getElementById('treatmentZoomTitle').textContent)">
+      <div class="rounded-xl bg-white p-2 border border-slate-900/5 mb-3 cursor-zoom-in relative group" onclick="event.stopPropagation(); openImageFullscreen(document.getElementById('treatmentZoomImg').src, document.getElementById('treatmentZoomTitle').textContent, document.getElementById('treatmentZoomPrice').textContent)">
         <img id="treatmentZoomImg" src="" alt="" class="w-full h-auto object-contain mx-auto">
         <span class="absolute bottom-3 right-3 bg-brand-dark/80 text-white text-[9px] font-bold px-2 py-0.5 rounded-full">⛶ Pantalla completa</span>
       </div>
@@ -2258,6 +2258,10 @@
   <div id="imageFullscreenModal" class="fixed inset-0 z-[70] flex items-center justify-center p-2 bg-black/95 hidden opacity-0 transition-opacity duration-300" onclick="closeModal('imageFullscreenModal')">
     <div id="imageFullscreenModalCard" class="relative w-full h-full flex items-center justify-center transform scale-95 transition-transform duration-300">
       <button onclick="event.stopPropagation(); closeModal('imageFullscreenModal')" class="absolute top-2 right-2 sm:top-4 sm:right-4 text-white text-3xl leading-none z-10 w-10 h-10 flex items-center justify-center rounded-full bg-white/10 hover:bg-white/20">✕</button>
+      <div id="imageFullscreenCaption" class="hidden absolute top-3 left-3 right-14 sm:top-4 sm:left-4 z-10 bg-black/60 backdrop-blur-sm rounded-xl px-3 py-2">
+        <p id="imageFullscreenTitle" class="text-white text-sm font-bold leading-snug"></p>
+        <p id="imageFullscreenPrice" class="text-brand-sky text-xs font-bold mt-0.5"></p>
+      </div>
       <img id="imageFullscreenImg" src="" alt="" class="max-w-full max-h-full object-contain" onclick="event.stopPropagation()">
     </div>
   </div>
@@ -2272,6 +2276,14 @@
         <button onclick="closeCheckoutModal()" class="text-slate-500 hover:text-brand-ink text-xl leading-none">✕</button>
       </div>
       <p class="text-[10px] text-slate-500 mb-3">¿Quiere cambiar la mica o el tratamiento de algún lente? <button type="button" onclick="checkoutBackToCart()" class="text-brand-sky font-bold underline">Regrese al carrito</button> y presione "Editar" en ese artículo.</p>
+
+      <!-- Selector de qué armazones del carrito se compran en este pedido: solo aparece
+           si hay más de un artículo guardado, para no obligar a comprar todo junto. -->
+      <div id="checkoutItemsWrap" class="hidden mb-4">
+        <label class="block text-[9px] uppercase tracking-widest text-slate-500 font-extrabold mb-2">¿Qué armazones quiere comprar ahora?</label>
+        <p class="text-[10px] text-slate-500 mb-2">Tiene varios artículos guardados en su carrito. Elija cuáles incluir en este pedido; los demás se quedan guardados para después.</p>
+        <div id="checkoutItemsList" class="space-y-2 max-h-56 overflow-y-auto p-0.5"></div>
+      </div>
 
       <div id="checkoutGraduacionWrap" class="mb-4">
         <label class="block text-[9px] uppercase tracking-widest text-slate-500 font-extrabold mb-2">¿Sus lentes serán con o sin graduación?</label>
@@ -7431,10 +7443,22 @@
     }
 
     // Abre cualquier imagen (tratamiento, mica, armazón, etc.) a pantalla completa para verla mejor.
-    function openImageFullscreen(imgUrl, alt) {
+    function openImageFullscreen(imgUrl, alt, price) {
       const img = document.getElementById('imageFullscreenImg');
       img.src = imgUrl;
       img.alt = alt || '';
+
+      const caption = document.getElementById('imageFullscreenCaption');
+      const titleEl = document.getElementById('imageFullscreenTitle');
+      const priceEl = document.getElementById('imageFullscreenPrice');
+      if (alt || price) {
+        titleEl.textContent = alt || '';
+        priceEl.textContent = price || '';
+        caption.classList.remove('hidden');
+      } else {
+        caption.classList.add('hidden');
+      }
+
       openModal('imageFullscreenModal');
     }
 
@@ -7442,6 +7466,10 @@
     // ---- CARRITO (persistido en localStorage) ----
     // =========================================================
     let cart = [];
+    // IDs de los artículos del carrito que se incluirán en ESTE pedido. Por default
+    // se incluyen todos, pero si el cliente entra por "Comprar ahora" desde un
+    // armazón específico del catálogo, aquí solo queda ese id (ver startCheckout()).
+    let checkoutSelectedIds = [];
     try { cart = JSON.parse(localStorage.getItem('vekaCart') || '[]'); } catch (e) { cart = []; }
 
     function saveCart() {
@@ -7550,7 +7578,7 @@
       window.firebaseReady.then(fb => fb.logProductInterest(productId)).catch(() => {});
       closeImgZoom();
       closeImgLightbox();
-      startCheckout();
+      startCheckout(false, productId);
     }
 
     // =========================================================
@@ -8120,6 +8148,58 @@
       renderCartDrawer();
     }
 
+    // Solo los artículos del carrito marcados para comprarse en ESTE pedido
+    // (ver checkoutSelectedIds). El resto del carrito se queda guardado para después.
+    function checkoutSelectedItems() {
+      return cart.filter(it => checkoutSelectedIds.includes(it.id));
+    }
+
+    function checkoutSelectedTotal() {
+      return checkoutSelectedItems().reduce((sum, it) => sum + ((Number(it.precio || 0) + Number(it.micaTipoElegidoCosto || 0) + Number(it.micaMaterialElegidoCosto || 0) + Number(it.tratamientoElegidoCosto || 0)) * it.cantidad), 0);
+    }
+
+    // Dibuja, dentro del checkout, la lista de artículos del carrito con checkbox
+    // para que el cliente elija cuáles quiere comprar ahora. Solo se muestra si
+    // hay más de un artículo en el carrito (con uno solo no hace falta elegir).
+    function renderCheckoutItemsSelector() {
+      const wrap = document.getElementById('checkoutItemsWrap');
+      const list = document.getElementById('checkoutItemsList');
+      if (!wrap || !list) return;
+
+      if (cart.length <= 1) {
+        wrap.classList.add('hidden');
+        return;
+      }
+      wrap.classList.remove('hidden');
+      list.innerHTML = cart.map(it => {
+        const checked = checkoutSelectedIds.includes(it.id);
+        const precioTxt = it.precio ? `$${Number(it.precio).toLocaleString('es-MX', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` : 'Precio a confirmar';
+        return `
+          <label class="flex items-center gap-3 p-2.5 rounded-xl border-2 ${checked ? 'border-brand-sky bg-brand-sky/5' : 'border-slate-900/10'} cursor-pointer transition-all">
+            <input type="checkbox" ${checked ? 'checked' : ''} onchange="checkoutToggleItem('${it.id}')" class="w-4 h-4 accent-brand-sky flex-shrink-0">
+            ${it.img ? `<img src="${it.img}" class="w-10 h-10 object-cover rounded-lg flex-shrink-0" alt="${it.modelo}">` : ''}
+            <span class="flex-1 min-w-0">
+              <span class="block text-xs font-bold text-brand-ink truncate">${it.modelo}${it.cantidad > 1 ? ` x${it.cantidad}` : ''}</span>
+              <span class="block text-[10px] text-slate-500 truncate">${it.color || ''}</span>
+            </span>
+            <span class="text-[11px] font-bold text-brand-sky flex-shrink-0">${precioTxt}</span>
+          </label>`;
+      }).join('');
+    }
+
+    function checkoutToggleItem(id) {
+      const idx = checkoutSelectedIds.indexOf(id);
+      if (idx >= 0) {
+        checkoutSelectedIds.splice(idx, 1);
+      } else {
+        checkoutSelectedIds.push(id);
+      }
+      renderCheckoutItemsSelector();
+      updateCheckoutGrandTotal();
+      const anyConGraduacion = checkoutSelectedItems().some(it => it.graduacion === 'con');
+      setCheckoutGraduacion(anyConGraduacion ? 'con' : 'sin');
+    }
+
     function cartTotal() {
       return cart.reduce((sum, it) => sum + ((Number(it.precio || 0) + Number(it.micaTipoElegidoCosto || 0) + Number(it.micaMaterialElegidoCosto || 0) + Number(it.tratamientoElegidoCosto || 0)) * it.cantidad), 0);
     }
@@ -8318,7 +8398,7 @@
       const traslado = Number(document.getElementById('checkoutExamenDistancia').value) || 0;
       const subtotal = personas * EXAM_PRICE_PER_PERSON;
       const bruto = subtotal + traslado;
-      const conBono = cart.length > 0;
+      const conBono = checkoutSelectedItems().length > 0;
       const bono = conBono ? bruto * EXAM_BONUS_PERCENT : 0;
       const total = bruto - bono;
       return { personas, traslado, subtotal, bruto, bono, total, conBono };
@@ -8466,14 +8546,14 @@
       const desgloseEl = document.getElementById('checkoutGrandTotalDesglose');
       if (!desgloseEl) return; // el checkout aún no está en el DOM
 
-      const lentesTotal = cartTotal();
+      const lentesTotal = checkoutSelectedTotal();
       const examenCost = checkoutTipo === 'examen' ? checkoutExamCost() : null;
       const total = lentesTotal + (examenCost ? examenCost.total : 0);
       const fmt = n => `$${n.toLocaleString('es-MX', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 
       // ---- Desglose por concepto: armazón, mica/material, y cada tratamiento (Blu Ray, Polarizado, Fotocromático) ----
       const totales = { armazon: 0, material: 0, bluRay: 0, fotocromatico: 0, polarizado: 0, otro: 0 };
-      cart.forEach(it => {
+      checkoutSelectedItems().forEach(it => {
         const cantidad = Number(it.cantidad) > 0 ? Number(it.cantidad) : 1;
         totales.armazon += Number(it.precio || 0) * cantidad;
         totales.material += (Number(it.micaTipoElegidoCosto || 0) + Number(it.micaMaterialElegidoCosto || 0)) * cantidad;
@@ -8518,7 +8598,7 @@
     // ¿Ya se capturó la receta de TODOS los artículos con graduación durante el flujo de compra
     // ("Configura tus lentes")? Si es así, no tiene sentido volver a pedirla aquí.
     function checkoutRecetaYaCapturada() {
-      const itemsConGraduacion = cart.filter(it => it.graduacion === 'con');
+      const itemsConGraduacion = checkoutSelectedItems().filter(it => it.graduacion === 'con');
       if (itemsConGraduacion.length === 0) return false;
       return itemsConGraduacion.every(it => it.graduacionInfo && (
         (it.graduacionInfo.modo === 'receta' && (it.graduacionInfo.receta || it.graduacionInfo.fotoUrl || it.graduacionInfo.fotoPorWhatsapp)) ||
@@ -8625,9 +8705,15 @@
       updateCheckoutRecetaUI();
     }
 
-    async function startCheckout(forceExamen) {
+    async function startCheckout(forceExamen, onlyProductId) {
       if (cart.length === 0 && !forceExamen) return;
       closeCartDrawer();
+
+      // Si viene de "Comprar ahora" sobre un armazón específico del catálogo, solo
+      // ese artículo entra en este pedido (aunque haya otros guardados en el carrito).
+      // Si no, por default se incluyen todos los artículos del carrito.
+      checkoutSelectedIds = onlyProductId ? [onlyProductId] : cart.map(it => it.id);
+      renderCheckoutItemsSelector();
 
       // Prefill contact fields if the customer is logged in
       try {
@@ -8649,11 +8735,11 @@
         setCheckoutTipo('examen');
       } else {
         graduacionWrap.classList.remove('hidden');
-        const anyConGraduacion = cart.some(it => it.graduacion === 'con');
+        const anyConGraduacion = checkoutSelectedItems().some(it => it.graduacion === 'con');
         setCheckoutGraduacion(anyConGraduacion ? 'con' : 'sin');
         // Si algún artículo pidió "No, necesito examen" en el flujo de compra,
         // preseleccionamos esa pestaña para no hacerle repetir la elección.
-        const anyPideExamen = cart.some(it => it.graduacionInfo && it.graduacionInfo.modo === 'examen');
+        const anyPideExamen = checkoutSelectedItems().some(it => it.graduacionInfo && it.graduacionInfo.modo === 'examen');
         if (anyConGraduacion && anyPideExamen) setCheckoutTipo('examen');
       }
       setCheckoutMetodo('whatsapp');
@@ -8662,7 +8748,7 @@
       // Si algún artículo del carrito ya trae foto de receta subida en el flujo de compra,
       // la mostramos aquí como recordatorio de que ya quedó guardada.
       const fotosWrap = document.getElementById('checkoutRecetaFotosWrap');
-      const fotosReceta = cart.filter(it => it.graduacionInfo && it.graduacionInfo.fotoUrl).map(it => it.graduacionInfo.fotoUrl);
+      const fotosReceta = checkoutSelectedItems().filter(it => it.graduacionInfo && it.graduacionInfo.fotoUrl).map(it => it.graduacionInfo.fotoUrl);
       if (fotosWrap) {
         fotosWrap.innerHTML = fotosReceta.map(url => `<img src="${url}" class="w-14 h-14 object-cover rounded-lg border border-slate-900/10" alt="Foto de receta">`).join('');
         fotosWrap.classList.toggle('hidden', fotosReceta.length === 0);
@@ -8724,8 +8810,13 @@
       status.className = 'text-[11px] text-slate-500 mt-2 text-center';
       status.textContent = 'Enviando pedido...';
 
-      const items = cart.map(it => ({ modelo: it.modelo, color: it.color, precio: it.precio, cantidad: it.cantidad, tratamientos: it.tratamientos || [], graduacion: it.graduacion === 'con' ? 'con' : 'sin', tipoCompra: it.tipoCompra || null, graduacionInfo: it.graduacionInfo || null, micaTipoElegido: it.micaTipoElegido || null, micaTipoElegidoCosto: it.micaTipoElegidoCosto || 0, micaMaterialElegido: it.micaMaterialElegido || null, micaMaterialElegidoCosto: it.micaMaterialElegidoCosto || 0, tratamientoElegido: it.tratamientoElegido || null, tratamientoElegidoCosto: it.tratamientoElegidoCosto || 0, tratamientosElegidos: it.tratamientosElegidos || null }));
-      const lentesTotal = cartTotal();
+      if (checkoutSelectedItems().length === 0) {
+        status.textContent = 'Elija al menos un armazón para comprar.';
+        return;
+      }
+
+      const items = checkoutSelectedItems().map(it => ({ modelo: it.modelo, color: it.color, precio: it.precio, cantidad: it.cantidad, tratamientos: it.tratamientos || [], graduacion: it.graduacion === 'con' ? 'con' : 'sin', tipoCompra: it.tipoCompra || null, graduacionInfo: it.graduacionInfo || null, micaTipoElegido: it.micaTipoElegido || null, micaTipoElegidoCosto: it.micaTipoElegidoCosto || 0, micaMaterialElegido: it.micaMaterialElegido || null, micaMaterialElegidoCosto: it.micaMaterialElegidoCosto || 0, tratamientoElegido: it.tratamientoElegido || null, tratamientoElegidoCosto: it.tratamientoElegidoCosto || 0, tratamientosElegidos: it.tratamientosElegidos || null }));
+      const lentesTotal = checkoutSelectedTotal();
       const examen = checkoutTipo === 'examen' ? checkoutExamCost() : null;
       const total = lentesTotal + (examen ? examen.total : 0);
       const chosenSlot = checkoutSlotsCache.find(s => s.id === slotId);
@@ -8803,7 +8894,10 @@
           msg += `%0A%0ARecuerda enviar tu receta.`;
         }
 
-        cart = [];
+        // Solo se quitan del carrito los armazones que se acaban de comprar; si el
+        // cliente dejó otros sin marcar, se quedan guardados para un pedido posterior.
+        cart = cart.filter(it => !checkoutSelectedIds.includes(it.id));
+        checkoutSelectedIds = [];
         saveCart();
 
         status.textContent = '';
