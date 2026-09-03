@@ -7061,6 +7061,56 @@
     // =========================================================
     // ---- ADMIN PANEL: PEDIDOS ----
     // =========================================================
+    // ---- Línea de tiempo del estado del pedido (para que el cliente vea en qué va) ----
+    function renderEstadoTimeline(estadoEnvio) {
+      const steps = [
+        { key: 'preparando', label: 'Pedido recibido', icon: '📦' },
+        { key: 'camino', label: 'En camino', icon: '🚚' },
+        { key: 'entregado', label: 'Entregado', icon: '✅' }
+      ];
+      const order = ['preparando', 'camino', 'entregado'];
+      const currentIdx = Math.max(0, order.indexOf(estadoEnvio || 'preparando'));
+      return `
+        <div class="flex items-start mb-2">
+          ${steps.map((s, i) => {
+            const done = i <= currentIdx;
+            const isLast = i === steps.length - 1;
+            return `
+              <div class="flex flex-col items-center ${isLast ? '' : 'flex-1'}">
+                <div class="w-6 h-6 rounded-full flex items-center justify-center text-[11px] flex-shrink-0 ${done ? 'bg-brand-teal text-brand-dark' : 'bg-slate-900/10 text-slate-500'}">${s.icon}</div>
+                <span class="text-[8px] mt-1 text-center leading-tight ${done ? 'text-brand-ink font-bold' : 'text-slate-500'}">${s.label}</span>
+              </div>
+              ${!isLast ? `<div class="flex-1 h-0.5 mt-3 ${i < currentIdx ? 'bg-brand-teal' : 'bg-slate-900/10'}"></div>` : ''}
+            `;
+          }).join('')}
+        </div>`;
+    }
+
+    // ---- Recordatorio de la cita de examen a domicilio (si el pedido incluye una) ----
+    function renderExamenReminder(examen) {
+      if (!examen || !examen.fecha) return '';
+      const [y, m, d] = examen.fecha.split('-').map(Number);
+      if (!y || !m || !d) return '';
+      const fechaObj = new Date(y, m - 1, d);
+      const hoy = new Date();
+      hoy.setHours(0, 0, 0, 0);
+      const diffDias = Math.round((fechaObj - hoy) / (1000 * 60 * 60 * 24));
+      const fechaBonita = fechaObj.toLocaleDateString('es-MX', { weekday: 'long', day: 'numeric', month: 'long' });
+      const fechaCap = fechaBonita.charAt(0).toUpperCase() + fechaBonita.slice(1);
+      const horaTxt = examen.hora ? ` a las ${examen.hora}` : '';
+
+      if (diffDias < 0) {
+        return `<p class="text-[11px] text-slate-500 mb-2">📅 Examen a domicilio: ${fechaCap}${horaTxt}</p>`;
+      }
+      if (diffDias === 0) {
+        return `<p class="text-[11px] font-bold text-brand-coral bg-brand-coral/10 border border-brand-coral/20 rounded-lg p-2.5 mb-2">🔔 ¡Hoy es tu examen a domicilio${horaTxt}! Le estaremos esperando.</p>`;
+      }
+      if (diffDias === 1) {
+        return `<p class="text-[11px] font-bold text-brand-teal bg-brand-teal/10 border border-brand-teal/20 rounded-lg p-2.5 mb-2">🔔 Mañana es su examen a domicilio${horaTxt}.</p>`;
+      }
+      return `<p class="text-[11px] font-semibold text-brand-sky bg-brand-sky/10 border border-brand-sky/20 rounded-lg p-2.5 mb-2">📅 Su examen a domicilio es en ${diffDias} días — ${fechaCap}${horaTxt}.</p>`;
+    }
+
     function estadoPagoBadge(estado) {
       const map = { pendiente: 'text-amber-500', proceso: 'text-brand-sky', pagado: 'text-emerald-500' };
       const labelMap = { pendiente: 'Pago pendiente', proceso: 'Pago en proceso', pagado: 'Pagado' };
@@ -7998,6 +8048,16 @@
               recetaFotoThumb = `<p class="text-[10px] text-brand-teal font-semibold">📱 Foto pendiente: la enviará por WhatsApp</p>`;
             }
           }
+          let tratamientoLineas = '';
+          if (it.tratamientosElegidos) {
+            const partes = [];
+            if (it.tratamientosElegidos.bluRay) partes.push(`<p class="text-[10px] text-brand-teal truncate">Blue Ray${PF_BLURAY_VARIANTE_LABELS[it.tratamientosElegidos.bluRay] ? ` (${escapeHtml(PF_BLURAY_VARIANTE_LABELS[it.tratamientosElegidos.bluRay])})` : ''}: +$${Number(PF_TRATAMIENTO_COMPONENTE_PRECIOS.blu_ray).toLocaleString('es-MX', {minimumFractionDigits:2, maximumFractionDigits:2})}</p>`);
+            if (it.tratamientosElegidos.fotocromatico) partes.push(`<p class="text-[10px] text-brand-teal truncate">Fotocromático${PF_FOTO_VARIANTE_LABELS[it.tratamientosElegidos.fotocromatico] ? ` (${escapeHtml(PF_FOTO_VARIANTE_LABELS[it.tratamientosElegidos.fotocromatico])})` : ''}: +$${Number(PF_TRATAMIENTO_COMPONENTE_PRECIOS.fotocromatico).toLocaleString('es-MX', {minimumFractionDigits:2, maximumFractionDigits:2})}</p>`);
+            if (it.tratamientosElegidos.polarizado) partes.push(`<p class="text-[10px] text-brand-teal truncate">Polarizado: +$${Number(PF_TRATAMIENTO_COMPONENTE_PRECIOS.polarizado).toLocaleString('es-MX', {minimumFractionDigits:2, maximumFractionDigits:2})}</p>`);
+            tratamientoLineas = partes.join('');
+          } else if (it.tratamientoElegido) {
+            tratamientoLineas = `<p class="text-[10px] text-brand-teal truncate">Tratamiento: ${escapeHtml(it.tratamientoElegido)}${it.tratamientoElegidoCosto ? ` (+$${Number(it.tratamientoElegidoCosto).toLocaleString('es-MX', {minimumFractionDigits:2, maximumFractionDigits:2})})` : ''}</p>`;
+          }
           purchaseFlowSummary = `
             <div class="mt-1.5 p-2 bg-brand-navy rounded-lg border border-slate-900/10 space-y-0.5">
               <p class="text-[10px] font-bold text-brand-ink">${tipoLabel}</p>
@@ -8005,7 +8065,7 @@
               ${recetaFotoThumb}
               ${it.micaTipoElegido ? `<p class="text-[10px] text-brand-teal truncate">Mica: ${escapeHtml(PF_MICA_TIPO_LABELS[it.micaTipoElegido] || it.micaTipoElegido)}${it.micaTipoElegidoCosto ? ` (+$${Number(it.micaTipoElegidoCosto).toLocaleString('es-MX', {minimumFractionDigits:2, maximumFractionDigits:2})})` : ' (incluida)'}</p>` : ''}
               ${it.micaMaterialElegido ? `<p class="text-[10px] text-brand-teal truncate">Material: ${escapeHtml(PF_MICA_MATERIAL_LABELS[it.micaMaterialElegido] || it.micaMaterialElegido)}${it.micaMaterialElegidoCosto ? ` (+$${Number(it.micaMaterialElegidoCosto).toLocaleString('es-MX', {minimumFractionDigits:2, maximumFractionDigits:2})})` : ''}</p>` : ''}
-              ${it.tratamientoElegido ? `<p class="text-[10px] text-brand-teal truncate">Tratamiento: ${escapeHtml(it.tratamientoElegido)}${it.tratamientoElegidoCosto ? ` (+$${Number(it.tratamientoElegidoCosto).toLocaleString('es-MX', {minimumFractionDigits:2, maximumFractionDigits:2})})` : ''}</p>` : ''}
+              ${tratamientoLineas}
               <p class="text-[10px] text-slate-500">Precio: ${precioText}${(it.micaTipoElegidoCosto || it.micaMaterialElegidoCosto || it.tratamientoElegidoCosto) ? ` + $${Number((it.micaTipoElegidoCosto||0) + (it.micaMaterialElegidoCosto||0) + (it.tratamientoElegidoCosto||0)).toLocaleString('es-MX', {minimumFractionDigits:2, maximumFractionDigits:2})} extras` : ''}</p>
             </div>`;
         }
@@ -8292,24 +8352,35 @@
       const fmt = n => `$${n.toLocaleString('es-MX', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 
       // ---- Desglose por concepto: armazón, mica/material, y cada tratamiento (Blu Ray, Polarizado, Fotocromático) ----
-      const totales = { armazon: 0, material: 0, bluRay: 0, fotocromatico: 0, polarizado: 0 };
+      const totales = { armazon: 0, material: 0, bluRay: 0, fotocromatico: 0, polarizado: 0, otro: 0 };
       cart.forEach(it => {
         const cantidad = Number(it.cantidad) > 0 ? Number(it.cantidad) : 1;
         totales.armazon += Number(it.precio || 0) * cantidad;
         totales.material += (Number(it.micaTipoElegidoCosto || 0) + Number(it.micaMaterialElegidoCosto || 0)) * cantidad;
-        const trat = it.tratamientoElegido || '';
-        const costoTrat = Number(it.tratamientoElegidoCosto || 0) * cantidad;
-        if (trat === 'Filtro de luz azul') totales.bluRay += costoTrat;
-        else if (trat === 'Fotocromático') totales.fotocromatico += costoTrat;
-        else if (trat === 'Polarizado') totales.polarizado += costoTrat;
+
+        if (it.tratamientosElegidos) {
+          // Artículos que pasaron por "Configura tus lentes": sabemos exactamente qué tratamiento(s) eligió.
+          if (it.tratamientosElegidos.bluRay) totales.bluRay += PF_TRATAMIENTO_COMPONENTE_PRECIOS.blu_ray * cantidad;
+          if (it.tratamientosElegidos.fotocromatico) totales.fotocromatico += PF_TRATAMIENTO_COMPONENTE_PRECIOS.fotocromatico * cantidad;
+          if (it.tratamientosElegidos.polarizado) totales.polarizado += PF_TRATAMIENTO_COMPONENTE_PRECIOS.polarizado * cantidad;
+        } else if (it.tratamientoElegido) {
+          // Artículos más antiguos sin ese detalle: los identificamos por el texto guardado.
+          const trat = it.tratamientoElegido;
+          const costoTrat = Number(it.tratamientoElegidoCosto || 0) * cantidad;
+          if (/blu ?ray|luz azul/i.test(trat)) totales.bluRay += costoTrat;
+          else if (/fotocrom/i.test(trat)) totales.fotocromatico += costoTrat;
+          else if (/polarizad/i.test(trat)) totales.polarizado += costoTrat;
+          else totales.otro += costoTrat;
+        }
       });
 
       const filas = [];
       filas.push(`<div class="flex justify-between"><span>🕶️ Armazón(es)</span><span>${fmt(totales.armazon)}</span></div>`);
       if (totales.material > 0) filas.push(`<div class="flex justify-between"><span>🔎 Mica / material</span><span>${fmt(totales.material)}</span></div>`);
-      if (totales.bluRay > 0) filas.push(`<div class="flex justify-between"><span>✨ Filtro de luz azul (Blue Ray)</span><span>${fmt(totales.bluRay)}</span></div>`);
+      if (totales.bluRay > 0) filas.push(`<div class="flex justify-between"><span>✨ Blue Ray</span><span>${fmt(totales.bluRay)}</span></div>`);
       if (totales.fotocromatico > 0) filas.push(`<div class="flex justify-between"><span>✨ Fotocromático</span><span>${fmt(totales.fotocromatico)}</span></div>`);
       if (totales.polarizado > 0) filas.push(`<div class="flex justify-between"><span>✨ Polarizado</span><span>${fmt(totales.polarizado)}</span></div>`);
+      if (totales.otro > 0) filas.push(`<div class="flex justify-between"><span>✨ Otro tratamiento</span><span>${fmt(totales.otro)}</span></div>`);
       desgloseEl.innerHTML = filas.join('');
 
       const examenRow = document.getElementById('checkoutGrandTotalExamenRow');
@@ -8526,7 +8597,7 @@
       status.className = 'text-[11px] text-slate-500 mt-2 text-center';
       status.textContent = 'Enviando pedido...';
 
-      const items = cart.map(it => ({ modelo: it.modelo, color: it.color, precio: it.precio, cantidad: it.cantidad, tratamientos: it.tratamientos || [], graduacion: it.graduacion === 'con' ? 'con' : 'sin', tipoCompra: it.tipoCompra || null, graduacionInfo: it.graduacionInfo || null, micaTipoElegido: it.micaTipoElegido || null, micaTipoElegidoCosto: it.micaTipoElegidoCosto || 0, micaMaterialElegido: it.micaMaterialElegido || null, micaMaterialElegidoCosto: it.micaMaterialElegidoCosto || 0, tratamientoElegido: it.tratamientoElegido || null, tratamientoElegidoCosto: it.tratamientoElegidoCosto || 0 }));
+      const items = cart.map(it => ({ modelo: it.modelo, color: it.color, precio: it.precio, cantidad: it.cantidad, tratamientos: it.tratamientos || [], graduacion: it.graduacion === 'con' ? 'con' : 'sin', tipoCompra: it.tipoCompra || null, graduacionInfo: it.graduacionInfo || null, micaTipoElegido: it.micaTipoElegido || null, micaTipoElegidoCosto: it.micaTipoElegidoCosto || 0, micaMaterialElegido: it.micaMaterialElegido || null, micaMaterialElegidoCosto: it.micaMaterialElegidoCosto || 0, tratamientoElegido: it.tratamientoElegido || null, tratamientoElegidoCosto: it.tratamientoElegidoCosto || 0, tratamientosElegidos: it.tratamientosElegidos || null }));
       const lentesTotal = cartTotal();
       const examen = checkoutTipo === 'examen' ? checkoutExamCost() : null;
       const total = lentesTotal + (examen ? examen.total : 0);
@@ -8728,7 +8799,11 @@
               const nombreMaterial = it.micaMaterialElegido === 'hiindex' ? 'Hi Index' : (it.micaMaterialElegido === 'policarbonato' ? 'Policarbonato' : it.micaMaterialElegido);
               filas.push(`<div class="flex justify-between"><span class="text-slate-500">🔹 Material: ${escapeHtml(nombreMaterial)}</span><span class="text-slate-600">+${money(it.micaMaterialElegidoCosto)}</span></div>`);
             }
-            if (it.tratamientoElegido) {
+            if (it.tratamientosElegidos) {
+              if (it.tratamientosElegidos.bluRay) filas.push(`<div class="flex justify-between"><span class="text-slate-500">✨ Blue Ray</span><span class="text-slate-600">+${money(PF_TRATAMIENTO_COMPONENTE_PRECIOS.blu_ray)}</span></div>`);
+              if (it.tratamientosElegidos.fotocromatico) filas.push(`<div class="flex justify-between"><span class="text-slate-500">✨ Fotocromático</span><span class="text-slate-600">+${money(PF_TRATAMIENTO_COMPONENTE_PRECIOS.fotocromatico)}</span></div>`);
+              if (it.tratamientosElegidos.polarizado) filas.push(`<div class="flex justify-between"><span class="text-slate-500">✨ Polarizado</span><span class="text-slate-600">+${money(PF_TRATAMIENTO_COMPONENTE_PRECIOS.polarizado)}</span></div>`);
+            } else if (it.tratamientoElegido) {
               filas.push(`<div class="flex justify-between"><span class="text-slate-500">✨ Tratamiento: ${escapeHtml(it.tratamientoElegido)}</span><span class="text-slate-600">+${money(it.tratamientoElegidoCosto)}</span></div>`);
             }
             const subtotalUnitario = Number(it.precio || 0) + Number(it.micaTipoElegidoCosto || 0) + Number(it.micaMaterialElegidoCosto || 0) + Number(it.tratamientoElegidoCosto || 0);
@@ -8744,16 +8819,20 @@
 
           return `
           <div class="p-3.5 bg-brand-navy border border-slate-900/10 rounded-xl">
-            <div class="flex items-center justify-between mb-1">
+            <div class="flex items-center justify-between mb-2">
               <span class="text-[10px] text-slate-500">${formatFecha(o.createdAt)}</span>
               ${o.precio ? `<span class="text-xs font-bold text-brand-ink">${money(o.precio)}</span>` : ''}
             </div>
+            ${o.tipoPedido ? `<div class="mb-2">${tipoPedidoBadge(o.tipoPedido)}</div>` : ''}
+            ${renderEstadoTimeline(o.estadoEnvio || 'preparando')}
             <p class="text-xs text-slate-600 mb-2">${itemsText || 'Pedido registrado'}</p>
             ${desgloseItems ? `<div class="mb-2 p-2.5 bg-brand-dark rounded-lg border border-slate-900/10">${desgloseItems}</div>` : ''}
+            ${o.examen ? renderExamenReminder(o.examen) : ''}
+            ${(o.examen && Array.isArray(o.examen.armazonesElegidos) && o.examen.armazonesElegidos.length) ? `<p class="text-[10px] text-slate-500 mb-2">Armazones para probarse ese día: ${o.examen.armazonesElegidos.map(a => `${escapeHtml(a.modelo)} (${escapeHtml(a.color)})`).join(', ')}</p>` : ''}
             ${restante !== null ? `<p class="text-[11px] text-slate-500 mb-2">Pagado: ${money(totalPagado)} · Falta por pagar: <strong class="text-brand-ink">${money(restante)}</strong></p>` : ''}
-            <div class="flex flex-wrap gap-2">
+            <div class="flex flex-wrap items-center justify-between gap-2">
               ${estadoPagoBadge(o.estadoPago || 'pendiente')}
-              ${estadoEnvioBadge(o.estadoEnvio || 'preparando')}
+              ${(o.estadoPago || 'pendiente') === 'pendiente' ? `<span class="text-[10px] text-slate-500">Le confirmaremos las formas de pago disponibles.</span>` : ''}
             </div>
           </div>
         `; }).join('');
