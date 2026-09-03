@@ -2262,8 +2262,11 @@
       </div>
 
       <div id="checkoutRecetaWrap" class="hidden mb-4">
-        <label class="block text-[9px] uppercase tracking-widest text-slate-500 font-extrabold mb-2">Su receta / graduación</label>
-        <textarea id="checkoutReceta" rows="2" placeholder="Escriba su graduación (ej. OD -2.00 OI -1.50) o pegue el enlace de la foto de su receta" class="w-full p-3.5 bg-brand-navy border border-slate-900/10 rounded-xl text-sm text-brand-ink focus:border-brand-sky focus:outline-none"></textarea>
+        <p id="checkoutRecetaNota" class="hidden text-[11px] font-semibold text-brand-teal bg-brand-teal/10 border border-brand-teal/20 rounded-xl p-3"></p>
+        <div id="checkoutRecetaInputWrap">
+          <label class="block text-[9px] uppercase tracking-widest text-slate-500 font-extrabold mb-2">Su receta / graduación</label>
+          <textarea id="checkoutReceta" rows="2" placeholder="Escriba su graduación (ej. OD -2.00 OI -1.50) o pegue el enlace de la foto de su receta" class="w-full p-3.5 bg-brand-navy border border-slate-900/10 rounded-xl text-sm text-brand-ink focus:border-brand-sky focus:outline-none"></textarea>
+        </div>
         <div id="checkoutRecetaFotosWrap" class="hidden flex flex-wrap gap-2 mt-2"></div>
       </div>
 
@@ -2322,7 +2325,7 @@
       </div>
 
       <div id="checkoutGrandTotalBox" class="mb-5 p-4 bg-brand-navy rounded-2xl border border-brand-sky/20 text-xs text-slate-600 space-y-1.5">
-        <div class="flex justify-between"><span>Armazón(es), mica y tratamiento</span><span id="checkoutGrandTotalLentes">$0.00</span></div>
+        <div id="checkoutGrandTotalDesglose" class="space-y-1.5"></div>
         <div id="checkoutGrandTotalExamenRow" class="hidden flex justify-between"><span>Examen a domicilio</span><span id="checkoutGrandTotalExamen">$0.00</span></div>
         <div class="flex justify-between font-bold text-brand-ink text-sm pt-2 border-t border-slate-900/10"><span>Total del pedido</span><span id="checkoutGrandTotal">$0.00</span></div>
       </div>
@@ -8084,6 +8087,7 @@
         pagBtn.classList.add('border-slate-900/10', 'text-slate-500');
         label.textContent = 'Enviar pedido por WhatsApp';
       }
+      updateCheckoutRecetaUI();
     }
 
     function haversineKm(lat1, lng1, lat2, lng2) {
@@ -8279,15 +8283,34 @@
     // Muestra el total real del pedido (armazones + su mica/tratamiento elegidos + examen),
     // para que se vea claramente que esos costos sí se están sumando.
     function updateCheckoutGrandTotal() {
-      const lentesEl = document.getElementById('checkoutGrandTotalLentes');
-      if (!lentesEl) return; // el checkout aún no está en el DOM
+      const desgloseEl = document.getElementById('checkoutGrandTotalDesglose');
+      if (!desgloseEl) return; // el checkout aún no está en el DOM
 
       const lentesTotal = cartTotal();
       const examenCost = checkoutTipo === 'examen' ? checkoutExamCost() : null;
       const total = lentesTotal + (examenCost ? examenCost.total : 0);
       const fmt = n => `$${n.toLocaleString('es-MX', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 
-      lentesEl.textContent = fmt(lentesTotal);
+      // ---- Desglose por concepto: armazón, mica/material, y cada tratamiento (Blu Ray, Polarizado, Fotocromático) ----
+      const totales = { armazon: 0, material: 0, bluRay: 0, fotocromatico: 0, polarizado: 0 };
+      cart.forEach(it => {
+        const cantidad = Number(it.cantidad) > 0 ? Number(it.cantidad) : 1;
+        totales.armazon += Number(it.precio || 0) * cantidad;
+        totales.material += (Number(it.micaTipoElegidoCosto || 0) + Number(it.micaMaterialElegidoCosto || 0)) * cantidad;
+        const trat = it.tratamientoElegido || '';
+        const costoTrat = Number(it.tratamientoElegidoCosto || 0) * cantidad;
+        if (trat === 'Filtro de luz azul') totales.bluRay += costoTrat;
+        else if (trat === 'Fotocromático') totales.fotocromatico += costoTrat;
+        else if (trat === 'Polarizado') totales.polarizado += costoTrat;
+      });
+
+      const filas = [];
+      filas.push(`<div class="flex justify-between"><span>🕶️ Armazón(es)</span><span>${fmt(totales.armazon)}</span></div>`);
+      if (totales.material > 0) filas.push(`<div class="flex justify-between"><span>🔎 Mica / material</span><span>${fmt(totales.material)}</span></div>`);
+      if (totales.bluRay > 0) filas.push(`<div class="flex justify-between"><span>✨ Filtro de luz azul (Blue Ray)</span><span>${fmt(totales.bluRay)}</span></div>`);
+      if (totales.fotocromatico > 0) filas.push(`<div class="flex justify-between"><span>✨ Fotocromático</span><span>${fmt(totales.fotocromatico)}</span></div>`);
+      if (totales.polarizado > 0) filas.push(`<div class="flex justify-between"><span>✨ Polarizado</span><span>${fmt(totales.polarizado)}</span></div>`);
+      desgloseEl.innerHTML = filas.join('');
 
       const examenRow = document.getElementById('checkoutGrandTotalExamenRow');
       const examenEl = document.getElementById('checkoutGrandTotalExamen');
@@ -8299,6 +8322,52 @@
       }
 
       document.getElementById('checkoutGrandTotal').textContent = fmt(total);
+    }
+
+    // ¿Ya se capturó la receta de TODOS los artículos con graduación durante el flujo de compra
+    // ("Configura tus lentes")? Si es así, no tiene sentido volver a pedirla aquí.
+    function checkoutRecetaYaCapturada() {
+      const itemsConGraduacion = cart.filter(it => it.graduacion === 'con');
+      if (itemsConGraduacion.length === 0) return false;
+      return itemsConGraduacion.every(it => it.graduacionInfo && (
+        (it.graduacionInfo.modo === 'receta' && (it.graduacionInfo.receta || it.graduacionInfo.fotoUrl || it.graduacionInfo.fotoPorWhatsapp)) ||
+        it.graduacionInfo.modo === 'examen'
+      ));
+    }
+
+    // Ajusta lo que se muestra en el bloque de receta según el método de envío elegido
+    // (WhatsApp / formulario) y si esa receta ya se capturó antes en el flujo de compra.
+    function updateCheckoutRecetaUI() {
+      const wrap = document.getElementById('checkoutRecetaWrap');
+      if (!wrap) return;
+      const inputWrap = document.getElementById('checkoutRecetaInputWrap');
+      const nota = document.getElementById('checkoutRecetaNota');
+
+      if (checkoutGraduacionGeneral !== 'con' || checkoutTipo !== 'receta') {
+        wrap.classList.add('hidden');
+        return;
+      }
+      wrap.classList.remove('hidden');
+
+      const yaCapturada = checkoutRecetaYaCapturada();
+
+      if (yaCapturada) {
+        // Ya se pidió la receta en el flujo de compra: no se vuelve a pedir, solo se avisa.
+        inputWrap.classList.add('hidden');
+        nota.classList.remove('hidden');
+        nota.textContent = checkoutMetodo === 'whatsapp'
+          ? '📱 Envía tu receta por WhatsApp junto con tu pedido.'
+          : '✅ Tu receta ya quedó registrada en el formulario, no es necesario escribirla de nuevo.';
+      } else if (checkoutMetodo === 'whatsapp') {
+        // No se capturó antes y va por WhatsApp: solo le recordamos enviarla allá, no la escribe aquí.
+        inputWrap.classList.add('hidden');
+        nota.classList.remove('hidden');
+        nota.textContent = '📱 Envía tu receta por WhatsApp junto con tu pedido.';
+      } else {
+        // No se capturó antes y va por el formulario: sí necesitamos que la escriba aquí.
+        inputWrap.classList.remove('hidden');
+        nota.classList.add('hidden');
+      }
     }
 
     function setCheckoutGraduacion(tipo) {
@@ -8332,6 +8401,7 @@
         setCheckoutTipo('receta');
       }
       updateCheckoutGrandTotal();
+      updateCheckoutRecetaUI();
     }
 
 
@@ -8361,6 +8431,7 @@
         examenWrap.classList.add('hidden');
       }
       updateCheckoutGrandTotal();
+      updateCheckoutRecetaUI();
     }
 
     async function startCheckout(forceExamen) {
@@ -8413,6 +8484,7 @@
       checkoutArmazonesSeleccionados = [];
       document.getElementById('checkoutArmazonesStatus').textContent = '';
       updateCheckoutGrandTotal();
+      updateCheckoutRecetaUI();
       openModal('checkoutModal');
     }
 
@@ -8433,7 +8505,8 @@
         status.textContent = 'Por favor complete su nombre y teléfono.';
         return;
       }
-      if (checkoutGraduacionGeneral === 'con' && checkoutTipo === 'receta' && !receta) {
+      const recetaYaCapturada = checkoutRecetaYaCapturada();
+      if (checkoutGraduacionGeneral === 'con' && checkoutTipo === 'receta' && checkoutMetodo === 'pagina' && !recetaYaCapturada && !receta) {
         status.textContent = 'Escriba su graduación o pegue el enlace de su receta.';
         return;
       }
@@ -8511,7 +8584,7 @@
         const itemsText = items.map(it => `• ${it.modelo} (${it.color})${it.cantidad > 1 ? ` x${it.cantidad}` : ''}${it.precio ? ` — $${Number(it.precio).toFixed(2)}` : ''}${(it.tratamientos && it.tratamientos.length) ? ` [${it.tratamientos.join(', ')}]` : ''}${it.graduacion === 'con' ? ' [CON GRADUACIÓN — costo final según receta]' : ' [sin graduación]'}${it.micaTipoElegido ? ` — Mica: ${PF_MICA_TIPO_LABELS[it.micaTipoElegido] || it.micaTipoElegido}${it.micaTipoElegidoCosto ? ` (+$${Number(it.micaTipoElegidoCosto).toFixed(2)})` : ' (incluida)'}` : ''}${it.micaMaterialElegido ? ` — Material: ${PF_MICA_MATERIAL_LABELS[it.micaMaterialElegido] || it.micaMaterialElegido}${it.micaMaterialElegidoCosto ? ` (+$${Number(it.micaMaterialElegidoCosto).toFixed(2)})` : ''}` : ''}${it.tratamientoElegido ? ` — Tratamiento: ${it.tratamientoElegido}${it.tratamientoElegidoCosto ? ` (+$${Number(it.tratamientoElegidoCosto).toFixed(2)})` : ''}` : ''}${(it.graduacionInfo && it.graduacionInfo.modo === 'receta' && it.graduacionInfo.receta) ? ` — Receta: ${it.graduacionInfo.receta}` : ''}${(it.graduacionInfo && it.graduacionInfo.modo === 'examen') ? ' — Pidió examen a domicilio' : ''}`).join('%0A');
         const tipoText = checkoutTipo === 'receta' ? 'Pedido CON RECETA' : checkoutTipo === 'examen' ? 'Pedido con EXAMEN A DOMICILIO' : 'Pedido SIN GRADUACIÓN';
         let msg = `Hola, quiero confirmar mi pedido en Visión EKA:%0A%0A${tipoText}%0A${itemsText}`;
-        if (checkoutTipo === 'receta') msg += `%0AReceta: ${receta}`;
+        if (checkoutTipo === 'receta' && receta) msg += `%0AReceta: ${receta}`;
         const fotosRecetaMsg = items.filter(it => it.graduacionInfo && it.graduacionInfo.fotoUrl).map(it => `• ${it.modelo}: ${it.graduacionInfo.fotoUrl}`);
         if (fotosRecetaMsg.length) msg += `%0A%0AFotos de receta subidas:%0A${fotosRecetaMsg.join('%0A')}`;
         if (items.some(it => it.graduacion === 'con')) msg += `%0A%0ANota: algunos lentes son con graduación, el precio final de esos se confirma según la receta.`;
@@ -8523,9 +8596,14 @@
           if (armazonesElegidos.length) msg += `%0AArmazones para probarse ese día: ${armazonesElegidos.map(a => `${a.modelo} (${a.color})`).join(', ')}`;
         }
         msg += `%0A%0ATotal general estimado: $${total.toFixed(2)} MXN%0A%0ANombre: ${nombre}%0ATeléfono: ${telefono}`;
-        // Si el cliente eligió mandar la receta por WhatsApp, se lo recordamos al final del mensaje.
+        // Si va por WhatsApp y todavía no tenemos la receta en ningún lado (ni escrita, ni foto
+        // subida, ni marcada para enviarse por WhatsApp desde el flujo de compra), se lo recordamos.
         const recetaPorWhatsapp = items.some(it => it.graduacionInfo && it.graduacionInfo.fotoPorWhatsapp);
-        if (recetaPorWhatsapp) msg += `%0A%0ARecuerda enviar tu receta`;
+        if (checkoutMetodo === 'whatsapp' && checkoutTipo === 'receta' && !receta && !fotosRecetaMsg.length) {
+          msg += `%0A%0AEnvía tu receta por WhatsApp junto con este pedido.`;
+        } else if (recetaPorWhatsapp) {
+          msg += `%0A%0ARecuerda enviar tu receta.`;
+        }
 
         cart = [];
         saveCart();
