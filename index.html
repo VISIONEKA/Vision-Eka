@@ -8354,6 +8354,15 @@
       }
       pfApplyToCartItem(productId);
       renderCartDrawer(); // refleja la nueva metadata si el carrito está visible
+
+      // Si el cliente editó el tratamiento/mica desde la pantalla de checkout
+      // ("¿Qué armazones quiere comprar ahora?"), refrescamos esa lista y el
+      // total del pedido sin que tenga que cerrar y volver a abrir el checkout.
+      const checkoutModal = document.getElementById('checkoutModal');
+      if (checkoutModal && !checkoutModal.classList.contains('hidden')) {
+        renderCheckoutItemsSelector();
+        updateCheckoutGrandTotal();
+      }
     }
 
     function cartSetGraduacion(id, tipo) {
@@ -8485,16 +8494,37 @@
       list.innerHTML = cart.map(it => {
         const checked = checkoutSelectedIds.includes(it.id);
         const precioTxt = it.precio ? `$${Number(it.precio).toLocaleString('es-MX', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` : 'Precio a confirmar';
+
+        // Resumen corto de mica/tratamiento ya elegidos para este armazón, para que
+        // el cliente vea de un vistazo qué tiene configurado sin salir del checkout.
+        const extrasPartes = [];
+        if (it.micaTipoElegido) extrasPartes.push(PF_MICA_TIPO_LABELS[it.micaTipoElegido] || it.micaTipoElegido);
+        if (it.micaMaterialElegido) extrasPartes.push(PF_MICA_MATERIAL_LABELS[it.micaMaterialElegido] || it.micaMaterialElegido);
+        if (it.tratamientosElegidos) {
+          if (it.tratamientosElegidos.bluRay) extrasPartes.push('Blue Ray');
+          if (it.tratamientosElegidos.fotocromatico) extrasPartes.push('Fotocromático');
+          if (it.tratamientosElegidos.polarizado) extrasPartes.push('Polarizado');
+        } else if (it.tratamientoElegido) {
+          extrasPartes.push(it.tratamientoElegido);
+        }
+        const extrasTxt = extrasPartes.length ? extrasPartes.join(' · ') : 'Sin tratamiento ni mica adicional';
+
         return `
-          <label class="flex items-center gap-3 p-2.5 rounded-xl border-2 ${checked ? 'border-brand-sky bg-brand-sky/5' : 'border-slate-900/10'} cursor-pointer transition-all">
-            <input type="checkbox" ${checked ? 'checked' : ''} onchange="checkoutToggleItem('${it.id}')" class="w-4 h-4 accent-brand-sky flex-shrink-0">
-            ${it.img ? `<img src="${it.img}" class="w-10 h-10 object-cover rounded-lg flex-shrink-0" alt="${it.modelo}">` : ''}
-            <span class="flex-1 min-w-0">
-              <span class="block text-xs font-bold text-brand-ink truncate">${it.modelo}${it.cantidad > 1 ? ` x${it.cantidad}` : ''}</span>
-              <span class="block text-[10px] text-slate-500 truncate">${it.color || ''}</span>
+          <div class="flex items-center gap-3 p-2.5 rounded-xl border-2 ${checked ? 'border-brand-sky bg-brand-sky/5' : 'border-slate-900/10'} transition-all">
+            <label class="flex items-center gap-3 flex-1 min-w-0 cursor-pointer">
+              <input type="checkbox" ${checked ? 'checked' : ''} onchange="checkoutToggleItem('${it.id}')" class="w-4 h-4 accent-brand-sky flex-shrink-0">
+              ${it.img ? `<img src="${it.img}" class="w-10 h-10 object-cover rounded-lg flex-shrink-0" alt="${it.modelo}">` : ''}
+              <span class="flex-1 min-w-0">
+                <span class="block text-xs font-bold text-brand-ink truncate">${it.modelo}${it.cantidad > 1 ? ` x${it.cantidad}` : ''}</span>
+                <span class="block text-[10px] text-slate-500 truncate">${it.color || ''}</span>
+                <span class="block text-[10px] text-brand-teal truncate">${extrasTxt}</span>
+              </span>
+            </label>
+            <span class="flex flex-col items-end gap-1 flex-shrink-0">
+              <span class="text-[11px] font-bold text-brand-sky">${precioTxt}</span>
+              <button type="button" onclick="event.stopPropagation(); openPurchaseFlow('${it.id}', false)" class="text-[9px] font-bold uppercase tracking-wide px-2 py-0.5 rounded-full border border-slate-900/10 text-slate-500 hover:border-brand-sky/40 hover:text-brand-sky transition-all">Editar</button>
             </span>
-            <span class="text-[11px] font-bold text-brand-sky flex-shrink-0">${precioTxt}</span>
-          </label>`;
+          </div>`;
       }).join('');
     }
 
