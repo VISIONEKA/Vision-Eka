@@ -4120,13 +4120,15 @@
             ${buildGalWrapHtml(key, p)}
           </div>
           <div class="p-5 sm:p-6 flex flex-col flex-grow">
-            <span class="gal-compact-hide text-[9px] font-extrabold text-brand-sky uppercase tracking-widest mb-1.5">${escapeHtml(p.categoria)}</span>
+            <div class="gal-compact-hide flex items-center justify-between gap-2 mb-1.5">
+              <span class="text-[9px] font-extrabold text-brand-sky uppercase tracking-widest">${escapeHtml(p.categoria)}</span>
+              <span id="galPrice-${key}" class="text-xs font-display font-bold text-brand-ink flex-shrink-0">${precioText}</span>
+            </div>
             <h4 class="font-display font-bold text-sm sm:text-base leading-tight text-brand-ink mb-1 min-h-[2.5rem]">${escapeHtml(p.modelo)}</h4>
             <div class="gal-compact-hide">${swatches}</div>
             <p id="galColor-${key}" class="gal-compact-hide text-xs text-slate-500 mb-2">Color: ${escapeHtml(p.color)}</p>
             <div id="galTratamientos-${key}" class="gal-compact-hide">${(p.tratamientos && p.tratamientos.length) ? `<div class="flex flex-wrap gap-1 mb-3">${p.tratamientos.map(t => `<span class="text-[8px] font-bold uppercase tracking-wide text-brand-teal bg-brand-teal/10 px-2 py-0.5 rounded-full">${escapeHtml(t)}</span>`).join('')}</div>` : '<div class="mb-1"></div>'}</div>
-            <div class="gal-compact-hide flex items-center justify-between mt-auto mb-4">
-              <span id="galPrice-${key}" class="text-sm font-display font-bold text-brand-ink">${precioText}</span>
+            <div class="gal-compact-hide flex items-center justify-end mt-auto mb-4">
               <span id="galStock-${key}">${stockBadge}</span>
             </div>
             <div id="galCartWrap-${key}" class="flex flex-col gap-2 mt-auto">
