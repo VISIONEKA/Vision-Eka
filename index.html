@@ -2301,7 +2301,7 @@
       <div id="checkoutGraduacionWrap" class="mb-4">
         <label class="block text-[9px] uppercase tracking-widest text-slate-500 font-extrabold mb-2">¿Sus lentes serán con o sin graduación?</label>
         <div class="grid grid-cols-2 gap-3">
-          <button type="button" onclick="setCheckoutGraduacion('con')" id="checkoutGraduacionConBtn" class="checkout-graduacion-btn text-left p-3 rounded-xl border-2 border-brand-sky text-brand-sky text-xs font-bold transition-all">👓 Con graduación<br><span class="font-normal normal-case text-[10px] text-slate-500">Necesito receta o examen</span></button>
+          <button type="button" onclick="setCheckoutGraduacion('con')" id="checkoutGraduacionConBtn" class="checkout-graduacion-btn text-left p-3 rounded-xl border-2 border-brand-sky text-brand-sky bg-brand-sky/10 ring-2 ring-brand-sky/30 text-xs font-bold transition-all">👓 Con graduación<br><span class="font-normal normal-case text-[10px] text-slate-500">Necesito receta o examen</span></button>
           <button type="button" onclick="setCheckoutGraduacion('sin')" id="checkoutGraduacionSinBtn" class="checkout-graduacion-btn text-left p-3 rounded-xl border-2 border-slate-900/10 text-slate-500 text-xs font-bold transition-all">🕶️ Sin graduación<br><span class="font-normal normal-case text-[10px] text-slate-500">Solo protección, sin receta</span></button>
         </div>
       </div>
@@ -2309,7 +2309,7 @@
       <div id="checkoutTipoWrap">
         <label class="block text-[9px] uppercase tracking-widest text-slate-500 font-extrabold mb-2">Tipo de pedido</label>
         <div class="grid grid-cols-2 gap-3 mb-4">
-          <button type="button" onclick="setCheckoutTipo('receta')" id="checkoutTipoRecetaBtn" class="checkout-tipo-btn text-left p-3 rounded-xl border-2 border-brand-sky text-brand-sky text-xs font-bold transition-all">📋 Ya tengo receta<br><span class="font-normal normal-case text-[10px] text-slate-500">Conozco mi graduación</span></button>
+          <button type="button" onclick="setCheckoutTipo('receta')" id="checkoutTipoRecetaBtn" class="checkout-tipo-btn text-left p-3 rounded-xl border-2 border-brand-sky text-brand-sky bg-brand-sky/10 ring-2 ring-brand-sky/30 text-xs font-bold transition-all">📋 Ya tengo receta<br><span class="font-normal normal-case text-[10px] text-slate-500">Conozco mi graduación</span></button>
           <button type="button" onclick="setCheckoutTipo('examen')" id="checkoutTipoExamenBtn" class="checkout-tipo-btn text-left p-3 rounded-xl border-2 border-slate-900/10 text-slate-500 text-xs font-bold transition-all">🏠 Necesito examen<br><span class="font-normal normal-case text-[10px] text-slate-500">Agendar a domicilio</span></button>
         </div>
       </div>
@@ -2381,7 +2381,7 @@
 
       <label class="block text-[9px] uppercase tracking-widest text-slate-500 font-extrabold mb-2">¿Cómo quiere enviarlo?</label>
       <div class="grid grid-cols-2 gap-3 mb-5">
-        <button type="button" onclick="setCheckoutMetodo('whatsapp')" id="checkoutMetodoWhatsappBtn" class="checkout-metodo-btn text-left p-3 rounded-xl border-2 border-brand-sky text-brand-sky text-xs font-bold transition-all">📱 Por WhatsApp<br><span class="font-normal normal-case text-[10px] text-slate-500">Se abre WhatsApp con su pedido listo</span></button>
+        <button type="button" onclick="setCheckoutMetodo('whatsapp')" id="checkoutMetodoWhatsappBtn" class="checkout-metodo-btn text-left p-3 rounded-xl border-2 border-brand-sky text-brand-sky bg-brand-sky/10 ring-2 ring-brand-sky/30 text-xs font-bold transition-all">📱 Por WhatsApp<br><span class="font-normal normal-case text-[10px] text-slate-500">Se abre WhatsApp con su pedido listo</span></button>
         <button type="button" onclick="setCheckoutMetodo('pagina')" id="checkoutMetodoPaginaBtn" class="checkout-metodo-btn text-left p-3 rounded-xl border-2 border-slate-900/10 text-slate-500 text-xs font-bold transition-all">💻 Solo por la página<br><span class="font-normal normal-case text-[10px] text-slate-500">Nos llega directo, sin abrir nada</span></button>
       </div>
 
@@ -7959,14 +7959,14 @@
       const conBtn = document.getElementById('pfTipoConBtn');
       const soloBtn = document.getElementById('pfTipoSoloBtn');
       [conBtn, soloBtn].forEach(btn => {
-        btn.classList.remove('border-brand-sky', 'text-brand-sky');
+        btn.classList.remove('border-brand-sky', 'text-brand-sky', 'bg-brand-sky/10', 'ring-2', 'ring-brand-sky/30');
         btn.classList.add('border-slate-900/10', 'text-slate-500');
       });
       if (purchaseFlowState.tipoCompra === 'con_graduacion') {
-        conBtn.classList.add('border-brand-sky', 'text-brand-sky');
+        conBtn.classList.add('border-brand-sky', 'text-brand-sky', 'bg-brand-sky/10', 'ring-2', 'ring-brand-sky/30');
         conBtn.classList.remove('border-slate-900/10', 'text-slate-500');
       } else if (purchaseFlowState.tipoCompra === 'solo_armazon') {
-        soloBtn.classList.add('border-brand-sky', 'text-brand-sky');
+        soloBtn.classList.add('border-brand-sky', 'text-brand-sky', 'bg-brand-sky/10', 'ring-2', 'ring-brand-sky/30');
         soloBtn.classList.remove('border-slate-900/10', 'text-slate-500');
       }
     }
@@ -7992,14 +7992,14 @@
       const recetaBtn = document.getElementById('pfModoRecetaBtn');
       const examenBtn = document.getElementById('pfModoExamenBtn');
       [recetaBtn, examenBtn].forEach(btn => {
-        btn.classList.remove('border-brand-sky', 'text-brand-sky');
+        btn.classList.remove('border-brand-sky', 'text-brand-sky', 'bg-brand-sky/10', 'ring-2', 'ring-brand-sky/30');
         btn.classList.add('border-slate-900/10', 'text-slate-500');
       });
       if (purchaseFlowState.graduacionModo === 'receta') {
-        recetaBtn.classList.add('border-brand-sky', 'text-brand-sky');
+        recetaBtn.classList.add('border-brand-sky', 'text-brand-sky', 'bg-brand-sky/10', 'ring-2', 'ring-brand-sky/30');
         recetaBtn.classList.remove('border-slate-900/10', 'text-slate-500');
       } else if (purchaseFlowState.graduacionModo === 'examen') {
-        examenBtn.classList.add('border-brand-sky', 'text-brand-sky');
+        examenBtn.classList.add('border-brand-sky', 'text-brand-sky', 'bg-brand-sky/10', 'ring-2', 'ring-brand-sky/30');
         examenBtn.classList.remove('border-slate-900/10', 'text-slate-500');
       }
     }
@@ -8676,15 +8676,15 @@
       const label = document.getElementById('checkoutSubmitBtnLabel');
 
       if (metodo === 'pagina') {
-        pagBtn.classList.add('border-brand-sky', 'text-brand-sky');
+        pagBtn.classList.add('border-brand-sky', 'text-brand-sky', 'bg-brand-sky/10', 'ring-2', 'ring-brand-sky/30');
         pagBtn.classList.remove('border-slate-900/10', 'text-slate-500');
-        waBtn.classList.remove('border-brand-sky', 'text-brand-sky');
+        waBtn.classList.remove('border-brand-sky', 'text-brand-sky', 'bg-brand-sky/10', 'ring-2', 'ring-brand-sky/30');
         waBtn.classList.add('border-slate-900/10', 'text-slate-500');
         label.textContent = 'Enviar pedido';
       } else {
-        waBtn.classList.add('border-brand-sky', 'text-brand-sky');
+        waBtn.classList.add('border-brand-sky', 'text-brand-sky', 'bg-brand-sky/10', 'ring-2', 'ring-brand-sky/30');
         waBtn.classList.remove('border-slate-900/10', 'text-slate-500');
-        pagBtn.classList.remove('border-brand-sky', 'text-brand-sky');
+        pagBtn.classList.remove('border-brand-sky', 'text-brand-sky', 'bg-brand-sky/10', 'ring-2', 'ring-brand-sky/30');
         pagBtn.classList.add('border-slate-900/10', 'text-slate-500');
         label.textContent = 'Enviar pedido a WhatsApp';
       }
@@ -9005,9 +9005,9 @@
       const examenWrap = document.getElementById('checkoutExamenWrap');
 
       if (checkoutGraduacionGeneral === 'sin') {
-        sinBtn.classList.add('border-brand-sky', 'text-brand-sky');
+        sinBtn.classList.add('border-brand-sky', 'text-brand-sky', 'bg-brand-sky/10', 'ring-2', 'ring-brand-sky/30');
         sinBtn.classList.remove('border-slate-900/10', 'text-slate-500');
-        conBtn.classList.remove('border-brand-sky', 'text-brand-sky');
+        conBtn.classList.remove('border-brand-sky', 'text-brand-sky', 'bg-brand-sky/10', 'ring-2', 'ring-brand-sky/30');
         conBtn.classList.add('border-slate-900/10', 'text-slate-500');
 
         // Sin graduación: no se pide receta ni se agenda examen, solo los datos de contacto.
@@ -9016,9 +9016,9 @@
         examenWrap.classList.add('hidden');
         checkoutTipo = 'sin_graduacion';
       } else {
-        conBtn.classList.add('border-brand-sky', 'text-brand-sky');
+        conBtn.classList.add('border-brand-sky', 'text-brand-sky', 'bg-brand-sky/10', 'ring-2', 'ring-brand-sky/30');
         conBtn.classList.remove('border-slate-900/10', 'text-slate-500');
-        sinBtn.classList.remove('border-brand-sky', 'text-brand-sky');
+        sinBtn.classList.remove('border-brand-sky', 'text-brand-sky', 'bg-brand-sky/10', 'ring-2', 'ring-brand-sky/30');
         sinBtn.classList.add('border-slate-900/10', 'text-slate-500');
 
         // Con graduación: se pide elegir entre subir receta o agendar examen (la mica y
@@ -9039,18 +9039,18 @@
       const examenWrap = document.getElementById('checkoutExamenWrap');
 
       if (tipo === 'examen') {
-        examenBtn.classList.add('border-brand-sky', 'text-brand-sky');
+        examenBtn.classList.add('border-brand-sky', 'text-brand-sky', 'bg-brand-sky/10', 'ring-2', 'ring-brand-sky/30');
         examenBtn.classList.remove('border-slate-900/10', 'text-slate-500');
-        recetaBtn.classList.remove('border-brand-sky', 'text-brand-sky');
+        recetaBtn.classList.remove('border-brand-sky', 'text-brand-sky', 'bg-brand-sky/10', 'ring-2', 'ring-brand-sky/30');
         recetaBtn.classList.add('border-slate-900/10', 'text-slate-500');
         examenWrap.classList.remove('hidden');
         recetaWrap.classList.add('hidden');
         updateExamenCostDisplay();
         loadCheckoutExamSlots();
       } else {
-        recetaBtn.classList.add('border-brand-sky', 'text-brand-sky');
+        recetaBtn.classList.add('border-brand-sky', 'text-brand-sky', 'bg-brand-sky/10', 'ring-2', 'ring-brand-sky/30');
         recetaBtn.classList.remove('border-slate-900/10', 'text-slate-500');
-        examenBtn.classList.remove('border-brand-sky', 'text-brand-sky');
+        examenBtn.classList.remove('border-brand-sky', 'text-brand-sky', 'bg-brand-sky/10', 'ring-2', 'ring-brand-sky/30');
         examenBtn.classList.add('border-slate-900/10', 'text-slate-500');
         recetaWrap.classList.remove('hidden');
         examenWrap.classList.add('hidden');
