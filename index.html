@@ -2466,7 +2466,7 @@
         <label class="block text-[9px] uppercase tracking-widest text-slate-500 font-extrabold mb-2">¿Cómo deseas adquirir tus lentes?</label>
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <button type="button" onclick="pfSetTipo('con_graduacion')" id="pfTipoConBtn" class="checkout-graduacion-btn text-left p-4 rounded-xl border-2 border-slate-900/10 text-slate-500 text-xs font-bold transition-all">👓 Lentes con graduación<br><span class="font-normal normal-case text-[10px] text-slate-500">Necesito receta o examen de la vista</span></button>
-          <button type="button" onclick="pfSetTipo('solo_armazon')" id="pfTipoSoloBtn" class="checkout-graduacion-btn text-left p-4 rounded-xl border-2 border-slate-900/10 text-slate-500 text-xs font-bold transition-all">🕶️ Solo armazón<br><span class="font-normal normal-case text-[10px] text-slate-500">Sin graduación, va directo al carrito</span></button>
+          <button type="button" onclick="pfSetTipo('solo_armazon')" id="pfTipoSoloBtn" class="checkout-graduacion-btn text-left p-4 rounded-xl border-2 border-slate-900/10 text-slate-500 text-xs font-bold transition-all">🕶️ Solo armazón<br><span class="font-normal normal-case text-[10px] text-slate-500">Sin graduación, puede llevar tratamiento</span></button>
         </div>
       </div>
 
@@ -7981,7 +7981,7 @@
 
     function pfGoBack() {
       if (purchaseFlowState.step === 5) {
-        pfShowStep(4);
+        pfShowStep(purchaseFlowState.tipoCompra === 'solo_armazon' ? 1 : 4);
       } else if (purchaseFlowState.step === 4) {
         pfShowStep(3);
       } else if (purchaseFlowState.step === 3) {
@@ -8011,11 +8011,14 @@
       purchaseFlowState.tipoCompra = tipo;
       pfHighlightTipo();
       if (tipo === 'solo_armazon') {
-        // "Solo armazón": no se pide graduación, examen ni tratamiento — directo al carrito.
+        // "Solo armazón": no se pide graduación ni mica (eso requiere receta),
+        // pero sí puede elegir tratamiento (Blue Ray, Fotocromático, Polarizado)
+        // — no todos los tratamientos requieren graduación.
         purchaseFlowState.graduacionModo = null;
         purchaseFlowState.receta = '';
-        purchaseFlowState.tratamiento = null;
-        pfFinish();
+        purchaseFlowState.micaTipo = null;
+        purchaseFlowState.micaMaterial = null;
+        pfShowStep(5);
       } else {
         pfShowStep(2);
       }
@@ -8352,8 +8355,10 @@
       item.micaMaterialElegido = conGraduacion ? purchaseFlowState.micaMaterial : null;
       item.micaMaterialElegidoCosto = item.micaMaterialElegido ? (PF_MICA_MATERIAL_PRECIOS[item.micaMaterialElegido] || 0) : 0;
 
-      const trat = conGraduacion ? pfComputeTratamiento() : { label: '', costo: 0, count: 0 };
-      item.tratamientosElegidos = conGraduacion
+      // El tratamiento (Blue Ray / Fotocromático / Polarizado) se guarda sin importar
+      // el tipo de compra: también aplica para "solo armazón" (sin graduación).
+      const trat = pfComputeTratamiento();
+      item.tratamientosElegidos = trat.count > 0
         ? { bluRay: purchaseFlowState.tratBluRay, fotocromatico: purchaseFlowState.tratFotocromatico, fotocromaticoColor: purchaseFlowState.tratFotocromaticoColor, polarizado: purchaseFlowState.tratPolarizado, polarizadoColor: purchaseFlowState.tratPolarizadoColor }
         : null;
       item.tratamientoElegido = trat.count > 0 ? trat.label : null;
