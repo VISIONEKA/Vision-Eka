@@ -2177,102 +2177,6 @@
     </div>
   </div>
 
-  <!-- ========== MODAL: ADMIN — EDITAR/AGREGAR ARMAZÓN DENTRO DE UN PEDIDO ========== -->
-  <div id="orderItemEditModal" class="fixed inset-0 z-[70] flex items-center justify-center p-4 bg-brand-navy/80 backdrop-blur-md hidden opacity-0 transition-opacity duration-300" onclick="if(event.target===this) closeItemEditModal()">
-    <div class="bg-brand-dark border-2 border-brand-sky/40 p-6 rounded-3xl max-w-lg w-full shadow-2xl transform scale-95 transition-transform duration-300 max-h-[90vh] overflow-y-auto" id="orderItemEditModalCard">
-      <h3 class="font-display font-bold text-base text-brand-ink mb-1" id="orderItemEditModalTitle">Editar armazón del pedido</h3>
-      <p class="text-[11px] text-slate-500 mb-4">Cada armazón de este pedido puede tener su propia mica, material y tratamiento.</p>
-
-      <div class="grid sm:grid-cols-2 gap-3 mb-3">
-        <div>
-          <label class="block text-[9px] uppercase tracking-widest text-slate-500 font-extrabold mb-1.5">Modelo / Armazón</label>
-          <input type="text" id="oiModelo" class="w-full p-3 bg-brand-navy border border-slate-900/10 rounded-xl text-sm text-brand-ink focus:border-brand-sky focus:outline-none" placeholder="Ej. Marvel 1">
-        </div>
-        <div>
-          <label class="block text-[9px] uppercase tracking-widest text-slate-500 font-extrabold mb-1.5">Color</label>
-          <input type="text" id="oiColor" class="w-full p-3 bg-brand-navy border border-slate-900/10 rounded-xl text-sm text-brand-ink focus:border-brand-sky focus:outline-none" placeholder="Ej. Negro">
-        </div>
-      </div>
-
-      <div class="grid sm:grid-cols-2 gap-3 mb-3">
-        <div>
-          <label class="block text-[9px] uppercase tracking-widest text-slate-500 font-extrabold mb-1.5">Cantidad</label>
-          <input type="number" min="1" id="oiCantidad" value="1" class="w-full p-3 bg-brand-navy border border-slate-900/10 rounded-xl text-sm text-brand-ink focus:border-brand-sky focus:outline-none">
-        </div>
-        <div>
-          <label class="block text-[9px] uppercase tracking-widest text-slate-500 font-extrabold mb-1.5">Precio del armazón</label>
-          <input type="number" min="0" step="0.01" id="oiPrecio" class="w-full p-3 bg-brand-navy border border-slate-900/10 rounded-xl text-sm text-brand-ink focus:border-brand-sky focus:outline-none" placeholder="$0.00">
-        </div>
-      </div>
-
-      <div class="mb-3">
-        <label class="block text-[9px] uppercase tracking-widest text-slate-500 font-extrabold mb-1.5">Graduación</label>
-        <select id="oiGraduacion" onchange="oiToggleRecetaWrap()" class="w-full p-3 bg-brand-navy border border-slate-900/10 rounded-xl text-sm text-brand-ink focus:border-brand-sky focus:outline-none">
-          <option value="sin">Sin graduación</option>
-          <option value="con">Con graduación</option>
-        </select>
-      </div>
-
-      <div id="oiRecetaWrap" class="mb-3 hidden">
-        <label class="block text-[9px] uppercase tracking-widest text-slate-500 font-extrabold mb-1.5">Receta / graduación</label>
-        <input type="text" id="oiReceta" class="w-full p-3 bg-brand-navy border border-slate-900/10 rounded-xl text-sm text-brand-ink focus:border-brand-sky focus:outline-none" placeholder="Ej. OD -1.50 / OI -1.75">
-      </div>
-
-      <div class="grid sm:grid-cols-2 gap-3 mb-3">
-        <div>
-          <label class="block text-[9px] uppercase tracking-widest text-slate-500 font-extrabold mb-1.5">Tipo de mica</label>
-          <select id="oiMicaTipo" onchange="oiAutoFillMicaTipoCosto()" class="w-full p-3 bg-brand-navy border border-slate-900/10 rounded-xl text-sm text-brand-ink focus:border-brand-sky focus:outline-none">
-            <option value="">— Ninguna —</option>
-            <option value="monofocal">Blanca (visión sencilla) — incluida</option>
-            <option value="bifocal">Bifocal FT-28</option>
-            <option value="progresiva">Progresivo Plus</option>
-          </select>
-        </div>
-        <div>
-          <label class="block text-[9px] uppercase tracking-widest text-slate-500 font-extrabold mb-1.5">Costo extra de mica</label>
-          <input type="number" min="0" step="0.01" id="oiMicaTipoCosto" value="0" class="w-full p-3 bg-brand-navy border border-slate-900/10 rounded-xl text-sm text-brand-ink focus:border-brand-sky focus:outline-none">
-        </div>
-      </div>
-
-      <div class="grid sm:grid-cols-2 gap-3 mb-3">
-        <div>
-          <label class="block text-[9px] uppercase tracking-widest text-slate-500 font-extrabold mb-1.5">Material</label>
-          <select id="oiMicaMaterial" onchange="oiAutoFillMicaMaterialCosto()" class="w-full p-3 bg-brand-navy border border-slate-900/10 rounded-xl text-sm text-brand-ink focus:border-brand-sky focus:outline-none">
-            <option value="">— Ninguno —</option>
-            <option value="hiindex">Hi Index</option>
-            <option value="policarbonato">Policarbonato</option>
-          </select>
-        </div>
-        <div>
-          <label class="block text-[9px] uppercase tracking-widest text-slate-500 font-extrabold mb-1.5">Costo extra de material</label>
-          <input type="number" min="0" step="0.01" id="oiMicaMaterialCosto" value="0" class="w-full p-3 bg-brand-navy border border-slate-900/10 rounded-xl text-sm text-brand-ink focus:border-brand-sky focus:outline-none">
-        </div>
-      </div>
-
-      <div class="grid sm:grid-cols-2 gap-3 mb-4">
-        <div>
-          <label class="block text-[9px] uppercase tracking-widest text-slate-500 font-extrabold mb-1.5">Tratamiento(s)</label>
-          <input type="text" id="oiTratamiento" class="w-full p-3 bg-brand-navy border border-slate-900/10 rounded-xl text-sm text-brand-ink focus:border-brand-sky focus:outline-none" placeholder="Ej. Blue Ray + Fotocromático">
-        </div>
-        <div>
-          <label class="block text-[9px] uppercase tracking-widest text-slate-500 font-extrabold mb-1.5">Costo tratamiento(s)</label>
-          <input type="number" min="0" step="0.01" id="oiTratamientoCosto" value="0" class="w-full p-3 bg-brand-navy border border-slate-900/10 rounded-xl text-sm text-brand-ink focus:border-brand-sky focus:outline-none">
-        </div>
-      </div>
-
-      <p id="oiEditStatus" class="text-[11px] text-red-400 mb-3"></p>
-
-      <div class="flex gap-3">
-        <button onclick="adminSaveOrderItemEdit()" class="flex-1 bg-gradient-to-r from-brand-sky to-brand-teal text-brand-ink font-bold py-3 rounded-xl transition-all hover:shadow-lg">
-          Guardar cambios
-        </button>
-        <button onclick="closeItemEditModal()" class="flex-1 bg-transparent border border-slate-900/10 text-slate-500 font-bold py-3 rounded-xl transition-all hover:bg-slate-900/5">
-          Cancelar
-        </button>
-      </div>
-    </div>
-  </div>
-
   <!-- ========== LIGHTBOX: VISTA AMPLIADA DE IMAGEN DE PRODUCTO ========== -->
   <div id="imgLightbox" class="fixed inset-0 z-[60] flex items-center justify-center p-4 sm:p-8 bg-brand-navy/95 backdrop-blur-md hidden opacity-0 transition-opacity duration-300" onclick="if(event.target===this) closeImgLightbox()">
     <button onclick="closeImgLightbox()" class="absolute top-4 right-4 sm:top-6 sm:right-6 w-10 h-10 rounded-full bg-brand-dark/80 border border-slate-900/10 text-brand-ink flex items-center justify-center text-xl hover:bg-brand-sky/20 transition-colors z-10" aria-label="Cerrar">✕</button>
@@ -2361,6 +2265,24 @@
         <button onclick="startCheckout()" id="cartCheckoutBtn" class="w-full bg-gradient-to-r from-brand-sky to-brand-teal text-brand-ink font-bold py-3.5 rounded-xl transition-all hover:shadow-lg">
           Continuar con mi pedido
         </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== MODAL: CAMBIAR ARMAZÓN DE UN ARTÍCULO DEL CARRITO ========== -->
+  <div id="cartSwapModal" class="fixed inset-0 z-[65] flex items-center justify-center p-4 bg-brand-navy/90 backdrop-blur-md hidden opacity-0 transition-opacity duration-300" onclick="if(event.target===this) closeCartSwapModal()">
+    <div class="bg-brand-dark border-2 border-brand-sky/40 rounded-3xl max-w-lg w-full shadow-2xl transform scale-95 transition-transform duration-300 max-h-[85vh] flex flex-col" id="cartSwapModalCard">
+      <div class="flex items-center justify-between p-5 border-b border-slate-900/10">
+        <div>
+          <h3 class="font-display font-bold text-base text-brand-ink">🔄 Cambiar armazón</h3>
+          <p class="text-[11px] text-slate-500 mt-0.5">Su mica, material y tratamiento elegidos se conservan; solo cambia el armazón.</p>
+        </div>
+        <button onclick="closeCartSwapModal()" class="text-slate-500 hover:text-brand-ink text-xl leading-none flex-shrink-0">✕</button>
+      </div>
+      <div class="p-4 border-b border-slate-900/10">
+        <input type="text" id="cartSwapSearch" oninput="renderCartSwapOptions()" placeholder="Buscar por modelo, color o categoría..." class="w-full p-3 bg-brand-navy border border-slate-900/10 rounded-xl text-sm text-brand-ink focus:border-brand-sky focus:outline-none">
+      </div>
+      <div id="cartSwapList" class="flex-1 overflow-y-auto p-4 space-y-2">
       </div>
     </div>
   </div>
@@ -7522,15 +7444,12 @@
       return map[tipo] || '';
     }
 
-    let adminAllPedidosCache = [];
-
     async function adminLoadPedidos() {
       const list = document.getElementById('adminPedidoList');
       const empty = document.getElementById('adminPedidoListEmpty');
       try {
         const fb = await window.firebaseReady;
         const pedidos = await fb.fetchOrders();
-        adminAllPedidosCache = pedidos;
 
         if (!pedidos.length) {
           list.innerHTML = '';
@@ -7542,30 +7461,7 @@
           const waPhone = (p.telefono || '').replace(/\D/g, '');
           const items = Array.isArray(p.items) ? p.items : [];
           const itemsHtml = items.length
-            ? `<div class="mt-1 mb-2 space-y-2">${items.map((it, i) => {
-                const subtotalItem = (Number(it.precio || 0) + Number(it.micaTipoElegidoCosto || 0) + Number(it.micaMaterialElegidoCosto || 0) + Number(it.tratamientoElegidoCosto || 0)) * Number(it.cantidad || 1);
-                return `
-                <div class="p-2.5 bg-brand-navy border border-slate-900/10 rounded-xl">
-                  <div class="flex items-start justify-between gap-2 mb-1">
-                    <p class="font-bold text-brand-ink text-[11px]">🕶️ ${it.modelo || 'Armazón'}${it.color ? ' · ' + it.color : ''}${it.cantidad > 1 ? ` x${it.cantidad}` : ''}</p>
-                    <div class="flex gap-2 flex-shrink-0">
-                      <button onclick="adminOpenItemEditModal('${p.id}', ${i})" class="text-[10px] font-bold uppercase tracking-wide text-brand-sky hover:text-brand-teal">✏️ Editar</button>
-                      <button onclick="adminRemoveOrderItem('${p.id}', ${i})" class="text-[10px] font-bold uppercase tracking-wide text-red-400 hover:text-red-300">🗑️</button>
-                    </div>
-                  </div>
-                  <div class="text-[10px] text-slate-500 space-y-0.5">
-                    ${it.precio ? `<p>Armazón: $${Number(it.precio).toLocaleString('es-MX', {minimumFractionDigits:2, maximumFractionDigits:2})}</p>` : ''}
-                    <p>Graduación: ${it.graduacion === 'con' ? 'Con graduación' : 'Sin graduación'}</p>
-                    ${(it.graduacionInfo && it.graduacionInfo.modo === 'receta' && it.graduacionInfo.receta) ? `<p>Receta: ${it.graduacionInfo.receta}</p>` : ''}
-                    ${(it.graduacionInfo && it.graduacionInfo.modo === 'examen') ? `<p>Pidió examen a domicilio</p>` : ''}
-                    ${it.micaTipoElegido ? `<p>Mica: ${PF_MICA_TIPO_LABELS[it.micaTipoElegido] || it.micaTipoElegido}${it.micaTipoElegidoCosto ? ` (+$${Number(it.micaTipoElegidoCosto).toFixed(2)})` : ' (incluida)'}</p>` : ''}
-                    ${it.micaMaterialElegido ? `<p>Material: ${PF_MICA_MATERIAL_LABELS[it.micaMaterialElegido] || it.micaMaterialElegido}${it.micaMaterialElegidoCosto ? ` (+$${Number(it.micaMaterialElegidoCosto).toFixed(2)})` : ''}</p>` : ''}
-                    ${it.tratamientoElegido ? `<p>Tratamiento: ${it.tratamientoElegido}${it.tratamientoElegidoCosto ? ` (+$${Number(it.tratamientoElegidoCosto).toFixed(2)})` : ''}</p>` : ''}
-                    <p class="text-brand-ink font-bold">Subtotal: $${subtotalItem.toLocaleString('es-MX', {minimumFractionDigits:2, maximumFractionDigits:2})}</p>
-                  </div>
-                </div>`;
-              }).join('')}</div>
-              <button onclick="adminOpenItemEditModal('${p.id}', -1)" class="text-[10px] font-bold uppercase tracking-wide text-brand-sky hover:text-brand-teal mb-2">➕ Agregar armazón a este pedido</button>`
+            ? `<div class="mt-1 mb-1 space-y-0.5">${items.map(it => `<p>• ${it.modelo || ''}${it.color ? ' · ' + it.color : ''} ${it.cantidad > 1 ? `x${it.cantidad}` : ''} ${it.precio ? `— $${Number(it.precio).toLocaleString('es-MX', {minimumFractionDigits:2, maximumFractionDigits:2})}` : ''}${it.micaTipoElegido ? ` · Mica: ${PF_MICA_TIPO_LABELS[it.micaTipoElegido] || it.micaTipoElegido}${it.micaTipoElegidoCosto ? ` (+$${Number(it.micaTipoElegidoCosto).toFixed(2)})` : ''}` : ''}${it.micaMaterialElegido ? ` · Material: ${PF_MICA_MATERIAL_LABELS[it.micaMaterialElegido] || it.micaMaterialElegido}${it.micaMaterialElegidoCosto ? ` (+$${Number(it.micaMaterialElegidoCosto).toFixed(2)})` : ''}` : ''}${it.tratamientoElegido ? ` · Tratamiento: ${it.tratamientoElegido}${it.tratamientoElegidoCosto ? ` (+$${Number(it.tratamientoElegidoCosto).toFixed(2)})` : ''}` : ''}</p>`).join('')}</div>`
             : (p.producto ? `<p><strong class="text-brand-ink">Producto:</strong> ${p.producto} ${p.cantidad ? `(x${p.cantidad})` : ''}</p>` : '');
 
           const itemsSum = items.reduce((sum, it) => sum + ((Number(it.precio || 0) + Number(it.micaTipoElegidoCosto || 0) + Number(it.micaMaterialElegidoCosto || 0) + Number(it.tratamientoElegidoCosto || 0)) * Number(it.cantidad || 1)), 0);
@@ -7769,134 +7665,6 @@
       }
     }
 
-    // =========================================================
-    // ---- ADMIN PANEL: EDITAR / AGREGAR / QUITAR ARMAZONES DE UN PEDIDO ----
-    // =========================================================
-    // Contexto del armazón que se está editando: a qué pedido pertenece y en qué
-    // posición del arreglo "items" está (-1 significa que es un armazón nuevo).
-    let oiEditCtx = { orderId: null, index: -1 };
-
-    function oiAutoFillMicaTipoCosto() {
-      const tipo = document.getElementById('oiMicaTipo').value;
-      document.getElementById('oiMicaTipoCosto').value = tipo ? (PF_MICA_TIPO_PRECIOS[tipo] || 0) : 0;
-    }
-
-    function oiAutoFillMicaMaterialCosto() {
-      const mat = document.getElementById('oiMicaMaterial').value;
-      document.getElementById('oiMicaMaterialCosto').value = mat ? (PF_MICA_MATERIAL_PRECIOS[mat] || 0) : 0;
-    }
-
-    function oiToggleRecetaWrap() {
-      const con = document.getElementById('oiGraduacion').value === 'con';
-      document.getElementById('oiRecetaWrap').classList.toggle('hidden', !con);
-    }
-
-    // Abre el modal para editar el armazón en items[index] del pedido orderId.
-    // Si index es -1, abre el modal vacío para agregar un armazón nuevo.
-    function adminOpenItemEditModal(orderId, index) {
-      const pedido = adminAllPedidosCache.find(p => p.id === orderId);
-      if (!pedido) return;
-      const items = Array.isArray(pedido.items) ? pedido.items : [];
-      const it = index >= 0 ? (items[index] || {}) : {};
-
-      oiEditCtx = { orderId, index };
-      document.getElementById('orderItemEditModalTitle').textContent = index >= 0 ? 'Editar armazón del pedido' : 'Agregar armazón a este pedido';
-      document.getElementById('oiModelo').value = it.modelo || '';
-      document.getElementById('oiColor').value = it.color || '';
-      document.getElementById('oiCantidad').value = it.cantidad || 1;
-      document.getElementById('oiPrecio').value = (it.precio !== undefined && it.precio !== null) ? it.precio : '';
-      document.getElementById('oiGraduacion').value = it.graduacion === 'con' ? 'con' : 'sin';
-      document.getElementById('oiReceta').value = (it.graduacionInfo && it.graduacionInfo.receta) || '';
-      document.getElementById('oiMicaTipo').value = it.micaTipoElegido || '';
-      document.getElementById('oiMicaTipoCosto').value = it.micaTipoElegidoCosto || 0;
-      document.getElementById('oiMicaMaterial').value = it.micaMaterialElegido || '';
-      document.getElementById('oiMicaMaterialCosto').value = it.micaMaterialElegidoCosto || 0;
-      document.getElementById('oiTratamiento').value = it.tratamientoElegido || '';
-      document.getElementById('oiTratamientoCosto').value = it.tratamientoElegidoCosto || 0;
-      document.getElementById('oiEditStatus').textContent = '';
-      oiToggleRecetaWrap();
-      openModal('orderItemEditModal');
-    }
-
-    function closeItemEditModal() {
-      closeModal('orderItemEditModal');
-      oiEditCtx = { orderId: null, index: -1 };
-    }
-
-    async function adminSaveOrderItemEdit() {
-      const status = document.getElementById('oiEditStatus');
-      const modelo = document.getElementById('oiModelo').value.trim();
-      if (!modelo) {
-        status.textContent = 'Escriba al menos el modelo del armazón.';
-        return;
-      }
-      const { orderId, index } = oiEditCtx;
-      const pedido = adminAllPedidosCache.find(p => p.id === orderId);
-      if (!pedido) {
-        status.textContent = 'No se encontró el pedido. Cierre y vuelva a intentar.';
-        return;
-      }
-
-      const graduacion = document.getElementById('oiGraduacion').value === 'con' ? 'con' : 'sin';
-      const receta = document.getElementById('oiReceta').value.trim();
-      const micaTipoElegido = document.getElementById('oiMicaTipo').value || null;
-      const micaMaterialElegido = document.getElementById('oiMicaMaterial').value || null;
-      const tratamientoElegido = document.getElementById('oiTratamiento').value.trim() || null;
-
-      const nuevoItem = {
-        modelo,
-        color: document.getElementById('oiColor').value.trim(),
-        cantidad: Math.max(1, parseInt(document.getElementById('oiCantidad').value) || 1),
-        precio: document.getElementById('oiPrecio').value !== '' ? Number(document.getElementById('oiPrecio').value) : 0,
-        graduacion,
-        graduacionInfo: graduacion === 'con' ? { modo: 'receta', receta } : null,
-        micaTipoElegido,
-        micaTipoElegidoCosto: micaTipoElegido ? (Number(document.getElementById('oiMicaTipoCosto').value) || 0) : 0,
-        micaMaterialElegido,
-        micaMaterialElegidoCosto: micaMaterialElegido ? (Number(document.getElementById('oiMicaMaterialCosto').value) || 0) : 0,
-        tratamientoElegido,
-        tratamientoElegidoCosto: tratamientoElegido ? (Number(document.getElementById('oiTratamientoCosto').value) || 0) : 0
-      };
-
-      const items = Array.isArray(pedido.items) ? [...pedido.items] : [];
-      if (index >= 0) {
-        items[index] = { ...items[index], ...nuevoItem };
-      } else {
-        items.push(nuevoItem);
-      }
-
-      status.textContent = 'Guardando...';
-      status.className = 'text-[11px] text-slate-500 mb-3';
-      try {
-        const fb = await window.firebaseReady;
-        await fb.updateOrderItems(orderId, items);
-        closeItemEditModal();
-        adminLoadPedidos();
-      } catch (e) {
-        console.error('Error al guardar el armazón del pedido:', e);
-        status.textContent = 'No se pudo guardar. Intente de nuevo.';
-        status.className = 'text-[11px] text-red-400 mb-3';
-      }
-    }
-
-    // Quita un armazón específico de un pedido (por su posición en el arreglo).
-    async function adminRemoveOrderItem(orderId, index) {
-      const pedido = adminAllPedidosCache.find(p => p.id === orderId);
-      if (!pedido) return;
-      const items = Array.isArray(pedido.items) ? pedido.items : [];
-      const it = items[index];
-      if (!it) return;
-      if (!confirm(`¿Quitar "${it.modelo || 'este armazón'}" de este pedido?`)) return;
-      const nuevosItems = items.filter((_, i) => i !== index);
-      try {
-        const fb = await window.firebaseReady;
-        await fb.updateOrderItems(orderId, nuevosItems);
-        adminLoadPedidos();
-      } catch (e) {
-        console.error('Error al quitar el armazón del pedido:', e);
-        alert('No se pudo quitar el armazón. Intente de nuevo.');
-      }
-    }
 
     // =========================================================
     // ---- MODAL HELPERS (genéricos, mismo patrón que successModal) ----
@@ -8635,6 +8403,84 @@
       renderCartDrawer();
     }
 
+    // =========================================================
+    // ---- CARRITO: CAMBIAR EL ARMAZÓN DE UN ARTÍCULO YA AGREGADO ----
+    // =========================================================
+    // Permite al cliente conservar la mica/material/tratamiento que ya configuró
+    // y solo cambiar el modelo/color del armazón, en vez de tener que borrar el
+    // artículo y volver a armarlo desde cero.
+    let cartSwapItemId = null;
+
+    function openCartSwapModal(itemId) {
+      cartSwapItemId = itemId;
+      document.getElementById('cartSwapSearch').value = '';
+      renderCartSwapOptions();
+      openModal('cartSwapModal');
+    }
+
+    function closeCartSwapModal() {
+      closeModal('cartSwapModal');
+      cartSwapItemId = null;
+    }
+
+    function renderCartSwapOptions() {
+      const list = document.getElementById('cartSwapList');
+      const term = (document.getElementById('cartSwapSearch').value || '').trim().toLowerCase();
+      const productos = Object.values(window.__publicProductsCache || {});
+      const filtrados = term
+        ? productos.filter(p => `${p.modelo || ''} ${p.color || ''} ${p.categoria || ''} ${p.genero || ''}`.toLowerCase().includes(term))
+        : productos;
+
+      if (!filtrados.length) {
+        list.innerHTML = '<p class="text-xs text-slate-600/80 italic text-center py-6">No se encontraron armazones con esa búsqueda.</p>';
+        return;
+      }
+
+      list.innerHTML = filtrados.slice(0, 60).map(p => {
+        const precioTxt = (p.precio !== null && p.precio !== undefined) ? `$${Number(p.precio).toLocaleString('es-MX', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` : 'Precio a consultar';
+        const thumb = p.img
+          ? `<img src="${p.img}" class="w-12 h-12 object-cover rounded-lg bg-brand-navy border border-slate-900/10 flex-shrink-0">`
+          : `<div class="w-12 h-12 rounded-lg bg-brand-navy border border-slate-900/10 flex items-center justify-center text-lg flex-shrink-0">🕶️</div>`;
+        return `
+          <button onclick="cartSwapConfirm('${p.id}')" class="w-full flex items-center gap-3 p-2.5 rounded-xl border-2 border-slate-900/10 hover:border-brand-sky/50 hover:bg-brand-sky/5 transition-all text-left">
+            ${thumb}
+            <span class="flex-1 min-w-0">
+              <span class="block text-xs font-bold text-brand-ink truncate">${p.modelo || 'Armazón'}</span>
+              <span class="block text-[10px] text-slate-500 truncate">${p.color || ''}</span>
+            </span>
+            <span class="text-[11px] font-bold text-brand-sky flex-shrink-0">${precioTxt}</span>
+          </button>`;
+      }).join('');
+    }
+
+    // Reemplaza el modelo/color/precio/imagen del artículo del carrito por los del
+    // producto elegido, conservando cantidad, graduación, mica, material y tratamiento.
+    // Nota: el "id" del artículo es el mismo id del producto (así lo usa el resto
+    // del carrito para buscarlo en el catálogo), así que al cambiar de armazón hay
+    // que actualizar también ese id.
+    function cartSwapConfirm(productId) {
+      const p = (window.__publicProductsCache || {})[productId];
+      if (!p || !cartSwapItemId) return;
+      const item = cart.find(it => it.id === cartSwapItemId);
+      if (!item) return;
+
+      if (productId !== cartSwapItemId && cart.some(it => it.id === productId)) {
+        alert('Ese armazón ya está en tu carrito como otro artículo. Quita uno de los dos antes de combinarlos.');
+        return;
+      }
+
+      const imgsArr = (p.imgs && p.imgs.length) ? p.imgs : (p.img ? [p.img] : []);
+      item.id = p.id;
+      item.modelo = p.modelo || item.modelo;
+      item.color = p.color || item.color;
+      item.precio = (p.precio === null || p.precio === undefined) ? item.precio : p.precio;
+      item.img = imgsArr[0] || item.img;
+
+      saveCart();
+      renderCartDrawer();
+      closeCartSwapModal();
+    }
+
     // Solo los artículos del carrito marcados para comprarse en ESTE pedido
     // (ver checkoutSelectedIds). El resto del carrito se queda guardado para después.
     function checkoutSelectedItems() {
@@ -8769,6 +8615,7 @@
               <button onclick="cartSetGraduacion('${it.id}', 'sin')" class="text-[9px] font-bold uppercase tracking-wide px-2 py-1 rounded-full border transition-all ${graduacion === 'sin' ? 'bg-brand-sky/20 border-brand-sky text-brand-ink' : 'border-slate-900/10 text-slate-500'}">Sin graduación</button>
               <button onclick="cartSetGraduacion('${it.id}', 'con')" class="text-[9px] font-bold uppercase tracking-wide px-2 py-1 rounded-full border transition-all ${graduacion === 'con' ? 'bg-brand-sky/20 border-brand-sky text-brand-ink' : 'border-slate-900/10 text-slate-500'}">Con graduación</button>
               <button onclick="openPurchaseFlow('${it.id}', false)" class="text-[9px] font-bold uppercase tracking-wide px-2 py-1 rounded-full border border-slate-900/10 text-slate-500 hover:border-brand-sky/40 hover:text-brand-sky transition-all">Editar</button>
+              <button onclick="openCartSwapModal('${it.id}')" class="text-[9px] font-bold uppercase tracking-wide px-2 py-1 rounded-full border border-slate-900/10 text-slate-500 hover:border-brand-sky/40 hover:text-brand-sky transition-all">🔄 Cambiar armazón</button>
             </div>
             <div class="flex items-center gap-2 mt-1.5">
               <button onclick="cartChangeQty('${it.id}', -1)" class="w-6 h-6 rounded-full bg-brand-navy border border-slate-900/10 text-brand-ink text-xs font-bold flex items-center justify-center">−</button>
