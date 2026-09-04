@@ -1889,7 +1889,11 @@
           </button>
           <p id="adminAddSlotStatus" class="text-[11px] text-slate-500 mt-3 mb-4"></p>
 
-          <div id="adminSlotList" class="space-y-2 pt-2 border-t border-slate-900/10">
+          <div class="flex flex-wrap items-center justify-between gap-3 pt-2 border-t border-slate-900/10 pb-2">
+            <p class="text-[10px] uppercase tracking-widest font-extrabold text-slate-500">Horarios registrados</p>
+            <button onclick="adminRemovePastSlots()" class="text-[10px] font-bold uppercase tracking-wide text-red-400 hover:text-red-300">🧹 Eliminar horarios pasados</button>
+          </div>
+          <div id="adminSlotList" class="space-y-2">
             <p id="adminSlotListEmpty" class="text-xs text-slate-600/80 italic pt-3">Aún no ha agregado horarios.</p>
           </div>
         </div>
@@ -2154,6 +2158,121 @@
     </div>
   </div>
 
+  <!-- ========== MODAL: CONFIRMAR APERTURA DE WHATSAPP ========== -->
+  <div id="waConfirmModal" class="fixed inset-0 z-[70] flex items-center justify-center p-6 bg-brand-navy/80 backdrop-blur-md hidden opacity-0 transition-opacity duration-300">
+    <div class="bg-brand-dark border-2 border-emerald-500/40 p-8 rounded-3xl max-w-md w-full shadow-2xl text-center transform scale-95 transition-transform duration-300" id="waConfirmModalCard">
+      <div class="w-16 h-16 bg-emerald-500/15 rounded-full flex items-center justify-center text-4xl mx-auto mb-6">
+        💬
+      </div>
+      <h3 class="font-display font-bold text-lg text-brand-ink mb-2">¿Abrir WhatsApp?</h3>
+      <p class="text-xs text-slate-500 leading-relaxed mb-6">
+        Tu pedido ya quedó registrado. Para terminar de confirmarlo, te contactaremos por WhatsApp con las formas de pago y el seguimiento de tu envío.
+      </p>
+      <button onclick="confirmOpenWhatsapp()" class="w-full bg-[#25D366] hover:bg-[#1da850] text-brand-ink font-bold py-3 px-6 rounded-xl transition-all mb-3">
+        💬 Sí, abrir WhatsApp
+      </button>
+      <button onclick="closeWaConfirmModal()" class="w-full bg-transparent border border-slate-900/10 text-slate-500 font-bold py-3 px-6 rounded-xl transition-all hover:bg-slate-900/5">
+        Ahora no
+      </button>
+    </div>
+  </div>
+
+  <!-- ========== MODAL: ADMIN — EDITAR/AGREGAR ARMAZÓN DENTRO DE UN PEDIDO ========== -->
+  <div id="orderItemEditModal" class="fixed inset-0 z-[70] flex items-center justify-center p-4 bg-brand-navy/80 backdrop-blur-md hidden opacity-0 transition-opacity duration-300" onclick="if(event.target===this) closeItemEditModal()">
+    <div class="bg-brand-dark border-2 border-brand-sky/40 p-6 rounded-3xl max-w-lg w-full shadow-2xl transform scale-95 transition-transform duration-300 max-h-[90vh] overflow-y-auto" id="orderItemEditModalCard">
+      <h3 class="font-display font-bold text-base text-brand-ink mb-1" id="orderItemEditModalTitle">Editar armazón del pedido</h3>
+      <p class="text-[11px] text-slate-500 mb-4">Cada armazón de este pedido puede tener su propia mica, material y tratamiento.</p>
+
+      <div class="grid sm:grid-cols-2 gap-3 mb-3">
+        <div>
+          <label class="block text-[9px] uppercase tracking-widest text-slate-500 font-extrabold mb-1.5">Modelo / Armazón</label>
+          <input type="text" id="oiModelo" class="w-full p-3 bg-brand-navy border border-slate-900/10 rounded-xl text-sm text-brand-ink focus:border-brand-sky focus:outline-none" placeholder="Ej. Marvel 1">
+        </div>
+        <div>
+          <label class="block text-[9px] uppercase tracking-widest text-slate-500 font-extrabold mb-1.5">Color</label>
+          <input type="text" id="oiColor" class="w-full p-3 bg-brand-navy border border-slate-900/10 rounded-xl text-sm text-brand-ink focus:border-brand-sky focus:outline-none" placeholder="Ej. Negro">
+        </div>
+      </div>
+
+      <div class="grid sm:grid-cols-2 gap-3 mb-3">
+        <div>
+          <label class="block text-[9px] uppercase tracking-widest text-slate-500 font-extrabold mb-1.5">Cantidad</label>
+          <input type="number" min="1" id="oiCantidad" value="1" class="w-full p-3 bg-brand-navy border border-slate-900/10 rounded-xl text-sm text-brand-ink focus:border-brand-sky focus:outline-none">
+        </div>
+        <div>
+          <label class="block text-[9px] uppercase tracking-widest text-slate-500 font-extrabold mb-1.5">Precio del armazón</label>
+          <input type="number" min="0" step="0.01" id="oiPrecio" class="w-full p-3 bg-brand-navy border border-slate-900/10 rounded-xl text-sm text-brand-ink focus:border-brand-sky focus:outline-none" placeholder="$0.00">
+        </div>
+      </div>
+
+      <div class="mb-3">
+        <label class="block text-[9px] uppercase tracking-widest text-slate-500 font-extrabold mb-1.5">Graduación</label>
+        <select id="oiGraduacion" onchange="oiToggleRecetaWrap()" class="w-full p-3 bg-brand-navy border border-slate-900/10 rounded-xl text-sm text-brand-ink focus:border-brand-sky focus:outline-none">
+          <option value="sin">Sin graduación</option>
+          <option value="con">Con graduación</option>
+        </select>
+      </div>
+
+      <div id="oiRecetaWrap" class="mb-3 hidden">
+        <label class="block text-[9px] uppercase tracking-widest text-slate-500 font-extrabold mb-1.5">Receta / graduación</label>
+        <input type="text" id="oiReceta" class="w-full p-3 bg-brand-navy border border-slate-900/10 rounded-xl text-sm text-brand-ink focus:border-brand-sky focus:outline-none" placeholder="Ej. OD -1.50 / OI -1.75">
+      </div>
+
+      <div class="grid sm:grid-cols-2 gap-3 mb-3">
+        <div>
+          <label class="block text-[9px] uppercase tracking-widest text-slate-500 font-extrabold mb-1.5">Tipo de mica</label>
+          <select id="oiMicaTipo" onchange="oiAutoFillMicaTipoCosto()" class="w-full p-3 bg-brand-navy border border-slate-900/10 rounded-xl text-sm text-brand-ink focus:border-brand-sky focus:outline-none">
+            <option value="">— Ninguna —</option>
+            <option value="monofocal">Blanca (visión sencilla) — incluida</option>
+            <option value="bifocal">Bifocal FT-28</option>
+            <option value="progresiva">Progresivo Plus</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-[9px] uppercase tracking-widest text-slate-500 font-extrabold mb-1.5">Costo extra de mica</label>
+          <input type="number" min="0" step="0.01" id="oiMicaTipoCosto" value="0" class="w-full p-3 bg-brand-navy border border-slate-900/10 rounded-xl text-sm text-brand-ink focus:border-brand-sky focus:outline-none">
+        </div>
+      </div>
+
+      <div class="grid sm:grid-cols-2 gap-3 mb-3">
+        <div>
+          <label class="block text-[9px] uppercase tracking-widest text-slate-500 font-extrabold mb-1.5">Material</label>
+          <select id="oiMicaMaterial" onchange="oiAutoFillMicaMaterialCosto()" class="w-full p-3 bg-brand-navy border border-slate-900/10 rounded-xl text-sm text-brand-ink focus:border-brand-sky focus:outline-none">
+            <option value="">— Ninguno —</option>
+            <option value="hiindex">Hi Index</option>
+            <option value="policarbonato">Policarbonato</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-[9px] uppercase tracking-widest text-slate-500 font-extrabold mb-1.5">Costo extra de material</label>
+          <input type="number" min="0" step="0.01" id="oiMicaMaterialCosto" value="0" class="w-full p-3 bg-brand-navy border border-slate-900/10 rounded-xl text-sm text-brand-ink focus:border-brand-sky focus:outline-none">
+        </div>
+      </div>
+
+      <div class="grid sm:grid-cols-2 gap-3 mb-4">
+        <div>
+          <label class="block text-[9px] uppercase tracking-widest text-slate-500 font-extrabold mb-1.5">Tratamiento(s)</label>
+          <input type="text" id="oiTratamiento" class="w-full p-3 bg-brand-navy border border-slate-900/10 rounded-xl text-sm text-brand-ink focus:border-brand-sky focus:outline-none" placeholder="Ej. Blue Ray + Fotocromático">
+        </div>
+        <div>
+          <label class="block text-[9px] uppercase tracking-widest text-slate-500 font-extrabold mb-1.5">Costo tratamiento(s)</label>
+          <input type="number" min="0" step="0.01" id="oiTratamientoCosto" value="0" class="w-full p-3 bg-brand-navy border border-slate-900/10 rounded-xl text-sm text-brand-ink focus:border-brand-sky focus:outline-none">
+        </div>
+      </div>
+
+      <p id="oiEditStatus" class="text-[11px] text-red-400 mb-3"></p>
+
+      <div class="flex gap-3">
+        <button onclick="adminSaveOrderItemEdit()" class="flex-1 bg-gradient-to-r from-brand-sky to-brand-teal text-brand-ink font-bold py-3 rounded-xl transition-all hover:shadow-lg">
+          Guardar cambios
+        </button>
+        <button onclick="closeItemEditModal()" class="flex-1 bg-transparent border border-slate-900/10 text-slate-500 font-bold py-3 rounded-xl transition-all hover:bg-slate-900/5">
+          Cancelar
+        </button>
+      </div>
+    </div>
+  </div>
+
   <!-- ========== LIGHTBOX: VISTA AMPLIADA DE IMAGEN DE PRODUCTO ========== -->
   <div id="imgLightbox" class="fixed inset-0 z-[60] flex items-center justify-center p-4 sm:p-8 bg-brand-navy/95 backdrop-blur-md hidden opacity-0 transition-opacity duration-300" onclick="if(event.target===this) closeImgLightbox()">
     <button onclick="closeImgLightbox()" class="absolute top-4 right-4 sm:top-6 sm:right-6 w-10 h-10 rounded-full bg-brand-dark/80 border border-slate-900/10 text-brand-ink flex items-center justify-center text-xl hover:bg-brand-sky/20 transition-colors z-10" aria-label="Cerrar">✕</button>
@@ -2388,7 +2507,7 @@
       </div>
 
       <button onclick="submitCheckout()" id="checkoutSubmitBtn" class="w-full bg-gradient-to-r from-brand-sky to-brand-teal text-brand-ink font-bold py-3.5 rounded-xl transition-all hover:shadow-lg mb-2">
-        <span id="checkoutSubmitBtnLabel">Enviar pedido por WhatsApp</span>
+        <span id="checkoutSubmitBtnLabel">Enviar pedido a WhatsApp</span>
       </button>
       <p class="text-[10px] text-slate-500 text-center">Le indicaremos las formas de pago disponibles una vez recibido su pedido.</p>
       <p id="checkoutStatus" class="text-[11px] text-red-400 mt-2 text-center"></p>
@@ -5796,6 +5915,39 @@
       }, 300);
     }
 
+    // ---- Modal: confirmar apertura de WhatsApp tras un pedido ----
+    const waConfirmModal = document.getElementById('waConfirmModal');
+    const waConfirmModalCard = document.getElementById('waConfirmModalCard');
+    let pendingWaUrl = null;
+
+    function openWaConfirmModal(waUrl) {
+      pendingWaUrl = waUrl;
+      waConfirmModal.classList.remove('hidden');
+      setTimeout(() => {
+        waConfirmModal.classList.add('opacity-100');
+        waConfirmModalCard.classList.add('scale-100');
+      }, 50);
+    }
+
+    function closeWaConfirmModal() {
+      waConfirmModal.classList.remove('opacity-100');
+      waConfirmModalCard.classList.remove('scale-100');
+      setTimeout(() => {
+        waConfirmModal.classList.add('hidden');
+      }, 300);
+      pendingWaUrl = null;
+    }
+
+    // Este clic es 100% directo del usuario (botón dentro del modal), así que
+    // window.open() aquí SÍ es permitido por Safari/iOS aunque el pedido ya se
+    // haya guardado antes con un await.
+    function confirmOpenWhatsapp() {
+      if (pendingWaUrl) {
+        window.open(pendingWaUrl, '_blank');
+      }
+      closeWaConfirmModal();
+    }
+
     // ---- Genera y descarga un archivo .ics para agregar la cita al calendario del cliente ----
     function buildICS({ fecha, hora, titulo, direccion, descripcion, durationMinutes }) {
       const [y, m, d] = fecha.split('-').map(Number);
@@ -6997,8 +7149,12 @@
         list.innerHTML = Object.entries(grupos).map(([fecha, horarios]) => {
           const [y, m, d] = fecha.split('-');
           const fechaLabel = (y && m && d) ? new Date(Number(y), Number(m) - 1, Number(d)).toLocaleDateString('es-MX', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }) : fecha;
+          const idsDelDiaJson = JSON.stringify(horarios.map(s => s.id)).replace(/"/g, '&quot;');
           return `<div class="pt-3 first:pt-0">
-            <h4 class="text-xs font-bold uppercase tracking-wider text-brand-ink mb-2">${fechaLabel}</h4>
+            <div class="flex items-center justify-between gap-3 mb-2">
+              <h4 class="text-xs font-bold uppercase tracking-wider text-brand-ink">${fechaLabel}</h4>
+              <button onclick='adminRemoveSlotsForDay("${fecha}", ${idsDelDiaJson})' class="text-[10px] font-bold uppercase tracking-wide text-red-400 hover:text-red-300 flex-shrink-0">🗑️ Eliminar todo el día</button>
+            </div>
             <div class="space-y-2">${horarios.map(s => {
           const [y, m, d] = (s.fecha || '').split('-');
           const disponible = s.disponible !== false;
@@ -7257,6 +7413,43 @@
       }
     }
 
+    // Borra de un jalón todos los horarios de un día específico (con una sola
+    // confirmación), en vez de tener que dar clic en "Eliminar" uno por uno.
+    async function adminRemoveSlotsForDay(fecha, ids) {
+      if (!ids || !ids.length) return;
+      const [y, m, d] = fecha.split('-');
+      const fechaLabel = (y && m && d) ? new Date(Number(y), Number(m) - 1, Number(d)).toLocaleDateString('es-MX', { day: 'numeric', month: 'long', year: 'numeric' }) : fecha;
+      if (!confirm(`¿Eliminar los ${ids.length} horario(s) del día ${fechaLabel}? Esta acción no se puede deshacer.`)) return;
+      try {
+        const fb = await window.firebaseReady;
+        await fb.deleteExamSlotsBulk(ids);
+        adminLoadExamSlots();
+      } catch (e) {
+        console.error('Error al eliminar horarios del día:', e);
+        alert('No se pudieron eliminar todos los horarios de ese día. Intente de nuevo.');
+      }
+    }
+
+    // Limpia de un jalón todos los horarios cuya fecha ya pasó (útil para no ir
+    // borrando manualmente cada horario viejo uno por uno).
+    async function adminRemovePastSlots() {
+      const hoyKey = toDateKey(new Date());
+      const pasados = (adminAllExamSlots || []).filter(s => s.fecha && s.fecha < hoyKey);
+      if (!pasados.length) {
+        alert('No hay horarios pasados por eliminar.');
+        return;
+      }
+      if (!confirm(`¿Eliminar los ${pasados.length} horario(s) de fechas anteriores a hoy? Esta acción no se puede deshacer.`)) return;
+      try {
+        const fb = await window.firebaseReady;
+        await fb.deleteExamSlotsBulk(pasados.map(s => s.id));
+        adminLoadExamSlots();
+      } catch (e) {
+        console.error('Error al eliminar horarios pasados:', e);
+        alert('No se pudieron eliminar todos los horarios pasados. Intente de nuevo.');
+      }
+    }
+
     // =========================================================
     // ---- ADMIN PANEL: PEDIDOS ----
     // =========================================================
@@ -7329,12 +7522,15 @@
       return map[tipo] || '';
     }
 
+    let adminAllPedidosCache = [];
+
     async function adminLoadPedidos() {
       const list = document.getElementById('adminPedidoList');
       const empty = document.getElementById('adminPedidoListEmpty');
       try {
         const fb = await window.firebaseReady;
         const pedidos = await fb.fetchOrders();
+        adminAllPedidosCache = pedidos;
 
         if (!pedidos.length) {
           list.innerHTML = '';
@@ -7346,7 +7542,30 @@
           const waPhone = (p.telefono || '').replace(/\D/g, '');
           const items = Array.isArray(p.items) ? p.items : [];
           const itemsHtml = items.length
-            ? `<div class="mt-1 mb-1 space-y-0.5">${items.map(it => `<p>• ${it.modelo || ''}${it.color ? ' · ' + it.color : ''} ${it.cantidad > 1 ? `x${it.cantidad}` : ''} ${it.precio ? `— $${Number(it.precio).toLocaleString('es-MX', {minimumFractionDigits:2, maximumFractionDigits:2})}` : ''}${it.micaTipoElegido ? ` · Mica: ${PF_MICA_TIPO_LABELS[it.micaTipoElegido] || it.micaTipoElegido}${it.micaTipoElegidoCosto ? ` (+$${Number(it.micaTipoElegidoCosto).toFixed(2)})` : ''}` : ''}${it.micaMaterialElegido ? ` · Material: ${PF_MICA_MATERIAL_LABELS[it.micaMaterialElegido] || it.micaMaterialElegido}${it.micaMaterialElegidoCosto ? ` (+$${Number(it.micaMaterialElegidoCosto).toFixed(2)})` : ''}` : ''}${it.tratamientoElegido ? ` · Tratamiento: ${it.tratamientoElegido}${it.tratamientoElegidoCosto ? ` (+$${Number(it.tratamientoElegidoCosto).toFixed(2)})` : ''}` : ''}</p>`).join('')}</div>`
+            ? `<div class="mt-1 mb-2 space-y-2">${items.map((it, i) => {
+                const subtotalItem = (Number(it.precio || 0) + Number(it.micaTipoElegidoCosto || 0) + Number(it.micaMaterialElegidoCosto || 0) + Number(it.tratamientoElegidoCosto || 0)) * Number(it.cantidad || 1);
+                return `
+                <div class="p-2.5 bg-brand-navy border border-slate-900/10 rounded-xl">
+                  <div class="flex items-start justify-between gap-2 mb-1">
+                    <p class="font-bold text-brand-ink text-[11px]">🕶️ ${it.modelo || 'Armazón'}${it.color ? ' · ' + it.color : ''}${it.cantidad > 1 ? ` x${it.cantidad}` : ''}</p>
+                    <div class="flex gap-2 flex-shrink-0">
+                      <button onclick="adminOpenItemEditModal('${p.id}', ${i})" class="text-[10px] font-bold uppercase tracking-wide text-brand-sky hover:text-brand-teal">✏️ Editar</button>
+                      <button onclick="adminRemoveOrderItem('${p.id}', ${i})" class="text-[10px] font-bold uppercase tracking-wide text-red-400 hover:text-red-300">🗑️</button>
+                    </div>
+                  </div>
+                  <div class="text-[10px] text-slate-500 space-y-0.5">
+                    ${it.precio ? `<p>Armazón: $${Number(it.precio).toLocaleString('es-MX', {minimumFractionDigits:2, maximumFractionDigits:2})}</p>` : ''}
+                    <p>Graduación: ${it.graduacion === 'con' ? 'Con graduación' : 'Sin graduación'}</p>
+                    ${(it.graduacionInfo && it.graduacionInfo.modo === 'receta' && it.graduacionInfo.receta) ? `<p>Receta: ${it.graduacionInfo.receta}</p>` : ''}
+                    ${(it.graduacionInfo && it.graduacionInfo.modo === 'examen') ? `<p>Pidió examen a domicilio</p>` : ''}
+                    ${it.micaTipoElegido ? `<p>Mica: ${PF_MICA_TIPO_LABELS[it.micaTipoElegido] || it.micaTipoElegido}${it.micaTipoElegidoCosto ? ` (+$${Number(it.micaTipoElegidoCosto).toFixed(2)})` : ' (incluida)'}</p>` : ''}
+                    ${it.micaMaterialElegido ? `<p>Material: ${PF_MICA_MATERIAL_LABELS[it.micaMaterialElegido] || it.micaMaterialElegido}${it.micaMaterialElegidoCosto ? ` (+$${Number(it.micaMaterialElegidoCosto).toFixed(2)})` : ''}</p>` : ''}
+                    ${it.tratamientoElegido ? `<p>Tratamiento: ${it.tratamientoElegido}${it.tratamientoElegidoCosto ? ` (+$${Number(it.tratamientoElegidoCosto).toFixed(2)})` : ''}</p>` : ''}
+                    <p class="text-brand-ink font-bold">Subtotal: $${subtotalItem.toLocaleString('es-MX', {minimumFractionDigits:2, maximumFractionDigits:2})}</p>
+                  </div>
+                </div>`;
+              }).join('')}</div>
+              <button onclick="adminOpenItemEditModal('${p.id}', -1)" class="text-[10px] font-bold uppercase tracking-wide text-brand-sky hover:text-brand-teal mb-2">➕ Agregar armazón a este pedido</button>`
             : (p.producto ? `<p><strong class="text-brand-ink">Producto:</strong> ${p.producto} ${p.cantidad ? `(x${p.cantidad})` : ''}</p>` : '');
 
           const itemsSum = items.reduce((sum, it) => sum + ((Number(it.precio || 0) + Number(it.micaTipoElegidoCosto || 0) + Number(it.micaMaterialElegidoCosto || 0) + Number(it.tratamientoElegidoCosto || 0)) * Number(it.cantidad || 1)), 0);
@@ -7547,6 +7766,135 @@
         adminLoadPedidos();
       } catch (e) {
         console.error('Error al eliminar pedido:', e);
+      }
+    }
+
+    // =========================================================
+    // ---- ADMIN PANEL: EDITAR / AGREGAR / QUITAR ARMAZONES DE UN PEDIDO ----
+    // =========================================================
+    // Contexto del armazón que se está editando: a qué pedido pertenece y en qué
+    // posición del arreglo "items" está (-1 significa que es un armazón nuevo).
+    let oiEditCtx = { orderId: null, index: -1 };
+
+    function oiAutoFillMicaTipoCosto() {
+      const tipo = document.getElementById('oiMicaTipo').value;
+      document.getElementById('oiMicaTipoCosto').value = tipo ? (PF_MICA_TIPO_PRECIOS[tipo] || 0) : 0;
+    }
+
+    function oiAutoFillMicaMaterialCosto() {
+      const mat = document.getElementById('oiMicaMaterial').value;
+      document.getElementById('oiMicaMaterialCosto').value = mat ? (PF_MICA_MATERIAL_PRECIOS[mat] || 0) : 0;
+    }
+
+    function oiToggleRecetaWrap() {
+      const con = document.getElementById('oiGraduacion').value === 'con';
+      document.getElementById('oiRecetaWrap').classList.toggle('hidden', !con);
+    }
+
+    // Abre el modal para editar el armazón en items[index] del pedido orderId.
+    // Si index es -1, abre el modal vacío para agregar un armazón nuevo.
+    function adminOpenItemEditModal(orderId, index) {
+      const pedido = adminAllPedidosCache.find(p => p.id === orderId);
+      if (!pedido) return;
+      const items = Array.isArray(pedido.items) ? pedido.items : [];
+      const it = index >= 0 ? (items[index] || {}) : {};
+
+      oiEditCtx = { orderId, index };
+      document.getElementById('orderItemEditModalTitle').textContent = index >= 0 ? 'Editar armazón del pedido' : 'Agregar armazón a este pedido';
+      document.getElementById('oiModelo').value = it.modelo || '';
+      document.getElementById('oiColor').value = it.color || '';
+      document.getElementById('oiCantidad').value = it.cantidad || 1;
+      document.getElementById('oiPrecio').value = (it.precio !== undefined && it.precio !== null) ? it.precio : '';
+      document.getElementById('oiGraduacion').value = it.graduacion === 'con' ? 'con' : 'sin';
+      document.getElementById('oiReceta').value = (it.graduacionInfo && it.graduacionInfo.receta) || '';
+      document.getElementById('oiMicaTipo').value = it.micaTipoElegido || '';
+      document.getElementById('oiMicaTipoCosto').value = it.micaTipoElegidoCosto || 0;
+      document.getElementById('oiMicaMaterial').value = it.micaMaterialElegido || '';
+      document.getElementById('oiMicaMaterialCosto').value = it.micaMaterialElegidoCosto || 0;
+      document.getElementById('oiTratamiento').value = it.tratamientoElegido || '';
+      document.getElementById('oiTratamientoCosto').value = it.tratamientoElegidoCosto || 0;
+      document.getElementById('oiEditStatus').textContent = '';
+      oiToggleRecetaWrap();
+      openModal('orderItemEditModal');
+    }
+
+    function closeItemEditModal() {
+      closeModal('orderItemEditModal');
+      oiEditCtx = { orderId: null, index: -1 };
+    }
+
+    async function adminSaveOrderItemEdit() {
+      const status = document.getElementById('oiEditStatus');
+      const modelo = document.getElementById('oiModelo').value.trim();
+      if (!modelo) {
+        status.textContent = 'Escriba al menos el modelo del armazón.';
+        return;
+      }
+      const { orderId, index } = oiEditCtx;
+      const pedido = adminAllPedidosCache.find(p => p.id === orderId);
+      if (!pedido) {
+        status.textContent = 'No se encontró el pedido. Cierre y vuelva a intentar.';
+        return;
+      }
+
+      const graduacion = document.getElementById('oiGraduacion').value === 'con' ? 'con' : 'sin';
+      const receta = document.getElementById('oiReceta').value.trim();
+      const micaTipoElegido = document.getElementById('oiMicaTipo').value || null;
+      const micaMaterialElegido = document.getElementById('oiMicaMaterial').value || null;
+      const tratamientoElegido = document.getElementById('oiTratamiento').value.trim() || null;
+
+      const nuevoItem = {
+        modelo,
+        color: document.getElementById('oiColor').value.trim(),
+        cantidad: Math.max(1, parseInt(document.getElementById('oiCantidad').value) || 1),
+        precio: document.getElementById('oiPrecio').value !== '' ? Number(document.getElementById('oiPrecio').value) : 0,
+        graduacion,
+        graduacionInfo: graduacion === 'con' ? { modo: 'receta', receta } : null,
+        micaTipoElegido,
+        micaTipoElegidoCosto: micaTipoElegido ? (Number(document.getElementById('oiMicaTipoCosto').value) || 0) : 0,
+        micaMaterialElegido,
+        micaMaterialElegidoCosto: micaMaterialElegido ? (Number(document.getElementById('oiMicaMaterialCosto').value) || 0) : 0,
+        tratamientoElegido,
+        tratamientoElegidoCosto: tratamientoElegido ? (Number(document.getElementById('oiTratamientoCosto').value) || 0) : 0
+      };
+
+      const items = Array.isArray(pedido.items) ? [...pedido.items] : [];
+      if (index >= 0) {
+        items[index] = { ...items[index], ...nuevoItem };
+      } else {
+        items.push(nuevoItem);
+      }
+
+      status.textContent = 'Guardando...';
+      status.className = 'text-[11px] text-slate-500 mb-3';
+      try {
+        const fb = await window.firebaseReady;
+        await fb.updateOrderItems(orderId, items);
+        closeItemEditModal();
+        adminLoadPedidos();
+      } catch (e) {
+        console.error('Error al guardar el armazón del pedido:', e);
+        status.textContent = 'No se pudo guardar. Intente de nuevo.';
+        status.className = 'text-[11px] text-red-400 mb-3';
+      }
+    }
+
+    // Quita un armazón específico de un pedido (por su posición en el arreglo).
+    async function adminRemoveOrderItem(orderId, index) {
+      const pedido = adminAllPedidosCache.find(p => p.id === orderId);
+      if (!pedido) return;
+      const items = Array.isArray(pedido.items) ? pedido.items : [];
+      const it = items[index];
+      if (!it) return;
+      if (!confirm(`¿Quitar "${it.modelo || 'este armazón'}" de este pedido?`)) return;
+      const nuevosItems = items.filter((_, i) => i !== index);
+      try {
+        const fb = await window.firebaseReady;
+        await fb.updateOrderItems(orderId, nuevosItems);
+        adminLoadPedidos();
+      } catch (e) {
+        console.error('Error al quitar el armazón del pedido:', e);
+        alert('No se pudo quitar el armazón. Intente de nuevo.');
       }
     }
 
@@ -8492,7 +8840,7 @@
         waBtn.classList.remove('border-slate-900/10', 'text-slate-500');
         pagBtn.classList.remove('border-brand-sky', 'text-brand-sky');
         pagBtn.classList.add('border-slate-900/10', 'text-slate-500');
-        label.textContent = 'Enviar pedido por WhatsApp';
+        label.textContent = 'Enviar pedido a WhatsApp';
       }
       updateCheckoutRecetaUI();
     }
@@ -9061,7 +9409,13 @@
         } : null;
         openSuccessModal(confirmMsg, calendarEvent);
         if (checkoutMetodo === 'whatsapp') {
-          window.open(`https://wa.me/524421295277?text=${msg}`, '_blank');
+          // En vez de abrir WhatsApp automáticamente, le preguntamos al cliente.
+          // Al dar clic en "Sí, abrir WhatsApp" dentro del modal, ESE clic (real y
+          // directo del usuario) es el que dispara window.open(), así que Safari en
+          // iPhone lo permite sin problema (a diferencia de abrirlo automáticamente
+          // después de un await, que Safari bloquea en silencio).
+          const waUrl = `https://wa.me/524421295277?text=${msg}`;
+          openWaConfirmModal(waUrl);
         }
       } catch (err) {
         console.error('Error al enviar el pedido:', err);
@@ -9758,6 +10112,14 @@ async function deleteProduct(id, storagePaths) {
       await updateDoc(doc(db, ORDERS_COLLECTION, id), { anticipo: Number(anticipo) || 0 });
     }
 
+    // Sobreescribe el arreglo completo de "items" (armazones/lentes) de un pedido.
+    // Se usa desde el panel de administrador para editar, agregar o quitar
+    // armazones dentro de un pedido ya guardado (cada uno puede llevar su propia
+    // mica, material y tratamiento).
+    async function updateOrderItems(id, items) {
+      await updateDoc(doc(db, ORDERS_COLLECTION, id), { items: Array.isArray(items) ? items.slice(0, 50) : [] });
+    }
+
     // ---- Historial de pagos (varios abonos por pedido, cada uno con su nota) ----
     async function addOrderPago(id, pago) {
       const entry = {
@@ -9802,6 +10164,12 @@ async function deleteProduct(id, storagePaths) {
 
     async function deleteExamSlot(id) {
       await deleteDoc(doc(db, EXAM_SLOTS_COLLECTION, id));
+    }
+
+    // Elimina varios horarios de un jalón (usado por "Eliminar todo el día" y
+    // "Eliminar horarios pasados" en el panel de administrador).
+    async function deleteExamSlotsBulk(ids) {
+      await Promise.all(ids.map(id => deleteDoc(doc(db, EXAM_SLOTS_COLLECTION, id))));
     }
 
     // Reserva el horario de forma segura (transacción): si dos personas intentan
@@ -10030,6 +10398,7 @@ async function deleteProduct(id, storagePaths) {
       updateOrderPago,
       updateOrderEnvio,
       updateOrderAnticipo,
+      updateOrderItems,
       addOrderPago,
       removeOrderPago,
       deleteOrder,
@@ -10043,6 +10412,7 @@ async function deleteProduct(id, storagePaths) {
       fetchAvailableExamSlots,
       addExamSlot,
       deleteExamSlot,
+      deleteExamSlotsBulk,
       setExamSlotAvailability,
       bookExamSlot,
       releaseExamSlot,
