@@ -7677,6 +7677,12 @@
         modal.classList.add('opacity-100');
         card.classList.add('scale-100');
       });
+      // Siempre arranca la ventana desde arriba, aunque ya estuviera abierta
+      // (ej. al cambiar de categoría/género en el catálogo no debe quedar
+      // con el scroll heredado de la categoría anterior).
+      card.scrollTop = 0;
+      const scrollArea = card.querySelector('.overflow-y-auto');
+      if (scrollArea) scrollArea.scrollTop = 0;
     }
     function closeModal(id) {
       const modal = document.getElementById(id);
@@ -7955,6 +7961,10 @@
       document.getElementById(`pfStep${step}`).classList.remove('hidden');
       document.getElementById('pfBackBtn').classList.toggle('hidden', step === 1);
       pfUpdateDots();
+      // Vuelve al inicio de la ventana en cada paso (si estaba hasta abajo en
+      // el paso anterior, "Siguiente"/"Atrás" no debe dejarlo hasta abajo).
+      const pfCard = document.getElementById('purchaseFlowModalCard');
+      if (pfCard) pfCard.scrollTop = 0;
 
       // Al volver a un paso, reflejamos las selecciones guardadas en los botones
       if (step === 1) {
