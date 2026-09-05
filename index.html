@@ -2374,6 +2374,7 @@
       </div>
 
       <div id="checkoutGrandTotalBox" class="mb-5 p-4 bg-brand-navy rounded-2xl border border-brand-sky/20 text-xs text-slate-600 space-y-1.5">
+        <div id="checkoutGrandTotalItems" class="space-y-2 mb-2"></div>
         <div id="checkoutGrandTotalDesglose" class="space-y-1.5"></div>
         <div id="checkoutGrandTotalExamenRow" class="hidden flex justify-between"><span>Examen a domicilio</span><span id="checkoutGrandTotalExamen">$0.00</span></div>
         <div class="flex justify-between font-bold text-brand-ink text-sm pt-2 border-t border-slate-900/10"><span>Total del pedido</span><span id="checkoutGrandTotal">$0.00</span></div>
@@ -2529,8 +2530,8 @@
               </div>
             </div>
             <div class="mt-3 space-y-3">
-              <div><p class="text-[10px] font-bold text-slate-500 mb-1">¿Tu receta tiene ADD / Adición?</p><div class="flex gap-2"><button type="button" onclick="pfSetOptionalField('add', true)" class="text-[10px] px-3 py-1.5 rounded-lg border">Sí</button><button type="button" onclick="pfSetOptionalField('add', false)" class="text-[10px] px-3 py-1.5 rounded-lg border">No</button></div></div>
-              <div><p class="text-[10px] font-bold text-slate-500 mb-1">¿Tienes tu DP?</p><div class="flex gap-2"><button type="button" onclick="pfSetOptionalField('dp', true)" class="text-[10px] px-3 py-1.5 rounded-lg border">Sí</button><button type="button" onclick="pfSetOptionalField('dp', false)" class="text-[10px] px-3 py-1.5 rounded-lg border">No, necesito ayuda</button></div></div>
+              <div><p class="text-[10px] font-bold text-slate-500 mb-1">¿Tu receta tiene ADD / Adición?</p><div class="flex gap-2"><button type="button" onclick="pfSetOptionalField('add', true)" id="pfAddSiBtn" class="pf-optional-btn text-[10px] px-3 py-1.5 rounded-lg border-2 border-slate-900/10 text-slate-500 transition-all">Sí</button><button type="button" onclick="pfSetOptionalField('add', false)" id="pfAddNoBtn" class="pf-optional-btn text-[10px] px-3 py-1.5 rounded-lg border-2 border-slate-900/10 text-slate-500 transition-all">No</button></div></div>
+              <div><p class="text-[10px] font-bold text-slate-500 mb-1">¿Tienes tu DP?</p><div class="flex gap-2"><button type="button" onclick="pfSetOptionalField('dp', true)" id="pfDpSiBtn" class="pf-optional-btn text-[10px] px-3 py-1.5 rounded-lg border-2 border-slate-900/10 text-slate-500 transition-all">Sí</button><button type="button" onclick="pfSetOptionalField('dp', false)" id="pfDpNoBtn" class="pf-optional-btn text-[10px] px-3 py-1.5 rounded-lg border-2 border-slate-900/10 text-slate-500 transition-all">No, necesito ayuda</button></div></div>
             </div>
             <p class="text-[10px] text-slate-500 mt-2">Si su receta no trae cilindro, eje, adición o DP, deje esos campos vacíos — no pasa nada.</p>
           </div>
@@ -8050,6 +8051,19 @@
         const input = document.getElementById(field === 'add' ? 'pfAdd' : 'pfDp');
         if (input) input.value = '';
       }
+      // Resalta en azul el botón (Sí/No) que quedó seleccionado, para que se note claramente.
+      const siBtn = document.getElementById(field === 'add' ? 'pfAddSiBtn' : 'pfDpSiBtn');
+      const noBtn = document.getElementById(field === 'add' ? 'pfAddNoBtn' : 'pfDpNoBtn');
+      [siBtn, noBtn].forEach(btn => {
+        if (!btn) return;
+        btn.classList.remove('border-brand-sky', 'text-brand-sky', 'bg-brand-sky/10', 'ring-2', 'ring-brand-sky/30');
+        btn.classList.add('border-slate-900/10', 'text-slate-500');
+      });
+      const selectedBtn = enabled ? siBtn : noBtn;
+      if (selectedBtn) {
+        selectedBtn.classList.add('border-brand-sky', 'text-brand-sky', 'bg-brand-sky/10', 'ring-2', 'ring-brand-sky/30');
+        selectedBtn.classList.remove('border-slate-900/10', 'text-slate-500');
+      }
     }
 
     // Muestra/oculta el panel de ayuda que explica qué es cada dato y dónde encontrarlo.
@@ -8068,6 +8082,9 @@
       setVal('pfOdEsf', e.odEsf); setVal('pfOdCil', e.odCil); setVal('pfOdEje', e.odEje);
       setVal('pfOiEsf', e.oiEsf); setVal('pfOiCil', e.oiCil); setVal('pfOiEje', e.oiEje);
       setVal('pfAdd', e.add); setVal('pfDp', e.dp);
+      // Refleja en los botones Sí/No si ya había ADD o DP guardados de una edición previa.
+      pfSetOptionalField('add', !!(e.add && String(e.add).trim()));
+      pfSetOptionalField('dp', !!(e.dp && String(e.dp).trim()));
     }
 
     function pfConfirmReceta() {
@@ -8536,6 +8553,47 @@
       return cart.reduce((sum, it) => sum + ((Number(it.precio || 0) + Number(it.micaTipoElegidoCosto || 0) + Number(it.micaMaterialElegidoCosto || 0) + Number(it.tratamientoElegidoCosto || 0)) * it.cantidad), 0);
     }
 
+    // Genera el bloque HTML con el resumen de compra de UN artículo (tipo de compra,
+    // graduación/receta, mica, material y tratamientos elegidos, con su costo).
+    // Se usa tanto en el carrito como en el desglose final del checkout, para no
+    // duplicar esta lógica en dos lugares distintos.
+    function buildPurchaseFlowSummaryHtml(it, precioText) {
+      if (!it.tipoCompra) return '';
+      const tipoLabel = it.tipoCompra === 'con_graduacion' ? '👓 Lentes con graduación' : '🕶️ Solo armazón';
+      let graduacionLabel = '';
+      let recetaFotoThumb = '';
+      if (it.tipoCompra === 'con_graduacion' && it.graduacionInfo) {
+        graduacionLabel = it.graduacionInfo.modo === 'receta'
+          ? `Receta: ${escapeHtml(it.graduacionInfo.receta || '')}`
+          : 'Examen a domicilio pendiente de agendar';
+        if (it.graduacionInfo.fotoUrl) {
+          recetaFotoThumb = `<img src="${it.graduacionInfo.fotoUrl}" class="w-12 h-12 object-cover rounded-lg border border-slate-900/10 mt-1" alt="Foto de receta">`;
+        } else if (it.graduacionInfo.fotoPorWhatsapp) {
+          recetaFotoThumb = `<p class="text-[10px] text-brand-teal font-semibold">📱 Foto pendiente: la enviará por WhatsApp</p>`;
+        }
+      }
+      let tratamientoLineas = '';
+      if (it.tratamientosElegidos) {
+        const partes = [];
+        if (it.tratamientosElegidos.bluRay) partes.push(`<p class="text-[10px] text-brand-teal truncate">Blue Ray${PF_BLURAY_VARIANTE_LABELS[it.tratamientosElegidos.bluRay] ? ` (${escapeHtml(PF_BLURAY_VARIANTE_LABELS[it.tratamientosElegidos.bluRay])})` : ''}: +$${Number(PF_TRATAMIENTO_COMPONENTE_PRECIOS.blu_ray).toLocaleString('es-MX', {minimumFractionDigits:2, maximumFractionDigits:2})}</p>`);
+        if (it.tratamientosElegidos.fotocromatico) partes.push(`<p class="text-[10px] text-brand-teal truncate">Fotocromático${PF_FOTO_VARIANTE_LABELS[it.tratamientosElegidos.fotocromatico] ? ` (${escapeHtml(PF_FOTO_VARIANTE_LABELS[it.tratamientosElegidos.fotocromatico])}${it.tratamientosElegidos.fotocromaticoColor && PF_COLOR_LABELS[it.tratamientosElegidos.fotocromaticoColor] ? ' · ' + escapeHtml(PF_COLOR_LABELS[it.tratamientosElegidos.fotocromaticoColor]) : ''})` : ''}: +$${Number(PF_TRATAMIENTO_COMPONENTE_PRECIOS.fotocromatico).toLocaleString('es-MX', {minimumFractionDigits:2, maximumFractionDigits:2})}</p>`);
+        if (it.tratamientosElegidos.polarizado) partes.push(`<p class="text-[10px] text-brand-teal truncate">Polarizado${it.tratamientosElegidos.polarizadoColor && PF_COLOR_LABELS[it.tratamientosElegidos.polarizadoColor] ? ` (${escapeHtml(PF_COLOR_LABELS[it.tratamientosElegidos.polarizadoColor])})` : ''}: +$${Number(PF_TRATAMIENTO_COMPONENTE_PRECIOS.polarizado).toLocaleString('es-MX', {minimumFractionDigits:2, maximumFractionDigits:2})}</p>`);
+        tratamientoLineas = partes.join('');
+      } else if (it.tratamientoElegido) {
+        tratamientoLineas = `<p class="text-[10px] text-brand-teal truncate">Tratamiento: ${escapeHtml(it.tratamientoElegido)}${it.tratamientoElegidoCosto ? ` (+$${Number(it.tratamientoElegidoCosto).toLocaleString('es-MX', {minimumFractionDigits:2, maximumFractionDigits:2})})` : ''}</p>`;
+      }
+      return `
+        <div class="mt-1.5 p-2 bg-brand-navy rounded-lg border border-slate-900/10 space-y-0.5">
+          <p class="text-[10px] font-bold text-brand-ink">${tipoLabel}</p>
+          ${graduacionLabel ? `<p class="text-[10px] text-slate-500 truncate">${graduacionLabel}</p>` : ''}
+          ${recetaFotoThumb}
+          ${it.micaTipoElegido ? `<p class="text-[10px] text-brand-teal truncate">Mica: ${escapeHtml(PF_MICA_TIPO_LABELS[it.micaTipoElegido] || it.micaTipoElegido)}${it.micaTipoElegidoCosto ? ` (+$${Number(it.micaTipoElegidoCosto).toLocaleString('es-MX', {minimumFractionDigits:2, maximumFractionDigits:2})})` : ' (incluida)'}</p>` : ''}
+          ${it.micaMaterialElegido ? `<p class="text-[10px] text-brand-teal truncate">Material: ${escapeHtml(PF_MICA_MATERIAL_LABELS[it.micaMaterialElegido] || it.micaMaterialElegido)}${it.micaMaterialElegidoCosto ? ` (+$${Number(it.micaMaterialElegidoCosto).toLocaleString('es-MX', {minimumFractionDigits:2, maximumFractionDigits:2})})` : ''}</p>` : ''}
+          ${tratamientoLineas}
+          <p class="text-[10px] text-slate-500">Precio: ${precioText}${(it.micaTipoElegidoCosto || it.micaMaterialElegidoCosto || it.tratamientoElegidoCosto) ? ` + $${Number((it.micaTipoElegidoCosto||0) + (it.micaMaterialElegidoCosto||0) + (it.tratamientoElegidoCosto||0)).toLocaleString('es-MX', {minimumFractionDigits:2, maximumFractionDigits:2})} extras` : ''}</p>
+        </div>`;
+    }
+
     function renderCartDrawer() {
       const list = document.getElementById('cartItemsList');
       const emptyMsg = document.getElementById('cartEmptyMsg');
@@ -8565,42 +8623,7 @@
 
         // Resumen del flujo de compra (tipo de compra / graduación / tratamiento),
         // solo se muestra si el artículo pasó por el flujo "Configura tus lentes".
-        let purchaseFlowSummary = '';
-        if (it.tipoCompra) {
-          const tipoLabel = it.tipoCompra === 'con_graduacion' ? '👓 Lentes con graduación' : '🕶️ Solo armazón';
-          let graduacionLabel = '';
-          let recetaFotoThumb = '';
-          if (it.tipoCompra === 'con_graduacion' && it.graduacionInfo) {
-            graduacionLabel = it.graduacionInfo.modo === 'receta'
-              ? `Receta: ${escapeHtml(it.graduacionInfo.receta || '')}`
-              : 'Examen a domicilio pendiente de agendar';
-            if (it.graduacionInfo.fotoUrl) {
-              recetaFotoThumb = `<img src="${it.graduacionInfo.fotoUrl}" class="w-12 h-12 object-cover rounded-lg border border-slate-900/10 mt-1" alt="Foto de receta">`;
-            } else if (it.graduacionInfo.fotoPorWhatsapp) {
-              recetaFotoThumb = `<p class="text-[10px] text-brand-teal font-semibold">📱 Foto pendiente: la enviará por WhatsApp</p>`;
-            }
-          }
-          let tratamientoLineas = '';
-          if (it.tratamientosElegidos) {
-            const partes = [];
-            if (it.tratamientosElegidos.bluRay) partes.push(`<p class="text-[10px] text-brand-teal truncate">Blue Ray${PF_BLURAY_VARIANTE_LABELS[it.tratamientosElegidos.bluRay] ? ` (${escapeHtml(PF_BLURAY_VARIANTE_LABELS[it.tratamientosElegidos.bluRay])})` : ''}: +$${Number(PF_TRATAMIENTO_COMPONENTE_PRECIOS.blu_ray).toLocaleString('es-MX', {minimumFractionDigits:2, maximumFractionDigits:2})}</p>`);
-            if (it.tratamientosElegidos.fotocromatico) partes.push(`<p class="text-[10px] text-brand-teal truncate">Fotocromático${PF_FOTO_VARIANTE_LABELS[it.tratamientosElegidos.fotocromatico] ? ` (${escapeHtml(PF_FOTO_VARIANTE_LABELS[it.tratamientosElegidos.fotocromatico])}${it.tratamientosElegidos.fotocromaticoColor && PF_COLOR_LABELS[it.tratamientosElegidos.fotocromaticoColor] ? ' · ' + escapeHtml(PF_COLOR_LABELS[it.tratamientosElegidos.fotocromaticoColor]) : ''})` : ''}: +$${Number(PF_TRATAMIENTO_COMPONENTE_PRECIOS.fotocromatico).toLocaleString('es-MX', {minimumFractionDigits:2, maximumFractionDigits:2})}</p>`);
-            if (it.tratamientosElegidos.polarizado) partes.push(`<p class="text-[10px] text-brand-teal truncate">Polarizado${it.tratamientosElegidos.polarizadoColor && PF_COLOR_LABELS[it.tratamientosElegidos.polarizadoColor] ? ` (${escapeHtml(PF_COLOR_LABELS[it.tratamientosElegidos.polarizadoColor])})` : ''}: +$${Number(PF_TRATAMIENTO_COMPONENTE_PRECIOS.polarizado).toLocaleString('es-MX', {minimumFractionDigits:2, maximumFractionDigits:2})}</p>`);
-            tratamientoLineas = partes.join('');
-          } else if (it.tratamientoElegido) {
-            tratamientoLineas = `<p class="text-[10px] text-brand-teal truncate">Tratamiento: ${escapeHtml(it.tratamientoElegido)}${it.tratamientoElegidoCosto ? ` (+$${Number(it.tratamientoElegidoCosto).toLocaleString('es-MX', {minimumFractionDigits:2, maximumFractionDigits:2})})` : ''}</p>`;
-          }
-          purchaseFlowSummary = `
-            <div class="mt-1.5 p-2 bg-brand-navy rounded-lg border border-slate-900/10 space-y-0.5">
-              <p class="text-[10px] font-bold text-brand-ink">${tipoLabel}</p>
-              ${graduacionLabel ? `<p class="text-[10px] text-slate-500 truncate">${graduacionLabel}</p>` : ''}
-              ${recetaFotoThumb}
-              ${it.micaTipoElegido ? `<p class="text-[10px] text-brand-teal truncate">Mica: ${escapeHtml(PF_MICA_TIPO_LABELS[it.micaTipoElegido] || it.micaTipoElegido)}${it.micaTipoElegidoCosto ? ` (+$${Number(it.micaTipoElegidoCosto).toLocaleString('es-MX', {minimumFractionDigits:2, maximumFractionDigits:2})})` : ' (incluida)'}</p>` : ''}
-              ${it.micaMaterialElegido ? `<p class="text-[10px] text-brand-teal truncate">Material: ${escapeHtml(PF_MICA_MATERIAL_LABELS[it.micaMaterialElegido] || it.micaMaterialElegido)}${it.micaMaterialElegidoCosto ? ` (+$${Number(it.micaMaterialElegidoCosto).toLocaleString('es-MX', {minimumFractionDigits:2, maximumFractionDigits:2})})` : ''}</p>` : ''}
-              ${tratamientoLineas}
-              <p class="text-[10px] text-slate-500">Precio: ${precioText}${(it.micaTipoElegidoCosto || it.micaMaterialElegidoCosto || it.tratamientoElegidoCosto) ? ` + $${Number((it.micaTipoElegidoCosto||0) + (it.micaMaterialElegidoCosto||0) + (it.tratamientoElegidoCosto||0)).toLocaleString('es-MX', {minimumFractionDigits:2, maximumFractionDigits:2})} extras` : ''}</p>
-            </div>`;
-        }
+        const purchaseFlowSummary = buildPurchaseFlowSummaryHtml(it, precioText);
 
         return `
         <div class="flex items-start gap-3">
@@ -8906,6 +8929,29 @@
       const total = lentesTotal + (examenCost ? examenCost.total : 0);
       const fmt = n => `$${n.toLocaleString('es-MX', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 
+      // ---- Desglose por modelo: cada armazón con su descripción, mica y tratamientos elegidos, y su propio subtotal ----
+      const itemsEl = document.getElementById('checkoutGrandTotalItems');
+      if (itemsEl) {
+        const items = checkoutSelectedItems();
+        itemsEl.innerHTML = items.map(it => {
+          const cantidad = Number(it.cantidad) > 0 ? Number(it.cantidad) : 1;
+          const precioUnit = Number(it.precio || 0);
+          const extrasUnit = Number(it.micaTipoElegidoCosto || 0) + Number(it.micaMaterialElegidoCosto || 0) + Number(it.tratamientoElegidoCosto || 0);
+          const subtotalItem = (precioUnit + extrasUnit) * cantidad;
+          const precioText = (it.precio !== null && it.precio !== undefined) ? fmt(precioUnit) : 'Consultar precio';
+          const purchaseFlowSummary = buildPurchaseFlowSummaryHtml(it, precioText);
+          return `
+            <div class="p-2.5 bg-brand-dark rounded-xl border border-slate-900/10">
+              <div class="flex items-start justify-between gap-2">
+                <p class="text-[11px] font-bold text-brand-ink">${escapeHtml(it.modelo)}${cantidad > 1 ? ` x${cantidad}` : ''}</p>
+                <p class="text-[11px] font-bold text-brand-sky flex-shrink-0">${fmt(subtotalItem)}</p>
+              </div>
+              ${it.color ? `<p class="text-[10px] text-slate-500">${escapeHtml(it.color)}</p>` : ''}
+              ${purchaseFlowSummary}
+            </div>`;
+        }).join('');
+      }
+
       // ---- Desglose por concepto: armazón, mica/material, y cada tratamiento (Blu Ray, Polarizado, Fotocromático) ----
       const totales = { armazon: 0, material: 0, bluRay: 0, fotocromatico: 0, polarizado: 0, otro: 0 };
       checkoutSelectedItems().forEach(it => {
@@ -8930,7 +8976,7 @@
       });
 
       const filas = [];
-      filas.push(`<div class="flex justify-between"><span>🕶️ Armazón(es)</span><span>${fmt(totales.armazon)}</span></div>`);
+      filas.push(`<div class="flex justify-between font-semibold"><span>🕶️ Suma de armazones</span><span>${fmt(totales.armazon)}</span></div>`);
       if (totales.material > 0) filas.push(`<div class="flex justify-between"><span>🔎 Mica / material</span><span>${fmt(totales.material)}</span></div>`);
       if (totales.bluRay > 0) filas.push(`<div class="flex justify-between"><span>✨ Blue Ray</span><span>${fmt(totales.bluRay)}</span></div>`);
       if (totales.fotocromatico > 0) filas.push(`<div class="flex justify-between"><span>✨ Fotocromático</span><span>${fmt(totales.fotocromatico)}</span></div>`);
