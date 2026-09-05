@@ -2345,9 +2345,10 @@
         <p id="checkoutGeoStatus" class="text-[10px] text-slate-500 mb-3"></p>
 
         <label class="block text-[9px] uppercase tracking-widest text-slate-500 font-extrabold mb-2">Fecha y horario disponible</label>
-        <select id="checkoutExamenSlot" class="w-full p-3.5 mb-1 bg-brand-dark border border-slate-900/10 rounded-xl text-sm text-brand-ink focus:border-brand-sky focus:outline-none">
-          <option value="">Cargando horarios disponibles...</option>
-        </select>
+        <div id="checkoutExamenSlotDays" class="space-y-2 mb-1">
+          <p class="text-[11px] text-slate-500 italic">Cargando horarios disponibles...</p>
+        </div>
+        <input type="hidden" id="checkoutExamenSlot" value="">
         <p id="checkoutSlotStatus" class="text-[10px] text-slate-500 mb-3"></p>
 
         <div id="checkoutExamenCostBox" class="text-xs text-slate-600 space-y-1 pt-3 border-t border-slate-900/10">
@@ -2724,7 +2725,34 @@
 
         <p id="accountAuthStatus" class="text-[11px] text-red-400 mt-1 mb-3 text-center"></p>
 
+        <button onclick="togglePhoneLookupForm()" id="phoneLookupToggleBtn" class="w-full text-brand-sky hover:text-brand-ink text-xs font-bold uppercase tracking-wider py-2 border border-brand-sky/30 rounded-xl mb-2">📱 Ver mis pedidos y citas sin cuenta</button>
+
+        <div id="phoneLookupForm" class="hidden mb-2">
+          <input type="tel" id="phoneLookupInput" placeholder="Su número de teléfono" class="w-full p-3.5 mb-2 bg-brand-navy border border-slate-900/10 rounded-xl text-sm text-brand-ink focus:border-brand-sky focus:outline-none">
+          <button onclick="lookupOrdersByPhone()" id="phoneLookupBtn" class="w-full bg-brand-sky text-brand-ink font-bold py-3 rounded-xl mb-1">Buscar</button>
+          <p id="phoneLookupStatus" class="text-[11px] text-red-400 text-center"></p>
+        </div>
+
         <button onclick="closeAccountModal()" class="w-full text-slate-500 hover:text-brand-ink text-xs font-bold uppercase tracking-wider py-2">Continuar sin cuenta</button>
+      </div>
+
+      <!-- Resultados de búsqueda por teléfono (sin cuenta) -->
+      <div id="accountPhoneLookupView" class="hidden text-left">
+        <button onclick="closePhoneLookupResults()" class="text-slate-500 hover:text-brand-ink text-xs font-bold uppercase tracking-wider mb-4">← Volver</button>
+
+        <div class="mb-6">
+          <h4 class="text-[9px] uppercase tracking-widest text-slate-500 font-extrabold mb-3">📦 Pedidos con ese teléfono</h4>
+          <div id="phoneOrdersList" class="space-y-3">
+            <p id="phoneOrdersEmpty" class="text-xs text-slate-600/80 italic">Buscando...</p>
+          </div>
+        </div>
+
+        <div class="mb-2">
+          <h4 class="text-[9px] uppercase tracking-widest text-slate-500 font-extrabold mb-3">📅 Citas con ese teléfono</h4>
+          <div id="phoneCitasList" class="space-y-3">
+            <p id="phoneCitasEmpty" class="text-xs text-slate-600/80 italic">Buscando...</p>
+          </div>
+        </div>
       </div>
 
       <!-- Logged in view -->
@@ -2737,6 +2765,13 @@
           <h4 class="text-[9px] uppercase tracking-widest text-slate-500 font-extrabold mb-3">📦 Mis pedidos</h4>
           <div id="myOrdersList" class="space-y-3">
             <p id="myOrdersEmpty" class="text-xs text-slate-600/80 italic">Cargando sus pedidos...</p>
+          </div>
+        </div>
+
+        <div class="text-left mb-6">
+          <h4 class="text-[9px] uppercase tracking-widest text-slate-500 font-extrabold mb-3">📅 Mis citas</h4>
+          <div id="myCitasList" class="space-y-3">
+            <p id="myCitasEmpty" class="text-xs text-slate-600/80 italic">Cargando sus citas...</p>
           </div>
         </div>
 
@@ -8880,15 +8915,17 @@
     }
 
     async function loadCheckoutExamSlots() {
-      const select = document.getElementById('checkoutExamenSlot');
+      const wrap = document.getElementById('checkoutExamenSlotDays');
+      const hidden = document.getElementById('checkoutExamenSlot');
       const status = document.getElementById('checkoutSlotStatus');
-      select.innerHTML = '<option value="">Cargando horarios disponibles...</option>';
+      wrap.innerHTML = '<p class="text-[11px] text-slate-500 italic">Cargando horarios disponibles...</p>';
+      hidden.value = '';
       status.textContent = '';
       try {
         const fb = await window.firebaseReady;
         checkoutSlotsCache = await fb.fetchAvailableExamSlots();
         if (checkoutSlotsCache.length === 0) {
-          select.innerHTML = '<option value="">No hay horarios disponibles por ahora</option>';
+          wrap.innerHTML = '<p class="text-[11px] text-slate-500 italic">No hay horarios disponibles por ahora</p>';
           status.textContent = 'Contáctenos por WhatsApp para coordinar una fecha especial.';
           return;
         }
@@ -8896,12 +8933,66 @@
           (resultado[slot.fecha] ||= []).push(slot);
           return resultado;
         }, {});
-        select.innerHTML = '<option value="">Seleccione fecha y horario...</option>' +
-          Object.entries(grupos).map(([fecha, horarios]) => `<optgroup label="${fecha}">${horarios.map(s => `<option value="${s.id}">${s.hora}</option>`).join('')}</optgroup>`).join('');
+        // Cada día se muestra como una tarjeta ("Sábado 12" + el año), que al presionarla
+        // despliega los horarios disponibles de ese día para elegir uno.
+        const fechasOrdenadas = Object.keys(grupos).sort();
+        wrap.innerHTML = fechasOrdenadas.map(fecha => {
+          const [y, m, d] = fecha.split('-').map(Number);
+          const dateObj = new Date(y, m - 1, d);
+          const diaSemana = dateObj.toLocaleDateString('es-MX', { weekday: 'long' });
+          const diaSemanaCap = diaSemana.charAt(0).toUpperCase() + diaSemana.slice(1);
+          const horariosHtml = grupos[fecha].map(s => `<button type="button" onclick="checkoutSelectExamSlot('${s.id}')" id="checkoutSlotBtn-${s.id}" class="checkout-slot-btn text-[11px] px-3 py-2 rounded-lg border-2 border-slate-900/10 text-slate-500 font-bold transition-all">${s.hora}</button>`).join('');
+          return `
+            <div class="rounded-xl border-2 border-slate-900/10 overflow-hidden" id="checkoutSlotDay-${fecha}">
+              <button type="button" onclick="checkoutToggleSlotDay('${fecha}')" class="w-full flex items-center justify-between gap-2 p-3 bg-brand-dark text-left">
+                <span>
+                  <span class="block text-xs font-bold text-brand-ink">${diaSemanaCap} ${d}</span>
+                  <span class="block text-[10px] text-slate-500">${y}</span>
+                </span>
+                <span class="checkout-slot-day-arrow text-slate-500 text-xs transition-transform">▾</span>
+              </button>
+              <div class="checkout-slot-day-panel hidden p-3 pt-0 flex flex-wrap gap-2 bg-brand-dark">${horariosHtml}</div>
+            </div>`;
+        }).join('');
+        // El primer día se despliega solo, para que se vean horarios de inmediato.
+        if (fechasOrdenadas.length) checkoutToggleSlotDay(fechasOrdenadas[0], true);
       } catch (e) {
         console.error('Error al cargar horarios disponibles:', e);
-        select.innerHTML = '<option value="">No se pudieron cargar los horarios</option>';
+        wrap.innerHTML = '<p class="text-[11px] text-red-400">No se pudieron cargar los horarios</p>';
       }
+    }
+
+    // Despliega/oculta los horarios de un día. Cierra los demás días para que
+    // la lista no se haga muy larga cuando hay varias fechas disponibles.
+    function checkoutToggleSlotDay(fecha, forceOpen) {
+      const dayEl = document.getElementById(`checkoutSlotDay-${fecha}`);
+      if (!dayEl) return;
+      const panel = dayEl.querySelector('.checkout-slot-day-panel');
+      const abrir = forceOpen || panel.classList.contains('hidden');
+      document.querySelectorAll('#checkoutExamenSlotDays .checkout-slot-day-panel').forEach(p => p.classList.add('hidden'));
+      document.querySelectorAll('#checkoutExamenSlotDays .checkout-slot-day-arrow').forEach(a => a.style.transform = '');
+      if (abrir) {
+        panel.classList.remove('hidden');
+        const arrow = dayEl.querySelector('.checkout-slot-day-arrow');
+        if (arrow) arrow.style.transform = 'rotate(180deg)';
+      }
+    }
+
+    // Marca en azul el horario elegido (dentro de su día) y guarda el id en el
+    // input oculto que usa submitCheckout para saber qué horario se reservó.
+    function checkoutSelectExamSlot(id) {
+      document.getElementById('checkoutExamenSlot').value = id;
+      document.querySelectorAll('.checkout-slot-btn').forEach(btn => {
+        btn.classList.remove('border-brand-sky', 'text-brand-sky', 'bg-brand-sky/10', 'ring-2', 'ring-brand-sky/30');
+        btn.classList.add('border-slate-900/10', 'text-slate-500');
+      });
+      const btn = document.getElementById(`checkoutSlotBtn-${id}`);
+      if (btn) {
+        btn.classList.add('border-brand-sky', 'text-brand-sky', 'bg-brand-sky/10', 'ring-2', 'ring-brand-sky/30');
+        btn.classList.remove('border-slate-900/10', 'text-slate-500');
+      }
+      const status = document.getElementById('checkoutSlotStatus');
+      if (status) status.textContent = '';
     }
 
     let checkoutGraduacionGeneral = 'con'; // 'con' | 'sin' — se pregunta primero en el checkout
@@ -9323,6 +9414,10 @@
     // =========================================================
     function openAccountModal() {
       refreshAccountView();
+      document.getElementById('accountPhoneLookupView').classList.add('hidden');
+      document.getElementById('phoneLookupForm').classList.add('hidden');
+      document.getElementById('phoneLookupInput').value = '';
+      document.getElementById('phoneLookupStatus').textContent = '';
       openModal('accountModal');
     }
     function closeAccountModal() {
@@ -9378,85 +9473,198 @@
     }
 
     async function loadMyOrders() {
-      const list = document.getElementById('myOrdersList');
       const empty = document.getElementById('myOrdersEmpty');
       empty.textContent = 'Cargando sus pedidos...';
+      const citasEmpty = document.getElementById('myCitasEmpty');
+      citasEmpty.textContent = 'Cargando sus citas...';
       try {
         const fb = await window.firebaseReady;
         const orders = await fb.fetchMyOrders();
-
-        if (!orders.length) {
-          empty.textContent = 'Aún no ha realizado ningún pedido.';
-          list.innerHTML = '';
-          list.appendChild(empty);
-          return;
-        }
-
-        list.innerHTML = orders.map(o => {
-          const items = Array.isArray(o.items) ? o.items : [];
-          const itemsText = items.length
-            ? items.map(it => `${it.modelo}${it.cantidad > 1 ? ` x${it.cantidad}` : ''}`).join(', ')
-            : (o.producto || '');
-          const pagos = Array.isArray(o.pagos) && o.pagos.length ? o.pagos : (o.anticipo > 0 ? [{ monto: o.anticipo, nota: 'Anticipo' }] : []);
-          const totalPagado = pagos.reduce((sum, pg) => sum + (Number(pg.monto) || 0), 0);
-          const restante = (o.precio && totalPagado > 0) ? Math.max(0, Number(o.precio) - totalPagado) : null;
-          const money = (n) => `$${Number(n || 0).toLocaleString('es-MX', {minimumFractionDigits:2, maximumFractionDigits:2})}`;
-
-          // ---- Desglose detallado por artículo: armazón, mica, material y tratamiento ----
-          const desgloseItems = items.map(it => {
-            const cantidad = Number(it.cantidad) > 0 ? Number(it.cantidad) : 1;
-            const filas = [];
-            filas.push(`<div class="flex justify-between"><span class="text-slate-500">🕶️ Armazón${it.color ? ` (${escapeHtml(it.color)})` : ''}</span><span class="text-slate-600">${money(it.precio)}</span></div>`);
-            if (it.micaTipoElegido) {
-              filas.push(`<div class="flex justify-between"><span class="text-slate-500">🔎 Mica: ${escapeHtml(it.micaTipoElegido)}</span><span class="text-slate-600">${Number(it.micaTipoElegidoCosto) > 0 ? '+' + money(it.micaTipoElegidoCosto) : 'Incluido'}</span></div>`);
-            }
-            if (it.micaMaterialElegido) {
-              const nombreMaterial = it.micaMaterialElegido === 'hiindex' ? 'Hi Index' : (it.micaMaterialElegido === 'policarbonato' ? 'Policarbonato' : it.micaMaterialElegido);
-              filas.push(`<div class="flex justify-between"><span class="text-slate-500">🔹 Material: ${escapeHtml(nombreMaterial)}</span><span class="text-slate-600">+${money(it.micaMaterialElegidoCosto)}</span></div>`);
-            }
-            if (it.tratamientosElegidos) {
-              if (it.tratamientosElegidos.bluRay) filas.push(`<div class="flex justify-between"><span class="text-slate-500">✨ Blue Ray</span><span class="text-slate-600">+${money(PF_TRATAMIENTO_COMPONENTE_PRECIOS.blu_ray)}</span></div>`);
-              if (it.tratamientosElegidos.fotocromatico) filas.push(`<div class="flex justify-between"><span class="text-slate-500">✨ Fotocromático${it.tratamientosElegidos.fotocromaticoColor && PF_COLOR_LABELS[it.tratamientosElegidos.fotocromaticoColor] ? ' (' + escapeHtml(PF_COLOR_LABELS[it.tratamientosElegidos.fotocromaticoColor]) + ')' : ''}</span><span class="text-slate-600">+${money(PF_TRATAMIENTO_COMPONENTE_PRECIOS.fotocromatico)}</span></div>`);
-              if (it.tratamientosElegidos.polarizado) filas.push(`<div class="flex justify-between"><span class="text-slate-500">✨ Polarizado${it.tratamientosElegidos.polarizadoColor && PF_COLOR_LABELS[it.tratamientosElegidos.polarizadoColor] ? ' (' + escapeHtml(PF_COLOR_LABELS[it.tratamientosElegidos.polarizadoColor]) + ')' : ''}</span><span class="text-slate-600">+${money(PF_TRATAMIENTO_COMPONENTE_PRECIOS.polarizado)}</span></div>`);
-            } else if (it.tratamientoElegido) {
-              filas.push(`<div class="flex justify-between"><span class="text-slate-500">✨ Tratamiento: ${escapeHtml(it.tratamientoElegido)}</span><span class="text-slate-600">+${money(it.tratamientoElegidoCosto)}</span></div>`);
-            }
-            const subtotalUnitario = Number(it.precio || 0) + Number(it.micaTipoElegidoCosto || 0) + Number(it.micaMaterialElegidoCosto || 0) + Number(it.tratamientoElegidoCosto || 0);
-            const subtotal = subtotalUnitario * cantidad;
-            return `
-              <div class="mb-2 last:mb-0">
-                <p class="text-[11px] font-bold text-brand-ink mb-1">${escapeHtml(it.modelo || 'Lente')}${cantidad > 1 ? ` <span class="font-normal text-slate-500">x${cantidad}</span>` : ''}</p>
-                <div class="space-y-0.5 text-[10.5px] pl-1">${filas.join('')}</div>
-                <div class="flex justify-between text-[10.5px] font-bold text-brand-ink mt-1 pt-1 border-t border-slate-900/5"><span>Subtotal</span><span>${money(subtotal)}</span></div>
-              </div>
-            `;
-          }).join('');
-
-          return `
-          <div class="p-3.5 bg-brand-navy border border-slate-900/10 rounded-xl">
-            <div class="flex items-center justify-between mb-2">
-              <span class="text-[10px] text-slate-500">${formatFecha(o.createdAt)}</span>
-              ${o.precio ? `<span class="text-xs font-bold text-brand-ink">${money(o.precio)}</span>` : ''}
-            </div>
-            ${o.tipoPedido ? `<div class="mb-2">${tipoPedidoBadge(o.tipoPedido)}</div>` : ''}
-            ${renderEstadoTimeline(o.estadoEnvio || 'preparando')}
-            <p class="text-xs text-slate-600 mb-2">${itemsText || 'Pedido registrado'}</p>
-            ${desgloseItems ? `<div class="mb-2 p-2.5 bg-brand-dark rounded-lg border border-slate-900/10">${desgloseItems}</div>` : ''}
-            ${o.examen ? renderExamenReminder(o.examen) : ''}
-            ${(o.examen && Array.isArray(o.examen.armazonesElegidos) && o.examen.armazonesElegidos.length) ? `<p class="text-[10px] text-slate-500 mb-2">Armazones para probarse ese día: ${o.examen.armazonesElegidos.map(a => `${escapeHtml(a.modelo)} (${escapeHtml(a.color)})`).join(', ')}</p>` : ''}
-            ${restante !== null ? `<p class="text-[11px] text-slate-500 mb-2">Pagado: ${money(totalPagado)} · Falta por pagar: <strong class="text-brand-ink">${money(restante)}</strong></p>` : ''}
-            <div class="flex flex-wrap items-center justify-between gap-2">
-              ${estadoPagoBadge(o.estadoPago || 'pendiente')}
-              ${(o.estadoPago || 'pendiente') === 'pendiente' ? `<span class="text-[10px] text-slate-500">Le confirmaremos las formas de pago disponibles.</span>` : ''}
-            </div>
-          </div>
-        `; }).join('');
+        renderOrdersAndCitas(orders, { ordersList: 'myOrdersList', ordersEmpty: 'myOrdersEmpty', citasList: 'myCitasList', citasEmpty: 'myCitasEmpty' });
       } catch (e) {
         console.error('Error al cargar mis pedidos:', e);
         empty.textContent = 'No se pudieron cargar sus pedidos.';
-        list.innerHTML = '';
-        list.appendChild(empty);
+        document.getElementById('myOrdersList').innerHTML = '';
+        document.getElementById('myOrdersList').appendChild(empty);
       }
+    }
+
+    // Muestra/oculta el formulario para buscar pedidos y citas sin necesidad de cuenta,
+    // solo con el número de teléfono que se dio al hacer el pedido.
+    function togglePhoneLookupForm() {
+      document.getElementById('phoneLookupForm').classList.toggle('hidden');
+    }
+
+    function closePhoneLookupResults() {
+      document.getElementById('accountPhoneLookupView').classList.add('hidden');
+      document.getElementById('accountLoggedOutView').classList.remove('hidden');
+    }
+
+    async function lookupOrdersByPhone() {
+      const telefono = document.getElementById('phoneLookupInput').value.trim();
+      const status = document.getElementById('phoneLookupStatus');
+      const digits = telefono.replace(/\D/g, '');
+      if (digits.length < 8) {
+        status.textContent = 'Escriba un número de teléfono válido (mínimo 8 dígitos).';
+        return;
+      }
+      status.textContent = '';
+      const btn = document.getElementById('phoneLookupBtn');
+      btn.disabled = true;
+      btn.textContent = 'Buscando...';
+      try {
+        const fb = await window.firebaseReady;
+        const orders = await fb.fetchOrdersByPhone(telefono);
+        document.getElementById('accountLoggedOutView').classList.add('hidden');
+        document.getElementById('accountPhoneLookupView').classList.remove('hidden');
+        if (!orders.length) {
+          document.getElementById('phoneOrdersEmpty').textContent = 'No encontramos pedidos con ese teléfono.';
+          document.getElementById('phoneCitasEmpty').textContent = 'No encontramos citas con ese teléfono.';
+          document.getElementById('phoneOrdersList').innerHTML = '';
+          document.getElementById('phoneOrdersList').appendChild(document.getElementById('phoneOrdersEmpty'));
+          document.getElementById('phoneCitasList').innerHTML = '';
+          document.getElementById('phoneCitasList').appendChild(document.getElementById('phoneCitasEmpty'));
+          return;
+        }
+        renderOrdersAndCitas(orders, { ordersList: 'phoneOrdersList', ordersEmpty: 'phoneOrdersEmpty', citasList: 'phoneCitasList', citasEmpty: 'phoneCitasEmpty' });
+      } catch (e) {
+        console.error('Error al buscar por teléfono:', e);
+        status.textContent = 'No se pudo realizar la búsqueda. Intente de nuevo.';
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Buscar';
+      }
+    }
+
+    // Pinta, en los contenedores indicados, la lista de pedidos y — por separado —
+    // la lista de citas de examen a domicilio que traen esos pedidos. Se usa tanto
+    // para "Mi Cuenta" (logueado) como para la búsqueda por teléfono (sin cuenta).
+    function renderOrdersAndCitas(orders, ids) {
+      const ordersList = document.getElementById(ids.ordersList);
+      const ordersEmpty = document.getElementById(ids.ordersEmpty);
+      const citasList = document.getElementById(ids.citasList);
+      const citasEmpty = document.getElementById(ids.citasEmpty);
+
+      if (!orders.length) {
+        if (ordersEmpty) ordersEmpty.textContent = 'Aún no ha realizado ningún pedido.';
+        if (ordersList) { ordersList.innerHTML = ''; if (ordersEmpty) ordersList.appendChild(ordersEmpty); }
+        if (citasEmpty) citasEmpty.textContent = 'Aún no tiene citas de examen a domicilio agendadas.';
+        if (citasList) { citasList.innerHTML = ''; if (citasEmpty) citasList.appendChild(citasEmpty); }
+        return;
+      }
+
+      if (ordersList) ordersList.innerHTML = orders.map(o => buildOrderCardHtml(o)).join('');
+
+      const citas = orders.filter(o => o.examen && o.examen.fecha);
+      if (citasList) {
+        if (!citas.length) {
+          if (citasEmpty) citasEmpty.textContent = 'No tiene citas de examen a domicilio agendadas.';
+          citasList.innerHTML = '';
+          if (citasEmpty) citasList.appendChild(citasEmpty);
+        } else {
+          // Las citas más próximas primero, sin importar el orden de los pedidos.
+          const citasOrdenadas = [...citas].sort((a, b) => (a.examen.fecha || '').localeCompare(b.examen.fecha || ''));
+          citasList.innerHTML = citasOrdenadas.map(o => buildCitaCardHtml(o)).join('');
+        }
+      }
+    }
+
+    // Tarjeta de UN pedido: artículos, desglose, estatus de envío y de pago.
+    // (La cita de examen a domicilio, si tiene, se muestra aparte en "Mis citas".)
+    function buildOrderCardHtml(o) {
+        const items = Array.isArray(o.items) ? o.items : [];
+        const itemsText = items.length
+          ? items.map(it => `${it.modelo}${it.cantidad > 1 ? ` x${it.cantidad}` : ''}`).join(', ')
+          : (o.producto || '');
+        const pagos = Array.isArray(o.pagos) && o.pagos.length ? o.pagos : (o.anticipo > 0 ? [{ monto: o.anticipo, nota: 'Anticipo' }] : []);
+        const totalPagado = pagos.reduce((sum, pg) => sum + (Number(pg.monto) || 0), 0);
+        const restante = (o.precio && totalPagado > 0) ? Math.max(0, Number(o.precio) - totalPagado) : null;
+        const money = (n) => `$${Number(n || 0).toLocaleString('es-MX', {minimumFractionDigits:2, maximumFractionDigits:2})}`;
+
+        // ---- Desglose detallado por artículo: armazón, mica, material y tratamiento ----
+        const desgloseItems = items.map(it => {
+          const cantidad = Number(it.cantidad) > 0 ? Number(it.cantidad) : 1;
+          const filas = [];
+          filas.push(`<div class="flex justify-between"><span class="text-slate-500">🕶️ Armazón${it.color ? ` (${escapeHtml(it.color)})` : ''}</span><span class="text-slate-600">${money(it.precio)}</span></div>`);
+          if (it.micaTipoElegido) {
+            filas.push(`<div class="flex justify-between"><span class="text-slate-500">🔎 Mica: ${escapeHtml(it.micaTipoElegido)}</span><span class="text-slate-600">${Number(it.micaTipoElegidoCosto) > 0 ? '+' + money(it.micaTipoElegidoCosto) : 'Incluido'}</span></div>`);
+          }
+          if (it.micaMaterialElegido) {
+            const nombreMaterial = it.micaMaterialElegido === 'hiindex' ? 'Hi Index' : (it.micaMaterialElegido === 'policarbonato' ? 'Policarbonato' : it.micaMaterialElegido);
+            filas.push(`<div class="flex justify-between"><span class="text-slate-500">🔹 Material: ${escapeHtml(nombreMaterial)}</span><span class="text-slate-600">+${money(it.micaMaterialElegidoCosto)}</span></div>`);
+          }
+          if (it.tratamientosElegidos) {
+            if (it.tratamientosElegidos.bluRay) filas.push(`<div class="flex justify-between"><span class="text-slate-500">✨ Blue Ray</span><span class="text-slate-600">+${money(PF_TRATAMIENTO_COMPONENTE_PRECIOS.blu_ray)}</span></div>`);
+            if (it.tratamientosElegidos.fotocromatico) filas.push(`<div class="flex justify-between"><span class="text-slate-500">✨ Fotocromático${it.tratamientosElegidos.fotocromaticoColor && PF_COLOR_LABELS[it.tratamientosElegidos.fotocromaticoColor] ? ' (' + escapeHtml(PF_COLOR_LABELS[it.tratamientosElegidos.fotocromaticoColor]) + ')' : ''}</span><span class="text-slate-600">+${money(PF_TRATAMIENTO_COMPONENTE_PRECIOS.fotocromatico)}</span></div>`);
+            if (it.tratamientosElegidos.polarizado) filas.push(`<div class="flex justify-between"><span class="text-slate-500">✨ Polarizado${it.tratamientosElegidos.polarizadoColor && PF_COLOR_LABELS[it.tratamientosElegidos.polarizadoColor] ? ' (' + escapeHtml(PF_COLOR_LABELS[it.tratamientosElegidos.polarizadoColor]) + ')' : ''}</span><span class="text-slate-600">+${money(PF_TRATAMIENTO_COMPONENTE_PRECIOS.polarizado)}</span></div>`);
+          } else if (it.tratamientoElegido) {
+            filas.push(`<div class="flex justify-between"><span class="text-slate-500">✨ Tratamiento: ${escapeHtml(it.tratamientoElegido)}</span><span class="text-slate-600">+${money(it.tratamientoElegidoCosto)}</span></div>`);
+          }
+          const subtotalUnitario = Number(it.precio || 0) + Number(it.micaTipoElegidoCosto || 0) + Number(it.micaMaterialElegidoCosto || 0) + Number(it.tratamientoElegidoCosto || 0);
+          const subtotal = subtotalUnitario * cantidad;
+          return `
+            <div class="mb-2 last:mb-0">
+              <p class="text-[11px] font-bold text-brand-ink mb-1">${escapeHtml(it.modelo || 'Lente')}${cantidad > 1 ? ` <span class="font-normal text-slate-500">x${cantidad}</span>` : ''}</p>
+              <div class="space-y-0.5 text-[10.5px] pl-1">${filas.join('')}</div>
+              <div class="flex justify-between text-[10.5px] font-bold text-brand-ink mt-1 pt-1 border-t border-slate-900/5"><span>Subtotal</span><span>${money(subtotal)}</span></div>
+            </div>
+          `;
+        }).join('');
+
+        return `
+        <div class="p-3.5 bg-brand-navy border border-slate-900/10 rounded-xl">
+          <div class="flex items-center justify-between mb-2">
+            <span class="text-[10px] text-slate-500">${formatFecha(o.createdAt)}</span>
+            ${o.precio ? `<span class="text-xs font-bold text-brand-ink">${money(o.precio)}</span>` : ''}
+          </div>
+          ${o.tipoPedido ? `<div class="mb-2">${tipoPedidoBadge(o.tipoPedido)}</div>` : ''}
+          ${renderEstadoTimeline(o.estadoEnvio || 'preparando')}
+          <p class="text-xs text-slate-600 mb-2">${itemsText || 'Pedido registrado'}</p>
+          ${desgloseItems ? `<div class="mb-2 p-2.5 bg-brand-dark rounded-lg border border-slate-900/10">${desgloseItems}</div>` : ''}
+          ${(o.examen && o.examen.fecha) ? `<p class="text-[10px] text-brand-sky mb-2">📅 Este pedido tiene una cita de examen a domicilio — vea el estatus en "Mis citas".</p>` : ''}
+          ${restante !== null ? `<p class="text-[11px] text-slate-500 mb-2">Pagado: ${money(totalPagado)} · Falta por pagar: <strong class="text-brand-ink">${money(restante)}</strong></p>` : ''}
+          <div class="flex flex-wrap items-center justify-between gap-2">
+            ${estadoPagoBadge(o.estadoPago || 'pendiente')}
+            ${(o.estadoPago || 'pendiente') === 'pendiente' ? `<span class="text-[10px] text-slate-500">Le confirmaremos las formas de pago disponibles.</span>` : ''}
+          </div>
+        </div>
+      `;
+    }
+
+    // Tarjeta de UNA cita de examen a domicilio, con su propio estatus
+    // (realizada / hoy / mañana / en X días), separada de la tarjeta del pedido.
+    function buildCitaCardHtml(o) {
+      const examen = o.examen;
+      const [y, m, d] = String(examen.fecha).split('-').map(Number);
+      if (!y || !m || !d) return '';
+      const fechaObj = new Date(y, m - 1, d);
+      const hoy = new Date();
+      hoy.setHours(0, 0, 0, 0);
+      const diffDias = Math.round((fechaObj - hoy) / (1000 * 60 * 60 * 24));
+      const diaSemana = fechaObj.toLocaleDateString('es-MX', { weekday: 'long' });
+      const diaSemanaCap = diaSemana.charAt(0).toUpperCase() + diaSemana.slice(1);
+      const horaTxt = examen.hora ? ` · ${examen.hora}` : '';
+
+      let estadoTexto, estadoClase;
+      if (diffDias < 0) { estadoTexto = '✅ Realizada'; estadoClase = 'text-emerald-500 bg-emerald-500/10 border-emerald-500/20'; }
+      else if (diffDias === 0) { estadoTexto = '🔔 Hoy'; estadoClase = 'text-brand-coral bg-brand-coral/10 border-brand-coral/20'; }
+      else if (diffDias === 1) { estadoTexto = '🔔 Mañana'; estadoClase = 'text-brand-teal bg-brand-teal/10 border-brand-teal/20'; }
+      else { estadoTexto = `📅 En ${diffDias} días`; estadoClase = 'text-brand-sky bg-brand-sky/10 border-brand-sky/20'; }
+
+      const armazonesTxt = (Array.isArray(examen.armazonesElegidos) && examen.armazonesElegidos.length)
+        ? examen.armazonesElegidos.map(a => escapeHtml(a.modelo || '')).join(', ')
+        : '';
+      const personas = Number(examen.personas) > 0 ? Number(examen.personas) : 1;
+
+      return `
+        <div class="p-3 bg-brand-navy border border-slate-900/10 rounded-xl">
+          <div class="flex items-center justify-between gap-2 mb-1.5">
+            <p class="text-xs font-bold text-brand-ink">${diaSemanaCap} ${d}${horaTxt}</p>
+            <span class="text-[9px] font-extrabold uppercase tracking-wide px-2 py-0.5 rounded-full border ${estadoClase} whitespace-nowrap">${estadoTexto}</span>
+          </div>
+          <p class="text-[10px] text-slate-500">🏠 Examen a domicilio · ${personas} persona${personas > 1 ? 's' : ''}</p>
+          ${armazonesTxt ? `<p class="text-[10px] text-slate-500 mt-0.5">Armazones a probarse: ${armazonesTxt}</p>` : ''}
+        </div>`;
     }
 
     async function submitCustomerLogin() {
@@ -9951,6 +10159,22 @@ async function deleteProduct(id, storagePaths) {
       return orders;
     }
 
+    // Pedidos y citas buscados por teléfono, sin necesidad de haber iniciado sesión
+    // (útil para quien pidió por WhatsApp o como invitado). Compara solo los dígitos
+    // para no fallar por espacios, guiones o el "+52" que algunos escriben.
+    async function fetchOrdersByPhone(telefono) {
+      const digits = String(telefono || '').replace(/\D/g, '').slice(-10);
+      if (digits.length < 8) return [];
+      const all = await fetchOrders();
+      const orders = all.filter(o => String(o.telefono || '').replace(/\D/g, '').slice(-10) === digits);
+      orders.sort((a, b) => {
+        const aTime = a.createdAt?.toMillis ? a.createdAt.toMillis() : 0;
+        const bTime = b.createdAt?.toMillis ? b.createdAt.toMillis() : 0;
+        return bTime - aTime;
+      });
+      return orders;
+    }
+
     async function addOrder(data) {
       const armazonesElegidos = Array.isArray(data.examen?.armazonesElegidos)
         ? data.examen.armazonesElegidos.slice(0, 5).map(a => ({
@@ -10286,6 +10510,7 @@ async function deleteProduct(id, storagePaths) {
       deleteAppointment,
       fetchOrders,
       fetchMyOrders,
+      fetchOrdersByPhone,
       addOrder,
       updateOrderPago,
       updateOrderEnvio,
