@@ -2895,6 +2895,12 @@
       let heroIdx = 0;
       let heroTimer = null;
 
+      // Oculta todas las fotos de arranque: primero hay que saber si existe
+      // una foto personalizada guardada en el admin (Firestore) o no, para
+      // mostrar directamente la foto correcta y que no se vea la foto de
+      // fábrica "brincando" a la foto real un instante después.
+      slides.forEach(img => img.classList.remove('opacity-100'));
+
       // Quita del DOM las fotos/puntos sobrantes cuando el admin elimina una
       // foto del banner (deja el carrusel con exactamente `count` fotos).
       function pruneHeroSlidesTo(count) {
@@ -2926,31 +2932,6 @@
       window.addEventListener('resize', applyHeroPositions);
       applyHeroPositions();
 
-      // Si hay una configuración guardada en Firestore (editada desde el admin),
-      // se sobreescriben las fotos/posiciones por defecto.
-      (async function loadHeroConfigFromFirestore() {
-        try {
-          const fb = await window.firebaseReady;
-          const config = await fb.fetchHeroConfig();
-          if (config && Array.isArray(config.slides) && config.slides.length) {
-            config.slides.forEach((s, i) => {
-              const img = slides[i];
-              if (!img) return;
-              if (s.src) img.src = s.src;
-              if (s.posDesktop) img.dataset.posDesktop = s.posDesktop;
-              if (s.posMobile) img.dataset.posMobile = s.posMobile;
-            });
-            // Si en el admin se eliminaron fotos (quedaron menos de las 4 de
-            // fábrica), se quitan del carrusel en vivo — si no, la foto por
-            // defecto seguía apareciendo aunque ya no estuviera en la config.
-            pruneHeroSlidesTo(config.slides.length);
-            applyHeroPositions();
-          }
-        } catch (err) {
-          console.error('No se pudo cargar la configuración del hero:', err);
-        }
-      })();
-
       function showHeroSlide(idx) {
         slides.forEach((img, i) => img.classList.toggle('opacity-100', i === idx));
         slides.forEach((img, i) => img.classList.toggle('opacity-0', i !== idx));
@@ -2977,8 +2958,52 @@
         restartHeroTimer();
       };
 
-      if (slides.length > 0) restartHeroTimer();
+      let heroRevealed = false;
+      function revealHeroOnce() {
+        if (heroRevealed) return;
+        heroRevealed = true;
+        if (slides.length > 0) {
+          showHeroSlide(0);
+          restartHeroTimer();
+        }
+      }
+      // Red de seguridad: si Firebase tarda o falla en cargar, no dejar el
+      // hero en blanco para siempre — a los 2s se revela con lo que haya.
+      setTimeout(revealHeroOnce, 2000);
+
+      // Si hay una configuración guardada en Firestore (editada desde el admin),
+      // se sobreescriben las fotos/posiciones por defecto. Solo hasta que esto
+      // termine (encuentre config personalizada o no) se revela la foto,
+      // directamente con la imagen correcta.
+      (async function loadHeroConfigFromFirestore() {
+        try {
+          const fb = await window.firebaseReady;
+          const config = await fb.fetchHeroConfig();
+          if (config && Array.isArray(config.slides) && config.slides.length) {
+            config.slides.forEach((s, i) => {
+              const img = slides[i];
+              if (!img) return;
+              if (s.src) img.src = s.src;
+              if (s.posDesktop) img.dataset.posDesktop = s.posDesktop;
+              if (s.posMobile) img.dataset.posMobile = s.posMobile;
+            });
+            // Si en el admin se eliminaron fotos (quedaron menos de las 4 de
+            // fábrica), se quitan del carrusel en vivo — si no, la foto por
+            // defecto seguía apareciendo aunque ya no estuviera en la config.
+            pruneHeroSlidesTo(config.slides.length);
+            applyHeroPositions();
+          }
+        } catch (err) {
+          console.error('No se pudo cargar la configuración del hero:', err);
+        } finally {
+          // Ya sabemos cuál es la foto correcta (personalizada o de fábrica):
+          // ahora sí se revela y arranca la rotación automática.
+          revealHeroOnce();
+        }
+      })();
     })();
+
+
 
     // ---- Fotos editables del Portafolio Óptico y Salud Visual (misma foto, posición ajustable) ----
     (function () {
