@@ -401,10 +401,10 @@
   <section id="hero" class="relative min-h-[62vh] sm:min-h-screen flex items-center justify-center overflow-hidden pt-24 lg:pt-20">
     <!-- Rotating photo carousel: varias fotos reales que se van alternando, protagonistas del hero -->
     <div class="absolute inset-0 z-0" id="heroCarousel">
-      <img src="https://images.unsplash.com/photo-1758691737646-79dbce8e25fb?w=1600&q=80" alt="Persona sonriendo con lentes en su oficina" data-default-src="https://images.unsplash.com/photo-1758691737646-79dbce8e25fb?w=1600&q=80" data-pos-desktop="50 50" data-pos-mobile="65 15" class="hero-slide absolute inset-0 w-full h-full object-cover object-[65%_15%] sm:object-center opacity-100 transition-opacity duration-[1500ms]">
-      <img src="https://images.unsplash.com/photo-1758876019338-c190822f6ca0?w=1600&q=80" alt="Colaboradora sonriendo con sus lentes en la oficina" data-default-src="https://images.unsplash.com/photo-1758876019338-c190822f6ca0?w=1600&q=80" data-pos-desktop="50 50" data-pos-mobile="50 20" class="hero-slide absolute inset-0 w-full h-full object-cover object-[center_20%] sm:object-center opacity-0 transition-opacity duration-[1500ms]">
-      <img src="https://images.unsplash.com/photo-1705579609022-a7a2266b6226?w=1600&q=80" alt="Trabajador con lentes de seguridad" data-default-src="https://images.unsplash.com/photo-1705579609022-a7a2266b6226?w=1600&q=80" data-pos-desktop="50 50" data-pos-mobile="65 15" class="hero-slide absolute inset-0 w-full h-full object-cover object-[65%_15%] sm:object-center opacity-0 transition-opacity duration-[1500ms]">
-      <img src="https://images.unsplash.com/photo-1758691737605-69a0e78bd193?w=1600&q=80" alt="Colaboradora sonriendo con sus lentes junto a la ventana" data-default-src="https://images.unsplash.com/photo-1758691737605-69a0e78bd193?w=1600&q=80" data-pos-desktop="50 50" data-pos-mobile="65 15" class="hero-slide absolute inset-0 w-full h-full object-cover object-[65%_15%] sm:object-center opacity-0 transition-opacity duration-[1500ms]">
+      <img src="https://raw.githubusercontent.com/regina1503/lentes-visioon-eka/main/WhatsApp%20Image%202026-08-23%20at%2011.03.53%20PM.jpeg" alt="Foto de portada Visión EKA" data-default-src="https://raw.githubusercontent.com/regina1503/lentes-visioon-eka/main/WhatsApp%20Image%202026-08-23%20at%2011.03.53%20PM.jpeg" data-pos-desktop="50 50" data-pos-mobile="50 50" class="hero-slide absolute inset-0 w-full h-full object-cover sm:object-center opacity-100 transition-opacity duration-[1500ms]">
+      <img src="https://raw.githubusercontent.com/regina1503/lentes-visioon-eka/main/nombre-de-la-carpeta/WhatsApp%20Image%202026-08-20%20at%2012.30.52%20AM.jpeg" alt="Foto de portada Visión EKA" data-default-src="https://raw.githubusercontent.com/regina1503/lentes-visioon-eka/main/nombre-de-la-carpeta/WhatsApp%20Image%202026-08-20%20at%2012.30.52%20AM.jpeg" data-pos-desktop="50 50" data-pos-mobile="50 50" class="hero-slide absolute inset-0 w-full h-full object-cover sm:object-center opacity-0 transition-opacity duration-[1500ms]">
+      <img src="https://raw.githubusercontent.com/regina1503/lentes-visioon-eka/main/WhatsApp%20Image%202026-08-23%20at%2011.07.09%20PM.jpeg" alt="Foto de portada Visión EKA" data-default-src="https://raw.githubusercontent.com/regina1503/lentes-visioon-eka/main/WhatsApp%20Image%202026-08-23%20at%2011.07.09%20PM.jpeg" data-pos-desktop="50 50" data-pos-mobile="50 50" class="hero-slide absolute inset-0 w-full h-full object-cover sm:object-center opacity-0 transition-opacity duration-[1500ms]">
+      <img src="https://raw.githubusercontent.com/regina1503/lentes-visioon-eka/main/CARPETA/WhatsApp%20Image%202026-08-21%20at%2010.33.46%20PM.jpeg" alt="Foto de portada Visión EKA" data-default-src="https://raw.githubusercontent.com/regina1503/lentes-visioon-eka/main/CARPETA/WhatsApp%20Image%202026-08-21%20at%2010.33.46%20PM.jpeg" data-pos-desktop="50 50" data-pos-mobile="50 50" class="hero-slide absolute inset-0 w-full h-full object-cover sm:object-center opacity-0 transition-opacity duration-[1500ms]">
       <!-- Degradado mínimo, solo abajo, para que las fotos se noten mucho más -->
       <div class="absolute inset-0 bg-gradient-to-t from-brand-navy/85 via-brand-navy/10 to-transparent"></div>
     </div>
@@ -2894,6 +2894,25 @@
       let dots = Array.from(document.querySelectorAll('#heroCarouselDots .hero-dot'));
       let heroIdx = 0;
       let heroTimer = null;
+      const HERO_CACHE_KEY = 'vekaHeroConfigCache_v1';
+
+      // Guarda en este navegador la última foto de portada confirmada, para
+      // que la próxima vez que esta persona entre al sitio no tenga que
+      // esperar a Firebase: se usa de inmediato la foto ya conocida.
+      function readHeroCache() {
+        try {
+          const raw = localStorage.getItem(HERO_CACHE_KEY);
+          if (!raw) return null;
+          const data = JSON.parse(raw);
+          if (data && Array.isArray(data.slides) && data.slides.length) return data;
+        } catch (e) { /* localStorage no disponible o dato corrupto: se ignora */ }
+        return null;
+      }
+      function writeHeroCache(slidesData) {
+        try {
+          localStorage.setItem(HERO_CACHE_KEY, JSON.stringify({ slides: slidesData, savedAt: Date.now() }));
+        } catch (e) { /* si falla (modo privado, cupo lleno, etc.) no es grave */ }
+      }
 
       // Oculta todas las fotos de arranque: primero hay que saber si existe
       // una foto personalizada guardada en el admin (Firestore) o no, para
@@ -2932,6 +2951,21 @@
       window.addEventListener('resize', applyHeroPositions);
       applyHeroPositions();
 
+      function applyHeroSlidesData(slidesData) {
+        slidesData.forEach((s, i) => {
+          const img = slides[i];
+          if (!img) return;
+          if (s.src) img.src = s.src;
+          if (s.posDesktop) img.dataset.posDesktop = s.posDesktop;
+          if (s.posMobile) img.dataset.posMobile = s.posMobile;
+        });
+        // Si en el admin se eliminaron fotos (quedaron menos de las 4 de
+        // fábrica), se quitan del carrusel en vivo — si no, la foto por
+        // defecto seguía apareciendo aunque ya no estuviera en la config.
+        pruneHeroSlidesTo(slidesData.length);
+        applyHeroPositions();
+      }
+
       function showHeroSlide(idx) {
         slides.forEach((img, i) => img.classList.toggle('opacity-100', i === idx));
         slides.forEach((img, i) => img.classList.toggle('opacity-0', i !== idx));
@@ -2967,37 +3001,37 @@
           restartHeroTimer();
         }
       }
-      // Red de seguridad: si Firebase tarda o falla en cargar, no dejar el
-      // hero en blanco para siempre — a los 2s se revela con lo que haya.
+
+      // Si ya conocemos la foto correcta de una visita anterior en este
+      // mismo navegador, se aplica y se revela YA MISMO, sin esperar nada.
+      const cachedHero = readHeroCache();
+      if (cachedHero) {
+        applyHeroSlidesData(cachedHero.slides);
+        revealHeroOnce();
+      }
+
+      // Red de seguridad: si Firebase tarda o falla en cargar (y no había
+      // caché previo), no dejar el hero en blanco para siempre — a los 2s
+      // se revela con lo que haya.
       setTimeout(revealHeroOnce, 2000);
 
-      // Si hay una configuración guardada en Firestore (editada desde el admin),
-      // se sobreescriben las fotos/posiciones por defecto. Solo hasta que esto
-      // termine (encuentre config personalizada o no) se revela la foto,
-      // directamente con la imagen correcta.
+      // Se confirma contra Firestore (editado desde el admin) siempre, aunque
+      // ya se haya revelado desde el caché — así, si el admin cambió la foto
+      // desde la última visita, se actualiza y se refresca el caché.
       (async function loadHeroConfigFromFirestore() {
         try {
           const fb = await window.firebaseReady;
           const config = await fb.fetchHeroConfig();
           if (config && Array.isArray(config.slides) && config.slides.length) {
-            config.slides.forEach((s, i) => {
-              const img = slides[i];
-              if (!img) return;
-              if (s.src) img.src = s.src;
-              if (s.posDesktop) img.dataset.posDesktop = s.posDesktop;
-              if (s.posMobile) img.dataset.posMobile = s.posMobile;
-            });
-            // Si en el admin se eliminaron fotos (quedaron menos de las 4 de
-            // fábrica), se quitan del carrusel en vivo — si no, la foto por
-            // defecto seguía apareciendo aunque ya no estuviera en la config.
-            pruneHeroSlidesTo(config.slides.length);
-            applyHeroPositions();
+            applyHeroSlidesData(config.slides);
+            writeHeroCache(config.slides);
           }
         } catch (err) {
           console.error('No se pudo cargar la configuración del hero:', err);
         } finally {
           // Ya sabemos cuál es la foto correcta (personalizada o de fábrica):
-          // ahora sí se revela y arranca la rotación automática.
+          // ahora sí se revela y arranca la rotación automática (si no se
+          // había revelado ya desde el caché).
           revealHeroOnce();
         }
       })();
