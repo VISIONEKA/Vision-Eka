@@ -2283,12 +2283,12 @@
     <div class="bg-brand-dark border-2 border-brand-sky/40 rounded-3xl max-w-lg w-full shadow-2xl transform scale-95 transition-transform duration-300 max-h-[85vh] overflow-y-auto p-6" id="checkoutModalCard">
       <div class="flex items-center justify-between mb-2">
         <div class="flex items-center gap-2">
-          <button type="button" onclick="checkoutBackToCart()" class="text-slate-500 hover:text-brand-ink text-lg leading-none w-7 h-7 flex items-center justify-center rounded-full hover:bg-slate-900/5 transition-all" aria-label="Regresar al carrito">←</button>
+          <button type="button" onclick="checkoutBackToCart()" id="checkoutBackBtn" class="text-slate-500 hover:text-brand-ink text-lg leading-none w-7 h-7 flex items-center justify-center rounded-full hover:bg-slate-900/5 transition-all" aria-label="Regresar al carrito">←</button>
           <h3 class="font-display font-bold text-lg text-brand-ink">Finalizar pedido</h3>
         </div>
         <button onclick="closeCheckoutModal()" class="text-slate-500 hover:text-brand-ink text-xl leading-none">✕</button>
       </div>
-      <p class="text-[10px] text-slate-500 mb-3">¿Quiere cambiar la mica o el tratamiento de algún lente? <button type="button" onclick="checkoutBackToCart()" class="text-brand-sky font-bold underline">Regrese al carrito</button> y presione "Editar" en ese artículo.</p>
+      <p id="checkoutBackHint" class="text-[10px] text-slate-500 mb-3">¿Quiere cambiar la mica o el tratamiento de algún lente? <button type="button" onclick="checkoutBackToCart()" class="text-brand-sky font-bold underline">Regrese al carrito</button> y presione "Editar" en ese artículo.</p>
 
       <!-- Selector de qué armazones del carrito se compran en este pedido: solo aparece
            si hay más de un artículo guardado, para no obligar a comprar todo junto. -->
@@ -7790,6 +7790,11 @@
     // se incluyen todos, pero si el cliente entra por "Comprar ahora" desde un
     // armazón específico del catálogo, aquí solo queda ese id (ver startCheckout()).
     let checkoutSelectedIds = [];
+    // De dónde entró el cliente al modal de checkout: 'cart' si vino del carrito
+    // (ahí sí tiene sentido "Regresar al carrito"), o 'direct' si entró directo
+    // desde el botón "Agendar examen a domicilio" (ahí la flecha debe solo cerrar
+    // el formulario, no mandarlo a un carrito que no usó). Ver startCheckout().
+    let checkoutEntryMode = 'cart';
     try { cart = JSON.parse(localStorage.getItem('vekaCart') || '[]'); } catch (e) { cart = []; }
 
     function saveCart() {
@@ -9290,10 +9295,12 @@
       if (forceExamen) {
         // Vino del botón directo "Agendar examen a domicilio": ya sabemos que es con graduación,
         // así que ocultamos la pregunta y vamos directo a agendar el examen.
+        checkoutEntryMode = 'direct';
         graduacionWrap.classList.add('hidden');
         setCheckoutGraduacion('con');
         setCheckoutTipo('examen');
       } else {
+        checkoutEntryMode = 'cart';
         graduacionWrap.classList.remove('hidden');
         const anyConGraduacion = checkoutSelectedItems().some(it => it.graduacion === 'con');
         setCheckoutGraduacion(anyConGraduacion ? 'con' : 'sin');
@@ -9320,6 +9327,7 @@
       document.getElementById('checkoutStatus').textContent = '';
       updateCheckoutGrandTotal();
       updateCheckoutRecetaUI();
+      updateCheckoutBackUI();
       openModal('checkoutModal');
     }
 
@@ -9327,11 +9335,34 @@
       closeModal('checkoutModal');
     }
 
-    // Regresa del checkout al carrito, por si el cliente quiere cambiar la mica o el
-    // tratamiento de algún artículo (desde el carrito puede presionar "Editar").
+    // Botón "←" del checkout. Su comportamiento depende de cómo entró el cliente:
+    // - 'cart': vino del carrito, así que "regresar" reabre el carrito (por si quiere
+    //   cambiar la mica o el tratamiento de algún artículo, presionando "Editar").
+    // - 'direct': entró directo por "Agendar examen a domicilio" (sin carrito de por
+    //   medio), así que "regresar" solo debe cerrar el formulario, no mandarlo a un
+    //   carrito que nunca usó.
     function checkoutBackToCart() {
+      if (checkoutEntryMode === 'direct') {
+        closeCheckoutModal();
+        return;
+      }
       closeCheckoutModal();
       setTimeout(() => openCartDrawer(), 260);
+    }
+
+    // Ajusta el texto/aria-label de la flecha y la nota de ayuda debajo, según si
+    // "regresar" va a abrir el carrito o simplemente cerrar el formulario.
+    function updateCheckoutBackUI() {
+      const backBtn = document.getElementById('checkoutBackBtn');
+      const hint = document.getElementById('checkoutBackHint');
+      if (!backBtn) return;
+      if (checkoutEntryMode === 'direct') {
+        backBtn.setAttribute('aria-label', 'Cerrar');
+        if (hint) hint.classList.add('hidden');
+      } else {
+        backBtn.setAttribute('aria-label', 'Regresar al carrito');
+        if (hint) hint.classList.remove('hidden');
+      }
     }
 
     async function submitCheckout() {
